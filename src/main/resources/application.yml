@@ -11,8 +11,8 @@ datasources:
   default:
     url: ${DB_JDBC_URL:`jdbc:tc:postgresql:14:///hmdb?TC_INITSCRIPT=file:src/test/resources/postgres/postgres-init.sql`}
     driverClassName: ${DB_DRIVER:org.testcontainers.jdbc.ContainerDatabaseDriver}
-    username: ${DB_USERNAME:hmdb}
-    password: ${DB_PASSWORD:hmdb}
+    username: ${DB_USERNAME:gddb}
+    password: ${DB_PASSWORD:gddb}
     maximum-pool-size: 8
     minimum-idle: 0
     pool-name: default

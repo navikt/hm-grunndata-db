@@ -1,0 +1,51 @@
+version: '3'
+services:
+  opensearchgrunndatadb:
+    image: opensearchproject/opensearch:2.3.0
+    ports:
+      - 9200:9200
+    container_name: opensearchgrunndatadb
+    environment:
+      - cluster.name=gddb
+      - node.name=opensearchgrunndatadb
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+    networks:
+      - opensearch-net
+  dashboardsgrunndatadb:
+    depends_on:
+      - opensearchgrunndatadb
+    image: opensearchproject/opensearch-dashboards:2.3.0
+    ports:
+      - 5601:5601
+    environment:
+      LOGGING_SILENT: "false"
+      OPENSEARCH_HOSTS: '["https://opensearchgrunndatadb:9200"]'
+    networks:
+      - opensearch-net
+  postgresgrunndatadb:
+    hostname: postgres
+    container_name: postgresgrunndatadb
+    image: postgres:14
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - ./src/test/resources/postgres:/docker-entrypoint-initdb.d
+    command: ["postgres", "-c", "log_statement=none"]
+#  grunndatadb:
+#    build: .
+#    depends_on:
+#      - postgres_grunndatadb
+#    ports:
+#      - "9090:8080"
+#    environment:
+#      DB_PASSWORD: gddb
+#      DB_USERNAME: gddb
+#      DB_DRIVER: org.postgresql.Driver
+#      DB_HOST: 'postgres'
+#      KAFKA_BOOTSTRAP_SERVERS: 'broker:29092'
+networks:
+  opensearch-net:
