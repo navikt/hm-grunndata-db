@@ -1,4 +1,4 @@
-package no.nav.hm.grunndata.db.indexer
+package no.nav.hm.grunndata.db.search
 
 import io.micronaut.context.annotation.ConfigurationProperties
 import io.micronaut.context.annotation.Factory
