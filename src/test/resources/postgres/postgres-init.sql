@@ -1,2 +1,2 @@
-CREATE USER hmgdb with password 'hmgdb';
-CREATE DATABASE hmgdb owner hmgdb;
+CREATE USER gddb with password 'gddb';
+CREATE DATABASE gddb owner gddb;

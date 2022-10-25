@@ -4,7 +4,6 @@ import io.micronaut.http.HttpHeaders.CACHE_CONTROL
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.annotation.*
 import org.slf4j.LoggerFactory
-import javax.validation.Valid
 
 
 @Controller
