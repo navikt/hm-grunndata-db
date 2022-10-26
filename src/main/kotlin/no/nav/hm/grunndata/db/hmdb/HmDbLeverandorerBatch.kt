@@ -5,6 +5,8 @@ import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.MappedEntity
 import io.micronaut.data.annotation.TypeDef
 import io.micronaut.data.model.DataType
+import no.nav.hm.grunndata.db.supplier.Supplier
+import no.nav.hm.grunndata.db.supplier.SupplierInfo
 import java.time.LocalDateTime
 import javax.persistence.Table
 
@@ -26,4 +28,10 @@ data class HmDbLeverandorerBatchDTO(
 fun HmDbLeverandorerBatchDTO.toEntity() : HmDbLeverandorerBatch = HmDbLeverandorerBatch(
     leverandorer = leverandorer
 )
+
+fun HmDbLeverandorerBatch.toSupplierList() : List<Supplier> = leverandorer.map {
+        Supplier(id=it.leverandorid.toLong(), hmdbId = it.leverandorid.toLong(), name = it.leverandornavn!!, info = SupplierInfo(
+            address = it.adresse, email = it.epost, phone = it.telefon, homepage = it.www
+        ))
+    }
 
