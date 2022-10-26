@@ -24,6 +24,16 @@ data class HmDbProduktBatch (
     val created: LocalDateTime = LocalDateTime.now()
 )
 
+data class HmDbProduktBatchDTO(
+    val produkter: List<ProduktDTO>,
+    val tekniskeData: List<TekniskeDataDTO>,
+)
+
+fun HmDbProduktBatchDTO.toEntity(): HmDbProduktBatch = HmDbProduktBatch(
+    produkter = produkter,
+    tekniskeData = tekniskeData
+)
+
 fun HmDbProduktBatch.toProductList():List<Product> {
     val byArtId = tekniskeData.groupBy { it.artid }
     return produkter.map { produkt ->

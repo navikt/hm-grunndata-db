@@ -18,3 +18,12 @@ data class HmDbLeverandorerBatch(
     val leverandorer: List<LeverandorDTO>,
     val created: LocalDateTime = LocalDateTime.now()
 )
+
+data class HmDbLeverandorerBatchDTO(
+    val leverandorer: List<LeverandorDTO>
+)
+
+fun HmDbLeverandorerBatchDTO.toEntity() : HmDbLeverandorerBatch = HmDbLeverandorerBatch(
+    leverandorer = leverandorer
+)
+

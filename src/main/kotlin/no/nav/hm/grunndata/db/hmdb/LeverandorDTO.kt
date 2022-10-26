@@ -2,6 +2,7 @@ package no.nav.hm.grunndata.db.hmdb
 
 import java.time.LocalDateTime
 
+
 data class LeverandorDTO(
     val leverandorid: String,
     val leverandornavn: String?,
@@ -13,5 +14,5 @@ data class LeverandorDTO(
     val www: String?,
     val landkode: String?,
     val created: LocalDateTime = LocalDateTime.now(),
-    val updated: LocalDateTime = LocalDateTime.now(),
+    val updated: LocalDateTime = LocalDateTime.now()
 )

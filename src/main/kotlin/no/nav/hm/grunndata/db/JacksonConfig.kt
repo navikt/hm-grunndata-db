@@ -22,5 +22,4 @@ class JacksonConfig : BeanCreatedEventListener<ObjectMapper> {
                 .configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true)
         return objectMapper
     }
-
 }
