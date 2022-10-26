@@ -9,12 +9,14 @@ import no.nav.hm.grunndata.db.product.*
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
+import javax.persistence.Table
 
 @MappedEntity
+@Table(name="hmdbproduktbatch_v1")
 data class HmDbProduktBatch (
     @field:GeneratedValue
     @field:Id
-    val id: Long =-1L,
+    var id: Long =-1L,
     @field:TypeDef(type = DataType.JSON)
     val produkter: List<ProduktDTO> = emptyList(),
     @field:TypeDef(type = DataType.JSON)
@@ -26,7 +28,6 @@ fun HmDbProduktBatch.toProductList():List<Product> {
     val byArtId = tekniskeData.groupBy { it.artid }
     return produkter.map { produkt ->
         Product(
-            id = produkt.artid.toLong(),
             title = produkt.prodname,
             seriesId = produkt.prodid,
             HMDBArtId = produkt.artid,

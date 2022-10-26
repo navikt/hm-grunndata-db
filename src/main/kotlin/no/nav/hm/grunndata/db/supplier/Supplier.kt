@@ -1,4 +1,4 @@
-package no.nav.hm.grunndata.db.product
+package no.nav.hm.grunndata.db.supplier
 
 import io.micronaut.data.annotation.GeneratedValue
 import io.micronaut.data.annotation.Id
@@ -10,22 +10,25 @@ import java.util.UUID
 import javax.persistence.Table
 
 @MappedEntity
-@Table(name="supplier_v1")
+@Table(name=SupplierTableName)
 data class Supplier(
     @field:GeneratedValue
     @field:Id
     var id:         Long=-1L,
+    val hmdbId:     Long? = null,
     val uuid:       String = UUID.randomUUID().toString(),
+    val name:       String,
     @field:TypeDef(type=DataType.JSON)
-    val info: SupplierInfo,
+    val info:       SupplierInfo,
     val created:    LocalDateTime = LocalDateTime.now(),
     val updated:    LocalDateTime = LocalDateTime.now()
 )
 
 data class SupplierInfo (
-    val name: String,
     val address: String?=null,
     val email: String?=null,
     val phone: String?=null,
     val homepage: String?=null
 )
+
+const val SupplierTableName="supplier_v1"
