@@ -18,9 +18,9 @@ data class HmDbProduktBatch (
     @field:Id
     var id: Long =-1L,
     @field:TypeDef(type = DataType.JSON)
-    val produkter: List<ProduktDTO> = emptyList(),
+    val produkter: List<ProduktDTO>,
     @field:TypeDef(type = DataType.JSON)
-    val tekniskeData: List<TekniskeDataDTO> = emptyList(),
+    val tekniskeData: List<TekniskeDataDTO>,
     val created: LocalDateTime = LocalDateTime.now()
 )
 

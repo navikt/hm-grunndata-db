@@ -20,13 +20,15 @@ class HmDbLeverandorerBatchRepositoryTest(private val repository: HmDbLeverandor
             telefon="1234567",
             epost= "epost@epost.test",
             www = "www.hjemmeside.no",
-            landkode = "no")
-        val batch = HmDbLeverandorerBatch(leverandorer = listOf(lev), md5 = "12345")
+            landkode = "no"
+        )
+        val batch = HmDbLeverandorerBatch(leverandorer = listOf(lev))
         runBlocking {
             val saved = repository.save(batch)
             val db = repository.findById(saved.id)
             db.shouldNotBeNull()
             db.leverandorer.size shouldBe 1
+            db.created shouldBe batch.created
         }
     }
 }

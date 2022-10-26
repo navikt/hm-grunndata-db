@@ -17,6 +17,7 @@ class HmDbProduktBatchTest(private val hmDbProduktBatchRepository: HmDbProduktBa
         val leverandor = objectMapper.readValue(File("tmp/dumps/leverandor.json"),
             HmDbLeverandorerBatch::class.java)
         leverandor.leverandorer.forEach {
+
         }
         println("Leverandør total: ${leverandor.leverandorer.size}")
         val batch = objectMapper.readValue(

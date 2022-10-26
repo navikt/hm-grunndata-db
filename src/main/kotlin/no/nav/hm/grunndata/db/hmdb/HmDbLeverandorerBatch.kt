@@ -13,9 +13,8 @@ import javax.persistence.Table
 data class HmDbLeverandorerBatch(
     @field:GeneratedValue
     @field:Id
-    val id: Long =-1L,
+    var id: Long = -1L,
     @field:TypeDef(type = DataType.JSON)
-    val leverandorer: List<LeverandorDTO> = emptyList(),
-    val md5: String,
+    val leverandorer: List<LeverandorDTO>,
     val created: LocalDateTime = LocalDateTime.now()
 )

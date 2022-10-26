@@ -3,10 +3,8 @@ CREATE SEQUENCE IF NOT EXISTS hmdbleverandorbatch_v1_id_seq START WITH 1;
 CREATE TABLE IF NOT EXISTS hmdbleverandorbatch_v1 (
     id NUMERIC(19,0) NOT NULL DEFAULT NEXTVAL('hmdbleverandorbatch_v1_id_seq'),
     leverandorer JSONB NOT NULL,
-    md5 VARCHAR(32) NOT NULL,
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY(id),
-    UNIQUE(md5)
+    PRIMARY KEY(id)
 );
 
 CREATE SEQUENCE IF NOT EXISTS hmdbproduktbatch_v1_id_seq START WITH 1;
@@ -15,10 +13,9 @@ CREATE TABLE IF NOT EXISTS hmdbproduktbatch_v1 (
     id NUMERIC(19,0) NOT NULL DEFAULT NEXTVAL('hmdbproduktbatch_v1_id_seq'),
     produkter JSONB NOT NULL,
     tekniske_data JSONB NOT NUll,
-    PRIMARY KEY (id),
-    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY(id)
 );
-
 
 CREATE SEQUENCE IF NOT EXISTS supplier_v1_id_seq START WITH 10000;
 
