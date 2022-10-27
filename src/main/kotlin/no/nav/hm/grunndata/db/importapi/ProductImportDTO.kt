@@ -24,7 +24,6 @@ data class ProductImportDTO(
 )
 
 fun ProductImportDTO.toEntity(): Product = Product(
-    id = supplierRef.replace("-", "").toLong(), // temporally hack
     title = title,
     seriesId = seriesId,
     HMSArtNr = HMSArtNr,
