@@ -37,6 +37,7 @@ dependencies {
     api("net.logstash.logback:logstash-logback-encoder:$logbackEncoderVersion")
     // coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive")
 
     // micronaut-data
     implementation("io.micronaut.data:micronaut-data-jdbc")

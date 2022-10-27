@@ -6,6 +6,11 @@ micronaut:
     consumer:
       type: fixed
       nThreads: 1
+  http:
+    client:
+      max-content-length: 100833718
+  server:
+    max-request-size: 100833718
 
 jackson:
   bean-introspection-module: true

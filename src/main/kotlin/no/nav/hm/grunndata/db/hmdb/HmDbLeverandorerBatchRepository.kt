@@ -6,5 +6,5 @@ import io.micronaut.data.repository.kotlin.CoroutineCrudRepository
 
 @JdbcRepository(dialect = Dialect.POSTGRES)
 interface HmDbLeverandorerBatchRepository: CoroutineCrudRepository<HmDbLeverandorerBatch, Long> {
-    suspend fun findFirstOrderByCreatedDesc(): HmDbLeverandorerBatch
+    suspend fun findFirstOrderByCreatedDesc(): HmDbLeverandorerBatch?
 }

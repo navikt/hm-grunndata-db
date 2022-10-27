@@ -31,10 +31,10 @@ class HmDbProduktBatchTest(private val hmDbProduktBatchRepository: HmDbProduktBa
             hmDbProduktBatchRepository.save(produkterBatch.toEntity())
 
             val dbLev = leverandorerBatchRepository.findFirstOrderByCreatedDesc()
-            dbLev.leverandorer.size shouldBe leverandorBatch.leverandorer.size
+            dbLev!!.leverandorer.size shouldBe leverandorBatch.leverandorer.size
 
             val dbProdukt = hmDbProduktBatchRepository.findFirstOrderByCreatedDesc()
-            dbProdukt.produkter.size shouldBe  produkterBatch.produkter.size
+            dbProdukt!!.produkter.size shouldBe  produkterBatch.produkter.size
             dbProdukt.tekniskeData.size shouldBe produkterBatch.tekniskeData.size
 
         }
