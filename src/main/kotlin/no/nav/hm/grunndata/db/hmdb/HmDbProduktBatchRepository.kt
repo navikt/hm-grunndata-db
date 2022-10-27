@@ -5,4 +5,6 @@ import io.micronaut.data.model.query.builder.sql.Dialect
 import io.micronaut.data.repository.kotlin.CoroutineCrudRepository
 
 @JdbcRepository(dialect = Dialect.POSTGRES)
-interface HmDbProduktBatchRepository: CoroutineCrudRepository<HmDbProduktBatch, Long>
+interface HmDbProduktBatchRepository: CoroutineCrudRepository<HmDbProduktBatch, Long> {
+    suspend fun findFirstOrderByCreatedDesc(): HmDbProduktBatch
+}
