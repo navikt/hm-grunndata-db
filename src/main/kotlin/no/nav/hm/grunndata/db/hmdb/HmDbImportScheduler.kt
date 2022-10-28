@@ -41,7 +41,7 @@ class HmDbImportScheduler(private val hmDbLeverandorerBatchRepository: HmDbLever
         }
     }
 
-    @Scheduled(cron = "*/30 * * * *")
+    @Scheduled(cron = "*/10 * * * *")
     fun updateProducts() {
         LOG.info("Running update hmdb products")
         runBlocking {

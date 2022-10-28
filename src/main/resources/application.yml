@@ -35,4 +35,4 @@ flyway:
 opensearch:
   password: ${OPEN_SEARCH_PASSWORD:admin}
   user: ${OPEN_SEARCH_USERNAME:admin}
-  url: ${OPEN_SEARCH_URI:https://localhost:9200}
+  url: ${OPEN_SEARCH_URI:`https://localhost:9200`}

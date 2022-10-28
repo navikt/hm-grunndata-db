@@ -39,7 +39,7 @@ fun HmDbProduktBatch.toProductList():List<Product> {
     return produkter.map { produkt ->
         Product(
             title = produkt.prodname,
-            seriesId = produkt.prodid,
+            seriesId = "hmdb-productid-${produkt.prodid}",
             HMDBArtId = produkt.artid,
             HMSArtNr = produkt.stockid,
             isoCategory = produkt.isocode,
