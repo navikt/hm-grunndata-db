@@ -80,7 +80,6 @@ class ProductIndexer(private val client: RestHighLevelClient,
     }
 
     fun index(docs: List<ProductDoc>): BulkResponse {
-        println("indexing ${docs.size}")
         return index(docs, indexName)
     }
 
@@ -95,7 +94,7 @@ class ProductIndexer(private val client: RestHighLevelClient,
     fun index(docs: List<ProductDoc>, indexName: String): BulkResponse {
         val bulkRequest = BulkRequest()
         docs.forEach {
-            println("indexing ${it.id}")
+            LOG.info("indexing ${it.id}")
             bulkRequest.add(
                 IndexRequest(indexName)
                 .id(it.id.toString())

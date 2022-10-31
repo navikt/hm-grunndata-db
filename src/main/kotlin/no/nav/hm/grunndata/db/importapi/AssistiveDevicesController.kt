@@ -25,11 +25,12 @@ class AssistiveDevicesController(private val objectMapper: ObjectMapper,
             LOG.info("Got product ${it.supplierRef} for $supplierId")
             it.toEntity()
         }
-        products.forEach { product ->
+        val savedList = products.map { product ->
             productRepository.findBySupplierIdAndSupplierRef(product.supplierId, product.supplierRef)?.let {
                 productRepository.update(product.copy(id=it.id, created=it.created))
             } ?: productRepository.save(product)
         }
+        productIndexer.index(savedList.map { it.toDoc() })
         return "OK"
     }
 }
