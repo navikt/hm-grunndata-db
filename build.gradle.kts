@@ -26,7 +26,7 @@ plugins {
     kotlin("kapt") version "1.7.0"
     kotlin("plugin.allopen") version "1.7.0"
     id("java")
-    id("io.micronaut.library") version "3.6.2"
+    id("io.micronaut.application") version "3.6.2"
 }
 
 
@@ -74,6 +74,10 @@ micronaut {
     processing {
         incremental(true)
     }
+}
+
+application {
+    mainClass.set("no.nav.hm.grunndata.db.Application")
 }
 
 java {

@@ -14,7 +14,7 @@ class HmDbProduktBatchTest(private val hmDbProduktBatchRepository: HmDbProduktBa
                            private val objectMapper: ObjectMapper, private val productIndexer: ProductIndexer
 ) {
 
-    @Test
+    //@Test
     fun hmdbProduktBatchTest() {
         val leverandorBatch = objectMapper.readValue(File("tmp/dumps/leverandor.json"),
             HmDbLeverandorerBatchDTO::class.java)
