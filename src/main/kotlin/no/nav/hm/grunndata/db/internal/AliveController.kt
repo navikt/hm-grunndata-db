@@ -1,6 +1,5 @@
 package no.nav.hm.grunndata.db.internal
 
-import io.micronaut.http.HttpResponse
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 
@@ -8,13 +7,9 @@ import io.micronaut.http.annotation.Get
 class AliveController {
 
     @Get("/alive")
-    fun alive(): HttpResponse<String> {
-        return HttpResponse.ok("OK")
-    }
+    fun alive() = "ALIVE"
 
     @Get("/ready")
-    fun ready(): HttpResponse<String> {
-        return HttpResponse.ok("OK")
-    }
+    fun ready() = "OK"
 
 }

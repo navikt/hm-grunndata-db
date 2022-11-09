@@ -26,9 +26,15 @@ plugins {
     kotlin("kapt") version "1.7.0"
     kotlin("plugin.allopen") version "1.7.0"
     id("java")
+    id("com.github.johnrengelman.shadow") version "7.1.0"
     id("io.micronaut.application") version "3.6.2"
 }
 
+configurations.all {
+    resolutionStrategy {
+        failOnChangingVersions()
+    }
+}
 
 dependencies {
     //implementation("com.github.navikt:hm-rapids-and-rivers-v2-core:1.0-SNAPSHOT")
