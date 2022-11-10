@@ -15,13 +15,10 @@ data class HmDbBatch(
     @field:Id
     var id: Long = -1L,
     val name: String,
-    val created: LocalDateTime = LocalDateTime.now(),
-    val lastupdated: LocalDateTime = LocalDateTime.now()
+    val updated: LocalDateTime = LocalDateTime.now(),
+    val syncfrom: LocalDateTime = LocalDateTime.now()
 )
 
-fun SupplierDTO.toSupplier(): Supplier =
-        Supplier(id= adressid, hmdbId = adressid, name = adressnamn1!!, info = SupplierInfo(
-            address = postadress1, email = epost, phone = telefon, homepage = www
-        ))
-
-
+const val SYNC_NEWS="news"
+const val SYNC_PRODUCTS="products"
+const val SYNC_SUPPLIERS="suppliers"
