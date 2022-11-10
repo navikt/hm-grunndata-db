@@ -4,7 +4,6 @@ import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.MappedEntity
 import java.time.LocalDateTime
 
-@MappedEntity
 data class SupplierDTO (
     val adressid: Long,
     val adressnamn1: String?,
@@ -16,5 +15,5 @@ data class SupplierDTO (
     val www: String?,
     val landkod: String?,
     val lastupdated: LocalDateTime,
-    val adrinsertdate: LocalDateTime,
+    val adrinsertdate: LocalDateTime?,
 )

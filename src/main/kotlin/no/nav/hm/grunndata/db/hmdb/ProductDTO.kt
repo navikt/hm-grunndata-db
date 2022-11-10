@@ -5,9 +5,7 @@ import io.micronaut.data.annotation.MappedEntity
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-@MappedEntity
 data class ProductDTO (
-    @field:Id
     val artid: Long,
     val adescshort: String?,
     val adraft: Boolean?,

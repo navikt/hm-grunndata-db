@@ -2,6 +2,7 @@ package no.nav.hm.grunndata.db.hmdb
 
 import io.micronaut.context.annotation.ConfigurationProperties
 import io.micronaut.context.annotation.Value
+import io.micronaut.core.convert.format.Format
 import io.micronaut.http.annotation.Header
 import io.micronaut.http.annotation.Headers
 import io.micronaut.http.client.annotation.Client
@@ -18,10 +19,13 @@ import java.time.LocalDateTime
 )
 interface HmDbClient {
 
-    @Get("/api/v1/sync/news")
-    fun fetchSuppliers(): List<SupplierDTO>
+    @Get("/api/v1/sync/suppliers")
+    fun fetchSuppliers(@QueryValue @Format("yyyy-MM-dd'T'HH:mm:ss") lastupdated: LocalDateTime): List<SupplierDTO>
 
     @Get("/api/v1/sync/products")
-    fun fetchProducts(@QueryValue change: LocalDateTime): List<ProductBatchDTO>
+    fun fetchProducts(@QueryValue @Format("yyyy-MM-dd'T'HH:mm:ss") change: LocalDateTime): List<ProductBatchDTO>
+
+    @Get("/api/v1/sync/news")
+    fun fetchAllNews(): List<NewsDTO>
 
 }
