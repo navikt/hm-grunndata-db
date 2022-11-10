@@ -1,41 +1,40 @@
 package no.nav.hm.grunndata.db.hmdb
 
+import io.micronaut.data.annotation.Id
+import io.micronaut.data.annotation.MappedEntity
 import java.time.LocalDate
+import java.time.LocalDateTime
 
-data class ProduktDTO(
+@MappedEntity
+data class ProductDTO (
+    @field:Id
+    val artid: Long,
     val adescshort: String?,
     val adraft: Boolean?,
-    val aindate: String?,
+    val aindate: LocalDateTime,
+    val achange: LocalDateTime,
     val aisapproved: Boolean?,
     val anbudid: String?,
     val aout: Boolean?,
-    val aoutdate: String?,
+    val aoutdate: LocalDateTime,
     val apostdesc: String?,
     val apostid: String?,
     val apostnr: String?,
     val aposttitle: String?,
-    val artid: String,
     val artname: String,
     val artno: String?,
     val artpostid: String?,
-    val blobfileURL: String?,
-    val blobfileURL_snet: String?,
-    val blobtype: String?,
-    val blobuse: String?,
     val hasanbud: Boolean?,
     val isactive: Boolean?,
     val isocode: String,
-    val isotextshort: String,
-    val isotitle: String,
-    val ldbid: String?,
-    val newsexpire: LocalDate?,
     val newsid: String?,
     val newspublish: LocalDate?,
-    val pisapproved: Boolean?,
+    val newsexpire: LocalDate?,
     val postrank: Long?,
-    val prodid: String,
+    val prodid: Long,
+    val pchange: LocalDateTime,
     val prodname: String,
     val pshortdesc: String,
     val stockid: String?,
-    val supplier: String?,
+    val supplier: String?
 )

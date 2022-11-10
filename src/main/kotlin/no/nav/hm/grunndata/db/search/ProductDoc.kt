@@ -12,7 +12,7 @@ data class ProductDoc(
     val description: Description,
     val status: ProductStatus = ProductStatus.ACTIVE,
     val HMSArtNr: String?=null,
-    val HMDBArtId: String?=null,
+    val HMDBArtId: Long?=null,
     val supplierRef: String,
     val isoCategory: String,
     val accessory: Boolean = false,

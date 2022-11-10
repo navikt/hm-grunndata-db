@@ -26,7 +26,7 @@ data class Product (
     @field:Column(name="hms_artnr")
     val HMSArtNr: String?=null,
     @field:Column(name="hmdb_artid")
-    val HMDBArtId: String?=null,
+    val HMDBArtId: Long?=null,
     val supplierRef: String,
     val isoCategory: String,
     val accessory: Boolean = false,
@@ -99,7 +99,7 @@ data class ProductDTO(
     val description: Description,
     val status: ProductStatus = ProductStatus.ACTIVE,
     val HMSArtNr: String?=null,
-    val HMDBArtId: String?=null,
+    val HMDBArtId: Long?=null,
     val supplierRef: String,
     val isoCategory: String,
     val accessory: Boolean = false,
