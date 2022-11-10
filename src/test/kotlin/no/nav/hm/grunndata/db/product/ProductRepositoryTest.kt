@@ -16,7 +16,7 @@ class ProductRepositoryTest(private val productRepository: ProductRepository,
     @Test
     fun readSavedDb() {
         runBlocking {
-            val supplier = supplierRepository.save(Supplier(name = "supplier 1", info = SupplierInfo(email = "test@test")))
+            val supplier = supplierRepository.save(Supplier(name = "supplier 1", identifier = "unik-identifier", info = SupplierInfo(email = "test@test")))
             val product = productRepository.save(Product(
                 supplierId = supplier.id, title = "Dette er et produkt", supplierRef = "123", isoCategory = "123456",
                 description = Description(modelName = "Produkt 1")

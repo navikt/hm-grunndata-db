@@ -15,7 +15,7 @@ data class Supplier(
     @field:GeneratedValue
     @field:Id
     var id:         Long=-1L,
-    val hmdbId:     Long? = null,
+    val identifier: String,
     val uuid:       String = UUID.randomUUID().toString(),
     val name:       String,
     @field:TypeDef(type=DataType.JSON)

@@ -9,11 +9,11 @@ CREATE TABLE IF NOT EXISTS hmdbbatch_v1 (
     UNIQUE (name)
 );
 
-CREATE SEQUENCE IF NOT EXISTS supplier_v1_id_seq START WITH 1000000;
+CREATE SEQUENCE IF NOT EXISTS supplier_v1_id_seq START WITH 1;
 
 CREATE TABLE IF NOT EXISTS supplier_v1 (
     id NUMERIC(19,0) NOT NULL DEFAULT NEXTVAL('supplier_v1_id_seq'),
-    hmdb_id NUMERIC(19,0),
+    identifier VARCHAR(255) NOT NULL,
     uuid VARCHAR(36) NOT NULL,
     name VARCHAR(255) NOT NULL,
     info JSONB NOT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS supplier_v1 (
     updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY(id),
     UNIQUE (uuid),
-    UNIQUE (name)
+    UNIQUE (identifier)
 );
 
 CREATE SEQUENCE IF NOT EXISTS product_v1_id_seq START WITH 1000;
