@@ -6,7 +6,7 @@ services:
       - 9200:9200
     container_name: opensearchgrunndatadb
     environment:
-      - cluster.name=gddb
+      - cluster.name=gdb
       - node.name=opensearchgrunndatadb
       - discovery.type=single-node
       - bootstrap.memory_lock=true
@@ -42,8 +42,8 @@ services:
 #    ports:
 #      - "9090:8080"
 #    environment:
-#      DB_PASSWORD: gddb
-#      DB_USERNAME: gddb
+#      DB_PASSWORD: gdb
+#      DB_USERNAME: gdb
 #      DB_DRIVER: org.postgresql.Driver
 #      DB_HOST: 'postgres'
 #      KAFKA_BOOTSTRAP_SERVERS: 'broker:29092'

@@ -19,10 +19,10 @@ jackson:
 
 datasources:
   default:
-    url: ${DB_JDBC_URL:`jdbc:tc:postgresql:14:///hmdb?TC_INITSCRIPT=file:src/test/resources/postgres/postgres-init.sql`}
+    url: ${DB_JDBC_URL:`jdbc:tc:postgresql:14:///gdb?TC_INITSCRIPT=file:src/test/resources/postgres/postgres-init.sql`}
     driverClassName: ${DB_DRIVER:org.testcontainers.jdbc.ContainerDatabaseDriver}
-    username: ${DB_USERNAME:gddb}
-    password: ${DB_PASSWORD:gddb}
+    username: ${DB_USERNAME:gdb}
+    password: ${DB_PASSWORD:gdb}
     maximum-pool-size: 8
     minimum-idle: 0
     pool-name: default
