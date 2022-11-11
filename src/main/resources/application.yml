@@ -11,6 +11,7 @@ micronaut:
       max-content-length: 100833718
   server:
     max-request-size: 100833718
+    port: 2022
 
 jackson:
   bean-introspection-module: true
