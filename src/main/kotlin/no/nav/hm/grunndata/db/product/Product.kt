@@ -5,8 +5,6 @@ import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.MappedEntity
 import io.micronaut.data.annotation.TypeDef
 import io.micronaut.data.model.DataType
-import no.nav.hm.grunndata.db.agreement.AgreementDTO
-import no.nav.hm.grunndata.db.agreement.ProductAgreement
 import java.time.LocalDateTime
 import java.util.UUID
 import javax.persistence.Column
@@ -37,7 +35,8 @@ data class Product (
     val data: Set<TechData> = emptySet(),
     @field:TypeDef(type = DataType.JSON)
     val media: List<Media> = emptyList(),
-    val agreement: ProductAgreement?=null,
+    @field:TypeDef(type = DataType.JSON)
+    val productAgreement: ProductAgreement?=null,
     val created: LocalDateTime = LocalDateTime.now(),
     val updated: LocalDateTime = LocalDateTime.now(),
     val expired: LocalDateTime = updated.plusYears(20),
@@ -47,9 +46,15 @@ data class Product (
 
 data class Description(val modelName: String?=null,
                        val modelDescription: String?=null,
-                       val text: String?=null) {
+                       val text: String?=null)
 
-}
+
+data class ProductAgreement (
+    val agreementId: Long,
+    val rank: Int,
+    val postId: Long
+)
+
 
 enum class ProductStatus {
     ACTIVE, INACTIVE

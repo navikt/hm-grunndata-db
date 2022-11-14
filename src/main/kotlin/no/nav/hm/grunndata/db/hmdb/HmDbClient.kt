@@ -23,7 +23,7 @@ interface HmDbClient {
     @Get("/api/v1/sync/products")
     fun fetchProducts(@QueryValue @Format("yyyy-MM-dd'T'HH:mm:ss") change: LocalDateTime): List<ProductBatchDTO>
 
-    @Get("/api/v1/sync/news")
-    fun fetchAllNews(): List<NewsDTO>
+    @Get("/api/v1/sync/agreements")
+    fun fetchAgreements(): List<HmDbAgreementDTO>
 
 }

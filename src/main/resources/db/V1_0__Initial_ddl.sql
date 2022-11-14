@@ -24,6 +24,34 @@ CREATE TABLE IF NOT EXISTS supplier_v1 (
     UNIQUE (identifier)
 );
 
+CREATE SEQUENCE IF NOT EXISTS agreement_v1_id_seq START WITH 1;
+
+CREATE TABLE IF NOT EXISTS agreement_v1 (
+    id NUMERIC(19,0) NOT NULL DEFAULT NEXTVAL('agreement_v1_id_seq'),
+    identifier VARCHAR(255) NOT NULL,
+    title VARCHAR(1024) NOT NULL,
+    resume VARCHAR(1024),
+    text TEXT NOT NULL,
+    link VARCHAR(1024),
+    publish TIMESTAMP,
+    expire TIMESTAMP,
+    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY(id),
+    UNIQUE(identifier)
+);
+
+CREATE SEQUENCE IF NOT EXISTS agreement_post_v1_id_seq START WITH 1;
+
+CREATE TABLE IF NOT EXISTS agreement_post_v1 (
+    id NUMERIC(19,0) NOT NULL DEFAULT NEXTVAL('agreement_post_v1_id_seq'),
+    identifier VARCHAR(255) NOT NULL,
+    nr INTEGER NOT NULL,
+    title VARCHAR(1024) NOT NULL,
+    description TEXT,
+    created TIMSTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+)
+
 CREATE SEQUENCE IF NOT EXISTS product_v1_id_seq START WITH 1000;
 
 CREATE TABLE IF NOT EXISTS product_v1 (
