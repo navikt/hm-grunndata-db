@@ -16,7 +16,6 @@ data class ProductImportDTO(
     val seriesId: String?=null,
     val data: Set<TechData> = emptySet(),
     val media: List<Media> = emptyList(),
-    val agreement: Agreement?=null,
     val created: LocalDateTime?=null,
     val expired: LocalDateTime?=null,
     val createdBy: String = "import-api",
@@ -35,7 +34,6 @@ fun ProductImportDTO.toEntity(): Product = Product(
     accessory = accessory,
     sparepart = part,
     media = media,
-    agreement = agreement,
     created = created?: LocalDateTime.now(),
     expired = expired?: LocalDateTime.now().plusYears(10)
 )

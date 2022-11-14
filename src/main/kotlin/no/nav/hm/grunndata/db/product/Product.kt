@@ -5,7 +5,8 @@ import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.MappedEntity
 import io.micronaut.data.annotation.TypeDef
 import io.micronaut.data.model.DataType
-import java.time.LocalDate
+import no.nav.hm.grunndata.db.agreement.AgreementDTO
+import no.nav.hm.grunndata.db.agreement.ProductAgreement
 import java.time.LocalDateTime
 import java.util.UUID
 import javax.persistence.Column
@@ -36,8 +37,7 @@ data class Product (
     val data: Set<TechData> = emptySet(),
     @field:TypeDef(type = DataType.JSON)
     val media: List<Media> = emptyList(),
-    @field:TypeDef(type = DataType.JSON)
-    val agreement: Agreement?=null,
+    val agreement: ProductAgreement?=null,
     val created: LocalDateTime = LocalDateTime.now(),
     val updated: LocalDateTime = LocalDateTime.now(),
     val expired: LocalDateTime = updated.plusYears(20),
@@ -50,16 +50,6 @@ data class Description(val modelName: String?=null,
                        val text: String?=null) {
 
 }
-
-data class Agreement (
-    val agreementId: String,
-    val agreementStart: LocalDate?,
-    val agreementEnd: LocalDate?,
-    val agreementRank: Long=1,
-    val agreementPostId: String,
-    val agreementPostNr: String,
-    val agreementPostTitle: String,
-)
 
 enum class ProductStatus {
     ACTIVE, INACTIVE
@@ -107,7 +97,6 @@ data class ProductDTO(
     val seriesId: String?=null,
     val data: Set<TechData> = emptySet(),
     val media: List<Media> = emptyList(),
-    val agreement: Agreement?=null,
     val created: LocalDateTime = LocalDateTime.now(),
     val updated: LocalDateTime = LocalDateTime.now(),
     val expired: LocalDateTime = updated.plusYears(20),
@@ -117,6 +106,6 @@ data class ProductDTO(
 
 fun Product.toDTO():ProductDTO =  ProductDTO (
     id, uuid, supplierId, title, description, status, HMSArtNr, HMDBArtId, supplierRef, isoCategory, accessory, sparepart,
-    seriesId,data, media, agreement, created, updated, expired, createdBy, updatedBy
+    seriesId,data, media, created, updated, expired, createdBy, updatedBy
 )
 

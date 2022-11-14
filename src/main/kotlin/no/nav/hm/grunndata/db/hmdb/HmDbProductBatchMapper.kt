@@ -13,7 +13,6 @@ fun ProductBatchDTO.toProductList():List<Product> {
             HMDBArtId = productDTO.artid,
             HMSArtNr = productDTO.stockid,
             isoCategory = productDTO.isocode,
-            agreement = mapAgreement(productDTO),
             data = techdata.getOrDefault(productDTO.artid, emptySet())
                 .map {
                     TechData(
@@ -61,14 +60,14 @@ fun mapDescription(produkt: ProductDTO): Description =
         modelDescription = produkt.adescshort,
         text = produkt.pshortdesc)
 
-fun mapAgreement(produkt: ProductDTO): Agreement? {
-    return if (produkt.newsid!=null && null != produkt.newspublish)
-        Agreement(agreementId = produkt.newsid,
-            agreementStart = produkt.newspublish,
-            agreementEnd = produkt.newsexpire!!,
-            agreementPostId = produkt.apostid!!,
-            agreementPostNr = produkt.apostnr!!,
-            agreementPostTitle = produkt.aposttitle!!,
-            agreementRank = produkt.postrank!!) else null
-}
+//fun mapAgreement(produkt: ProductDTO): AgreementDTO? {
+//    return if (produkt.newsid!=null && null != produkt.newspublish)
+//        AgreementDTO(agreementId = produkt.newsid,
+//            agreementStart = produkt.newspublish,
+//            agreementEnd = produkt.newsexpire!!,
+//            agreementPostId = produkt.apostid!!,
+//            agreementPostNr = produkt.apostnr!!,
+//            agreementPostTitle = produkt.aposttitle!!,
+//            agreementRank = produkt.postrank!!) else null
+//}
 
