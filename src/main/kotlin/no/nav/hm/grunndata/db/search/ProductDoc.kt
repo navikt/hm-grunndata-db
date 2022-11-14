@@ -16,7 +16,7 @@ data class ProductDoc(
     val supplierRef: String,
     val isoCategory: String,
     val accessory: Boolean = false,
-    val part: Boolean = false,
+    val sparepart: Boolean = false,
     val seriesId: String?=null,
     val data: Set<TechData> = emptySet(),
     val media: List<Media> = emptyList(),
@@ -40,7 +40,7 @@ data class TechDataFilters(val fyllmateriale:String?, val setebreddeMaksCM: Int?
 fun Product.toDoc(): ProductDoc = ProductDoc(
     id = id, uuid = uuid, supplierId = supplierId, title = title, description = description, status = status,
     HMSArtNr = HMSArtNr, HMDBArtId = HMDBArtId, supplierRef = supplierRef, isoCategory = isoCategory,
-    accessory = accessory, part = part, seriesId = seriesId, data = data, media = media, agreement = agreement,
+    accessory = accessory, sparepart = sparepart, seriesId = seriesId, data = data, media = media, agreement = agreement,
     created = created, updated = updated, expired = expired, createdBy = createdBy, updatedBy = updatedBy,
     filters = mapTechDataFilters(data)
 )

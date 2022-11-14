@@ -1,6 +1,5 @@
 package no.nav.hm.grunndata.db.hmdb
 
-import io.micronaut.data.annotation.MappedEntity
 import java.time.LocalDateTime
 
 data class NewsDTO (

@@ -30,7 +30,7 @@ data class Product (
     val supplierRef: String,
     val isoCategory: String,
     val accessory: Boolean = false,
-    val part: Boolean = false,
+    val sparepart: Boolean = false,
     val seriesId: String?=null,
     @field:TypeDef(type = DataType.JSON)
     val data: Set<TechData> = emptySet(),
@@ -103,7 +103,7 @@ data class ProductDTO(
     val supplierRef: String,
     val isoCategory: String,
     val accessory: Boolean = false,
-    val part: Boolean = false,
+    val sparepart: Boolean = false,
     val seriesId: String?=null,
     val data: Set<TechData> = emptySet(),
     val media: List<Media> = emptyList(),
@@ -116,7 +116,7 @@ data class ProductDTO(
 )
 
 fun Product.toDTO():ProductDTO =  ProductDTO (
-    id, uuid, supplierId, title, description, status, HMSArtNr, HMDBArtId, supplierRef, isoCategory, accessory, part,
+    id, uuid, supplierId, title, description, status, HMSArtNr, HMDBArtId, supplierRef, isoCategory, accessory, sparepart,
     seriesId,data, media, agreement, created, updated, expired, createdBy, updatedBy
 )
 
