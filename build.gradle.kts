@@ -61,8 +61,10 @@ dependencies {
     // Apache POI for excel file handling
     implementation("org.apache.poi:poi:$apachePoiVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")
+    testImplementation("io.micronaut.test:micronaut-test-kotest5")
     testImplementation("io.kotest:kotest-runner-junit5-jvm:$kotestVersion")
     testImplementation("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
+
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.0")
     testImplementation("no.nav:kafka-embedded-env:$kafkaEmbeddedVersion")
     {

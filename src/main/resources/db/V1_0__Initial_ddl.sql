@@ -33,12 +33,15 @@ CREATE TABLE IF NOT EXISTS agreement_v1 (
     resume VARCHAR(1024),
     text TEXT NOT NULL,
     link VARCHAR(1024),
+    reference VARCHAR(255) NOT NULL,
     publish TIMESTAMP,
     expire TIMESTAMP,
+    created_by VARCHAR(255) NOT NULL,
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY(id),
-    UNIQUE(identifier)
+    UNIQUE(identifier),
+    UNIQUE(reference)
 );
 
 CREATE SEQUENCE IF NOT EXISTS agreement_post_v1_id_seq START WITH 1;
@@ -46,11 +49,16 @@ CREATE SEQUENCE IF NOT EXISTS agreement_post_v1_id_seq START WITH 1;
 CREATE TABLE IF NOT EXISTS agreement_post_v1 (
     id NUMERIC(19,0) NOT NULL DEFAULT NEXTVAL('agreement_post_v1_id_seq'),
     identifier VARCHAR(255) NOT NULL,
+    agreement_id NUMERIC(19,0) NOT NULL,
     nr INTEGER NOT NULL,
     title VARCHAR(1024) NOT NULL,
     description TEXT,
-    created TIMSTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-)
+    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_by VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id),
+    UNIQUE(identifier),
+    CONSTRAINT fk_agreement_post_v1_log FOREIGN KEY (agreement_id) REFERENCES agreement_v1(id)
+);
 
 CREATE SEQUENCE IF NOT EXISTS product_v1_id_seq START WITH 1000;
 

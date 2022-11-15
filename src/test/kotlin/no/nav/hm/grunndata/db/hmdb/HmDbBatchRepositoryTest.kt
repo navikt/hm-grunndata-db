@@ -22,7 +22,8 @@ class HmDbBatchRepositoryTest(private val repository: HmDbBatchRepository) {
         saved.id shouldBeGreaterThan -1
         val found = repository.findByName(SYNC_AGREEMENTS)
         found.shouldNotBeNull()
-        val updated = repository.update(found.copy(syncfrom = LocalDateTime.now().minusMonths(3).truncatedTo(ChronoUnit.SECONDS)))
+        val updated = repository.update(found.copy(syncfrom = LocalDateTime.now().minusMonths(3)
+            .truncatedTo(ChronoUnit.SECONDS)))
         updated.syncfrom shouldBeAfter saved.syncfrom
     }
 }

@@ -6,6 +6,6 @@ import io.micronaut.data.repository.kotlin.CoroutineCrudRepository
 
 @JdbcRepository(dialect = Dialect.POSTGRES)
 interface AgreementRepository: CoroutineCrudRepository<Agreement,Long> {
-    fun findByIdentifier(identfier: String): Agreement?
+    fun findByIdentifier(identifier: String): Agreement?
 
 }

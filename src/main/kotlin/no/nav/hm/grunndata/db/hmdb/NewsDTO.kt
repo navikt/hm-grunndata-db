@@ -13,5 +13,5 @@ data class NewsDTO (
     val newspublish: LocalDateTime,
     val newsexpire: LocalDateTime?,
     val ldbid: Int,
-    val externid: String?,
+    val externid: String,
 )

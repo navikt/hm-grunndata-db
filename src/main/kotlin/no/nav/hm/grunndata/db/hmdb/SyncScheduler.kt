@@ -57,6 +57,7 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
                     saveAgreement(it)
                 }
             }
+            hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = agreements.last().agreement.updated))
         }
     }
 
@@ -66,7 +67,7 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
             agreementPostRepository.findByIdentifier(post.identifier)?.let { db ->
                 agreementPostRepository.update(post.copy(id = db.id, agreementId = agree.id, created = db.created))
             } ?: run {
-                agreementPostRepository.save(post)
+                agreementPostRepository.save(post.copy(agreementId = agree.id))
             }
         }
     }
@@ -74,8 +75,7 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
     private suspend fun saveAgreement(agreementDocument: AgreementDocument) {
         val saved = agreementRepository.save(agreementDocument.agreement)
         agreementDocument.agreementPost.forEach { post ->
-            post.copy(agreementId = saved.id)
-            agreementPostRepository.save(post)
+            agreementPostRepository.save(post.copy(agreementId = saved.id))
         }
     }
 
@@ -88,17 +88,18 @@ private fun AvtalePostDTO.toAgreementPost(): AgreementPost = AgreementPost(
     identifier = "hmdb-$apostid",
     nr = apostnr,
     title = aposttitle,
-    desc = apostdesc
+    description = apostdesc
 )
 
 
 private fun NewsDTO.toAgreement(): Agreement = Agreement(
-        identifier = "hmdb-+${externid}",
+        identifier = "hmdb-${newsid}",
         title= newstitle,
         resume= newsresume,
         text = newstext,
         link = newslink,
         publish = newspublish,
-        expire = newsexpire
+        expire = newsexpire,
+        reference = externid
 )
 
