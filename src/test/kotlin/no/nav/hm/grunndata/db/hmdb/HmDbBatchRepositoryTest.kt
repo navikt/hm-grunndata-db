@@ -14,13 +14,13 @@ class HmDbBatchRepositoryTest(private val repository: HmDbBatchRepository) {
 
     @Test
     fun testHmDbBatchRepository() {
-        val notFound = repository.findByName(SYNC_NEWS)
+        val notFound = repository.findByName(SYNC_AGREEMENTS)
         notFound.shouldBeNull()
-        val syncNews = HmDbBatch(name= SYNC_NEWS,
+        val syncNews = HmDbBatch(name= SYNC_AGREEMENTS,
             syncfrom = LocalDateTime.now().minusMonths(6).truncatedTo(ChronoUnit.SECONDS))
         val saved = repository.save(syncNews)
         saved.id shouldBeGreaterThan -1
-        val found = repository.findByName(SYNC_NEWS)
+        val found = repository.findByName(SYNC_AGREEMENTS)
         found.shouldNotBeNull()
         val updated = repository.update(found.copy(syncfrom = LocalDateTime.now().minusMonths(3).truncatedTo(ChronoUnit.SECONDS)))
         updated.syncfrom shouldBeAfter saved.syncfrom

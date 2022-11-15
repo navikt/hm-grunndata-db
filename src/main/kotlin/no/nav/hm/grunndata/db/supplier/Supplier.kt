@@ -5,6 +5,7 @@ import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.MappedEntity
 import io.micronaut.data.annotation.TypeDef
 import io.micronaut.data.model.DataType
+import no.nav.hm.grunndata.db.HMDB
 import java.time.LocalDateTime
 import java.util.UUID
 import javax.persistence.Table
@@ -20,6 +21,7 @@ data class Supplier(
     val name:       String,
     @field:TypeDef(type=DataType.JSON)
     val info:       SupplierInfo,
+    val createdBy: String = HMDB,
     val created:    LocalDateTime = LocalDateTime.now(),
     val updated:    LocalDateTime = LocalDateTime.now()
 )

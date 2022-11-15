@@ -51,9 +51,31 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
         val agreements = hmdbagreements.map { mapAgreement(it) }
         runBlocking {
             agreements.forEach {
-                it.agreement.identifier
-                agreementRepository.save(it.agreement)
+                agreementRepository.findByIdentifier(it.agreement.identifier)?.let { agree ->
+                    updateAgreement(it, agree)
+                } ?: run {
+                    saveAgreement(it)
+                }
             }
+        }
+    }
+
+    private suspend fun updateAgreement(agreementDocument: AgreementDocument, agree: Agreement) {
+        agreementRepository.update(agreementDocument.agreement.copy(id = agree.id, created = agree.created))
+        agreementDocument.agreementPost.forEach { post ->
+            agreementPostRepository.findByIdentifier(post.identifier)?.let { db ->
+                agreementPostRepository.update(post.copy(id = db.id, agreementId = agree.id, created = db.created))
+            } ?: run {
+                agreementPostRepository.save(post)
+            }
+        }
+    }
+
+    private suspend fun saveAgreement(agreementDocument: AgreementDocument) {
+        val saved = agreementRepository.save(agreementDocument.agreement)
+        agreementDocument.agreementPost.forEach { post ->
+            post.copy(agreementId = saved.id)
+            agreementPostRepository.save(post)
         }
     }
 
