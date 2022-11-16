@@ -61,19 +61,19 @@ fun mapTechDataFilters(data: List<TechData>): TechDataFilters {
     data.forEach {
         when (it.key) {
             "Fyllmateriale" -> fyllmateriale = it.value
-            "Setebredde maks" -> setebreddeMaksCM = it.value.decimalStringToInt()
-            "Setebredde min" -> setebreddeMinCM = it.value.decimalStringToInt()
-            "Brukervekt min" -> brukervektMinKG = it.value.decimalStringToInt()
+            "Setebredde maks" -> setebreddeMaksCM = it.value.decimalToInt()
+            "Setebredde min" -> setebreddeMinCM = it.value.decimalToInt()
+            "Brukervekt min" -> brukervektMinKG = it.value.decimalToInt()
             "Materiale i trekk" -> materialeTrekk = it.value
-            "Setedybde min" -> setedybdeMinCM = it.value.decimalStringToInt()
-            "Setedybde maks" -> setedybdeMaksCM = it.value.decimalStringToInt()
-            "Setehøyde maks" -> setehoydeMaksCM = it.value.decimalStringToInt()
-            "Setehøyde min" -> setehoydeMinCM = it.value.decimalStringToInt()
-            "Totalvekt" -> totalVektKG = it.value.decimalStringToInt()
-            "Lengde" -> lengdeCM = it.value.decimalStringToInt()
-            "Bredde" -> breddeCM = it.value.decimalStringToInt()
+            "Setedybde min" -> setedybdeMinCM = it.value.decimalToInt()
+            "Setedybde maks" -> setedybdeMaksCM = it.value.decimalToInt()
+            "Setehøyde maks" -> setehoydeMaksCM = it.value.decimalToInt()
+            "Setehøyde min" -> setehoydeMinCM = it.value.decimalToInt()
+            "Totalvekt" -> totalVektKG = it.value.decimalToInt()
+            "Lengde" -> lengdeCM = it.value.decimalToInt()
+            "Bredde" -> breddeCM = it.value.decimalToInt()
             "Beregnet på barn" -> beregnetBarn = it.value
-            "Brukervekt maks" -> brukervektMaksKG = it.value.decimalStringToInt()
+            "Brukervekt maks" -> brukervektMaksKG = it.value.decimalToInt()
         }
     }
     return TechDataFilters(fyllmateriale = fyllmateriale, setebreddeMaksCM = setebreddeMaksCM,
@@ -83,4 +83,4 @@ fun mapTechDataFilters(data: List<TechData>): TechDataFilters {
         beregnetBarn = beregnetBarn, brukervektMaksKG = brukervektMaksKG)
 }
 
-private fun String.decimalStringToInt(): Int? = substringBeforeLast(".").toInt()
+private fun String.decimalToInt(): Int? = substringBeforeLast(".").toInt()
