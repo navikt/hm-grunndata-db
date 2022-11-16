@@ -5,6 +5,7 @@ import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.MappedEntity
 import io.micronaut.data.annotation.TypeDef
 import io.micronaut.data.model.DataType
+import no.nav.hm.grunndata.db.HMDB
 import java.time.LocalDateTime
 import java.util.UUID
 import javax.persistence.Column
@@ -32,7 +33,7 @@ data class Product (
     val sparepart: Boolean = false,
     val seriesId: String?=null,
     @field:TypeDef(type = DataType.JSON)
-    val data: Set<TechData> = emptySet(),
+    val techData: Set<TechData> = emptySet(),
     @field:TypeDef(type = DataType.JSON)
     val media: List<Media> = emptyList(),
     @field:TypeDef(type = DataType.JSON)
@@ -40,8 +41,8 @@ data class Product (
     val created: LocalDateTime = LocalDateTime.now(),
     val updated: LocalDateTime = LocalDateTime.now(),
     val expired: LocalDateTime = updated.plusYears(20),
-    val createdBy: String = "hjelpemiddeldatabasen",
-    val updatedBy: String = "hjelpemiddeldatabasen"
+    val createdBy: String = HMDB,
+    val updatedBy: String = HMDB
 )
 
 data class Description(val modelName: String?=null,
@@ -111,6 +112,6 @@ data class ProductDTO(
 
 fun Product.toDTO():ProductDTO =  ProductDTO (
     id, uuid, supplierId, title, description, status, HMSArtNr, HMDBArtId, supplierRef, isoCategory, accessory, sparepart,
-    seriesId,data, media, created, updated, expired, createdBy, updatedBy
+    seriesId,techData, media, created, updated, expired, createdBy, updatedBy
 )
 

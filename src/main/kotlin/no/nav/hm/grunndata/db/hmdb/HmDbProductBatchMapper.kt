@@ -13,7 +13,7 @@ fun ProductBatchDTO.toProductList():List<Product> {
             HMDBArtId = productDTO.artid,
             HMSArtNr = productDTO.stockid,
             isoCategory = productDTO.isocode,
-            data = techdata.getOrDefault(productDTO.artid, emptySet())
+            techData = techdata.getOrDefault(productDTO.artid, emptySet())
                 .map {
                     TechData(
                         key = it.techlabeldk!!,

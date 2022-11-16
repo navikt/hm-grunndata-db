@@ -38,9 +38,9 @@ data class TechDataFilters(val fyllmateriale:String?, val setebreddeMaksCM: Int?
 fun Product.toDoc(): ProductDoc = ProductDoc(
     id = id, uuid = uuid, supplierId = supplierId, title = title, description = description, status = status,
     HMSArtNr = HMSArtNr, HMDBArtId = HMDBArtId, supplierRef = supplierRef, isoCategory = isoCategory,
-    accessory = accessory, sparepart = sparepart, seriesId = seriesId, data = data, media = media,
+    accessory = accessory, sparepart = sparepart, seriesId = seriesId, data = techData, media = media,
     created = created, updated = updated, expired = expired, createdBy = createdBy, updatedBy = updatedBy,
-    filters = mapTechDataFilters(data)
+    filters = mapTechDataFilters(techData)
 )
 
 fun mapTechDataFilters(data: Set<TechData>): TechDataFilters {
