@@ -58,6 +58,7 @@ dependencies {
     implementation("io.micronaut:micronaut-http-server-netty")
     implementation("io.micronaut:micronaut-http-client")
     implementation("org.opensearch.client:opensearch-rest-high-level-client:${openSearchRestClientVersion}")
+    implementation("io.micronaut.cache:micronaut-cache-caffeine")
     // Apache POI for excel file handling
     implementation("org.apache.poi:poi:$apachePoiVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")

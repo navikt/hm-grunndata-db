@@ -1,13 +1,19 @@
 package no.nav.hm.grunndata.db.hmdb
 
+import io.micronaut.data.annotation.TypeDef
+import io.micronaut.data.model.DataType
 import io.micronaut.scheduling.annotation.Scheduled
 import jakarta.inject.Singleton
 import kotlinx.coroutines.runBlocking
+import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.db.agreement.*
+import no.nav.hm.grunndata.db.product.*
 import no.nav.hm.grunndata.db.supplier.SupplierRepository
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
+import java.util.*
+import javax.persistence.Column
 
 @Singleton
 class SyncScheduler(private val hmDbClient: HmDbClient,
@@ -61,6 +67,44 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
         }
     }
 
+    @Scheduled(cron="0 45 * * * *")
+    fun syncProducts() {
+        val syncBatchJob = hmdbBatchRepository.findByName(SYNC_PRODUCTS) ?:
+        hmdbBatchRepository.save(HmDbBatch(name= SYNC_PRODUCTS,
+            syncfrom = LocalDateTime.now().minusYears(100).truncatedTo(ChronoUnit.SECONDS)))
+        val hmdbProducts = hmDbClient.fetchProducts(syncBatchJob.syncfrom)
+        LOG.info("Calling product sync from ${syncBatchJob.syncfrom}, Got total of ${hmdbProducts.size} products")
+        runBlocking {
+            val products = hmdbProducts.map { mapProduct(it) }
+        }
+    }
+
+    private suspend fun mapProduct(batch: HmDbProductBatchDTO) {
+        batch.products.forEach { prod ->
+            Product(
+                supplierId =  supplierRepository.findByIdentifier(prod.supplier!!.identifier())!!.id,
+                title = prod.prodname,
+                description = Description(),
+                status = ProductStatus.ACTIVE,
+                HMSArtNr = prod.stockid,
+                HMDBArtId = prod.artid,
+                supplierRef = prod.artno!!, isoCategory = prod.isocode,
+                seriesId = "${prod.prodid}".identifier(),
+                techData = mapTechData(batch.techdata[prod.artid] ?: emptyList()),
+                media =  mapBlobs(batch.blobs[prod.prodid] ?: emptyList()),
+                productAgreement = prod.newsid?.let {ProductAgreement(identifier = prod.newsid.identifier(), rank = prod.postrank!!, postId = prod.apostid!!)},
+                created = prod.aindate,
+                expired = prod.aoutdate,
+                createdBy = HMDB,
+                updatedBy = HMDB
+            )
+        }
+    }
+
+    private fun mapTechData(techDataDTOS: List<TechDataDTO>): List<TechData> {
+        TODO("Not yet implemented")
+    }
+
     private suspend fun updateAgreement(agreementDocument: AgreementDocument, agree: Agreement) {
         agreementRepository.update(agreementDocument.agreement.copy(id = agree.id, created = agree.created))
         agreementDocument.agreementPost.forEach { post ->
@@ -103,3 +147,4 @@ private fun NewsDTO.toAgreement(): Agreement = Agreement(
         reference = externid
 )
 
+fun String.identifier(): String = "hmdb-$this"

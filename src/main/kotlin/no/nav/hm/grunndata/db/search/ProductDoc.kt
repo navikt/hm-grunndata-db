@@ -18,7 +18,7 @@ data class ProductDoc(
     val accessory: Boolean = false,
     val sparepart: Boolean = false,
     val seriesId: String?=null,
-    val data: Set<TechData> = emptySet(),
+    val data: List<TechData> = emptyList(),
     val media: List<Media> = emptyList(),
     val created: LocalDateTime = LocalDateTime.now(),
     val updated: LocalDateTime = LocalDateTime.now(),
@@ -43,7 +43,7 @@ fun Product.toDoc(): ProductDoc = ProductDoc(
     filters = mapTechDataFilters(techData)
 )
 
-fun mapTechDataFilters(data: Set<TechData>): TechDataFilters {
+fun mapTechDataFilters(data: List<TechData>): TechDataFilters {
     var fyllmateriale:String? = null
     var setebreddeMaksCM: Int? = null
     var setebreddeMinCM: Int? = null

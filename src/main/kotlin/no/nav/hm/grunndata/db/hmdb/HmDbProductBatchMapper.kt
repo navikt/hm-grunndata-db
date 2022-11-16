@@ -20,7 +20,7 @@ fun HmDbProductBatchDTO.toProductList():List<Product> {
                         value = it.datavalue!!,
                         unit = it.techdataunit!!,
                     )
-                }.toSet(),
+                }.toList(),
             supplierId = productDTO.supplier!!.toLong(),
             supplierRef = productDTO.artno ?: productDTO.artid.toString(),
             description = mapDescription(productDTO),
@@ -43,12 +43,13 @@ fun parseDate(aindate: String?): LocalDateTime {
     return LocalDateTime.now()
 }
 
+fun mapBlobs(blobs: List<BlobDTO>): List<Media> = blobs.map { mapBlob(it) }
 
 fun mapBlob(blobDTO: BlobDTO): Media {
     val mediaTytpe = when (blobDTO.blobtype.trim().lowercase()) {
         "billede" -> MediaType.IMAGE
         else -> {
-            println(blobDTO.blobtype)
+            println("UNKNOWN ${blobDTO.blobtype}")
             MediaType.OTHER
         }
     }

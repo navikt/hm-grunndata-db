@@ -12,7 +12,9 @@ micronaut:
   server:
     max-request-size: 100833718
     port: 2022
-
+  caches:
+    suppliers:
+      charset: 'UTF-8'
 jackson:
   bean-introspection-module: true
   serialization:

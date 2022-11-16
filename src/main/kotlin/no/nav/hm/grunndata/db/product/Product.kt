@@ -33,7 +33,7 @@ data class Product (
     val sparepart: Boolean = false,
     val seriesId: String?=null,
     @field:TypeDef(type = DataType.JSON)
-    val techData: Set<TechData> = emptySet(),
+    val techData: List<TechData> = emptyList(),
     @field:TypeDef(type = DataType.JSON)
     val media: List<Media> = emptyList(),
     @field:TypeDef(type = DataType.JSON)
@@ -51,7 +51,7 @@ data class Description(val modelName: String?=null,
 
 
 data class ProductAgreement (
-    val agreementId: Long,
+    val identifier: String,
     val rank: Int,
     val postId: Long
 )
@@ -101,7 +101,7 @@ data class ProductDTO(
     val accessory: Boolean = false,
     val sparepart: Boolean = false,
     val seriesId: String?=null,
-    val data: Set<TechData> = emptySet(),
+    val techData: List<TechData> = emptyList(),
     val media: List<Media> = emptyList(),
     val created: LocalDateTime = LocalDateTime.now(),
     val updated: LocalDateTime = LocalDateTime.now(),
