@@ -1,11 +1,9 @@
 package no.nav.hm.grunndata.db.hmdb
 
-import io.micronaut.data.annotation.Id
-import io.micronaut.data.annotation.MappedEntity
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-data class ProductDTO (
+data class HmDbProductDTO (
     val artid: Long,
     val adescshort: String?,
     val adraft: Boolean?,
@@ -15,10 +13,8 @@ data class ProductDTO (
     val anbudid: String?,
     val aout: Boolean?,
     val aoutdate: LocalDateTime,
-    val apostdesc: String?,
     val apostid: String?,
-    val apostnr: String?,
-    val aposttitle: String?,
+    val postrank: Long?,
     val artname: String,
     val artno: String?,
     val artpostid: String?,
@@ -28,7 +24,6 @@ data class ProductDTO (
     val newsid: String?,
     val newspublish: LocalDate?,
     val newsexpire: LocalDate?,
-    val postrank: Long?,
     val prodid: Long,
     val pchange: LocalDateTime,
     val prodname: String,

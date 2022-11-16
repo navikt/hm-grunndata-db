@@ -5,7 +5,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
-fun ProductBatchDTO.toProductList():List<Product> {
+fun HmDbProductBatchDTO.toProductList():List<Product> {
     return products.map { productDTO ->
         Product(
             title = productDTO.prodname,
@@ -55,7 +55,7 @@ fun mapBlob(blobDTO: BlobDTO): Media {
     return Media(type = mediaTytpe, uri = blobDTO.blobfile.trim())
 }
 
-fun mapDescription(produkt: ProductDTO): Description =
+fun mapDescription(produkt: HmDbProductDTO): Description =
     Description(modelName = produkt.artname,
         modelDescription = produkt.adescshort,
         text = produkt.pshortdesc)
