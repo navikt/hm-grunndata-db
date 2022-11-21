@@ -25,8 +25,7 @@ data class Product (
     val status: ProductStatus = ProductStatus.ACTIVE,
     @field:Column(name="hms_artnr")
     val HMSArtNr: String?=null,
-    @field:Column(name="hmdb_artid")
-    val HMDBArtId: Long?=null,
+    val identifier: String,
     val supplierRef: String,
     val isoCategory: String,
     val accessory: Boolean = false,
@@ -37,7 +36,7 @@ data class Product (
     @field:TypeDef(type = DataType.JSON)
     val media: List<Media> = emptyList(),
     @field:TypeDef(type = DataType.JSON)
-    val productAgreement: ProductAgreement?=null,
+    val agreementInfo: AgreementInfo?=null,
     val created: LocalDateTime = LocalDateTime.now(),
     val updated: LocalDateTime = LocalDateTime.now(),
     val expired: LocalDateTime = updated.plusYears(20),
@@ -50,10 +49,12 @@ data class Description(val modelName: String?=null,
                        val text: String?=null)
 
 
-data class ProductAgreement (
-    val identifier: String,
+data class AgreementInfo (
+    val id: Long?=null,
+    val identifier: String?=null,
     val rank: Int,
-    val postId: Long
+    val postId: Long,
+    val reference: String?=null,
 )
 
 
@@ -95,7 +96,7 @@ data class ProductDTO(
     val description: Description,
     val status: ProductStatus = ProductStatus.ACTIVE,
     val HMSArtNr: String?=null,
-    val HMDBArtId: Long?=null,
+    val identifier: String?=null,
     val supplierRef: String,
     val isoCategory: String,
     val accessory: Boolean = false,
@@ -106,12 +107,12 @@ data class ProductDTO(
     val created: LocalDateTime = LocalDateTime.now(),
     val updated: LocalDateTime = LocalDateTime.now(),
     val expired: LocalDateTime = updated.plusYears(20),
-    val createdBy: String = "hjelpemiddeldatabasen",
-    val updatedBy: String = "hjelpemiddeldatabasen"
+    val createdBy: String = HMDB,
+    val updatedBy: String = HMDB
 )
 
 fun Product.toDTO():ProductDTO =  ProductDTO (
-    id, uuid, supplierId, title, description, status, HMSArtNr, HMDBArtId, supplierRef, isoCategory, accessory, sparepart,
+    id, uuid, supplierId, title, description, status, HMSArtNr, identifier, supplierRef, isoCategory, accessory, sparepart,
     seriesId,techData, media, created, updated, expired, createdBy, updatedBy
 )
 

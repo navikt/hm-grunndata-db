@@ -30,6 +30,7 @@ fun ProductImportDTO.toEntity(): Product = Product(
     techData = techData,
     supplierId = supplierId,
     supplierRef = supplierRef,
+    identifier = supplierRef,
     description = description,
     accessory = accessory,
     sparepart = part,

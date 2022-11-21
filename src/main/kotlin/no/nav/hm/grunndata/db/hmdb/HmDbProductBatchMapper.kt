@@ -5,31 +5,6 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
-fun HmDbProductBatchDTO.toProductList():List<Product> {
-    return products.map { productDTO ->
-        Product(
-            title = productDTO.prodname,
-            seriesId = "hmdb-productid-${productDTO.prodid}",
-            HMDBArtId = productDTO.artid,
-            HMSArtNr = productDTO.stockid,
-            isoCategory = productDTO.isocode,
-            techData = techdata.getOrDefault(productDTO.artid, emptySet())
-                .map {
-                    TechData(
-                        key = it.techlabeldk!!,
-                        value = it.datavalue!!,
-                        unit = it.techdataunit!!,
-                    )
-                }.toList(),
-            supplierId = productDTO.supplier!!.toLong(),
-            supplierRef = productDTO.artno ?: productDTO.artid.toString(),
-            description = mapDescription(productDTO),
-            media = blobs.getOrDefault(productDTO.artid, emptySet()).map{mapBlob(it) },
-            created = productDTO.aindate
-        )
-    }
-}
-
 val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
 
 fun parseDate(aindate: String?): LocalDateTime {

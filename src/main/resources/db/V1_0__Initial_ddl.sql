@@ -70,11 +70,11 @@ CREATE TABLE IF NOT EXISTS product_v1 (
     status VARCHAR(32) NOT NULL,
     description JSONB NOT NULL,
     hms_artnr VARCHAR(255),
-    hmdb_artid VARCHAR(255),
+    identifier VARCHAR(255) NOT NULL,
     supplier_ref VARCHAR(255) NOT NULL,
     iso_category VARCHAR(255) NOT NULL,
     accessory BOOLEAN NOT NULL DEFAULT FALSE,
-    part BOOLEAN NOT NULL DEFAULT FALSE,
+    sparepart BOOLEAN NOT NULL DEFAULT FALSE,
     series_id VARCHAR(255),
     tech_data JSONB NOT NULL,
     media JSONB NOT NULL,
@@ -86,6 +86,7 @@ CREATE TABLE IF NOT EXISTS product_v1 (
     updated_by VARCHAR(255) NOT NULL,
     PRIMARY KEY(id),
     UNIQUE (uuid),
+    UNIQUE (identifier),
     UNIQUE (supplier_id, supplier_ref),
     CONSTRAINT fk_supplier_product_v1_log FOREIGN KEY (supplier_id) REFERENCES supplier_v1(id)
 )
