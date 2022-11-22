@@ -1,5 +1,6 @@
 package no.nav.hm.grunndata.db.hmdb
 
+import io.micronaut.data.exceptions.DataAccessException
 import io.micronaut.scheduling.annotation.Scheduled
 import jakarta.inject.Singleton
 import kotlinx.coroutines.runBlocking
@@ -64,7 +65,7 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
         }
     }
 
-    //@Scheduled(cron="* */10 * * * *")
+    @Scheduled(cron="* */5 * * * *")
     fun syncProducts() {
         val syncBatchJob = hmdbBatchRepository.findByName(SYNC_PRODUCTS) ?:
         hmdbBatchRepository.save(HmDbBatch(name= SYNC_PRODUCTS,
@@ -76,7 +77,21 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
         LOG.info("Got total of ${hmdbProductsBatch.products.size} products")
         if (hmdbProductsBatch.products.isNotEmpty()) {
             runBlocking {
-                val last = extractProductBatch(hmdbProductsBatch).last()
+                val products = extractProductBatch(hmdbProductsBatch)
+                products.forEach {
+                    try {
+                        LOG.info("finding from db: ${it.identifier}")
+                        productRepository.findByIdentifier(it.identifier)?.let { inDb ->
+                            productRepository.update(it.copy(id = inDb.id, created = inDb.created))
+                        } ?: run {
+                            productRepository.save(it)
+                        }
+                    }
+                    catch (e: DataAccessException) {
+                        LOG.error("Got exception while persisting ${it.supplierId}-${it.supplierRef} ${it.identifier}",e)
+                    }
+                }
+                val last = products.last()
                 LOG.info("finished batch and update last sync time ${last.updated}")
                 hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = last.updated))
             }
@@ -86,7 +101,7 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
 
     private suspend fun extractProductBatch(batch: HmDbProductBatchDTO): List<Product> {
        return batch.products.map { prod ->
-           LOG.info("Mapping product ${prod.prodid} ${prod.artid} from supplier ${prod.supplier}")
+           LOG.info("Mapping product prodid: ${prod.prodid} artid: ${prod.artid} artno: ${prod.artno} from supplier ${prod.supplier}")
             Product(
                 supplierId =  supplierRepository.findByIdentifier(prod.supplier!!.HmDbIdentifier())!!.id,
                 title = prod.prodname,
@@ -94,7 +109,7 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
                 status = ProductStatus.ACTIVE,
                 HMSArtNr = prod.stockid,
                 identifier = "${prod.artid}".HmDbIdentifier(),
-                supplierRef = prod.artno ?: prod.artid.toString(),
+                supplierRef = if (prod.artno!=null && prod.artno.isNotBlank()) prod.artno else prod.artid.toString(),
                 isoCategory = prod.isocode,
                 seriesId = "${prod.prodid}".HmDbIdentifier(),
                 techData = mapTechData(batch.techdata[prod.artid] ?: emptyList()),
@@ -108,13 +123,7 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
                 updatedBy = HMDB
             )
         }.sortedBy { it.updated }
-           .map {
-                productRepository.findByIdentifier(it.identifier)?.let { inDb ->
-                    productRepository.update(it.copy(id=inDb.id, created = inDb.created))
-                } ?: run {
-                    productRepository.save(it)
-                }
-            }
+
     }
 
     private fun mapTechData(datas: List<TechDataDTO>): List<TechData> = datas.map {

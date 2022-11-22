@@ -80,6 +80,7 @@ enum class MediaSourceType {
 enum class MediaType {
     PDF,
     IMAGE,
+    VIDEO,
     OTHER
 }
 

@@ -21,14 +21,16 @@ fun parseDate(aindate: String?): LocalDateTime {
 fun mapBlobs(blobs: List<BlobDTO>): List<Media> = blobs.map { mapBlob(it) }
 
 fun mapBlob(blobDTO: BlobDTO): Media {
-    val mediaTytpe = when (blobDTO.blobtype.trim().lowercase()) {
+    val mediaType = when (blobDTO.blobtype.trim().lowercase()) {
         "billede" -> MediaType.IMAGE
+        "brosjyre", "bruksanvisning", "quickguide", "målskjema", "batterioversikt" -> MediaType.PDF
+        "video" -> MediaType.VIDEO
         else -> {
-            println("UNKNOWN ${blobDTO.blobtype}")
+            println("UNKNOWN ${blobDTO.blobtype} ${blobDTO.blobfile}")
             MediaType.OTHER
         }
     }
-    return Media(type = mediaTytpe, uri = blobDTO.blobfile.trim())
+    return Media(type = mediaType, text=blobDTO.blobtype.trim(),  uri = blobDTO.blobfile.trim())
 }
 
 fun mapDescription(produkt: HmDbProductDTO): Description =
