@@ -9,6 +9,7 @@ micronaut:
   http:
     client:
       max-content-length: 100833718
+      read-timeout: "5m"
   server:
     max-request-size: 100833718
     port: 2022

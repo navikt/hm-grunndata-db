@@ -23,11 +23,11 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
         private val LOG = LoggerFactory.getLogger(SyncScheduler::class.java)
     }
 
-    @Scheduled(cron = "0 15 * * * *")
+    //@Scheduled(cron = "0 15 * * * *")
     fun syncSuppliers() {
         val syncBatchJob = hmdbBatchRepository.findByName(SYNC_SUPPLIERS) ?:
             hmdbBatchRepository.save(HmDbBatch(name= SYNC_SUPPLIERS,
-                syncfrom = LocalDateTime.now().minusYears(100).truncatedTo(ChronoUnit.SECONDS)))
+                syncfrom = LocalDateTime.now().minusYears(20).truncatedTo(ChronoUnit.SECONDS)))
         val suppliers = hmDbClient.fetchSuppliers(syncBatchJob.syncfrom)
         LOG.info("Calling supplier sync from ${syncBatchJob.syncfrom}, Got total of ${suppliers.size} suppliers")
         val entities = suppliers.map { it.toSupplier() }.sortedBy { it.updated }
@@ -44,11 +44,11 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
         }
     }
 
-    @Scheduled(cron="0 30 * * * *")
+    //@Scheduled(cron="0 30 * * * *")
     fun syncAgreements() {
         val syncBatchJob = hmdbBatchRepository.findByName(SYNC_AGREEMENTS) ?:
         hmdbBatchRepository.save(HmDbBatch(name= SYNC_AGREEMENTS,
-            syncfrom = LocalDateTime.now().minusYears(100).truncatedTo(ChronoUnit.SECONDS)))
+            syncfrom = LocalDateTime.now().minusYears(10).truncatedTo(ChronoUnit.SECONDS)))
         val hmdbagreements = hmDbClient.fetchAgreements()
         LOG.info("Calling agreement sync from ${syncBatchJob.syncfrom}, Got total of ${hmdbagreements.size} agreements")
         val agreements = hmdbagreements.map { mapAgreement(it) }
@@ -64,20 +64,29 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
         }
     }
 
-    @Scheduled(cron="0 45 * * * *")
+    //@Scheduled(cron="* */10 * * * *")
     fun syncProducts() {
         val syncBatchJob = hmdbBatchRepository.findByName(SYNC_PRODUCTS) ?:
         hmdbBatchRepository.save(HmDbBatch(name= SYNC_PRODUCTS,
-            syncfrom = LocalDateTime.now().minusYears(100).truncatedTo(ChronoUnit.SECONDS)))
-        val hmdbProductsBatch = hmDbClient.fetchProducts(syncBatchJob.syncfrom)
-        LOG.info("Calling product sync from ${syncBatchJob.syncfrom}, Got total of ${hmdbProductsBatch.products.size} products")
-        runBlocking {
-            extractProductBatch(hmdbProductsBatch)
+            syncfrom = LocalDateTime.now().minusYears(10).truncatedTo(ChronoUnit.SECONDS)))
+        val from = syncBatchJob.syncfrom
+        val to = from.plusMonths(3)
+        LOG.info("Calling product sync from ${from} to $to")
+        val hmdbProductsBatch = hmDbClient.fetchProducts(from, to)
+        LOG.info("Got total of ${hmdbProductsBatch.products.size} products")
+        if (hmdbProductsBatch.products.isNotEmpty()) {
+            runBlocking {
+                val last = extractProductBatch(hmdbProductsBatch).last()
+                LOG.info("finished batch and update last sync time ${last.updated}")
+                hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = last.updated))
+            }
         }
+
     }
 
     private suspend fun extractProductBatch(batch: HmDbProductBatchDTO): List<Product> {
        return batch.products.map { prod ->
+           LOG.info("Mapping product ${prod.prodid} ${prod.artid} from supplier ${prod.supplier}")
             Product(
                 supplierId =  supplierRepository.findByIdentifier(prod.supplier!!.HmDbIdentifier())!!.id,
                 title = prod.prodname,
@@ -93,8 +102,8 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
                 agreementInfo = prod.newsid?.let {AgreementInfo(identifier = prod.newsid.HmDbIdentifier(),
                     rank = prod.postrank!!, postId = prod.apostid!!)},
                 created = prod.aindate,
-                expired = prod.aoutdate,
-                updated = if (prod.achange.isAfter(prod.pchange)) prod.achange else prod.pchange,
+                updated = prod.achange,
+                expired = prod.aoutdate ?: LocalDateTime.now().plusYears(20),
                 createdBy = HMDB,
                 updatedBy = HMDB
             )
@@ -108,9 +117,10 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
             }
     }
 
-    private fun mapTechData(techDataDTOS: List<TechDataDTO>): List<TechData> {
-        TODO("Not yet implemented")
+    private fun mapTechData(datas: List<TechDataDTO>): List<TechData> = datas.map {
+            TechData(key = it.techlabeldk!!, value = it.datavalue!!, unit = it.techdataunit!!)
     }
+
 
     private suspend fun updateAgreement(agreementDocument: AgreementDocument, agree: Agreement) {
         agreementRepository.update(agreementDocument.agreement.copy(id = agree.id, created = agree.created))
@@ -136,7 +146,7 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
 }
 
 private fun AvtalePostDTO.toAgreementPost(): AgreementPost = AgreementPost(
-    identifier = "hmdb-$apostid",
+    identifier = "$apostid".HmDbIdentifier(),
     nr = apostnr,
     title = aposttitle,
     description = apostdesc
@@ -144,7 +154,7 @@ private fun AvtalePostDTO.toAgreementPost(): AgreementPost = AgreementPost(
 
 
 private fun NewsDTO.toAgreement(): Agreement = Agreement(
-        identifier = "hmdb-${newsid}",
+        identifier = "$newsid".HmDbIdentifier(),
         title= newstitle,
         resume= newsresume,
         text = newstext,

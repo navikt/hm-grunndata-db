@@ -12,7 +12,7 @@ data class HmDbProductDTO (
     val aisapproved: Boolean?,
     val anbudid: String?,
     val aout: Boolean?,
-    val aoutdate: LocalDateTime,
+    val aoutdate: LocalDateTime?,
     val apostid: Long?,
     val postrank: Int?,
     val artname: String,

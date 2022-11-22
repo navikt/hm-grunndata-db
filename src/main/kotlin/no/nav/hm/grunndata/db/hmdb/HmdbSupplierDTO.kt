@@ -18,6 +18,6 @@ data class HmdbSupplierDTO (
     val adrinsertdate: LocalDateTime?,
 )
 
-fun HmdbSupplierDTO.toSupplier() = Supplier(identifier = "hmdbid-$adressid", name = adressnamn1!!,
+fun HmdbSupplierDTO.toSupplier() = Supplier(identifier = "$adressid".HmDbIdentifier(), name = adressnamn1!!,
     created = adrinsertdate ?: LocalDateTime.now(), updated = lastupdated, info = SupplierInfo(
         address = postadress1, email = epost, phone = telefon, homepage = www))
