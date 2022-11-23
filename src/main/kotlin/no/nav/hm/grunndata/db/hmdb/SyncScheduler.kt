@@ -105,7 +105,7 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
             Product(
                 supplierId =  supplierRepository.findByIdentifier(prod.supplier!!.HmDbIdentifier())!!.id,
                 title = prod.prodname,
-                description = Description(),
+                description = mapDescription(prod),
                 status = ProductStatus.ACTIVE,
                 HMSArtNr = prod.stockid,
                 identifier = "${prod.artid}".HmDbIdentifier(),

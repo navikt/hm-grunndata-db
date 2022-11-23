@@ -45,8 +45,8 @@ data class Product (
     val updatedBy: String = HMDB
 )
 
-data class Description(val modelName: String?=null,
-                       val modelDescription: String?=null,
+data class Description(val name: String?=null,
+                       val shortDescription: String?=null,
                        val text: String?=null)
 
 

@@ -34,8 +34,8 @@ fun mapBlob(blobDTO: BlobDTO): Media {
 }
 
 fun mapDescription(produkt: HmDbProductDTO): Description =
-    Description(modelName = produkt.artname,
-        modelDescription = produkt.adescshort,
+    Description(name = produkt.artname,
+        shortDescription = produkt.adescshort,
         text = produkt.pshortdesc)
 
 //fun mapAgreement(produkt: ProductDTO): AgreementDTO? {
