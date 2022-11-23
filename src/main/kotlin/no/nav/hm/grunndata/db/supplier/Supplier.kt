@@ -33,4 +33,7 @@ data class SupplierInfo (
     val homepage: String?=null
 )
 
+data class SupplierDTO(val id:Long, val identifier: String, val uuid: String, val name: String, val info: SupplierInfo,
+                       val createdBy: String, val created: LocalDateTime, val updated: LocalDateTime)
+
 const val SupplierTableName="supplier_v1"

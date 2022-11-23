@@ -6,6 +6,8 @@ import io.micronaut.data.annotation.MappedEntity
 import io.micronaut.data.annotation.TypeDef
 import io.micronaut.data.model.DataType
 import no.nav.hm.grunndata.db.HMDB
+import no.nav.hm.grunndata.db.supplier.Supplier
+import no.nav.hm.grunndata.db.supplier.SupplierDTO
 import java.time.LocalDateTime
 import java.util.UUID
 import javax.persistence.Column
@@ -51,10 +53,11 @@ data class Description(val name: String?=null,
 
 
 data class AgreementInfo (
-    val id: Long?=null,
+    val id: Long,
     val identifier: String?=null,
     val rank: Int,
     val postId: Long,
+    val postIdentifier: String?=null,
     val reference: String?=null,
 )
 
@@ -64,7 +67,6 @@ enum class ProductStatus {
 }
 
 data class Media (
-    val id:     Long = -1L,
     val uuid:   UUID = UUID.randomUUID(),
     val order:  Int=1,
     val type: MediaType = MediaType.IMAGE,
@@ -93,7 +95,7 @@ data class TechData (
 data class ProductDTO(
     var id: Long = -1L,
     val uuid: UUID = UUID.randomUUID(),
-    val supplierId: Long,
+    val supplier: SupplierDTO,
     val title: String,
     val description: Description,
     val status: ProductStatus = ProductStatus.ACTIVE,
@@ -109,12 +111,16 @@ data class ProductDTO(
     val created: LocalDateTime = LocalDateTime.now(),
     val updated: LocalDateTime = LocalDateTime.now(),
     val expired: LocalDateTime = updated.plusYears(20),
+    val agreementInfo: AgreementInfo?,
+    val hasAgreement: Boolean = (agreementInfo!=null),
     val createdBy: String = HMDB,
     val updatedBy: String = HMDB
 )
 
-fun Product.toDTO():ProductDTO =  ProductDTO (
-    id, uuid, supplierId, title, description, status, HMSArtNr, identifier, supplierRef, isoCategory, accessory, sparepart,
-    seriesId,techData, media, created, updated, expired, createdBy, updatedBy
+fun Product.toDTO(supplier: SupplierDTO):ProductDTO =  ProductDTO (
+    id = id, uuid=uuid, supplier = supplier, title = title, description=description, status = status, HMSArtNr = HMSArtNr,
+    identifier = identifier, supplierRef=supplierRef, isoCategory=isoCategory, accessory=accessory, sparepart=sparepart,
+    seriesId=seriesId, techData=techData, media= media, created=created, updated=updated, expired=expired,
+    agreementInfo = agreementInfo, hasAgreement = (agreementInfo!=null), createdBy=createdBy, updatedBy=updatedBy
 )
 

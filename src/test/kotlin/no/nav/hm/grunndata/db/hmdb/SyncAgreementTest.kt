@@ -9,6 +9,7 @@ import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import io.mockk.every
 import io.mockk.mockk
 import jakarta.inject.Inject
+import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.db.agreement.AgreementRepository
 import org.junit.jupiter.api.Test
 
@@ -33,9 +34,11 @@ class SyncAgreementTest(private val syncScheduler: SyncScheduler,
             )
         }
         syncScheduler.syncAgreements()
-        val agreement = agreementRepository.findByIdentifier("hmdb-4361")
-        agreement.shouldNotBeNull()
-        agreement.reference shouldBe "17-274"
+        runBlocking {
+            val agreement = agreementRepository.findByIdentifier("HMDB-4361")
+            agreement.shouldNotBeNull()
+            agreement.reference shouldBe "17-274"
+        }
     }
 
 }

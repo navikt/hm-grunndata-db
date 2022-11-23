@@ -30,7 +30,7 @@ class AssistiveDevicesController(private val objectMapper: ObjectMapper,
                 productRepository.update(product.copy(id=it.id, created=it.created))
             } ?: productRepository.save(product)
         }
-        productIndexer.index(savedList.map { it.toDoc() })
+        //roductIndexer.index(savedList.map { it.toDoc() })
         return "OK"
     }
 }

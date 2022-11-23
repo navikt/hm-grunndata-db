@@ -10,6 +10,6 @@ import io.micronaut.data.repository.kotlin.CoroutineCrudRepository
 @CacheConfig("agreements")
 interface AgreementRepository: CoroutineCrudRepository<Agreement,Long> {
     @Cacheable
-    fun findByIdentifier(identifier: String): Agreement?
+    suspend fun findByIdentifier(identifier: String): Agreement?
 
 }

@@ -71,11 +71,11 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
         hmdbBatchRepository.save(HmDbBatch(name= SYNC_PRODUCTS,
             syncfrom = LocalDateTime.now().minusYears(10).truncatedTo(ChronoUnit.SECONDS)))
         val from = syncBatchJob.syncfrom
-        val to = from.plusMonths(3)
+        val to = from.plusMonths(2)
         LOG.info("Calling product sync from ${from} to $to")
         val hmdbProductsBatch = hmDbClient.fetchProducts(from, to)
         LOG.info("Got total of ${hmdbProductsBatch.products.size} products")
-        if (hmdbProductsBatch.products.isNotEmpty()) {
+        if (hmdbProductsBatch.products.isNotEmpty() && hmdbProductsBatch.products.size>1) {
             runBlocking {
                 val products = extractProductBatch(hmdbProductsBatch)
                 products.forEach {
@@ -114,8 +114,7 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
                 seriesId = "${prod.prodid}".HmDbIdentifier(),
                 techData = mapTechData(batch.techdata[prod.artid] ?: emptyList()),
                 media =  mapBlobs(batch.blobs[prod.prodid] ?: emptyList()),
-                agreementInfo = prod.newsid?.let {AgreementInfo(identifier = prod.newsid.HmDbIdentifier(),
-                    rank = prod.postrank!!, postId = prod.apostid!!)},
+                agreementInfo = if(prod.newsid!=null) mapAgreementInfo(prod) else null,
                 created = prod.aindate,
                 updated = prod.achange,
                 expired = prod.aoutdate ?: LocalDateTime.now().plusYears(20),
@@ -130,6 +129,22 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
             TechData(key = it.techlabeldk!!, value = it.datavalue!!, unit = it.techdataunit!!)
     }
 
+    private suspend fun mapAgreementInfo(prod: HmDbProductDTO): AgreementInfo {
+        LOG.info("Mapping agreement for ${prod.newsid} and post: ${prod.apostid}")
+        val agreement = agreementRepository.findByIdentifier("${prod.newsid}".HmDbIdentifier())
+        val post = agreementPostRepository.findByIdentifier("${prod.apostid}".HmDbIdentifier())
+        if (post!!.agreementId!=agreement!!.id) {
+            throw RuntimeException("Wrong agreement state!, should never happen")
+        }
+        return AgreementInfo(
+            id = agreement.id,
+            identifier = agreement.identifier,
+            rank = prod.postrank,
+            postId = post.id,
+            postIdentifier = post.identifier,
+            reference = agreement.reference
+        )
+    }
 
     private suspend fun updateAgreement(agreementDocument: AgreementDocument, agree: Agreement) {
         agreementRepository.update(agreementDocument.agreement.copy(id = agree.id, created = agree.created))

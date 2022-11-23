@@ -15,4 +15,6 @@ interface SupplierRepository: CoroutineCrudRepository<Supplier, Long> {
     @Cacheable
     suspend fun findByIdentifier(identifier: String): Supplier?
 
+    @Cacheable
+    override suspend fun findById(id:Long): Supplier?
 }

@@ -1,13 +1,15 @@
 package no.nav.hm.grunndata.db.indexer
 
 import no.nav.hm.grunndata.db.product.*
+import no.nav.hm.grunndata.db.supplier.Supplier
+import no.nav.hm.grunndata.db.supplier.SupplierInfo
 import java.time.LocalDateTime
 import java.util.*
 
 data class ProductDoc(
     var id: Long = -1L,
     val uuid: UUID = UUID.randomUUID(),
-    val supplierId: Long,
+    val supplier: SupplierDoc,
     val title: String,
     val description: Description,
     val status: ProductStatus = ProductStatus.ACTIVE,
@@ -30,6 +32,8 @@ data class ProductDoc(
     val hasAgreement: Boolean = false,
 )
 
+data class SupplierDoc (val id: Long, val identifier: String, val name: String)
+
 data class TechDataFilters(val fyllmateriale:String?, val setebreddeMaksCM: Int?, val setebreddeMinCM: Int?,
                            val brukervektMinKG: Int?, val materialeTrekk:String?, val setedybdeMinCM:Int?,
                            val setedybdeMaksCM: Int?, val setehoydeMaksCM:Int?, val setehoydeMinCM: Int?,
@@ -37,12 +41,13 @@ data class TechDataFilters(val fyllmateriale:String?, val setebreddeMaksCM: Int?
                            val brukervektMaksKG: Int?)
 
 
-fun Product.toDoc(): ProductDoc = ProductDoc(
-    id = id, uuid = uuid, supplierId = supplierId, title = title, description = description, status = status,
-    HMSArtNr = HMSArtNr, identifier = identifier, supplierRef = supplierRef, isoCategory = isoCategory,
-    accessory = accessory, sparepart = sparepart, seriesId = seriesId, data = techData, media = media,
-    created = created, updated = updated, expired = expired, createdBy = createdBy, updatedBy = updatedBy,
-    agreementInfo = agreementInfo, hasAgreement = agreementInfo!=null, filters = mapTechDataFilters(techData)
+fun Product.toDoc(supplier: Supplier): ProductDoc = ProductDoc(
+    id = id, uuid = uuid, supplier = SupplierDoc(id=supplier.id, identifier=supplier.identifier, name= supplier.name),
+    title = title, description = description, status = status, HMSArtNr = HMSArtNr, identifier = identifier,
+    supplierRef = supplierRef, isoCategory = isoCategory, accessory = accessory, sparepart = sparepart, seriesId = seriesId,
+    data = techData, media = media, created = created, updated = updated, expired = expired, createdBy = createdBy,
+    updatedBy = updatedBy, agreementInfo = agreementInfo, hasAgreement = agreementInfo!=null,
+    filters = mapTechDataFilters(techData)
 )
 
 fun mapTechDataFilters(data: List<TechData>): TechDataFilters {

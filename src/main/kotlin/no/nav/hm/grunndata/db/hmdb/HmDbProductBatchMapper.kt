@@ -23,7 +23,7 @@ fun mapBlobs(blobs: List<BlobDTO>): List<Media> = blobs.map { mapBlob(it) }
 fun mapBlob(blobDTO: BlobDTO): Media {
     val mediaType = when (blobDTO.blobtype.trim().lowercase()) {
         "billede" -> MediaType.IMAGE
-        "brosjyre", "bruksanvisning", "quickguide", "målskjema", "batterioversikt" -> MediaType.PDF
+        "brosjyre", "produktbl", "bruksanvisning", "brugsanvisning", "quickguide", "målskjema", "batterioversikt" -> MediaType.PDF
         "video" -> MediaType.VIDEO
         else -> {
             println("UNKNOWN ${blobDTO.blobtype} ${blobDTO.blobfile}")
