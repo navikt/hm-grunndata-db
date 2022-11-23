@@ -7,8 +7,8 @@ import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.PathVariable
 import io.micronaut.http.annotation.Post
 import no.nav.hm.grunndata.db.product.ProductRepository
-import no.nav.hm.grunndata.db.search.ProductIndexer
-import no.nav.hm.grunndata.db.search.toDoc
+import no.nav.hm.grunndata.db.indexer.ProductIndexer
+import no.nav.hm.grunndata.db.indexer.toDoc
 import org.slf4j.LoggerFactory
 
 @Controller("/api/v1/assistive/devices")

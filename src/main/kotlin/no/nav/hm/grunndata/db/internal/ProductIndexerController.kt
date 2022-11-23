@@ -4,8 +4,8 @@ import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Put
 import kotlinx.coroutines.flow.*
 import no.nav.hm.grunndata.db.product.ProductRepository
-import no.nav.hm.grunndata.db.search.ProductIndexer
-import no.nav.hm.grunndata.db.search.toDoc
+import no.nav.hm.grunndata.db.indexer.ProductIndexer
+import no.nav.hm.grunndata.db.indexer.toDoc
 import org.slf4j.LoggerFactory
 
 
