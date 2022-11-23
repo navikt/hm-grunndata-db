@@ -25,7 +25,9 @@ data class ProductDoc(
     val expired: LocalDateTime = updated.plusYears(20),
     val createdBy: String = "hjelpemiddeldatabasen",
     val updatedBy: String = "hjelpemiddeldatabasen",
-    val filters: TechDataFilters
+    val filters: TechDataFilters,
+    val agreementInfo: AgreementInfo?,
+    val hasAgreement: Boolean = false,
 )
 
 data class TechDataFilters(val fyllmateriale:String?, val setebreddeMaksCM: Int?, val setebreddeMinCM: Int?,
@@ -40,7 +42,7 @@ fun Product.toDoc(): ProductDoc = ProductDoc(
     HMSArtNr = HMSArtNr, identifier = identifier, supplierRef = supplierRef, isoCategory = isoCategory,
     accessory = accessory, sparepart = sparepart, seriesId = seriesId, data = techData, media = media,
     created = created, updated = updated, expired = expired, createdBy = createdBy, updatedBy = updatedBy,
-    filters = mapTechDataFilters(techData)
+    agreementInfo = agreementInfo, hasAgreement = agreementInfo!=null, filters = mapTechDataFilters(techData)
 )
 
 fun mapTechDataFilters(data: List<TechData>): TechDataFilters {

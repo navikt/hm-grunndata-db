@@ -16,6 +16,8 @@ micronaut:
   caches:
     suppliers:
       charset: 'UTF-8'
+    agreements:
+      charset: 'UTF-8'
 jackson:
   bean-introspection-module: true
   serialization:
