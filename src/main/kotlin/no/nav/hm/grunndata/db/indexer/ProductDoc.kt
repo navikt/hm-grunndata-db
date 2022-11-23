@@ -6,8 +6,8 @@ import no.nav.hm.grunndata.db.supplier.SupplierInfo
 import java.time.LocalDateTime
 import java.util.*
 
-data class ProductDoc(
-    var id: Long = -1L,
+data class ProductDoc (
+    override var id: String?,
     val uuid: UUID = UUID.randomUUID(),
     val supplier: SupplierDoc,
     val title: String,
@@ -30,7 +30,7 @@ data class ProductDoc(
     val filters: TechDataFilters,
     val agreementInfo: AgreementInfo?,
     val hasAgreement: Boolean = false,
-)
+): SearchDoc
 
 data class SupplierDoc (val id: Long, val identifier: String, val name: String)
 
@@ -42,7 +42,7 @@ data class TechDataFilters(val fyllmateriale:String?, val setebreddeMaksCM: Int?
 
 
 fun Product.toDoc(supplier: Supplier): ProductDoc = ProductDoc(
-    id = id, uuid = uuid, supplier = SupplierDoc(id=supplier.id, identifier=supplier.identifier, name= supplier.name),
+    id = id.toString(), uuid = uuid, supplier = SupplierDoc(id=supplier.id, identifier=supplier.identifier, name= supplier.name),
     title = title, description = description, status = status, HMSArtNr = HMSArtNr, identifier = identifier,
     supplierRef = supplierRef, isoCategory = isoCategory, accessory = accessory, sparepart = sparepart, seriesId = seriesId,
     data = techData, media = media, created = created, updated = updated, expired = expired, createdBy = createdBy,
