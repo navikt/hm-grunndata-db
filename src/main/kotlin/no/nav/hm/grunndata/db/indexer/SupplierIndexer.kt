@@ -6,12 +6,12 @@ import org.opensearch.action.bulk.BulkResponse
 import org.slf4j.LoggerFactory
 
 @Singleton
-class ProductIndexer(private val indexer: Indexer,
-                     @Value("\${ALIASNAME:product}") private val aliasName: String,
-                     @Value("\${INDEXNAME:product_2022}") private val indexName: String ) {
+class SupplierIndexer(private val indexer: Indexer,
+                      @Value("\${SUPPLIER_ALIASNAME:supplier}") private val aliasName: String,
+                      @Value("\${SUPPLIER_INDEXNAME:supplier_2022}") private val indexName: String ) {
 
     companion object {
-        private val LOG = LoggerFactory.getLogger(ProductIndexer::class.java)
+        private val LOG = LoggerFactory.getLogger(SupplierIndexer::class.java)
 //        private val SETTINGS = ProductIndexer::class.java
 //            .getResource("/opensearch/product-settings.json").readText()
 //        private val MAPPING = ProductIndexer::class.java
@@ -30,24 +30,23 @@ class ProductIndexer(private val indexer: Indexer,
         }
     }
 
-    fun index(docs: List<ProductDoc>): BulkResponse = indexer.index(docs, indexName)
+    fun index(docs: List<SupplierDoc>): BulkResponse {
+        return indexer.index(docs, indexName)
+    }
 
+    fun index(doc: SupplierDoc): BulkResponse {
+        return indexer.index(listOf(doc), indexName)
+    }
 
-    fun index(doc: ProductDoc): BulkResponse = indexer.index(listOf(doc), indexName)
+    fun index(doc: SupplierDoc, indexName: String): BulkResponse {
+        return indexer.index(listOf(doc), indexName)
+    }
 
-
-    fun index(doc: ProductDoc, indexName: String): BulkResponse =
-        indexer.index(listOf(doc), indexName)
-
-
-    fun index(docs: List<ProductDoc>, indexName: String): BulkResponse =
-        indexer.index(docs,indexName)
-
+    fun index(docs: List<SupplierDoc>, indexName: String): BulkResponse {
+        return indexer.index(docs,indexName)
+    }
 
     fun createIndex(indexName: String): Boolean = indexer.createIndex(indexName)
 
     fun updateAlias(indexName: String): Boolean = indexer.updateAlias(indexName,aliasName)
-
-
-
 }

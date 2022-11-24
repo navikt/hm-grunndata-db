@@ -65,7 +65,7 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
         }
     }
 
-    @Scheduled(fixedDelay = "2m")
+    @Scheduled(fixedDelay = "1m")
     fun syncProducts() {
         val syncBatchJob = hmdbBatchRepository.findByName(SYNC_PRODUCTS) ?:
         hmdbBatchRepository.save(HmDbBatch(name= SYNC_PRODUCTS,
@@ -75,7 +75,7 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
         LOG.info("Calling product sync from ${from} to $to")
         val hmdbProductsBatch = hmDbClient.fetchProducts(from, to)
         LOG.info("Got total of ${hmdbProductsBatch.products.size} products")
-        if (hmdbProductsBatch.products.isNotEmpty() && hmdbProductsBatch.products.size>1) {
+        if (hmdbProductsBatch.products.isNotEmpty()) {
             runBlocking {
                 val products = extractProductBatch(hmdbProductsBatch)
                 products.forEach {
@@ -95,6 +95,10 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
                 LOG.info("finished batch and update last sync time ${last.updated}")
                 hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = last.updated))
             }
+        }
+        else if (to.isBefore(LocalDateTime.now().minusHours(1))){
+            LOG.info("Empty list, skip to next batch $to")
+            hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = to))
         }
 
     }

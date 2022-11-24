@@ -1,19 +1,8 @@
 package no.nav.hm.grunndata.db.indexer
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.micronaut.context.annotation.Value
 import jakarta.inject.Singleton
-import org.opensearch.action.admin.indices.alias.IndicesAliasesRequest
-import org.opensearch.action.admin.indices.alias.get.GetAliasesRequest
-import org.opensearch.action.bulk.BulkRequest
 import org.opensearch.action.bulk.BulkResponse
-import org.opensearch.action.index.IndexRequest
-import org.opensearch.client.RequestOptions
-import org.opensearch.client.RestHighLevelClient
-import org.opensearch.client.indices.CreateIndexRequest
-import org.opensearch.client.indices.GetIndexRequest
-import org.opensearch.common.xcontent.XContentType
-import org.opensearch.rest.RestStatus
 import org.slf4j.LoggerFactory
 
 @Singleton

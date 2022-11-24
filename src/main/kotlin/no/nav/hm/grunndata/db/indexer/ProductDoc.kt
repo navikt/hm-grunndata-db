@@ -9,7 +9,7 @@ import java.util.*
 data class ProductDoc (
     override val id: String,
     val uuid: UUID = UUID.randomUUID(),
-    val supplier: SupplierDoc,
+    val supplier: ProductSupplier,
     val title: String,
     val description: Description,
     val status: ProductStatus = ProductStatus.ACTIVE,
@@ -32,7 +32,6 @@ data class ProductDoc (
     val hasAgreement: Boolean = false,
 ): SearchDoc
 
-data class SupplierDoc (val id: Long, val identifier: String, val name: String)
 
 data class TechDataFilters(val fyllmateriale:String?, val setebreddeMaksCM: Int?, val setebreddeMinCM: Int?,
                            val brukervektMinKG: Int?, val materialeTrekk:String?, val setedybdeMinCM:Int?,
@@ -40,15 +39,18 @@ data class TechDataFilters(val fyllmateriale:String?, val setebreddeMaksCM: Int?
                            val totalVektKG: Int?, val lengdeCM: Int?, val breddeCM: Int?, val beregnetBarn: String?,
                            val brukervektMaksKG: Int?)
 
+data class ProductSupplier(val id: String, val identifier: String, val name: String)
 
-fun Product.toDoc(supplier: Supplier): ProductDoc = ProductDoc(
-    id = id.toString(), uuid = uuid, supplier = SupplierDoc(id=supplier.id, identifier=supplier.identifier, name= supplier.name),
+fun Product.toDoc(supplier: Supplier): ProductDoc = ProductDoc (
+    id = id.toString(), uuid = uuid, supplier = ProductSupplier(id=supplier.id.toString(), identifier=supplier.identifier, name= supplier.name),
     title = title, description = description, status = status, HMSArtNr = HMSArtNr, identifier = identifier,
     supplierRef = supplierRef, isoCategory = isoCategory, accessory = accessory, sparepart = sparepart, seriesId = seriesId,
     data = techData, media = media, created = created, updated = updated, expired = expired, createdBy = createdBy,
     updatedBy = updatedBy, agreementInfo = agreementInfo, hasAgreement = agreementInfo!=null,
     filters = mapTechDataFilters(techData)
 )
+
+
 
 fun mapTechDataFilters(data: List<TechData>): TechDataFilters {
     var fyllmateriale:String? = null
