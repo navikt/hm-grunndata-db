@@ -22,13 +22,9 @@ class Indexer(private val client: RestHighLevelClient,
 
     companion object {
         private val LOG = LoggerFactory.getLogger(Indexer::class.java)
-//        private val SETTINGS = ProductIndexer::class.java
-//            .getResource("/opensearch/product-settings.json").readText()
-//        private val MAPPING = ProductIndexer::class.java
-//            .getResource("/opensearch/product-mapping.json").readText()
     }
 
-    private fun initIndex(indexName: String) {
+    fun initIndex(indexName: String) {
         val indexRequest= GetIndexRequest(indexName)
         if (!client.indices().exists(indexRequest, RequestOptions.DEFAULT)) {
             if (createIndex(indexName))
@@ -38,16 +34,16 @@ class Indexer(private val client: RestHighLevelClient,
         }
     }
 
-    private fun initAlias(aliasName: String, indexName: String) {
+    fun initAlias(aliasName: String, indexName: String) {
         val aliasIndexRequest = GetAliasesRequest(aliasName)
         val response = client.indices().getAlias(aliasIndexRequest, RequestOptions.DEFAULT)
         if (response.status() == RestStatus.NOT_FOUND) {
             LOG.warn("Alias $aliasName is not pointing to any index, updating alias")
-            updateAlias(indexName,true, aliasName)
+            updateAlias(indexName, aliasName)
         }
     }
 
-    fun updateAlias(indexName: String, removePreviousAliases: Boolean = false, aliasName: String): Boolean {
+    fun updateAlias(indexName: String, aliasName: String): Boolean {
         val remove = IndicesAliasesRequest.AliasActions(IndicesAliasesRequest.AliasActions.Type.REMOVE)
             .index("$aliasName*")
             .alias(aliasName)
@@ -55,7 +51,7 @@ class Indexer(private val client: RestHighLevelClient,
             .index(indexName)
             .alias(aliasName)
         val request = IndicesAliasesRequest().apply {
-            if (removePreviousAliases) addAliasAction(remove)
+            addAliasAction(remove)
             addAliasAction(add)
         }
         LOG.info("updateAlias for alias $aliasName and pointing to $indexName ")

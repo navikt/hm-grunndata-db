@@ -1,12 +1,10 @@
-package no.nav.hm.grunndata.db.internal
+package no.nav.hm.grunndata.db.indexer
 
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Post
 import io.micronaut.http.annotation.Put
 import kotlinx.coroutines.flow.*
 import no.nav.hm.grunndata.db.product.ProductRepository
-import no.nav.hm.grunndata.db.indexer.ProductIndexer
-import no.nav.hm.grunndata.db.indexer.toDoc
 import no.nav.hm.grunndata.db.supplier.SupplierRepository
 import org.slf4j.LoggerFactory
 
@@ -44,7 +42,7 @@ class ProductIndexerController(private val indexer: ProductIndexer,
     @Put("/product/alias/{indexName}")
     fun indexAliasTo(indexName:String) {
         LOG.info("Changing alias to $indexName")
-        indexer.updateAlias(indexName, true)
+        indexer.updateAlias(indexName)
     }
 
 }

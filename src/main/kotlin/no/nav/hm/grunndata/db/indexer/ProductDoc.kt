@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 import java.util.*
 
 data class ProductDoc (
-    override var id: String?,
+    override val id: String,
     val uuid: UUID = UUID.randomUUID(),
     val supplier: SupplierDoc,
     val title: String,
