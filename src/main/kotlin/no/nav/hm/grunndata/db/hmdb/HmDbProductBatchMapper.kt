@@ -38,14 +38,4 @@ fun mapDescription(produkt: HmDbProductDTO): Description =
         shortDescription = produkt.adescshort,
         text = produkt.pshortdesc)
 
-//fun mapAgreement(produkt: ProductDTO): AgreementDTO? {
-//    return if (produkt.newsid!=null && null != produkt.newspublish)
-//        AgreementDTO(agreementId = produkt.newsid,
-//            agreementStart = produkt.newspublish,
-//            agreementEnd = produkt.newsexpire!!,
-//            agreementPostId = produkt.apostid!!,
-//            agreementPostNr = produkt.apostnr!!,
-//            agreementPostTitle = produkt.aposttitle!!,
-//            agreementRank = produkt.postrank!!) else null
-//}
 
