@@ -17,7 +17,7 @@ class ProductIndexerController(private val indexer: ProductIndexer,
         private val LOG = LoggerFactory.getLogger(ProductIndexerController::class.java)
     }
 
-    @Put("/product")
+    @Put("/products")
     suspend fun indexProducts() {
         LOG.info("Indexing all products")
             repository.findAll()
@@ -26,7 +26,7 @@ class ProductIndexerController(private val indexer: ProductIndexer,
                 .collect()
     }
 
-    @Post("/product/{indexName}")
+    @Post("/products/{indexName}")
     suspend fun indexProducts(indexName: String) {
         LOG.info("creating index $indexName")
         val success = indexer.createIndex(indexName)
@@ -39,7 +39,7 @@ class ProductIndexerController(private val indexer: ProductIndexer,
         }
     }
 
-    @Put("/product/alias/{indexName}")
+    @Put("/products/alias/{indexName}")
     fun indexAliasTo(indexName:String) {
         LOG.info("Changing alias to $indexName")
         indexer.updateAlias(indexName)

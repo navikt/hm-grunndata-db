@@ -16,9 +16,9 @@ class SupplierIndexerController(private val indexer: SupplierIndexer,
         private val LOG = LoggerFactory.getLogger(SupplierIndexerController::class.java)
     }
 
-    @Put("/supplier")
+    @Put("/suppliers")
     suspend fun indexAgreements() {
-        LOG.info("Indexing all supplier")
+        LOG.info("Indexing all suppliers")
         supplierRepository.findAll()
             .onEach {
                 indexer.index(it.toDoc())
@@ -27,7 +27,7 @@ class SupplierIndexerController(private val indexer: SupplierIndexer,
             .collect()
     }
 
-    @Post("/supplier/{indexName}")
+    @Post("/suppliers/{indexName}")
     suspend fun indexAgreements(indexName: String) {
         LOG.info("creating index $indexName")
         val success = indexer.createIndex(indexName)
@@ -42,7 +42,7 @@ class SupplierIndexerController(private val indexer: SupplierIndexer,
         }
     }
 
-    @Put("/supplier/alias/{indexName}")
+    @Put("/suppliers/alias/{indexName}")
     fun indexAliasTo(indexName:String) {
         LOG.info("Changing alias to $indexName")
         indexer.updateAlias(indexName)

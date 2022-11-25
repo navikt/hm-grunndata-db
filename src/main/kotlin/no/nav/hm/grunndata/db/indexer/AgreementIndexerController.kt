@@ -21,9 +21,9 @@ class AgreementIndexerController(private val indexer: AgreementIndexer,
         private val LOG = LoggerFactory.getLogger(AgreementIndexerController::class.java)
     }
 
-    @Put("/agreement")
+    @Put("/agreements")
     suspend fun indexAgreements() {
-        LOG.info("Indexing all products")
+        LOG.info("Indexing all agreements")
         agreementRepository.findAll()
             .onEach {
                 val document = AgreementDocument (it, agreementPostRepository.findByAgreementId(it.id))
@@ -33,7 +33,7 @@ class AgreementIndexerController(private val indexer: AgreementIndexer,
             .collect()
     }
 
-    @Post("/agreement/{indexName}")
+    @Post("/agreements/{indexName}")
     suspend fun indexAgreements(indexName: String) {
         LOG.info("creating index $indexName")
         val success = indexer.createIndex(indexName)
@@ -49,7 +49,7 @@ class AgreementIndexerController(private val indexer: AgreementIndexer,
         }
     }
 
-    @Put("/agreement/alias/{indexName}")
+    @Put("/agreements/alias/{indexName}")
     fun indexAliasTo(indexName:String) {
         LOG.info("Changing alias to $indexName")
         indexer.updateAlias(indexName)
