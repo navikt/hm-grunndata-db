@@ -1,9 +1,6 @@
-package no.nav.hm.grunndata.db.hmdb
+package no.nav.hm.grunndata.db.hmdb.product
 
 import no.nav.hm.grunndata.db.product.*
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
 
 fun mapBlobs(blobs: List<BlobDTO>): List<Media> =
     blobs.toSet()

@@ -1,4 +1,4 @@
-package no.nav.hm.grunndata.db.hmdb
+package no.nav.hm.grunndata.db.hmdb.product
 
 import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.MappedEntity

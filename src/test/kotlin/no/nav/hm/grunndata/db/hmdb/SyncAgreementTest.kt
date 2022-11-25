@@ -11,6 +11,7 @@ import io.mockk.mockk
 import jakarta.inject.Inject
 import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.db.agreement.AgreementRepository
+import no.nav.hm.grunndata.db.hmdb.agreement.HmDbAgreementDTO
 import org.junit.jupiter.api.Test
 
 @MicronautTest

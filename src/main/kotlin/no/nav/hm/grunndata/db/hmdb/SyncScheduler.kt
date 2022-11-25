@@ -6,6 +6,10 @@ import jakarta.inject.Singleton
 import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.db.agreement.*
+import no.nav.hm.grunndata.db.hmdb.agreement.AvtalePostDTO
+import no.nav.hm.grunndata.db.hmdb.agreement.HmDbAgreementDTO
+import no.nav.hm.grunndata.db.hmdb.agreement.NewsDTO
+import no.nav.hm.grunndata.db.hmdb.product.*
 import no.nav.hm.grunndata.db.product.*
 import no.nav.hm.grunndata.db.supplier.SupplierRepository
 import org.slf4j.LoggerFactory
@@ -113,7 +117,7 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
                 status = ProductStatus.ACTIVE,
                 HMSArtNr = prod.stockid,
                 identifier = "${prod.artid}".HmDbIdentifier(),
-                supplierRef = if (prod.artno!=null && prod.artno.isNotBlank()) prod.artno else prod.artid.toString(),
+                supplierRef = if (prod.artno!=null && prod.artno.isNotBlank()) prod.artno else prod.artid.toString().HmDbIdentifier(),
                 isoCategory = prod.isocode,
                 seriesId = "${prod.prodid}".HmDbIdentifier(),
                 techData = mapTechData(batch.techdata[prod.artid] ?: emptyList()),

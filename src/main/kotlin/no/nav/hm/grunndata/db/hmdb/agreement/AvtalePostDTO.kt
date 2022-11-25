@@ -1,4 +1,4 @@
-package no.nav.hm.grunndata.db.hmdb
+package no.nav.hm.grunndata.db.hmdb.agreement
 
 import java.time.LocalDate
 
