@@ -5,20 +5,12 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
-val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+fun mapBlobs(blobs: List<BlobDTO>): List<Media> =
+    blobs.toSet()
+        .map { mapBlob(it) }
+        .sortedBy { "${it.type}-${it.uri}" }
+        .mapIndexed { index, media -> media.copy(order = index+1)}
 
-fun parseDate(aindate: String?): LocalDateTime {
-    try {
-        val dateStr = aindate!!.substring(0,aindate!!.lastIndexOf("."))
-        return LocalDateTime.parse(dateStr, dateTimeFormatter)
-    }
-    catch (e: DateTimeParseException) {
-         println("Could not parse date $aindate")
-    }
-    return LocalDateTime.now()
-}
-
-fun mapBlobs(blobs: List<BlobDTO>): List<Media> = blobs.map { mapBlob(it) }
 
 fun mapBlob(blobDTO: BlobDTO): Media {
     val mediaType = when (blobDTO.blobtype.trim().lowercase()) {
