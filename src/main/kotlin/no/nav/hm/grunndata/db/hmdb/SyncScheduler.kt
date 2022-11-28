@@ -22,7 +22,8 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
                     private val supplierRepository: SupplierRepository,
                     private val agreementRepository: AgreementRepository,
                     private val agreementPostRepository: AgreementPostRepository,
-                    private val productRepository: ProductRepository) {
+                    private val productRepository: ProductRepository,
+                    private val hmDBProductMapper: HmDBProductMapper) {
 
     companion object {
         private val LOG = LoggerFactory.getLogger(SyncScheduler::class.java)
@@ -110,48 +111,9 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
     private suspend fun extractProductBatch(batch: HmDbProductBatchDTO): List<Product> {
        return batch.products.map { prod ->
            LOG.info("Mapping product prodid: ${prod.prodid} artid: ${prod.artid} artno: ${prod.artno} from supplier ${prod.supplier}")
-            Product(
-                supplierId =  supplierRepository.findByIdentifier(prod.supplier!!.HmDbIdentifier())!!.id,
-                title = prod.prodname,
-                description = mapDescription(prod),
-                status = ProductStatus.ACTIVE,
-                HMSArtNr = prod.stockid,
-                identifier = "${prod.artid}".HmDbIdentifier(),
-                supplierRef = if (prod.artno!=null && prod.artno.isNotBlank()) prod.artno else prod.artid.toString().HmDbIdentifier(),
-                isoCategory = prod.isocode,
-                seriesId = "${prod.prodid}".HmDbIdentifier(),
-                techData = mapTechData(batch.techdata[prod.artid] ?: emptyList()),
-                media =  mapBlobs(batch.blobs[prod.prodid] ?: emptyList()),
-                agreementInfo = if(prod.newsid!=null) mapAgreementInfo(prod) else null,
-                created = prod.aindate,
-                updated = prod.achange,
-                expired = prod.aoutdate ?: LocalDateTime.now().plusYears(20),
-                createdBy = HMDB,
-                updatedBy = HMDB
-            )
+           hmDBProductMapper.mapProduct(prod, batch)
         }.sortedBy { it.updated }
 
-    }
-
-    private fun mapTechData(datas: List<TechDataDTO>): List<TechData> = datas.map {
-            TechData(key = it.techlabeldk!!, value = it.datavalue!!, unit = it.techdataunit!!)
-    }
-
-    private suspend fun mapAgreementInfo(prod: HmDbProductDTO): AgreementInfo {
-        LOG.info("Mapping agreement for ${prod.newsid} and post: ${prod.apostid}")
-        val agreement = agreementRepository.findByIdentifier("${prod.newsid}".HmDbIdentifier())
-        val post = agreementPostRepository.findByIdentifier("${prod.apostid}".HmDbIdentifier())
-        if (post!!.agreementId!=agreement!!.id) {
-            throw RuntimeException("Wrong agreement state!, should never happen")
-        }
-        return AgreementInfo(
-            id = agreement.id,
-            identifier = agreement.identifier,
-            rank = prod.postrank,
-            postId = post.id,
-            postIdentifier = post.identifier,
-            reference = agreement.reference
-        )
     }
 
     private suspend fun updateAgreement(agreementDocument: AgreementDocument, agree: Agreement) {
