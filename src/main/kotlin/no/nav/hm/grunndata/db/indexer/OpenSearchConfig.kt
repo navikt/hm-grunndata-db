@@ -37,6 +37,7 @@ class OpenSearchConfig(private val openSearchEnv: OpenSearchEnv) {
                     LOG.info("Using dev settings for ${openSearchEnv.url}")
                     devAndTestSettings(httpClientBuilder)
                 }
+
                 httpClientBuilder
             }
         LOG.info("Opensearch client using ${openSearchEnv.user} and url ${openSearchEnv.url}")
