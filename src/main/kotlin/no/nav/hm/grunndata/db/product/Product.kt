@@ -42,6 +42,7 @@ data class Product (
     val agreementInfo: AgreementInfo?=null,
     val created: LocalDateTime = LocalDateTime.now(),
     val updated: LocalDateTime = LocalDateTime.now(),
+    val published: LocalDateTime = LocalDateTime.now(),
     val expired: LocalDateTime = updated.plusYears(20),
     val createdBy: String = HMDB,
     val updatedBy: String = HMDB
@@ -111,6 +112,7 @@ data class ProductDTO(
     val media: List<Media> = emptyList(),
     val created: LocalDateTime = LocalDateTime.now(),
     val updated: LocalDateTime = LocalDateTime.now(),
+    val published: LocalDateTime = LocalDateTime.now(),
     val expired: LocalDateTime = updated.plusYears(20),
     val agreementInfo: AgreementInfo?,
     val hasAgreement: Boolean = (agreementInfo!=null),
@@ -121,7 +123,7 @@ data class ProductDTO(
 fun Product.toDTO(supplier: SupplierDTO):ProductDTO =  ProductDTO (
     id = id, uuid=uuid, supplier = supplier, title = title, description=description, status = status, HMSArtNr = HMSArtNr,
     identifier = identifier, supplierRef=supplierRef, isoCategory=isoCategory, accessory=accessory, sparepart=sparepart,
-    seriesId=seriesId, techData=techData, media= media, created=created, updated=updated, expired=expired,
+    seriesId=seriesId, techData=techData, media= media, created=created, updated=updated, published=published, expired=expired,
     agreementInfo = agreementInfo, hasAgreement = (agreementInfo!=null), createdBy=createdBy, updatedBy=updatedBy
 )
 
