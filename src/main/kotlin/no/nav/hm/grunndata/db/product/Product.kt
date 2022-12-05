@@ -6,15 +6,12 @@ import io.micronaut.data.annotation.MappedEntity
 import io.micronaut.data.annotation.TypeDef
 import io.micronaut.data.model.DataType
 import no.nav.hm.grunndata.db.HMDB
-import no.nav.hm.grunndata.db.supplier.Supplier
 import no.nav.hm.grunndata.db.supplier.SupplierDTO
 import java.time.LocalDateTime
 import java.util.UUID
 import javax.persistence.Column
-import javax.persistence.Table
 
-@MappedEntity
-@Table(name="product_v1")
+@MappedEntity("product_v1")
 data class Product (
     @field:GeneratedValue
     @field:Id
@@ -74,11 +71,11 @@ data class Media (
     val type: MediaType = MediaType.IMAGE,
     val uri:    String,
     val text:   String?=null,
-    val source: MediaSourceType = MediaSourceType.ONPREM
+    val source: MediaSourceType = MediaSourceType.HMDB
 )
 
 enum class MediaSourceType {
-    ONPREM, GCP, EXTERNALURL
+    HMDB, GCP, EXTERNALURL
 }
 
 enum class MediaType {
