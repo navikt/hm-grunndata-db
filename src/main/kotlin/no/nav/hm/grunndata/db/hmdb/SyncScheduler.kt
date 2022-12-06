@@ -57,13 +57,15 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
         hmdbBatchRepository.save(HmDbBatch(name= SYNC_AGREEMENTS,
             syncfrom = LocalDateTime.now().minusYears(10).truncatedTo(ChronoUnit.SECONDS)))
         val hmdbagreements = hmDbClient.fetchAgreements()
-        LOG.info("Calling agreement sync from ${syncBatchJob.syncfrom}, Got total of ${hmdbagreements.size} agreements")
+        LOG.info("Calling agreement sync, got total of ${hmdbagreements.size} agreements")
         val agreements = hmdbagreements.map { mapAgreement(it) }
         runBlocking {
             agreements.forEach {
                 agreementRepository.findByIdentifier(it.agreement.identifier)?.let { agree ->
+                    LOG.info("updating agreement ${agree.id} with identifier ${agree.identifier}")
                     updateAgreement(it, agree)
                 } ?: run {
+                    LOG.info("saved new agreement ${it.agreement.id}")
                     saveAgreement(it)
                 }
             }
@@ -71,7 +73,7 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
         }
     }
 
-    //@Scheduled(fixedDelay = "1m")
+    @Scheduled(fixedDelay = "1m")
     fun syncProducts() {
         val syncBatchJob = hmdbBatchRepository.findByName(SYNC_PRODUCTS) ?:
         hmdbBatchRepository.save(HmDbBatch(name= SYNC_PRODUCTS,

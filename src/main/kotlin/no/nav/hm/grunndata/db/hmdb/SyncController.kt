@@ -1,9 +1,7 @@
-package no.nav.hm.grunndata.db.internal
+package no.nav.hm.grunndata.db.hmdb
 
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
-import no.nav.hm.grunndata.db.HMDB
-import no.nav.hm.grunndata.db.hmdb.SyncScheduler
 import org.slf4j.LoggerFactory
 
 @Controller("/internal/sync")
