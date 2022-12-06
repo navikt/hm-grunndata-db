@@ -10,14 +10,11 @@ import java.time.LocalDateTime
 import java.util.UUID
 import javax.persistence.Table
 
-@MappedEntity
-@Table(name=SupplierTableName)
+@MappedEntity(SupplierTableName)
 data class Supplier(
-    @field:GeneratedValue
     @field:Id
-    var id:         Long=-1L,
+    val id:       UUID = UUID.randomUUID(),
     val identifier: String,
-    val uuid:       String = UUID.randomUUID().toString(),
     val name:       String,
     @field:TypeDef(type=DataType.JSON)
     val info:       SupplierInfo,

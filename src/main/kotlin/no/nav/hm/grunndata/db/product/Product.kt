@@ -17,7 +17,7 @@ data class Product (
     @field:Id
     var id: Long = -1L,
     val uuid: UUID = UUID.randomUUID(),
-    val supplierId: Long,
+    val supplierId: UUID,
     val title: String,
     @field:TypeDef(type = DataType.JSON)
     val description: Description,
@@ -51,10 +51,10 @@ data class Description(val name: String?=null,
 
 
 data class AgreementInfo (
-    val id: Long,
+    val id: UUID,
     val identifier: String?=null,
     val rank: Int,
-    val postId: Long,
+    val postId: UUID,
     val postNr: Int,
     val postIdentifier: String?=null,
     val reference: String?=null,

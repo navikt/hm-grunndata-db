@@ -9,26 +9,20 @@ CREATE TABLE IF NOT EXISTS hmdbbatch_v1 (
     UNIQUE (name)
 );
 
-CREATE SEQUENCE IF NOT EXISTS supplier_v1_id_seq START WITH 1;
-
 CREATE TABLE IF NOT EXISTS supplier_v1 (
-    id NUMERIC(19,0) NOT NULL DEFAULT NEXTVAL('supplier_v1_id_seq'),
+    id UUID NOT NULL,
     identifier VARCHAR(255) NOT NULL,
-    uuid VARCHAR(36) NOT NULL,
     name VARCHAR(255) NOT NULL,
     info JSONB NOT NULL,
     created_by VARCHAR(64) NOT NULL,
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY(id),
-    UNIQUE (uuid),
     UNIQUE (identifier)
 );
 
-CREATE SEQUENCE IF NOT EXISTS agreement_v1_id_seq START WITH 1;
-
 CREATE TABLE IF NOT EXISTS agreement_v1 (
-    id NUMERIC(19,0) NOT NULL DEFAULT NEXTVAL('agreement_v1_id_seq'),
+    id UUID NOT NULL,
     identifier VARCHAR(255) NOT NULL,
     title VARCHAR(1024) NOT NULL,
     resume VARCHAR(1024),
@@ -45,12 +39,10 @@ CREATE TABLE IF NOT EXISTS agreement_v1 (
     UNIQUE(reference)
 );
 
-CREATE SEQUENCE IF NOT EXISTS agreement_post_v1_id_seq START WITH 1;
-
 CREATE TABLE IF NOT EXISTS agreement_post_v1 (
-    id NUMERIC(19,0) NOT NULL DEFAULT NEXTVAL('agreement_post_v1_id_seq'),
+    id UUID NOT NULL,
     identifier VARCHAR(255) NOT NULL,
-    agreement_id NUMERIC(19,0) NOT NULL,
+    agreement_id UUID NOT NULL,
     nr INTEGER NOT NULL,
     title VARCHAR(1024) NOT NULL,
     description TEXT,
@@ -66,7 +58,7 @@ CREATE SEQUENCE IF NOT EXISTS product_v1_id_seq START WITH 1000;
 CREATE TABLE IF NOT EXISTS product_v1 (
     id NUMERIC(19,0) NOT NULL DEFAULT NEXTVAL('product_v1_id_seq'),
     uuid VARCHAR(36) NOT NULL,
-    supplier_id NUMERIC(19,0) NOT NULL,
+    supplier_id UUID NOT NULL,
     title VARCHAR(255) NOT NULL,
     status VARCHAR(32) NOT NULL,
     description JSONB NOT NULL,

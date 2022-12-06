@@ -2,6 +2,7 @@ package no.nav.hm.grunndata.db.indexer
 
 import no.nav.hm.grunndata.db.agreement.AgreementDocument
 import java.time.LocalDateTime
+import java.util.UUID
 
 data class AgreementDoc(
     override val id: String,
@@ -20,7 +21,7 @@ data class AgreementDoc(
 ) : SearchDoc
 
 data class AgreementPostDoc (
-    val id: Long,
+    val id: UUID,
     val identifier: String,
     val nr: Int,
     val title: String,

@@ -2,9 +2,10 @@ package no.nav.hm.grunndata.db.importapi
 
 import no.nav.hm.grunndata.db.product.*
 import java.time.LocalDateTime
+import java.util.*
 
 data class ProductImportDTO(
-    val supplierId: Long,
+    val supplierId: UUID,
     val title: String,
     val description: Description,
     val status: ProductStatus = ProductStatus.ACTIVE,

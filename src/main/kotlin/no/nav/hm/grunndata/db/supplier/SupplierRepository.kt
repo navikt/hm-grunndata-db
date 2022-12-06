@@ -6,15 +6,16 @@ import io.micronaut.cache.annotation.Cacheable
 import io.micronaut.data.jdbc.annotation.JdbcRepository
 import io.micronaut.data.model.query.builder.sql.Dialect
 import io.micronaut.data.repository.kotlin.CoroutineCrudRepository
+import java.util.*
 
 
 @JdbcRepository(dialect = Dialect.POSTGRES)
 @CacheConfig("suppliers")
-interface SupplierRepository: CoroutineCrudRepository<Supplier, Long> {
+interface SupplierRepository: CoroutineCrudRepository<Supplier, UUID> {
 
     @Cacheable
     suspend fun findByIdentifier(identifier: String): Supplier?
 
     @Cacheable
-    override suspend fun findById(id:Long): Supplier?
+    override suspend fun findById(id: UUID): Supplier?
 }

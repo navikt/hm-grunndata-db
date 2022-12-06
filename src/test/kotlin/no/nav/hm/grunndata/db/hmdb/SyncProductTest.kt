@@ -24,7 +24,7 @@ class SyncProductTest(private val syncScheduler: SyncScheduler,
 //    @Inject
 //    lateinit var mockClient: HmDbClient
 
-    @Test
+    //@Test ignore, just for integration
     fun syncProducts() {
 //        every {
 //            mockClient.fetchAgreements()

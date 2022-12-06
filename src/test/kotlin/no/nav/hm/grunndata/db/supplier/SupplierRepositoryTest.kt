@@ -24,7 +24,7 @@ class SupplierRepositoryTest(private val repository: SupplierRepository) {
             val db = repository.findById(saved.id)
             db.shouldNotBeNull()
             db.name shouldBe "legacy company"
-            db.identifier shouldBe "hmdbid-1000"
+            db.identifier shouldBe "HMDB-1000"
             db.info.email shouldBe "epost@epost.test"
         }
 

@@ -5,12 +5,12 @@ import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.MappedEntity
 import no.nav.hm.grunndata.db.HMDB
 import java.time.LocalDateTime
+import java.util.*
 
 @MappedEntity("agreement_v1")
 data class Agreement (
-    @field:GeneratedValue
     @field:Id
-    var id: Long=-1L,
+    val  id: UUID = UUID.randomUUID(),
     val identifier: String,
     val title: String,
     val resume: String?,
@@ -26,10 +26,9 @@ data class Agreement (
 
 @MappedEntity("agreement_post_v1")
 data class AgreementPost (
-    @field:GeneratedValue
     @field:Id
-    var id: Long=-1L,
-    val agreementId: Long=-1L,
+    val id: UUID = UUID.randomUUID(),
+    val agreementId: UUID = UUID.randomUUID(),
     val identifier: String,
     val nr: Int,
     val title: String,

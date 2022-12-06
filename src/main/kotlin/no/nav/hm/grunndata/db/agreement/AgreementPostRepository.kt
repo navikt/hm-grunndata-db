@@ -5,12 +5,13 @@ import io.micronaut.cache.annotation.Cacheable
 import io.micronaut.data.jdbc.annotation.JdbcRepository
 import io.micronaut.data.model.query.builder.sql.Dialect
 import io.micronaut.data.repository.kotlin.CoroutineCrudRepository
+import java.util.*
 
 @JdbcRepository(dialect = Dialect.POSTGRES)
 @CacheConfig("agreementposts")
-interface AgreementPostRepository: CoroutineCrudRepository<AgreementPost, Long> {
+interface AgreementPostRepository: CoroutineCrudRepository<AgreementPost, UUID> {
 
-    suspend fun findByAgreementId(agreementId: Long): List<AgreementPost>
+    suspend fun findByAgreementId(agreementId: UUID): List<AgreementPost>
 
     @Cacheable
     suspend fun findByIdentifier(identifier: String): AgreementPost?
