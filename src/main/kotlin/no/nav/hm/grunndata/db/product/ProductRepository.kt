@@ -6,7 +6,7 @@ import io.micronaut.data.repository.kotlin.CoroutineCrudRepository
 import java.util.*
 
 @JdbcRepository(dialect = Dialect.POSTGRES)
-interface ProductRepository: CoroutineCrudRepository<Product, Long> {
+interface ProductRepository: CoroutineCrudRepository<Product, UUID> {
     suspend fun findBySupplierIdAndSupplierRef(supplierId: UUID, supplierRef: String): Product?
     suspend fun findByIdentifier(identifier: String): Product?
 

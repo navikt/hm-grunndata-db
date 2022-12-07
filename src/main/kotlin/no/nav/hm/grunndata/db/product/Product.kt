@@ -1,6 +1,5 @@
 package no.nav.hm.grunndata.db.product
 
-import io.micronaut.data.annotation.GeneratedValue
 import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.MappedEntity
 import io.micronaut.data.annotation.TypeDef
@@ -13,10 +12,8 @@ import javax.persistence.Column
 
 @MappedEntity("product_v1")
 data class Product (
-    @field:GeneratedValue
     @field:Id
-    var id: Long = -1L,
-    val uuid: UUID = UUID.randomUUID(),
+    val id: UUID = UUID.randomUUID(),
     val supplierId: UUID,
     val title: String,
     @field:TypeDef(type = DataType.JSON)
@@ -66,7 +63,7 @@ enum class ProductStatus {
 }
 
 data class Media (
-    val uuid:   UUID = UUID.randomUUID(),
+    val id:   UUID = UUID.randomUUID(),
     val order:  Int=1,
     val type: MediaType = MediaType.IMAGE,
     val uri:    String,
@@ -92,8 +89,7 @@ data class TechData (
 )
 
 data class ProductDTO(
-    var id: Long = -1L,
-    val uuid: UUID = UUID.randomUUID(),
+    val id: UUID,
     val supplier: SupplierDTO,
     val title: String,
     val description: Description,
@@ -118,7 +114,7 @@ data class ProductDTO(
 )
 
 fun Product.toDTO(supplier: SupplierDTO):ProductDTO =  ProductDTO (
-    id = id, uuid=uuid, supplier = supplier, title = title, description=description, status = status, HMSArtNr = HMSArtNr,
+    id = id, supplier = supplier, title = title, description=description, status = status, HMSArtNr = HMSArtNr,
     identifier = identifier, supplierRef=supplierRef, isoCategory=isoCategory, accessory=accessory, sparepart=sparepart,
     seriesId=seriesId, techData=techData, media= media, created=created, updated=updated, published=published, expired=expired,
     agreementInfo = agreementInfo, hasAgreement = (agreementInfo!=null), createdBy=createdBy, updatedBy=updatedBy

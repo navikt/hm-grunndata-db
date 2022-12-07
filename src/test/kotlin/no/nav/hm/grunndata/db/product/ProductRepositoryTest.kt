@@ -1,8 +1,10 @@
 package no.nav.hm.grunndata.db.product
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.common.runBlocking
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
+import io.micronaut.data.exceptions.DataAccessException
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import no.nav.hm.grunndata.db.supplier.Supplier
 import no.nav.hm.grunndata.db.supplier.SupplierInfo
@@ -25,6 +27,9 @@ class ProductRepositoryTest(private val productRepository: ProductRepository,
             db.shouldNotBeNull()
             db.supplierId shouldBe product.supplierId
             db.title shouldBe product.title
+            val updated = productRepository.update(db.copy(title = "Dette er et nytt produkt"))
+            updated.shouldNotBeNull()
+            updated.title shouldBe "Dette er et nytt produkt"
         }
     }
 }

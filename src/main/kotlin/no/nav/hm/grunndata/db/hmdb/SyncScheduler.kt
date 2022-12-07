@@ -73,7 +73,7 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
         }
     }
 
-    @Scheduled(fixedDelay = "1m")
+    //@Scheduled(fixedDelay = "1m")
     fun syncProducts() {
         val syncBatchJob = hmdbBatchRepository.findByName(SYNC_PRODUCTS) ?:
         hmdbBatchRepository.save(HmDbBatch(name= SYNC_PRODUCTS,
@@ -116,7 +116,6 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
            LOG.info("Mapping product prodid: ${prod.prodid} artid: ${prod.artid} artno: ${prod.artno} from supplier ${prod.supplier}")
            hmDBProductMapper.mapProduct(prod, batch)
         }.sortedBy { it.updated }
-
     }
 
     private suspend fun updateAgreement(agreementDocument: AgreementDocument, agree: Agreement) {

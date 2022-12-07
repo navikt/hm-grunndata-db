@@ -8,7 +8,6 @@ import java.util.*
 
 data class ProductDoc (
     override val id: String,
-    val uuid: UUID = UUID.randomUUID(),
     val supplier: ProductSupplier,
     val title: String,
     val description: Description,
@@ -42,7 +41,7 @@ data class TechDataFilters(val fyllmateriale:String?, val setebreddeMaksCM: Int?
 data class ProductSupplier(val id: String, val identifier: String, val name: String)
 
 fun Product.toDoc(supplier: Supplier): ProductDoc = ProductDoc (
-    id = id.toString(), uuid = uuid, supplier = ProductSupplier(id=supplier.id.toString(), identifier=supplier.identifier, name= supplier.name),
+    id = id.toString(), supplier = ProductSupplier(id=supplier.id.toString(), identifier=supplier.identifier, name= supplier.name),
     title = title, description = description, status = status, HMSArtNr = HMSArtNr, identifier = identifier,
     supplierRef = supplierRef, isoCategory = isoCategory, accessory = accessory, sparepart = sparepart, seriesId = seriesId,
     data = techData, media = media, created = created, updated = updated, expired = expired, createdBy = createdBy,

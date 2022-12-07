@@ -13,7 +13,7 @@ data class ProductImportDTO(
     val supplierRef: String,
     val isoCategory: String,
     val accessory: Boolean = false,
-    val part: Boolean = false,
+    val sparepart: Boolean = false,
     val seriesId: String?=null,
     val techData: List<TechData> = emptyList(),
     val media: List<Media> = emptyList(),
@@ -34,7 +34,7 @@ fun ProductImportDTO.toEntity(): Product = Product(
     identifier = supplierRef,
     description = description,
     accessory = accessory,
-    sparepart = part,
+    sparepart = sparepart,
     media = media,
     created = created?: LocalDateTime.now(),
     expired = expired?: LocalDateTime.now().plusYears(10)
