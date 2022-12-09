@@ -5,7 +5,6 @@ import io.micronaut.data.annotation.MappedEntity
 import io.micronaut.data.annotation.TypeDef
 import io.micronaut.data.model.DataType
 import no.nav.hm.grunndata.db.HMDB
-import no.nav.hm.grunndata.db.supplier.SupplierDTO
 import java.time.LocalDateTime
 import java.util.UUID
 import javax.persistence.Column
@@ -90,7 +89,7 @@ data class TechData (
 
 data class ProductDTO(
     val id: UUID,
-    val supplier: SupplierDTO,
+    val supplierId: UUID,
     val title: String,
     val description: Description,
     val status: ProductStatus = ProductStatus.ACTIVE,
@@ -113,8 +112,8 @@ data class ProductDTO(
     val updatedBy: String = HMDB
 )
 
-fun Product.toDTO(supplier: SupplierDTO):ProductDTO =  ProductDTO (
-    id = id, supplier = supplier, title = title, description=description, status = status, HMSArtNr = HMSArtNr,
+fun Product.toDTO():ProductDTO =  ProductDTO (
+    id = id, supplierId = supplierId, title = title, description=description, status = status, HMSArtNr = HMSArtNr,
     identifier = identifier, supplierRef=supplierRef, isoCategory=isoCategory, accessory=accessory, sparepart=sparepart,
     seriesId=seriesId, techData=techData, media= media, created=created, updated=updated, published=published, expired=expired,
     agreementInfo = agreementInfo, hasAgreement = (agreementInfo!=null), createdBy=createdBy, updatedBy=updatedBy
