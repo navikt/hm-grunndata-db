@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS product_v1 (
     supplier_ref VARCHAR(255) NOT NULL,
     iso_category VARCHAR(255) NOT NULL,
     accessory BOOLEAN NOT NULL DEFAULT FALSE,
-    sparepart BOOLEAN NOT NULL DEFAULT FALSE,
+    spare_part BOOLEAN NOT NULL DEFAULT FALSE,
     series_id VARCHAR(255),
     tech_data JSONB NOT NULL,
     media JSONB NOT NULL,

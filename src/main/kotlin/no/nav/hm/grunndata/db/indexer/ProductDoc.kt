@@ -2,9 +2,7 @@ package no.nav.hm.grunndata.db.indexer
 
 import no.nav.hm.grunndata.db.product.*
 import no.nav.hm.grunndata.db.supplier.Supplier
-import no.nav.hm.grunndata.db.supplier.SupplierInfo
 import java.time.LocalDateTime
-import java.util.*
 
 data class ProductDoc (
     override val id: String,
@@ -17,7 +15,7 @@ data class ProductDoc (
     val supplierRef: String,
     val isoCategory: String,
     val accessory: Boolean = false,
-    val sparepart: Boolean = false,
+    val sparePart: Boolean = false,
     val seriesId: String?=null,
     val data: List<TechData> = emptyList(),
     val media: List<Media> = emptyList(),
@@ -43,7 +41,7 @@ data class ProductSupplier(val id: String, val identifier: String, val name: Str
 fun Product.toDoc(supplier: Supplier): ProductDoc = ProductDoc (
     id = id.toString(), supplier = ProductSupplier(id=supplier.id.toString(), identifier=supplier.identifier, name= supplier.name),
     title = title, description = description, status = status, HMSArtNr = HMSArtNr, identifier = identifier,
-    supplierRef = supplierRef, isoCategory = isoCategory, accessory = accessory, sparepart = sparepart, seriesId = seriesId,
+    supplierRef = supplierRef, isoCategory = isoCategory, accessory = accessory, sparePart = sparePart, seriesId = seriesId,
     data = techData, media = media, created = created, updated = updated, expired = expired, createdBy = createdBy,
     updatedBy = updatedBy, agreementInfo = agreementInfo, hasAgreement = agreementInfo!=null,
     filters = mapTechDataFilters(techData)
