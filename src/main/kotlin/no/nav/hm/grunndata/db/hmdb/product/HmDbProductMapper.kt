@@ -74,8 +74,8 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
             "brosjyre", "produktbl", "bruksanvisning", "brugsanvisning", "quickguide", "målskjema", "batterioversikt" -> MediaType.PDF
             "video" -> MediaType.VIDEO
             else -> {
-                println("UNKNOWN ${blobDTO.blobtype} ${blobDTO.blobfile}")
-                MediaType.OTHER
+                if (blobDTO.blobfile.endsWith("pdf", true)) MediaType.PDF
+                else MediaType.OTHER
             }
         }
         return Media(type = mediaType, text = blobDTO.blobtype.trim(), uri = blobDTO.blobfile.trim())
