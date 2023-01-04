@@ -25,8 +25,7 @@ class Indexer(private val client: RestHighLevelClient,
     }
 
     fun initIndex(indexName: String) {
-        val indexRequest= GetIndexRequest(indexName)
-        if (!client.indices().exists(indexRequest, RequestOptions.DEFAULT)) {
+        if (!client.indices().exists(GetIndexRequest(indexName), RequestOptions.DEFAULT)) {
             if (createIndex(indexName))
                 LOG.info("$indexName has been created")
             else
@@ -81,5 +80,8 @@ class Indexer(private val client: RestHighLevelClient,
         }
         return client.bulk(bulkRequest, RequestOptions.DEFAULT)
     }
+
+    fun indexExists(indexName: String):Boolean = client.indices()
+        .exists(GetIndexRequest(indexName), RequestOptions.DEFAULT)
 
 }
