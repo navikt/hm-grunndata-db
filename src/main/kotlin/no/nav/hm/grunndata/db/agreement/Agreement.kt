@@ -18,6 +18,8 @@ data class Agreement (
     val reference: String,
     val publish: LocalDateTime,
     val expire: LocalDateTime?,
+
+    val documents: List<AttachmentDoc> = emptyList(),
     val createdBy: String = HMDB,
     val created: LocalDateTime = LocalDateTime.now(),
     val updated: LocalDateTime = LocalDateTime.now()
