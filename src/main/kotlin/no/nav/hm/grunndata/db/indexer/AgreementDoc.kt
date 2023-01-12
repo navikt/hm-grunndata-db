@@ -10,7 +10,6 @@ data class AgreementDoc(
     val title: String,
     val resume: String?,
     val text: String?,
-    val link: String?,
     val reference: String,
     val publish: LocalDateTime,
     val expire: LocalDateTime?,
@@ -32,7 +31,7 @@ data class AgreementPostDoc (
 fun AgreementDocument.toDoc() : AgreementDoc = AgreementDoc(
     id = agreement.id.toString(), identifier = agreement.identifier,
     title = agreement.title, resume = agreement.resume, text = agreement.text,
-    link = agreement.link, reference = agreement.reference, publish = agreement.publish, expire = agreement.expire,
+    reference = agreement.reference, publish = agreement.publish, expire = agreement.expire,
     createdBy = agreement.createdBy, created = agreement.created, updated = agreement.updated,
     posts = agreementPost.map { AgreementPostDoc(
         id = it.id, identifier = it.identifier, nr = it.nr, title = it.title, description = it.description,

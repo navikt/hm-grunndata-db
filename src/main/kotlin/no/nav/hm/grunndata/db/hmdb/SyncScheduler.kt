@@ -136,12 +136,15 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
         }
     }
 
-    private fun mapAgreement(hmdbag: HmDbAgreementDTO): AgreementDocument =
-        AgreementDocument(agreement = hmdbag.newsDTO.toAgreement(),
-            agreementPost = hmdbag.poster.map { it.toAgreementPost() }  )
+    private fun mapAgreement(hmdbag: HmDbAgreementDTO): AgreementDocument {
+        val agreement = hmdbag.newsDTO.toAgreement()
+        return AgreementDocument(agreement = agreement,
+            agreementPost = hmdbag.poster.map { it.toAgreementPost(agreement) })
+    }
 }
 
-private fun AvtalePostDTO.toAgreementPost(): AgreementPost = AgreementPost(
+private fun AvtalePostDTO.toAgreementPost(agreement: Agreement): AgreementPost = AgreementPost(
+    agreementId = agreement.id ,
     identifier = "$apostid".HmDbIdentifier(),
     nr = apostnr,
     title = aposttitle,
@@ -154,7 +157,6 @@ private fun NewsDTO.toAgreement(): Agreement = Agreement(
         title= newstitle,
         resume= newsresume,
         text = newstext,
-        link = newslink,
         publish = newspublish,
         expire = newsexpire,
         reference = externid
