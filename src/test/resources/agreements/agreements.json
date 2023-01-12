@@ -1,418 +1,315 @@
-[
-  {
-    "newsDTO": {
-      "newsid": 4361,
-      "newstitle": "Sitteputer med trykksårforebyggende egenskaper ",
-      "newsresume": "Gjør deg kjent med avtalen, spesielt innholdet i postene (se lenken \"Poster\"), før du benytter hurtigoversikten. ",
-      "newstext": "<p><strong><a title=\"pdf-fil - &aring;pner i nytt vindu\" href=\"blobs/hmidocfiles/5987562.pdf\" target=\"_blank\" rel=\"noopener\">Hurtigoversikt (PDF)</a></strong><br><br>Avtalen omfatter sitteputer som er beregnet brukt i rullestol, eller i kombinasjon med andre seter. Brukerne er personer som har behov for &aring; forebygge eller hindre videreutvikling av trykks&aring;r. <br><br><strong>Avtalen er inndelt i 7 poster:</strong> <br>Post 1: Enkel sittepute <br>Post 2: Sittepute som ikke skal innstilles - lav modell<br>Post 3: Sittepute som ikke skal innstilles - h&oslash;y modell<br>Post 4: Sittepute som skal innstilles - lav modell<br>Post 5: Sittepute som skal innstilles - h&oslash;y modell<br>Post 6: Sittepute for trykks&aring;rforebygging og posisjonering<br>Post 7: Sittepute som gir god st&oslash;tte under forflytning<br><br>Alle putene leveres med to like avtakbare trekk. Det fremkommer i produktseriebeskrivelsene om disse er inkontinenstrekk eller ikke. De putene som kan innstilles leveres med det utstyret som er n&oslash;dvendig for &aring; ta puten i bruk, for eksempel pumpe. <br><br>Les mer om de ulike postene, selve avtalen, leverand&oslash;rer med mer under lenkene nederst p&aring; siden. <br><br>Sitteputer som ikke har trykks&aring;rforebyggende egenskaper, samt hygieneputer, dvs. puter som brukes i forbindelse med bad eller toalett, er ikke omfattet av denne avtalen.<br><br>Enkle sitteputer som kan brukes opp&aring; andre seter i forbindelse med for eksempel reise er ikke omfattet av denne avtalen. <br><br></p>",
-      "newstype": 7,
-      "newspublisher": 12248,
-      "newspublish": "2018-12-01T00:00:00",
-      "newsexpire": "2022-11-30T00:00:00",
-      "ldbid": 2,
-      "externid": "17-274"
-    },
-    "poster": [
-      {
-        "apostid": 864,
-        "newsid": 4361,
-        "apostnr": 1,
-        "aposttitle": "Post 1: Enkel sittepute",
-        "apostdesc": "Sitteputer til voksne og barn som ikke sitter så lenge av gangen og som kan endre sittestilling, eller flytte seg inn og ut av rullestolen på egenhånd.  Putene har ikke innstillingsmuligheter. ",
-        "apostindate": "2018-10-15"
-      },
-      {
-        "apostid": 865,
-        "newsid": 4361,
-        "apostnr": 2,
-        "aposttitle": "Post 2: Sittepute som ikke skal innstilles - lav modell ",
-        "apostdesc": "Sitteputer til voksne og barn som har nedsatt evne til å endre sittestilling og som ikke har feilstillinger og/eller asymmetrier.  ",
-        "apostindate": "2018-10-15"
-      },
-      {
-        "apostid": 866,
-        "newsid": 4361,
-        "apostnr": 3,
-        "aposttitle": "Post 3: Sittepute som ikke skal innstilles - høy modell ",
-        "apostdesc": "Sitteputer til voksne og barn som har nedsatt evne til å endre sittestilling og som har behov for mye materiale å synke ned i/bli omsluttet av. Brukerne har ikke feilstillinger og/eller asymmetrier.  ",
-        "apostindate": "2018-10-15"
-      },
-      {
-        "apostid": 867,
-        "newsid": 4361,
-        "apostnr": 4,
-        "aposttitle": "Post 4: Sittepute som skal innstilles - lav modell",
-        "apostdesc": "Til voksne og barn som har behov for at det tilpasses hvor langt ned i puten de skal synke. Brukerne har ikke feilstillinger og/eller asymmetrier.   Putene kan innstilles av bruker eller hjelper. ",
-        "apostindate": "2018-10-15"
-      },
-      {
-        "apostid": 868,
-        "newsid": 4361,
-        "apostnr": 5,
-        "aposttitle": "Post 5: Sittepute som skal innstilles - høy modell",
-        "apostdesc": "Til voksne og barn som har behov for at det tilpasses hvor langt ned i puten de skal synke. Brukerne har behov for mye materiale å synke nedi/bli omsluttet av, men de har ikke feilstillinger og/eller asymmetrier. Putene kan innstilles av bruker eller hjelper. ",
-        "apostindate": "2018-10-15"
-      },
-      {
-        "apostid": 869,
-        "newsid": 4361,
-        "apostnr": 6,
-        "aposttitle": "Post 6: Sittepute for trykksårforebygging og posisjonering ",
-        "apostdesc": "Til voksne og barn som har behov for individuell posisjonering og god sittestabilitet. Brukerne kan ha asymmetrier og/eller feilstillinger som det må kompenseres/korrigeres for. ",
-        "apostindate": "2018-10-15"
-      },
-      {
-        "apostid": 870,
-        "newsid": 4361,
-        "apostnr": 7,
-        "aposttitle": "Post 7: Sittepute som gir god støtte under forflytning ",
-        "apostdesc": "Til voksne og barn som ofte har nedsatt evne til å endre sittestilling. Brukerne forflytter seg selvstendig til og fra rullestol ved hjelp av armene, og putene har derfor god støtte i forkant. ",
-        "apostindate": "2018-10-15"
-      }
-    ]
+[ {
+  "newsDTO" : {
+    "newsid" : 6427,
+    "newstitle" : "Kalendere og planleggingssystemer",
+    "newsresume" : "Gjør deg kjent med avtalen, spesielt innholdet i postene (se lenken \"Poster\"), før du benytter hurtigoversikten. ",
+    "newstext" : "<p><strong><a href=\"blobs/hmidocfiles/58133.pdf?r=19042022071714\">Hurtigoversikt (PDF)</a></strong>- sist endret 19.04.2022<strong><br></strong><br>Avtalen omfatter kalendere, planleggingssystemer og tidtakere<strong><br></strong><br>Brukerne er personer med ulik grad av kognitiv svikt. Mange m&oslash;ter utfordringer med tid, struktur, planlegging og oversikt over dagen/d&oslash;gnet. Produktene i rammeavtalen kan v&aelig;re aktuelle i for eksempel egen bolig, barnehage, skole/utdanning, arbeid og fritid. <br><br>Avtalen best&aring;r av 8 poster. Nedenfor er hver enkelt post beskrevet. Innenfor den enkelte posten er produktene presentert etter rangering. Oversikt over produkter og rangering finner du ogs&aring; i hurtigoversikten.<br><em><br></em></p>",
+    "newstype" : 7,
+    "newspublisher" : 17266,
+    "newspublish" : "2019-03-01T00:00:00",
+    "newsexpire" : "2023-03-01T00:00:00",
+    "ldbid" : 2,
+    "externid" : "17-1920"
   },
-  {
-    "newsDTO": {
-      "newsid": 6427,
-      "newstitle": "Kalendere og planleggingssystemer",
-      "newsresume": "Gjør deg kjent med avtalen, spesielt innholdet i postene (se lenken \"Poster\"), før du benytter hurtigoversikten. ",
-      "newstext": "<p><strong><a href=\"blobs/hmidocfiles/58133.pdf?r=19042022071714\">Hurtigoversikt (PDF)</a></strong>- sist endret 19.04.2022<strong><br></strong><br>Avtalen omfatter kalendere, planleggingssystemer og tidtakere<strong><br></strong><br>Brukerne er personer med ulik grad av kognitiv svikt. Mange m&oslash;ter utfordringer med tid, struktur, planlegging og oversikt over dagen/d&oslash;gnet. Produktene i rammeavtalen kan v&aelig;re aktuelle i for eksempel egen bolig, barnehage, skole/utdanning, arbeid og fritid. <br><br>Avtalen best&aring;r av 8 poster. Nedenfor er hver enkelt post beskrevet. Innenfor den enkelte posten er produktene presentert etter rangering. Oversikt over produkter og rangering finner du ogs&aring; i hurtigoversikten.<br><em><br></em></p>",
-      "newstype": 7,
-      "newspublisher": 17266,
-      "newspublish": "2019-03-01T00:00:00",
-      "newsexpire": "2023-03-01T00:00:00",
-      "ldbid": 2,
-      "externid": "17-1920"
+  "poster" : [ {
+    "apostid" : 871,
+    "newsid" : 6427,
+    "apostnr" : 1,
+    "aposttitle" : "Post 1: Enkel kalender med døgnorientering",
+    "apostdesc" : "Posten inneholder produkter som viser klokke, ukedag og tid på døgnet på en enkel måte. Produktene krever ingen spesiell betjening fra brukerens side. Mengden informasjon og hvordan denne vises, kan tilpasses noe.",
+    "apostindate" : "2019-01-08",
+    "ldbid" : 2
+  }, {
+    "apostid" : 872,
+    "newsid" : 6427,
+    "apostnr" : 2,
+    "aposttitle" : "Post 2: Enkel kalender med døgnorientering og påminnelse",
+    "apostdesc" : "Posten inneholder produkter som viser klokke, ukedag og tid på døgnet på en enkel måte. Produktene kan i tillegg gi påminnelse om daglige aktiviteter og avtaler ved hjelp av lyd/tale. Produktene krever ingen spesiell betjening fra brukerens side. Mengden informasjon kan tilpasses noe.",
+    "apostindate" : "2019-01-08",
+    "ldbid" : 2
+  }, {
+    "apostid" : 873,
+    "newsid" : 6427,
+    "apostnr" : 3,
+    "aposttitle" : "Post 3: Tidshjelpemiddel med visuell nedtelling av tidsintervall",
+    "apostdesc" : "Posten inneholder produkter som gir en tydelig nedtelling av ulike tidsintervaller og gir et varsel når nedtellingen er ferdig. Produktene er enkle å ta med seg.",
+    "apostindate" : "2019-01-08",
+    "ldbid" : 2
+  }, {
+    "apostid" : 874,
+    "newsid" : 6427,
+    "apostnr" : 4,
+    "aposttitle" : "Post 4: Dagsplanlegger med elektronisk tidsmarkør",
+    "apostdesc" : "Posten inneholder produkter som gir oversikt og struktur over dagen og dagens aktiviteter med en tidsmarkør som viser hvor man er i døgnet, inkludert om det er natt eller dag. Produktene kan gi påminnelse og vise når en aktivitet starter, når den avsluttes og innholdet i den. Synliggjøring av aktiviteter og avtaler gjøres ved for eksempel å skrive, tegne eller henge opp bilder/symboler. Markering av tid og påminnelse skjer elektronisk. ",
+    "apostindate" : "2019-01-08",
+    "ldbid" : 2
+  }, {
+    "apostid" : 875,
+    "newsid" : 6427,
+    "apostnr" : 5,
+    "aposttitle" : "Post 5: Digitalt planleggingssystem som programvare/app",
+    "apostdesc" : "Posten inneholder apper som visualiserer og gir påminnelse om avtaler og aktiviteter på en enkel og oversiktlig måte. Mengden informasjon kan tilpasses. Appen installeres på brukerens egen enhet, og kan anvendes på smarttelefon, nettbrett eller pc. Appen kan administreres fra nettbasert løsning av hjelper som ikke er tilstede.",
+    "apostindate" : "2019-01-08",
+    "ldbid" : 2
+  }, {
+    "apostid" : 876,
+    "newsid" : 6427,
+    "apostnr" : 6,
+    "aposttitle" : "Post 6: Digitalt planleggingssystem installert på liten enhet",
+    "apostdesc" : "Posten inneholder produkter som viser aktiviteter og avtaler på en enkel og oversiktlig måte. I tillegg gir de påminnelse om start-/sluttidspunkt og innhold i avtalen i form av lyd/tale. Mengden informasjon kan tilpasses. Planleggingssystemet kan administreres fra nettbasert løsning av hjelper som ikke er tilstede. Produktene er enkle å ta med seg. Størrelse: inntil 7\".\n",
+    "apostindate" : "2019-01-08",
+    "ldbid" : 2
+  }, {
+    "apostid" : 877,
+    "newsid" : 6427,
+    "apostnr" : 7,
+    "aposttitle" : "Post 7: Digitalt planleggingssystem installert på stor enhet",
+    "apostdesc" : "Posten inneholder produkter som viser aktiviteter og avtaler på en enkel og oversiktlig måte. I tillegg gir de påminnelse om start-/sluttidspunkt og innhold i avtalen i form av lyd/tale. Mengden informasjon kan tilpasses. Planleggingssystemet kan administreres fra nettbasert løsning av hjelper som ikke er tilstede. Produktene er mulige å ta med seg.\nStørrelse: 7-13\". \n",
+    "apostindate" : "2019-01-08",
+    "ldbid" : 2
+  }, {
+    "apostid" : 878,
+    "newsid" : 6427,
+    "apostnr" : 8,
+    "aposttitle" : "Post 8: Digitalt planleggingssystem installert på stasjonær enhet",
+    "apostdesc" : "Posten inneholder produkter som viser aktiviteter og avtaler på en enkel og oversiktlig måte. I tillegg gir de påminnelse om start-/sluttidspunkt og innhold i avtalen. Påminnelse gis i form av lyd/tale. Aktiviteter/avtaler varsles på en måte som fanger brukerens oppmerksomhet. Mengden informasjon kan tilpasses. Aktivitetene kan vises med foto og/eller grafiske symboler i tillegg til skrift. Planleggingssystemet kan administreres fra nettbasert løsning av hjelper som ikke er tilstede. Beregnet for bruk med bordstativ eller veggfeste.\nStørrelse: over 19\". ",
+    "apostindate" : "2019-01-08",
+    "ldbid" : 2
+  } ],
+  "newsDocHolder" : [ {
+    "newsDoc" : {
+      "hmidocid" : 1520,
+      "newsid" : 6427,
+      "hmidoctitle" : "Hurtigoversikt",
+      "hmidocdesc" : "",
+      "hmidocfilename" : "Hurtigoversikt",
+      "hmidocrank" : 1,
+      "ldbid" : 2,
+      "hmidocindate" : "2019-02-18T12:43:54.37",
+      "hmidocadrlist" : false
     },
-    "poster": [
-      {
-        "apostid": 871,
-        "newsid": 6427,
-        "apostnr": 1,
-        "aposttitle": "Post 1: Enkel kalender med døgnorientering",
-        "apostdesc": "Posten inneholder produkter som viser klokke, ukedag og tid på døgnet på en enkel måte. Produktene krever ingen spesiell betjening fra brukerens side. Mengden informasjon og hvordan denne vises, kan tilpasses noe.",
-        "apostindate": "2019-01-08"
-      },
-      {
-        "apostid": 872,
-        "newsid": 6427,
-        "apostnr": 2,
-        "aposttitle": "Post 2: Enkel kalender med døgnorientering og påminnelse",
-        "apostdesc": "Posten inneholder produkter som viser klokke, ukedag og tid på døgnet på en enkel måte. Produktene kan i tillegg gi påminnelse om daglige aktiviteter og avtaler ved hjelp av lyd/tale. Produktene krever ingen spesiell betjening fra brukerens side. Mengden informasjon kan tilpasses noe.",
-        "apostindate": "2019-01-08"
-      },
-      {
-        "apostid": 873,
-        "newsid": 6427,
-        "apostnr": 3,
-        "aposttitle": "Post 3: Tidshjelpemiddel med visuell nedtelling av tidsintervall",
-        "apostdesc": "Posten inneholder produkter som gir en tydelig nedtelling av ulike tidsintervaller og gir et varsel når nedtellingen er ferdig. Produktene er enkle å ta med seg.",
-        "apostindate": "2019-01-08"
-      },
-      {
-        "apostid": 874,
-        "newsid": 6427,
-        "apostnr": 4,
-        "aposttitle": "Post 4: Dagsplanlegger med elektronisk tidsmarkør",
-        "apostdesc": "Posten inneholder produkter som gir oversikt og struktur over dagen og dagens aktiviteter med en tidsmarkør som viser hvor man er i døgnet, inkludert om det er natt eller dag. Produktene kan gi påminnelse og vise når en aktivitet starter, når den avsluttes og innholdet i den. Synliggjøring av aktiviteter og avtaler gjøres ved for eksempel å skrive, tegne eller henge opp bilder/symboler. Markering av tid og påminnelse skjer elektronisk. ",
-        "apostindate": "2019-01-08"
-      },
-      {
-        "apostid": 875,
-        "newsid": 6427,
-        "apostnr": 5,
-        "aposttitle": "Post 5: Digitalt planleggingssystem som programvare/app",
-        "apostdesc": "Posten inneholder apper som visualiserer og gir påminnelse om avtaler og aktiviteter på en enkel og oversiktlig måte. Mengden informasjon kan tilpasses. Appen installeres på brukerens egen enhet, og kan anvendes på smarttelefon, nettbrett eller pc. Appen kan administreres fra nettbasert løsning av hjelper som ikke er tilstede.",
-        "apostindate": "2019-01-08"
-      },
-      {
-        "apostid": 876,
-        "newsid": 6427,
-        "apostnr": 6,
-        "aposttitle": "Post 6: Digitalt planleggingssystem installert på liten enhet",
-        "apostdesc": "Posten inneholder produkter som viser aktiviteter og avtaler på en enkel og oversiktlig måte. I tillegg gir de påminnelse om start-/sluttidspunkt og innhold i avtalen i form av lyd/tale. Mengden informasjon kan tilpasses. Planleggingssystemet kan administreres fra nettbasert løsning av hjelper som ikke er tilstede. Produktene er enkle å ta med seg. Størrelse: inntil 7\".\n",
-        "apostindate": "2019-01-08"
-      },
-      {
-        "apostid": 877,
-        "newsid": 6427,
-        "apostnr": 7,
-        "aposttitle": "Post 7: Digitalt planleggingssystem installert på stor enhet",
-        "apostdesc": "Posten inneholder produkter som viser aktiviteter og avtaler på en enkel og oversiktlig måte. I tillegg gir de påminnelse om start-/sluttidspunkt og innhold i avtalen i form av lyd/tale. Mengden informasjon kan tilpasses. Planleggingssystemet kan administreres fra nettbasert løsning av hjelper som ikke er tilstede. Produktene er mulige å ta med seg.\nStørrelse: 7-13\". \n",
-        "apostindate": "2019-01-08"
-      },
-      {
-        "apostid": 878,
-        "newsid": 6427,
-        "apostnr": 8,
-        "aposttitle": "Post 8: Digitalt planleggingssystem installert på stasjonær enhet",
-        "apostdesc": "Posten inneholder produkter som viser aktiviteter og avtaler på en enkel og oversiktlig måte. I tillegg gir de påminnelse om start-/sluttidspunkt og innhold i avtalen. Påminnelse gis i form av lyd/tale. Aktiviteter/avtaler varsles på en måte som fanger brukerens oppmerksomhet. Mengden informasjon kan tilpasses. Aktivitetene kan vises med foto og/eller grafiske symboler i tillegg til skrift. Planleggingssystemet kan administreres fra nettbasert løsning av hjelper som ikke er tilstede. Beregnet for bruk med bordstativ eller veggfeste.\nStørrelse: over 19\". ",
-        "apostindate": "2019-01-08"
-      }
-    ]
-  },
-  {
-    "newsDTO": {
-      "newsid": 7449,
-      "newstitle": "Elektriske rullestoler ",
-      "newsresume": "Gjør deg kjent med avtalen, spesielt innholdet i postene (se lenken \"Poster\"), før du benytter hurtigoversikten. ",
-      "newstext": "<p><a title=\"Hurtigoversikt (PDF)\" href=\"blobs/hmidocfiles/6052804.pdf\">Hurtigoversikt (PDF)</a> - sist oppdatert 12.01.2022<br><strong><br>Fra og med 01.10.2020 finner du drivhjul og drivaggregat i avtalen for manuelle rullestoler.</strong><br><br>Avtalen inneholder 27 poster:<br>Post 1-8: Rullestoler med manuell styring (scootere med styre eller ratt)<br>Post 9-27: Rullestoler med motorisert styring (joystick-betjening) <br><br>I post 8, 24, 25, 26 og 27 finner du rullestoler beregnet for <strong>innend&oslash;rs</strong> bruk.<br><br>I post 13-18 og 20-23finner du rullestoler begregnet brukt som <strong>sete i</strong> <strong>kj&oslash;ret&oslash;y</strong>. Disse er markert med en stjerne i hurtigoversikten. I tillegg finnes det ytterligere to rullestoler p&aring; rammeavtale som kan benyttes som sete i kj&oslash;ret&oslash;y. Disse er markert p&aring; samme m&aring;te i hurtigoversikten. <br><br>For &aring; f&aring; en helhetlig oversikt over egenskaper og utstyr som leveres med rullestolene, anbefales det &aring; lese postbeskrivelsene (se lenken \"Poster\"), produktserie-/produktbeskrivelsene, brosjyrer, bruksanvsininger og teknisk data tilknyttet hvert produkt. <br><br>Oversikt over tjenester, tilbeh&oslash;r og reservedeler finner du ved &aring; f&oslash;lge de aktuelle lenkene p&aring; denne siden. For ytterligere <a href=\"blobs/hmidocfiles/2806237.pdf\"> informasjon om tjenester (PDF) </a> kan du f&oslash;lge denne lenken Du kan ogs&aring; lese om blant annet generelle krav til rullestolene under lenken \"Behov- og kravspesifikasjon\".<br><br>P&aring; <a href=\"http://www.kunnskapsbanken.net/?s=elektrisk+rullestol\">kunnskapsbanken.net</a> finner du \"<strong>Godkjenningskurs elektrisk rullestol</strong>\" og hefter/artikler om blant annet elektrisk rullestol i trafikk og bruk av elektrisk rullestol for sm&aring; barn.</p>",
-      "newstype": 7,
-      "newspublisher": 12248,
-      "newspublish": "2019-03-15T00:00:00",
-      "newsexpire": "2023-03-15T00:00:00",
-      "ldbid": 2,
-      "externid": "17-1766"
+    "newsDocAdr" : [ ]
+  }, {
+    "newsDoc" : {
+      "hmidocid" : 1521,
+      "newsid" : 6427,
+      "hmidoctitle" : "Tilbehør",
+      "hmidocdesc" : "Tilbehør er deler som endrer hovedproduktets funksjon. Tilbehør kan monteres i tillegg til, eller i stedet for en del som er påmontert i en standard utgave av hovedproduktet. Dato bak lenken angir når dokumentet ble lastet opp på Hjelpemiddeldatabasen.",
+      "hmidocfilename" : "",
+      "hmidocrank" : 2,
+      "ldbid" : 2,
+      "hmidocindate" : "2019-02-18T12:46:06.337",
+      "hmidocadrlist" : true
     },
-    "poster": [
-      {
-        "apostid": 879,
-        "newsid": 7449,
-        "apostnr": 1,
-        "aposttitle": "Post 1: Elektrisk rullestol med manuell styring for utendørs bruk med 4 hjul - voksne ",
-        "apostdesc": "Rullestoler i post 1 leveres med sitteenhet, opp- og/eller nedfellbare armlener, seterotasjon, regulerbar seteforskyving, batteri, lader, ladeplugg, kjørelys foran, baklys, retningslys, reflekser, kurv, krykkeholder, to speil, to separate bremsesystemer og helårsdekk. \n\n",
-        "apostindate": "2019-02-11"
-      },
-      {
-        "apostid": 880,
-        "newsid": 7449,
-        "apostnr": 2,
-        "aposttitle": "Post 2: Elektrisk rullestol med manuell styring for utendørs bruk med 4 hjul - stor kroppsstørrelse og/eller høy brukervekt - voksne ",
-        "apostdesc": "Rullestolen i post 2 leveres med sitteenhet, opp- og/eller nedfellbare armlener, seterotasjon, regulerbar seteforskyving, batteri, lader, ladeplugg, kjørelys foran, baklys, retningslys, reflekser, kurv, krykkeholder, to speil, to separate bremsesystemer og helårsdekk.  \n\n",
-        "apostindate": "2019-02-11"
-      },
-      {
-        "apostid": 881,
-        "newsid": 7449,
-        "apostnr": 3,
-        "aposttitle": "Post 3: Elektrisk rullestol med manuell styring for utendørs bruk med 4 hjul - kort modell - voksne ",
-        "apostdesc": "Rullestolen i post 3 leveres med sitteenhet, opp- og/eller nedfellbare armlener, seterotasjon, regulerbar seteforskyving, batteri, lader, ladeplugg, kjørelys foran, baklys, retningslys, reflekser, kurv, krykkeholder, to speil, to separate bremsesystemer og helårsdekk. Lengde: 132 cm.                                                              ",
-        "apostindate": "2019-02-11"
-      },
-      {
-        "apostid": 882,
-        "newsid": 7449,
-        "apostnr": 4,
-        "aposttitle": "Post 4: Elektrisk rullestol med manuell styring for utendørs bruk med 4 hjul og kabin - voksne ",
-        "apostdesc": "Rullestoler i post 4 leveres med sitteenhet, opp- og/eller nedfellbare armlener, seterotasjon, regulerbar seteforskyving, batteri, lader, ladeplugg, kjørelys foran, baklys, retningslys, kurv, krykkeholder, to speil, to separate bremsesystemer, helårsdekk, påmontert kabin med reflekser, varmeapparat, vindusvisker(e) til frontruten, vindusspylesystem og innvendig speil.  ",
-        "apostindate": "2019-02-11"
-      },
-      {
-        "apostid": 883,
-        "newsid": 7449,
-        "apostnr": 5,
-        "aposttitle": "Post 5: Elektrisk rullestol med manuell styring for utendørs bruk med 4 hjul - barn/små voksne ",
-        "apostdesc": "Rullestoler i post 5 leveres med sitteenhet, opp- og/eller nedfellbare armlener, seterotasjon, regulerbar seteforskyving, batteri, lader, ladeplugg, kjørelys foran, baklys, retningslys, reflekser, kurv, krykkeholder, to speil, to separate bremsesystemer og helårsdekk.  ",
-        "apostindate": "2019-02-11"
-      },
-      {
-        "apostid": 884,
-        "newsid": 7449,
-        "apostnr": 6,
-        "aposttitle": "Post 6: Elektrisk rullestol med manuell styring for utendørs bruk med 3 hjul - voksne",
-        "apostdesc": "Rullestolen i post 6 leveres med sitteenhet, opp- og/eller nedfellbare armlener, seterotasjon, regulerbar seteforskyving, batteri, lader, ladeplugg, kjørelys foran, baklys, retningslys, reflekser, kurv, krykkeholder, to speil, to separate bremsesystemer og helårsdekk. ",
-        "apostindate": "2019-02-11"
-      },
-      {
-        "apostid": 885,
-        "newsid": 7449,
-        "apostnr": 7,
-        "aposttitle": "Post 7: Elektrisk rullestol med manuell styring for begrenset utendørs bruk delbar/sammenleggbar - voksne",
-        "apostdesc": "Rullestolen i post 7 leveres med sitteenhet, armlener, batteri, lader, ladeplugg, reflekser og dekk med mønster. Tyngste del etter deling veier 23 kilo. \n",
-        "apostindate": "2019-02-11"
-      },
-      {
-        "apostid": 886,
-        "newsid": 7449,
-        "apostnr": 8,
-        "aposttitle": "Post 8: Elektrisk rullestol med manuell styring for innendørs bruk delbar/sammenleggbar - voksne",
-        "apostdesc": "Rullestolen i post 8 leveres med sitteenhet, armlener, batteri, lader, ladeplugg og dekk beregnet for innebruk. Tyngste del etter deling veier 23 kilo. \n",
-        "apostindate": "2019-02-12"
-      },
-      {
-        "apostid": 887,
-        "newsid": 7449,
-        "apostnr": 9,
-        "aposttitle": "Post 9 Elektrisk rullestol med motorisert styring for utendørs bruk med manuell endring av ryggvinkel - voksne ",
-        "apostdesc": "Rullestolen i post 9 leveres med sitteenhet, benstøtter/fotstøtter, armlener, batteri, lader, ladeplugg, kjørelys foran, baklys, retningslys, reflekser, helårsdekk og manuell endring av ryggvinkel. ",
-        "apostindate": "2019-02-12"
-      },
-      {
-        "apostid": 888,
-        "newsid": 7449,
-        "apostnr": 10,
-        "aposttitle": "Post 10: Elektrisk rullestol med motorisert styring for utendørs bruk - barn/små voksne ",
-        "apostdesc": "Rullestolen i post 10 leveres med sitteenhet, benstøtter/fotstøtter, armlener, batteri, lader, ladeplugg, kjørelys foran, baklys, retningslys, reflekser og helårsdekk. Fjernstyrt nødstopp finnes som tilbehør. ",
-        "apostindate": "2019-02-12"
-      },
-      {
-        "apostid": 889,
-        "newsid": 7449,
-        "apostnr": 11,
-        "aposttitle": "Post 11: Elektrisk rullestol med motorisert styring for utendørs bruk med elektriske setefunksjoner - voksne",
-        "apostdesc": "Rullestoler i post 11 leveres med sitteenhet, benstøtter/fotstøtter, armlener, hodestøtte (gjelder rullestoler med elektrisk tilt), batteri, lader, ladeplugg, kjørelys foran, baklys, retningslys, reflekser og helsårsdekk. Rullestolene har elektriske reguleringer av minimum to setefunksjoner, der ryggvinkelregulering og/eller tiltregulering inngår.",
-        "apostindate": "2019-02-12"
-      },
-      {
-        "apostid": 890,
-        "newsid": 7449,
-        "apostnr": 12,
-        "aposttitle": "Post 12: Elektrisk rullestol med motorisert styring for utendørs bruk med elektriske setefunksjoner - barn/ små voksne ",
-        "apostdesc": "Rullestoler i post 12 leveres med sitteenhet, benstøtter/fotstøtter, armlener, hodestøtte (gjelder rullestoler med elektrisk tilt), batteri, lader, ladeplugg, kjørelys foran, baklys, retningslys, reflekser og helårsdekk. Rullestolene har elektriske reguleringer av minimum to setefunksjoner, der ryggvinkelregulering og/eller tiltregulering inngår. Ledsagerstyring og fjernstyrt nødstopp finnes som tilbehør.  \n\n",
-        "apostindate": "2019-02-12"
-      },
-      {
-        "apostid": 891,
-        "newsid": 7449,
-        "apostnr": 13,
-        "aposttitle": "Post 13: Elektrisk rullestol med motorisert styring for begrenset utendørs bruk med bakhjulsdrift og elektrisk regulering av tilt - voksne ",
-        "apostdesc": "Rullestolen i post 13 leveres med sitteenhet, benstøtter/fotstøtter, armlener, hodestøtte, batteri, lader, ladeplugg, manuell regulering av ryggvinkel, elektrisk tilt, parallellforskyvbar styreboks, bakhjulsdrift og dekk med mønster. Ledsagerstyring finnes som tilbehør. Rullestolen er beregnet brukt som sete i kjøretøy. ",
-        "apostindate": "2019-02-12"
-      },
-      {
-        "apostid": 892,
-        "newsid": 7449,
-        "apostnr": 14,
-        "aposttitle": "Post 14: Elektrisk rullestol med motorisert styring for begrenset utendørs bruk med senterdrift og elektrisk regulering av tilt - voksne",
-        "apostdesc": "Rullestolen i post 14 leveres med sitteenhet, benstøtter/fotstøtter, armlener, hodestøtte, batteri, lader, ladeplugg, manuell regulering av ryggvinkel, elektrisk tilt, parallellforskyvbar styreboks, senterdrift og dekk med mønster. Ledsagerstyring finnes som tilbehør. Rullestolen er beregnet brukt som sete i kjøretøy.",
-        "apostindate": "2019-02-12"
-      },
-      {
-        "apostid": 893,
-        "newsid": 7449,
-        "apostnr": 15,
-        "aposttitle": "Post 15: Elektrisk rullestol med motorisert styring for begrenset utendørs bruk med bakhjulsdrift og elektriske setefunksjoner - voksne",
-        "apostdesc": "Rullestoler i post 15 leveres med sitteenhet, benstøtter/fotstøtter, armlener, hodestøtte, batteri, lader, ladeplugg, elektrisk tilt, elektrisk seteløft, elektrisk regulering av ryggvinkel, elektrisk vinkelregulering av benstøtter, parallellforskyvbar styreboks, bakhjulsdrift og dekk med mønster. Ledsagerstyring finnes som tilbehør. Rullestolene er beregnet brukt som sete i kjøretøy og rammen er klargjort for påmontering av elektrisk bilfeste. \n \n",
-        "apostindate": "2019-02-12"
-      },
-      {
-        "apostid": 894,
-        "newsid": 7449,
-        "apostnr": 16,
-        "aposttitle": "Post 16: Elektrisk rullestol med motorisert styring for begrenset utendørs bruk med senterdrift og elektriske setefunksjoner - voksne",
-        "apostdesc": "Rullestoler i post 16 leveres med sitteenhet, benstøtter/fotstøtter, armlener, hodestøtte, batteri, lader, ladeplugg, elektrisk tilt, elektrisk seteløft, elektrisk regulering av ryggvinkel, elektrisk vinkelregulering av benstøtter, parallellforskyvbar styreboks, senterdrift og dekk med mønster. Ledsagerstyring finnes som tilbehør. Rullestolene er beregnet brukt som sete i kjøretøy og rammen er klargjort for påmontering av elektrisk bilfeste. ",
-        "apostindate": "2019-02-12"
-      },
-      {
-        "apostid": 895,
-        "newsid": 7449,
-        "apostnr": 17,
-        "aposttitle": "Post 17: Elektrisk rullestol med motorisert styring for begrenset utendørs bruk med forhjulsdrift og elektriske setefunksjoner - voksne",
-        "apostdesc": "Rullestoler i post 17 leveres med sitteenhet, benstøtter/fotstøtter, armlener, hodestøtte, batteri, lader, ladeplugg, elektrisk tilt, elektrisk seteløft, elektrisk regulering av ryggvinkel, elektrisk vinkelregulering av benstøtter, parallellforskyvbar styreboks, forhjulsdrift, retningsstabiliserende system og dekk med mønster. Ledsagerstyring finnes som tilbehør. Rullestolene er beregnet brukt som sete i kjøretøy og rammen er klargjort for påmontering av elektrisk bilfeste. ",
-        "apostindate": "2019-02-12"
-      },
-      {
-        "apostid": 896,
-        "newsid": 7449,
-        "apostnr": 18,
-        "aposttitle": "Post 18: Elektrisk rullestol med motorisert styring for begrenset utendørs bruk med elektriske setefunksjoner der hovedformålet er bruk som førersete i kjøretøy - voksne ",
-        "apostdesc": "Rullestoler i post 18 leveres med sitteenhet, benstøtter/fotstøtter, armlener, hodestøtte, batteri, lader, ladeplugg, elektrisk tilt, elektrisk seteløft, elektrisk regulering av ryggvinkel, elektrisk regulering av vinkel og legglengde på benstøtter, sentermontert benstøtte, parallellforskyvbar styreboks, retningsstabiliserende system og dekk med mønster. Maksimal setehøyde er 39 cm (målt på seteplaten horisontalt i laveste posisjon). Rullestolene er beregnet brukt som førersete i kjøretøy og rullestoldelen av bilfeste er påmontert. ",
-        "apostindate": "2019-02-12"
-      },
-      {
-        "apostid": 897,
-        "newsid": 7449,
-        "apostnr": 19,
-        "aposttitle": "Post 19: Elektrisk rullestol med motorisert styring for begrenset utendørs bruk med elektriske setefunksjoner - stor kroppsstørrelse og/eller høy brukervekt - voksne",
-        "apostdesc": "Rullestoler i post 19 leveres med sitteenhet, benstøtter/fotstøtter, armlener, hodestøtte, batteri, lader, ladeplugg og parallellforskyvbar styreboks. Rullestolene har elektrisk regulering av minimum to setefunksjoner, der regulering av tilt og/eller ryggvinkel inngår. Ledsagerstyring finnes som tilbehør. Brukervekt: Over 200 kg. ",
-        "apostindate": "2019-02-12"
-      },
-      {
-        "apostid": 898,
-        "newsid": 7449,
-        "apostnr": 20,
-        "aposttitle": "Post 20: Elektrisk rullestol med motorisert styring for begrenset utendørs bruk med elektrisk ståfunksjon - voksne",
-        "apostdesc": "Rullestolen  i post 20 leveres med sitteenhet, benstøtter/fotstøtter, armlener, hodestøtte, batteri, lader, ladeplugg, parallellforskyvbar styreboks, elektrisk ståfunksjon, elektrisk tilt, elektrisk seteløft, elektrisk regulering av ryggvinkel og elektrisk regulering av vinkel på benstøtter. Funksjonene kan reguleres hver for seg. Rullestolene leveres med bryst- og knestøtte og dekk med mønster. Rullestolen er beregnet brukt som sete i kjøretøy. ",
-        "apostindate": "2019-02-12"
-      },
-      {
-        "apostid": 899,
-        "newsid": 7449,
-        "apostnr": 21,
-        "aposttitle": "Post 21: Elektrisk rullestol med motorisert styring for begrenset utendørs bruk med elektrisk tilt og seteløft - for barn/små voksne ",
-        "apostdesc": " Rullestoler i post 21 leveres med sitteenhet, benstøtter/fotstøtter, armlener, hodestøtte, batteri, lader, ladeplugg, elektrisk tilt, elektrisk seteløft, manuell regulering av ryggvinkel, parallellforskyvbar styreboks, og dekk med mønster. Rullestoler med forhjulsdrift har retningsstabiliserende system. Fjernstyrt nødstopp og ledsagerstyring finnes som tilbehør. Rullestolene er beregnet brukt som sete i kjøretøy. \n\n",
-        "apostindate": "2019-02-12"
-      },
-      {
-        "apostid": 900,
-        "newsid": 7449,
-        "apostnr": 22,
-        "aposttitle": "Post 22: Elektrisk rullestol med motorisert styring for begrenset utendørs bruk med elektriske setefunksjoner - barn/små voksne ",
-        "apostdesc": "Rullestoler i post 22 leveres med sitteenhet, benstøtter/fotstøtter, armlener, hodestøtte, batteri, lader, ladeplugg, elektrisk tilt, elektrisk seteløft, elektrisk regulering av ryggvinkel, elektrisk regulering av benstøtter, parallellforskyvbar styreboks, og dekk med mønster. Rullestoler med forhjulsdrift har retningsstabiliserende system. Fjernstyrt nødstopp og ledsagerstyring finnes som tilbehør. Rullestolene er beregnet brukt som sete i kjøretøy. ",
-        "apostindate": "2019-02-12"
-      },
-      {
-        "apostid": 901,
-        "newsid": 7449,
-        "apostnr": 23,
-        "aposttitle": "Post 23: Elektrisk rullestol med motorisert styring for begrenset utendørs bruk med elektrisk ståfunksjon - barn/små voksne",
-        "apostdesc": "Rullestolen i post 23 leveres med sitteenhet, benstøtter/fotstøtter, armlener, hodestøtte, batteri, lader, ladeplugg, parallellforskyvbar styreboks, elektrisk ståfunksjon, elektrisk tilt, elektrisk seteløft, elektrisk regulering av ryggvinkel og elektrisk regulering av vinkel på benstøtter. Funksjonene kan reguleres hver for seg. Rullestolene leveres med bryst- og knestøtte og dekk med mønster. Rullestolen er beregnet brukt som sete i kjøretøy. ",
-        "apostindate": "2019-02-12"
-      },
-      {
-        "apostid": 902,
-        "newsid": 7449,
-        "apostnr": 24,
-        "aposttitle": "Post 24: Elektrisk rullestol med motorisert styring for innendørs bruk - voksne",
-        "apostdesc": "Rullestoler i post 24 leveres med sitteenhet, benstøtter/fotstøtter, batteri, lader, ladeplugg, elektrisk seteløft, manuell regulering av rygghøyde, manuell regulering av ryggvinkel,  sentermontert benstøtte (som følger setet når høyden reguleres) og høyderegulerbare armlener. Alternativ størrelse av sete og rygg finnes som tilbehør.  ",
-        "apostindate": "2019-02-12"
-      },
-      {
-        "apostid": 903,
-        "newsid": 7449,
-        "apostnr": 25,
-        "aposttitle": "Post 25: Elektrisk rullestol med motorisert styring for innendørs bruk med elektriske setefunksjoner - voksne",
-        "apostdesc": "Rullestoler i post 25 leveres med sitteenhet, benstøtter/fotstøtter, armlener, batteri, lader, ladeplugg, hodestøtte, elektrisk seteløft, elektrisk tilt, elektrisk regulering av ryggvinkel, sentermontert benstøtte (som følger setet når høyden reguleres), høyderegulerbare armlener og dekk for innendørs bruk. Alternativ størrelse av sete og rygg finnes som tilbehør.   ",
-        "apostindate": "2019-02-12"
-      },
-      {
-        "apostid": 904,
-        "newsid": 7449,
-        "apostnr": 26,
-        "aposttitle": "Post 26: Elektrisk rullestol med motorisert styring for innendørs bruk - barn/små voksne",
-        "apostdesc": "Rullestoler i post 26 leveres med sitteenhet, benstøtter/fotstøtter, armlener, batteri, lader, ladeplugg, elektrisk seteløft, manuell regulering av ryggvinkel, mulighet for justering av rygghøyde, sentermontert benstøtte, høyderegulerbare armlener og dekk for innendørs bruk. Alternativ størrelse av sete og rygg finnes som tilbehør.  ",
-        "apostindate": "2019-02-12"
-      },
-      {
-        "apostid": 905,
-        "newsid": 7449,
-        "apostnr": 27,
-        "aposttitle": "Post 27: Elektrisk rullestol med motorisert styring for innendørs bruk med elektriske setefunksjoner - barn/små voksne ",
-        "apostdesc": "Rullestoler i post 27 leveres med sitteenhet, benstøtter/fotstøtter, batteri, lader, ladeplugg, hodestøtte, elektrisk tilt, elektrisk seteløft, elektrisk regulering av ryggvinkel, sentermontert benstøtte, mulighet for regulering eller justering av vinkelen på benstøtte, høyderegulerbare armlener og dekk for innendørs bruk.  ",
-        "apostindate": "2019-02-12"
-      },
-      {
-        "apostid": 908,
-        "newsid": 7449,
-        "apostnr": 0,
-        "aposttitle": "",
-        "apostdesc": "",
-        "apostindate": "2019-02-12"
-      }
-    ]
-  },
-  {
-    "newsDTO": {
-      "newsid": 8692,
-      "newstitle": "TEST UU",
-      "newsresume": "",
-      "newstext": "",
-      "newstype": 7,
-      "newspublisher": 12248,
-      "newspublish": "2026-02-01T00:00:00",
-      "newsexpire": "2027-02-10T00:00:00",
-      "ldbid": 2,
-      "externid": "11"
+    "newsDocAdr" : [ {
+      "docadrid" : 1591,
+      "hmidocid" : 1521,
+      "adressid" : 5156,
+      "docadrfile" : "5156-1521.pdf",
+      "ldbid" : 2,
+      "docadrout" : false,
+      "docadrindate" : "2019-02-27T13:08:03.497",
+      "docadrupdate" : "2021-12-08T13:20:50.493"
+    }, {
+      "docadrid" : 1592,
+      "hmidocid" : 1521,
+      "adressid" : 58068,
+      "docadrfile" : "58068-1521.pdf",
+      "ldbid" : 2,
+      "docadrout" : false,
+      "docadrindate" : "2019-02-27T13:08:18.64",
+      "docadrupdate" : "2020-01-21T09:49:41.26"
+    }, {
+      "docadrid" : 1593,
+      "hmidocid" : 1521,
+      "adressid" : 5205,
+      "docadrfile" : "5205-1521.pdf",
+      "ldbid" : 2,
+      "docadrout" : false,
+      "docadrindate" : "2019-02-27T13:08:30.33",
+      "docadrupdate" : "2019-02-27T13:08:30.33"
+    }, {
+      "docadrid" : 1594,
+      "hmidocid" : 1521,
+      "adressid" : 5179,
+      "docadrfile" : "5179-1521.pdf",
+      "ldbid" : 2,
+      "docadrout" : false,
+      "docadrindate" : "2019-02-27T13:08:45.38",
+      "docadrupdate" : "2019-02-27T13:08:45.38"
+    }, {
+      "docadrid" : 1595,
+      "hmidocid" : 1521,
+      "adressid" : 5171,
+      "docadrfile" : "5171-1521.pdf",
+      "ldbid" : 2,
+      "docadrout" : false,
+      "docadrindate" : "2019-02-27T13:08:58.217",
+      "docadrupdate" : "2020-01-17T10:37:32.09"
+    } ]
+  }, {
+    "newsDoc" : {
+      "hmidocid" : 1522,
+      "newsid" : 6427,
+      "hmidoctitle" : "Reservedeler",
+      "hmidocdesc" : "Reservedeler er deler som ikke endrer hovedproduktets funksjon, men som erstatter en utslitt eller ødelagt del på et produkt i standard utgave. De delene tilbehøret består av er også reservedeler. Dato bak lenken angir når dokumentet ble lastet opp på Hjelpemiddeldatabasen. (Det finnes ikke reservedeler for produkter fra Normedia).",
+      "hmidocfilename" : "",
+      "hmidocrank" : 3,
+      "ldbid" : 2,
+      "hmidocindate" : "2019-02-18T12:46:27.1",
+      "hmidocadrlist" : true
     },
-    "poster": [
-      {
-        "apostid": 1239,
-        "newsid": 8692,
-        "apostnr": 1,
-        "aposttitle": "Post 1 ",
-        "apostdesc": "",
-        "apostindate": "2022-02-01"
-      }
-    ]
-  }
-]
+    "newsDocAdr" : [ {
+      "docadrid" : 1596,
+      "hmidocid" : 1522,
+      "adressid" : 5156,
+      "docadrfile" : "5156-1522.pdf",
+      "ldbid" : 2,
+      "docadrout" : false,
+      "docadrindate" : "2019-02-27T13:09:41.837",
+      "docadrupdate" : "2022-11-02T09:19:48.84"
+    }, {
+      "docadrid" : 1597,
+      "hmidocid" : 1522,
+      "adressid" : 58068,
+      "docadrfile" : "58068-1522.pdf",
+      "ldbid" : 2,
+      "docadrout" : false,
+      "docadrindate" : "2019-02-27T13:10:00.403",
+      "docadrupdate" : "2020-01-21T09:49:53.437"
+    }, {
+      "docadrid" : 1600,
+      "hmidocid" : 1522,
+      "adressid" : 5205,
+      "docadrfile" : "5205-1522.pdf",
+      "ldbid" : 2,
+      "docadrout" : false,
+      "docadrindate" : "2019-02-27T13:11:44.393",
+      "docadrupdate" : "2019-02-27T13:11:44.393"
+    }, {
+      "docadrid" : 1601,
+      "hmidocid" : 1522,
+      "adressid" : 5171,
+      "docadrfile" : "5171-1522.pdf",
+      "ldbid" : 2,
+      "docadrout" : false,
+      "docadrindate" : "2019-02-27T13:12:03.503",
+      "docadrupdate" : "2019-02-27T13:12:03.503"
+    } ]
+  }, {
+    "newsDoc" : {
+      "hmidocid" : 1523,
+      "newsid" : 6427,
+      "hmidoctitle" : "Tjenester",
+      "hmidocdesc" : "Tjenester finnes kun for leverandørene Abilia og Visolit. Dato bak lenken angir når dokumentet ble lastet opp på Hjelpemiddeldatabasen.",
+      "hmidocfilename" : "",
+      "hmidocrank" : 4,
+      "ldbid" : 2,
+      "hmidocindate" : "2019-02-18T12:47:02.583",
+      "hmidocadrlist" : true
+    },
+    "newsDocAdr" : [ {
+      "docadrid" : 1602,
+      "hmidocid" : 1523,
+      "adressid" : 5156,
+      "docadrfile" : "5156-1523.pdf",
+      "ldbid" : 2,
+      "docadrout" : false,
+      "docadrindate" : "2019-02-27T13:15:54.177",
+      "docadrupdate" : "2021-12-08T13:21:12.67"
+    }, {
+      "docadrid" : 1603,
+      "hmidocid" : 1523,
+      "adressid" : 58068,
+      "docadrfile" : "58068-1523.pdf",
+      "ldbid" : 2,
+      "docadrout" : false,
+      "docadrindate" : "2019-02-27T13:16:07.607",
+      "docadrupdate" : "2019-06-19T11:52:01.817"
+    } ]
+  }, {
+    "newsDoc" : {
+      "hmidocid" : 1524,
+      "newsid" : 6427,
+      "hmidoctitle" : "Endringskatalog ",
+      "hmidocdesc" : "<p>Endringskatalogen inneholder alle endringer som gj&oslash;res i rammeavtalen i l&oslash;pet av avtaleperioden. Dato bak lenken angir n&aring;r dokumentet ble lastet opp p&aring; Hjelpemiddeldatabasen.</p>",
+      "hmidocfilename" : "",
+      "hmidocrank" : 5,
+      "ldbid" : 2,
+      "hmidocindate" : "2019-02-18T12:47:23.42",
+      "hmidocadrlist" : true
+    },
+    "newsDocAdr" : [ {
+      "docadrid" : 1670,
+      "hmidocid" : 1524,
+      "adressid" : 5156,
+      "docadrfile" : "5156-1524.pdf",
+      "ldbid" : 2,
+      "docadrout" : false,
+      "docadrindate" : "2020-01-16T18:13:04.92",
+      "docadrupdate" : "2022-11-02T09:10:44.4"
+    }, {
+      "docadrid" : 1671,
+      "hmidocid" : 1524,
+      "adressid" : 5205,
+      "docadrfile" : "5205-1524.pdf",
+      "ldbid" : 2,
+      "docadrout" : false,
+      "docadrindate" : "2020-01-16T18:13:15.37",
+      "docadrupdate" : "2021-10-14T12:18:52.233"
+    }, {
+      "docadrid" : 1672,
+      "hmidocid" : 1524,
+      "adressid" : 5179,
+      "docadrfile" : "5179-1524.pdf",
+      "ldbid" : 2,
+      "docadrout" : false,
+      "docadrindate" : "2020-01-16T18:13:26.51",
+      "docadrupdate" : "2021-10-14T12:19:03.59"
+    }, {
+      "docadrid" : 1673,
+      "hmidocid" : 1524,
+      "adressid" : 5171,
+      "docadrfile" : "5171-1524.pdf",
+      "ldbid" : 2,
+      "docadrout" : false,
+      "docadrindate" : "2020-01-16T18:13:37.82",
+      "docadrupdate" : "2021-10-14T12:19:13.19"
+    }, {
+      "docadrid" : 1675,
+      "hmidocid" : 1524,
+      "adressid" : 58068,
+      "docadrfile" : "58068-1524.pdf",
+      "ldbid" : 2,
+      "docadrout" : false,
+      "docadrindate" : "2020-01-21T09:50:52.383",
+      "docadrupdate" : "2021-10-14T12:19:25.88"
+    } ]
+  }, {
+    "newsDoc" : {
+      "hmidocid" : 1525,
+      "newsid" : 6427,
+      "hmidoctitle" : "Behov- og kravspesifikasjon",
+      "hmidocdesc" : "Dokumentet inneholder konkurransegrunnlaget ved utlysning av anbudet. Her får du blant annet detaljert informasjon om kravene til som er stilt til hovedprodukt, tilbehør og reservedeler. I nye avtaledokument benyttes begrepene \"delkontrakt\" eller \"delleveranse\" mens vi på på Hjelpemiddeldatabasen har valgt å beholde ordet \"post\".",
+      "hmidocfilename" : "Les behov- og kravspesifikasjonen (pdf)",
+      "hmidocrank" : 6,
+      "ldbid" : 2,
+      "hmidocindate" : "2019-02-18T12:48:58.79",
+      "hmidocadrlist" : false
+    },
+    "newsDocAdr" : [ ]
+  }, {
+    "newsDoc" : {
+      "hmidocid" : 1526,
+      "newsid" : 6427,
+      "hmidoctitle" : "Rammeavtalen",
+      "hmidocdesc" : "Her finner du avtalen som er inngått mellom NAV og leverandør. Avtalen inneholder blant annet informasjon om plikter, pris- og betalingsbetingelser, garantiperiode og mislighold.",
+      "hmidocfilename" : "Les rammeavtalen (pdf)",
+      "hmidocrank" : 7,
+      "ldbid" : 2,
+      "hmidocindate" : "2019-02-18T12:53:25.287",
+      "hmidocadrlist" : false
+    },
+    "newsDocAdr" : [ ]
+  } ]
+} ]

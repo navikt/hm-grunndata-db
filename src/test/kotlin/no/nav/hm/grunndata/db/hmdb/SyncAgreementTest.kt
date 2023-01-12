@@ -36,9 +36,10 @@ class SyncAgreementTest(private val syncScheduler: SyncScheduler,
         }
         syncScheduler.syncAgreements()
         runBlocking {
-            val agreement = agreementRepository.findByIdentifier("HMDB-4361")
+            val agreement = agreementRepository.findByIdentifier("HMDB-6427")
             agreement.shouldNotBeNull()
-            agreement.reference shouldBe "17-274"
+            agreement.reference shouldBe "17-1920"
+            println(objectMapper.writeValueAsString(agreement))
         }
     }
 

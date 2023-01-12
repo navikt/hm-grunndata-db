@@ -6,9 +6,7 @@ import jakarta.inject.Singleton
 import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.db.agreement.*
-import no.nav.hm.grunndata.db.hmdb.agreement.AvtalePostDTO
-import no.nav.hm.grunndata.db.hmdb.agreement.HmDbAgreementDTO
-import no.nav.hm.grunndata.db.hmdb.agreement.NewsDTO
+import no.nav.hm.grunndata.db.hmdb.agreement.*
 import no.nav.hm.grunndata.db.hmdb.product.*
 import no.nav.hm.grunndata.db.product.*
 import no.nav.hm.grunndata.db.supplier.SupplierRepository
@@ -16,6 +14,7 @@ import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 import java.util.*
+import kotlin.collections.ArrayList
 
 @Singleton
 class SyncScheduler(private val hmDbClient: HmDbClient,
@@ -137,7 +136,7 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
     }
 
     private fun mapAgreement(hmdbag: HmDbAgreementDTO): AgreementDocument {
-        val agreement = hmdbag.newsDTO.toAgreement()
+        val agreement = hmdbag.toAgreement()
         return AgreementDocument(agreement = agreement,
             agreementPost = hmdbag.poster.map { it.toAgreementPost(agreement) })
     }
@@ -152,14 +151,31 @@ private fun AvtalePostDTO.toAgreementPost(agreement: Agreement): AgreementPost =
 )
 
 
-private fun NewsDTO.toAgreement(): Agreement = Agreement(
-        identifier = "$newsid".HmDbIdentifier(),
-        title= newstitle,
-        resume= newsresume,
-        text = newstext,
-        publish = newspublish,
-        expire = newsexpire,
-        reference = externid
+private fun HmDbAgreementDTO.toAgreement(): Agreement = Agreement(
+        identifier = "${newsDTO.newsid}".HmDbIdentifier(),
+        title= newsDTO.newstitle,
+        resume= newsDTO.newsresume,
+        text = newsDTO.newstext,
+        publish = newsDTO.newspublish,
+        expire = newsDTO.newsexpire,
+        reference = newsDTO.externid,
+        attachments =  mapNewsDocHolder(newsDocHolder)
 )
+
+private fun mapNewsDocHolder(newsdocHolder: List<NewsDocHolder>): List<AgreementAttachment> = newsdocHolder.map {
+        AgreementAttachment(title = it.newsDoc.hmidoctitle,
+            description = it.newsDoc.hmidocdesc, media = mapMedia(it.newsDoc, it.newsDocAdr)) }
+
+
+private fun mapMedia(newsDoc: NewsDocDTO, newsDocAdr: List<NewsDocAdr>): List<Media> {
+    val mediaList = if (!newsDoc.hmidocfilename.isNullOrBlank()) listOf(Media(uri=newsDoc.hmidocfilename))  else emptyList()
+    mediaList.plus( newsDocAdr.map {
+        Media(uri = it.docadrfile)
+    })
+    return mediaList
+}
+
+
+
 
 fun String.HmDbIdentifier(): String = "$HMDB-$this"

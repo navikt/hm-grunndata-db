@@ -2,7 +2,7 @@ package no.nav.hm.grunndata.db.hmdb.agreement
 import java.time.LocalDateTime
 
 data class NewsDocHolder(
-    val newsdoc: NewsDocDTO,
+    val newsDoc: NewsDocDTO,
     val newsDocAdr: List<NewsDocAdr>
 )
 
