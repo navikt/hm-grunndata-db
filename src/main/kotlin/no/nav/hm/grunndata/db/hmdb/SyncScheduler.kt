@@ -168,12 +168,20 @@ private fun mapNewsDocHolder(newsdocHolder: List<NewsDocHolder>): List<Agreement
 
 
 private fun mapMedia(newsDoc: NewsDocDTO, newsDocAdr: List<NewsDocAdr>): List<Media> {
-    val mediaList = if (!newsDoc.hmidocfilename.isNullOrBlank()) listOf(Media(uri=newsDoc.hmidocfilename))  else emptyList()
-    mediaList.plus( newsDocAdr.map {
-        Media(uri = it.docadrfile)
+    val mediaList = if (!newsDoc.hmidocfilename.isNullOrBlank())
+            listOf(Media(uri=newsDoc.hmidocfilename, type = getFileType(newsDoc.hmidocfilename)))
+        else emptyList()
+    return mediaList.plus( newsDocAdr.map {
+        Media(uri = it.docadrfile, type = getFileType(it.docadrfile))
     })
-    return mediaList
 }
+
+private fun getFileType(filename: String) : MediaType =
+    when (filename.substringAfterLast('.', "").lowercase()) {
+        "pdf" -> MediaType.PDF
+        "jpg", "png" -> MediaType.IMAGE
+        else -> MediaType.OTHER
+    }
 
 
 

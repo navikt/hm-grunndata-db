@@ -39,6 +39,7 @@ class SyncAgreementTest(private val syncScheduler: SyncScheduler,
             val agreement = agreementRepository.findByIdentifier("HMDB-6427")
             agreement.shouldNotBeNull()
             agreement.reference shouldBe "17-1920"
+            agreement.attachments.size shouldBe 7
             println(objectMapper.writeValueAsString(agreement))
         }
     }
