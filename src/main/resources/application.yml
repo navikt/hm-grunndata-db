@@ -24,7 +24,6 @@ jackson:
   bean-introspection-module: true
   serialization:
     indentOutput: true
-
 datasources:
   default:
     url: ${DB_JDBC_URL:`jdbc:tc:postgresql:14:///gdb?TC_INITSCRIPT=file:src/test/resources/postgres/postgres-init.sql`}
