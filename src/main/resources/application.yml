@@ -12,7 +12,7 @@ micronaut:
       read-timeout: "15m"
   server:
     max-request-size: 100833718
-    port: 2022
+    port: 8080
   caches:
     suppliers:
       charset: 'UTF-8'
