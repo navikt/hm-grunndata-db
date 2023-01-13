@@ -18,7 +18,7 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
         Product(
             supplierId =  supplierRepository.findByIdentifier(prod.supplier!!.HmDbIdentifier())!!.id,
             title = prod.prodname,
-            description = mapDescription(prod),
+            attributes = mapAttributes(prod),
             status = mapStatus(prod),
             HMSArtNr = prod.stockid,
             identifier = "${prod.artid}".HmDbIdentifier(),
@@ -81,11 +81,10 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
         return Media(type = mediaType, text = blobDTO.blobtype.trim(), uri = blobDTO.blobfile.trim())
     }
 
-    fun mapDescription(produkt: HmDbProductDTO): Description =
-        Description(
-            name = produkt.artname,
-            shortDescription = produkt.adescshort,
-            text = produkt.pshortdesc
-        )
+    fun mapAttributes(produkt: HmDbProductDTO): Map<String, List<String>> = mapOf(
+        Pair("name", listOf(produkt.artname)),
+        Pair("shortDescription", listOfNotNull(produkt.adescshort)),
+        Pair("text", listOf(produkt.pshortdesc))
+    )
 }
 

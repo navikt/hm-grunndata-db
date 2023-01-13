@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS product_v1 (
     supplier_id UUID NOT NULL,
     title VARCHAR(255) NOT NULL,
     status VARCHAR(32) NOT NULL,
-    description JSONB NOT NULL,
+    attributes JSONB NOT NULL,
     hms_artnr VARCHAR(255),
     identifier VARCHAR(255) NOT NULL,
     supplier_ref VARCHAR(255) NOT NULL,
