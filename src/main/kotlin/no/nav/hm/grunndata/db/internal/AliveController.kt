@@ -6,10 +6,10 @@ import io.micronaut.http.annotation.Get
 @Controller("/internal")
 class AliveController {
 
-    @Get("/alive")
+    @Get("/isAlive")
     fun alive() = "ALIVE"
 
-    @Get("/ready")
+    @Get("/isReady")
     fun ready() = "OK"
 
 }
