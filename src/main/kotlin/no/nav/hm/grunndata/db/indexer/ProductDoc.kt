@@ -8,7 +8,7 @@ data class ProductDoc (
     override val id: String,
     val supplier: ProductSupplier,
     val title: String,
-    val description: Description,
+    val attributes: Map<String, List<String>>,
     val status: ProductStatus,
     val HMSArtNr: String?=null,
     val identifier: String,
@@ -40,7 +40,7 @@ data class ProductSupplier(val id: String, val identifier: String, val name: Str
 
 fun Product.toDoc(supplier: Supplier): ProductDoc = ProductDoc (
     id = id.toString(), supplier = ProductSupplier(id=supplier.id.toString(), identifier=supplier.identifier, name= supplier.name),
-    title = title, description = description, status = status, HMSArtNr = HMSArtNr, identifier = identifier,
+    title = title, attributes = attributes, status = status, HMSArtNr = HMSArtNr, identifier = identifier,
     supplierRef = supplierRef, isoCategory = isoCategory, accessory = accessory, sparePart = sparePart, seriesId = seriesId,
     data = techData, media = media, created = created, updated = updated, expired = expired, createdBy = createdBy,
     updatedBy = updatedBy, agreementInfo = agreementInfo, hasAgreement = agreementInfo!=null,

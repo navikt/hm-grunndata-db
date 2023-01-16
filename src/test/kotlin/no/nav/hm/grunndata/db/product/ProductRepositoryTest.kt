@@ -21,7 +21,7 @@ class ProductRepositoryTest(private val productRepository: ProductRepository,
             val supplier = supplierRepository.save(Supplier(name = "supplier 1", identifier = "unik-identifier", info = SupplierInfo(email = "test@test")))
             val product = productRepository.save(Product(
                 supplierId = supplier.id, identifier = "123", title = "Dette er et produkt", supplierRef = "123", isoCategory = "123456",
-                description = Description(name = "Produkt 1")
+                attributes = mapOf(Pair("name", listOf("Produkt 1")))
             ))
             val db = productRepository.findById(product.id)
             db.shouldNotBeNull()
