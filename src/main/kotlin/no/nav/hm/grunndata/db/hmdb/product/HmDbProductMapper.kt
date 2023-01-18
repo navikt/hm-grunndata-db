@@ -6,8 +6,10 @@ import no.nav.hm.grunndata.db.agreement.AgreementPostRepository
 import no.nav.hm.grunndata.db.agreement.AgreementRepository
 import no.nav.hm.grunndata.db.hmdb.HmDbIdentifier
 import no.nav.hm.grunndata.db.product.*
+import no.nav.hm.grunndata.db.product.AttributeNames.*
 import no.nav.hm.grunndata.db.supplier.SupplierRepository
 import java.time.LocalDateTime
+import java.util.*
 
 @Singleton
 class HmDBProductMapper(private val supplierRepository: SupplierRepository,
@@ -81,10 +83,10 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
         return Media(type = mediaType, text = blobDTO.blobtype.trim(), uri = blobDTO.blobfile.trim())
     }
 
-    fun mapAttributes(produkt: HmDbProductDTO): Map<String, List<String>> = mapOf(
-        Pair("name", listOf(produkt.artname)),
-        Pair("shortDescription", listOfNotNull(produkt.adescshort)),
-        Pair("text", listOf(produkt.pshortdesc))
+    fun mapAttributes(produkt: HmDbProductDTO): EnumMap<AttributeNames, Any> = enumMapOf(
+        Pair(articlename, listOf(produkt.artname)),
+        Pair(shortdescription, listOfNotNull(produkt.adescshort)),
+        Pair(text, listOf(produkt.pshortdesc))
     )
 }
 

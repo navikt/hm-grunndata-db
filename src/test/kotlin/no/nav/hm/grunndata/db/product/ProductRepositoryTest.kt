@@ -22,7 +22,8 @@ class ProductRepositoryTest(private val productRepository: ProductRepository,
             val supplier = supplierRepository.save(Supplier(name = "supplier 1", identifier = "unik-identifier", info = SupplierInfo(email = "test@test")))
             val product = productRepository.save(Product(
                 supplierId = supplier.id, identifier = "123", title = "Dette er et produkt", supplierRef = "123", isoCategory = "123456",
-                attributes = mapOf(Pair("name", "Produkt 1"), Pair("manufacture", "Samsung"), Pair("compatibility", listOf("produkt 2", "product 3")))
+                attributes = enumMapOf(Pair(AttributeNames.articlename, "Produkt 1"),
+                    Pair(AttributeNames.manufacturer, "Samsung"), Pair(AttributeNames.compatibilty, listOf("produkt 2", "product 3")))
             ))
             val db = productRepository.findById(product.id)
             db.shouldNotBeNull()
