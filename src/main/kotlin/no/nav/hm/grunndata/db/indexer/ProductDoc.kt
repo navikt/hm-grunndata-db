@@ -8,7 +8,7 @@ data class ProductDoc (
     override val id: String,
     val supplier: ProductSupplier,
     val title: String,
-    val attributes: Map<String, List<String>>,
+    val attributes: Map<String,Any>,
     val status: ProductStatus,
     val HMSArtNr: String?=null,
     val identifier: String,

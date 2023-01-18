@@ -6,6 +6,7 @@ import io.micronaut.data.annotation.TypeDef
 import io.micronaut.data.model.DataType
 import no.nav.hm.grunndata.db.HMDB
 import java.time.LocalDateTime
+import java.util.EnumMap
 import java.util.UUID
 import javax.persistence.Column
 
@@ -16,7 +17,7 @@ data class Product (
     val supplierId: UUID,
     val title: String,
     @field:TypeDef(type = DataType.JSON)
-    val attributes: Map<String, List<String>> = emptyMap(),
+    val attributes: EnumMap<AttributeNames, Any>,
     val status: ProductStatus = ProductStatus.ACTIVE,
     @field:Column(name="hms_artnr")
     val HMSArtNr: String?=null,
@@ -91,7 +92,7 @@ data class ProductDTO(
     val id: UUID,
     val supplierId: UUID,
     val title: String,
-    val attributes: Map<String, List<String>> = emptyMap(),
+    val attributes: EnumMap<AttributeNames, Any>,
     val status: ProductStatus = ProductStatus.ACTIVE,
     val HMSArtNr: String?=null,
     val identifier: String?=null,
