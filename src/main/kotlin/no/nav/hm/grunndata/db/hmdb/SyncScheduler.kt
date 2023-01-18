@@ -29,7 +29,7 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
         private val LOG = LoggerFactory.getLogger(SyncScheduler::class.java)
     }
 
-    //@Scheduled(cron = "0 15 * * * *")
+    @Scheduled(cron = "0 15 0 * * *")
     fun syncSuppliers() {
         val syncBatchJob = hmdbBatchRepository.findByName(SYNC_SUPPLIERS) ?:
             hmdbBatchRepository.save(HmDbBatch(name= SYNC_SUPPLIERS,
@@ -50,7 +50,7 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
         }
     }
 
-    //@Scheduled(cron="0 30 * * * *")
+    @Scheduled(cron="0 30 1 * * *")
     fun syncAgreements() {
         val syncBatchJob = hmdbBatchRepository.findByName(SYNC_AGREEMENTS) ?:
         hmdbBatchRepository.save(HmDbBatch(name= SYNC_AGREEMENTS,

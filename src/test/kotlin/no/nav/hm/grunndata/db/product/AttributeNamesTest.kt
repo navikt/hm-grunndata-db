@@ -1,11 +1,9 @@
 package no.nav.hm.grunndata.db.product
 
 import io.kotest.matchers.collections.shouldContain
-import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldNotContain
-import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 import no.nav.hm.grunndata.db.product.AttributeNames.*
+import org.junit.jupiter.api.Test
 
 class AttributeNamesTest {
 
