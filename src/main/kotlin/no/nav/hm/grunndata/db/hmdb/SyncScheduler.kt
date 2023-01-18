@@ -72,7 +72,7 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
         }
     }
 
-    //@Scheduled(fixedDelay = "1m")
+    @Scheduled(fixedDelay = "2m")
     fun syncProducts() {
         val syncBatchJob = hmdbBatchRepository.findByName(SYNC_PRODUCTS) ?:
         hmdbBatchRepository.save(HmDbBatch(name= SYNC_PRODUCTS,
