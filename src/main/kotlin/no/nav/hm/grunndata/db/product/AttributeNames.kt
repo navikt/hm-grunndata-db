@@ -11,7 +11,6 @@ enum class AttributeNames(private val type: AttributeType) {
     shortdescription(AttributeType.HTML),
     text(AttributeType.STRING),
     url(AttributeType.URL)
-
 }
 
 enum class AttributeType {
@@ -20,3 +19,7 @@ enum class AttributeType {
 
 inline fun <reified K: Enum<K>, V> enumMapOf(vararg pairs: Pair<K, V>): EnumMap<K, V> =
     pairs.toMap(EnumMap<K, V>(K::class.java))
+
+inline fun <reified T : Enum<T>> enumContains(name: String): Boolean {
+    return T::class.java.enumConstants.any { it.name == name}
+}
