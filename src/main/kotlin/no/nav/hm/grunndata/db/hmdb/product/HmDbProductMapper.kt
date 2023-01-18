@@ -83,10 +83,10 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
         return Media(type = mediaType, text = blobDTO.blobtype.trim(), uri = blobDTO.blobfile.trim())
     }
 
-    fun mapAttributes(produkt: HmDbProductDTO): EnumMap<AttributeNames, Any> = enumMapOf(
-        Pair(articlename, listOf(produkt.artname)),
-        Pair(shortdescription, listOfNotNull(produkt.adescshort)),
-        Pair(text, listOf(produkt.pshortdesc))
+    fun mapAttributes(produkt: HmDbProductDTO): Map<String, Any> = mapOf(
+        Pair(articlename.name, listOf(produkt.artname)),
+        Pair(shortdescription.name, listOfNotNull(produkt.adescshort)),
+        Pair(text.name, listOf(produkt.pshortdesc))
     )
 }
 
