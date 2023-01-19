@@ -22,7 +22,7 @@ class ProductRepositoryTest(private val productRepository: ProductRepository,
             val product = productRepository.save(Product(
                 supplierId = supplier.id, identifier = "123", title = "Dette er et produkt", supplierRef = "123", isoCategory = "123456",
                 attributes = mapOf(Pair(articlename.name, "Produkt 1"),
-                    Pair(manufacturer.name, "Samsung"), Pair(compatibilty.name, listOf("produkt 2", "product 3")))
+                    Pair(manufacturer.name, "Samsung"), Pair(compatibility.name, listOf("produkt 2", "product 3")))
             ))
             val db = productRepository.findById(product.id)
             db.shouldNotBeNull()

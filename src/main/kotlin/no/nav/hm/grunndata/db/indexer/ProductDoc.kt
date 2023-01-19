@@ -27,6 +27,7 @@ data class ProductDoc (
     val filters: TechDataFilters,
     val agreementInfo: AgreementInfo?,
     val hasAgreement: Boolean = false,
+    val keywords: List<String> = emptyList()
 ): SearchDoc
 
 
@@ -44,10 +45,18 @@ fun Product.toDoc(supplier: Supplier): ProductDoc = ProductDoc (
     supplierRef = supplierRef, isoCategory = isoCategory, accessory = accessory, sparePart = sparePart, seriesId = seriesId,
     data = techData, media = media, created = created, updated = updated, expired = expired, createdBy = createdBy,
     updatedBy = updatedBy, agreementInfo = agreementInfo, hasAgreement = agreementInfo!=null,
-    filters = mapTechDataFilters(techData)
+    filters = mapTechDataFilters(techData), keywords = mapKeywords(this, supplier)
 )
 
-
+fun mapKeywords(product: Product, supplier: Supplier): List<String> {
+    val keywords = listOfNotNull(
+        product.title, product.isoCategory, product.supplierRef, product.seriesId,
+        product.HMSArtNr, supplier.name
+    )
+    return product.attributes["keywords"]?.let {
+        keywords.plus((it as List<*>).map { s -> s as String })
+    } ?: keywords
+}
 
 fun mapTechDataFilters(data: List<TechData>): TechDataFilters {
     var fyllmateriale:String? = null
