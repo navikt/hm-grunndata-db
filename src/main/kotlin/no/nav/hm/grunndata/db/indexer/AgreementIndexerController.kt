@@ -41,7 +41,7 @@ class AgreementIndexerController(
         agreementRepository.findAll()
             .onEach {
                 val document = AgreementDocument(it, agreementPostRepository.findByAgreementId(it.id))
-                indexer.index(document.toDoc())
+                indexer.index(document.toDoc(), indexName)
             }
             .catch { e -> LOG.error("Got exception while indexing ${e.message}") }
             .collect()

@@ -18,7 +18,7 @@ class SupplierIndexerController(
     }
 
     @Put("/suppliers")
-    suspend fun indexAgreements() {
+    suspend fun indexSuppliers() {
         LOG.info("Indexing all suppliers")
         supplierRepository.findAll()
             .onEach {
@@ -29,8 +29,7 @@ class SupplierIndexerController(
     }
 
     @Post("/suppliers/{indexName}")
-    suspend fun indexAgreements(indexName: String) {
-        LOG.info("creating index $indexName")
+    suspend fun indexSuppliers(indexName: String) {
         if (!indexer.indexExists(indexName)) indexer.createIndex(indexName)
         LOG.info("index to $indexName")
         supplierRepository.findAll()
