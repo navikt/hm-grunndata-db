@@ -45,4 +45,6 @@ class AgreementIndexer(private val indexer: Indexer,
     fun createIndex(indexName: String): Boolean = indexer.createIndex(indexName)
 
     fun updateAlias(indexName: String): Boolean = indexer.updateAlias(indexName,aliasName)
+
+    fun indexExists(indexName: String): Boolean = indexer.indexExists(indexName)
 }

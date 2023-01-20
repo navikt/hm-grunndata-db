@@ -9,8 +9,9 @@ import org.slf4j.LoggerFactory
 
 
 @Controller("/internal/index")
-class SupplierIndexerController(private val indexer: SupplierIndexer,
-                                private val supplierRepository: SupplierRepository
+class SupplierIndexerController(
+    private val indexer: SupplierIndexer,
+    private val supplierRepository: SupplierRepository
 ) {
     companion object {
         private val LOG = LoggerFactory.getLogger(SupplierIndexerController::class.java)
@@ -30,20 +31,19 @@ class SupplierIndexerController(private val indexer: SupplierIndexer,
     @Post("/suppliers/{indexName}")
     suspend fun indexAgreements(indexName: String) {
         LOG.info("creating index $indexName")
-        val success = indexer.createIndex(indexName)
-        if (success) {
-            LOG.info("index to $indexName")
-            supplierRepository.findAll()
-                .onEach {
-                    indexer.index(it.toDoc(), indexName)
-                }
-                .catch { e -> LOG.error("Got exception while indexint ${e.message}") }
-                .collect()
-        }
+        if (!indexer.indexExists(indexName)) indexer.createIndex(indexName)
+        LOG.info("index to $indexName")
+        supplierRepository.findAll()
+            .onEach {
+                indexer.index(it.toDoc(), indexName)
+            }
+            .catch { e -> LOG.error("Got exception while indexint ${e.message}") }
+            .collect()
+
     }
 
     @Put("/suppliers/alias/{indexName}")
-    fun indexAliasTo(indexName:String) {
+    fun indexAliasTo(indexName: String) {
         LOG.info("Changing alias to $indexName")
         indexer.updateAlias(indexName)
     }

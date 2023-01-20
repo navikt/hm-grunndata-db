@@ -13,9 +13,10 @@ import org.slf4j.LoggerFactory
 
 
 @Controller("/internal/index")
-class AgreementIndexerController(private val indexer: AgreementIndexer,
-                                 private val agreementRepository: AgreementRepository,
-                                 private val agreementPostRepository: AgreementPostRepository
+class AgreementIndexerController(
+    private val indexer: AgreementIndexer,
+    private val agreementRepository: AgreementRepository,
+    private val agreementPostRepository: AgreementPostRepository
 ) {
     companion object {
         private val LOG = LoggerFactory.getLogger(AgreementIndexerController::class.java)
@@ -26,7 +27,7 @@ class AgreementIndexerController(private val indexer: AgreementIndexer,
         LOG.info("Indexing all agreements")
         agreementRepository.findAll()
             .onEach {
-                val document = AgreementDocument (it, agreementPostRepository.findByAgreementId(it.id))
+                val document = AgreementDocument(it, agreementPostRepository.findByAgreementId(it.id))
                 indexer.index(document.toDoc())
             }
             .catch { e -> LOG.error("Got exception while indexint ${e.message}") }
@@ -35,22 +36,19 @@ class AgreementIndexerController(private val indexer: AgreementIndexer,
 
     @Post("/agreements/{indexName}")
     suspend fun indexAgreements(indexName: String) {
-        LOG.info("creating index $indexName")
-        val success = indexer.createIndex(indexName)
-        //if (success) {
-            LOG.info("index to $indexName")
-            agreementRepository.findAll()
-                .onEach {
-                    val document = AgreementDocument (it, agreementPostRepository.findByAgreementId(it.id))
-                    indexer.index(document.toDoc())
-                }
-                .catch { e -> LOG.error("Got exception while indexing ${e.message}") }
-                .collect()
-        //}
+        if (!indexer.indexExists(indexName)) indexer.createIndex(indexName)
+        LOG.info("index to $indexName")
+        agreementRepository.findAll()
+            .onEach {
+                val document = AgreementDocument(it, agreementPostRepository.findByAgreementId(it.id))
+                indexer.index(document.toDoc())
+            }
+            .catch { e -> LOG.error("Got exception while indexing ${e.message}") }
+            .collect()
     }
 
     @Put("/agreements/alias/{indexName}")
-    fun indexAliasTo(indexName:String) {
+    fun indexAliasTo(indexName: String) {
         LOG.info("Changing alias to $indexName")
         indexer.updateAlias(indexName)
     }
