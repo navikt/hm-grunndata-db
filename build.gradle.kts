@@ -16,7 +16,7 @@ val tcVersion= "1.16.3"
 val mockkVersion = "1.13.2"
 val kotestVersion = "5.5.0"
 val apachePoiVersion = "5.2.3"
-val openSearchRestClientVersion = "1.3.5"
+val openSearchRestClientVersion = "1.3.7"
 
 group = "no.nav.hm"
 version = properties["version"] ?: "local-build"
@@ -60,7 +60,7 @@ dependencies {
     implementation("org.opensearch.client:opensearch-rest-high-level-client:${openSearchRestClientVersion}")
     implementation("io.micronaut.cache:micronaut-cache-caffeine")
     // Apache POI for excel file handling
-    implementation("org.apache.poi:poi:$apachePoiVersion")
+    //implementation("org.apache.poi:poi:$apachePoiVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("io.micronaut.test:micronaut-test-kotest5")
     testImplementation("io.kotest:kotest-runner-junit5-jvm:$kotestVersion")

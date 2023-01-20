@@ -12,20 +12,21 @@ class ProductIndexer(private val indexer: Indexer,
 
     companion object {
         private val LOG = LoggerFactory.getLogger(ProductIndexer::class.java)
-//        private val SETTINGS = ProductIndexer::class.java
-//            .getResource("/opensearch/product-settings.json").readText()
-//        private val MAPPING = ProductIndexer::class.java
-//            .getResource("/opensearch/product-mapping.json").readText()
+        private val settings = ProductIndexer::class.java
+            .getResource("/opensearch/products_settings.json")?.readText()
+        private val mapping = ProductIndexer::class.java
+            .getResource("/opensearch/products_mapping.json")?.readText()
     }
 
     init {
+
         try {
-            indexer.initIndex(indexName)
+            indexer.initIndex(indexName, settings, mapping)
             indexer.initAlias(aliasName,indexName)
         } catch (e: Exception) {
             LOG.error("OpenSearch might not be ready ${e.message}, will wait 10s and retry")
             Thread.sleep(10000)
-            indexer.initIndex(indexName)
+            indexer.initIndex(indexName, settings, mapping)
             indexer.initAlias(aliasName,indexName)
         }
     }
@@ -44,7 +45,7 @@ class ProductIndexer(private val indexer: Indexer,
         indexer.index(docs,indexName)
 
 
-    fun createIndex(indexName: String): Boolean = indexer.createIndex(indexName)
+    fun createIndex(indexName: String): Boolean = indexer.createIndex(indexName, settings, mapping)
 
     fun updateAlias(indexName: String): Boolean = indexer.updateAlias(indexName,aliasName)
 

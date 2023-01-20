@@ -24,9 +24,9 @@ class Indexer(private val client: RestHighLevelClient,
         private val LOG = LoggerFactory.getLogger(Indexer::class.java)
     }
 
-    fun initIndex(indexName: String) {
+    fun initIndex(indexName: String, settings: String?=null, mapping: String?=null) {
         if (!client.indices().exists(GetIndexRequest(indexName), RequestOptions.DEFAULT)) {
-            if (createIndex(indexName))
+            if (createIndex(indexName, settings, mapping))
                 LOG.info("$indexName has been created")
             else
                 LOG.error("Failed to create $indexName")
@@ -57,10 +57,10 @@ class Indexer(private val client: RestHighLevelClient,
         return client.indices().updateAliases(request, RequestOptions.DEFAULT).isAcknowledged
     }
 
-    fun createIndex(indexName: String): Boolean {
+    fun createIndex(indexName: String, settings: String?=null, mapping: String?=null): Boolean {
         val createIndexRequest = CreateIndexRequest(indexName)
-        //.source(SETTINGS, XContentType.JSON)
-        //.mapping(MAPPING, XContentType.JSON)
+        settings?.let { createIndexRequest.source(settings, XContentType.JSON) }
+        mapping?.let { createIndexRequest.mapping(mapping, XContentType.JSON) }
         return client.indices().create(createIndexRequest, RequestOptions.DEFAULT).isAcknowledged
     }
 

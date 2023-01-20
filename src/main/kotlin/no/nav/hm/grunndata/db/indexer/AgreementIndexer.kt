@@ -12,10 +12,6 @@ class AgreementIndexer(private val indexer: Indexer,
 
     companion object {
         private val LOG = LoggerFactory.getLogger(AgreementIndexer::class.java)
-//        private val SETTINGS = ProductIndexer::class.java
-//            .getResource("/opensearch/product-settings.json").readText()
-//        private val MAPPING = ProductIndexer::class.java
-//            .getResource("/opensearch/product-mapping.json").readText()
     }
 
     init {

@@ -1,0 +1,56 @@
+{
+  "settings": {
+    "index": {
+      "number_of_shards": 3,
+      "number_of_replicas": 2
+    },
+    "analysis": {
+      "filter": {
+        "norwegian_stop": {
+          "type":       "stop",
+          "stopwords":  "_norwegian_"
+        },
+        "norwegian_stemmer": {
+          "type":       "stemmer",
+          "language":   "norwegian"
+        }
+      },
+      "char_filter": {
+        "custom_trim": {
+          "type": "pattern_replace",
+          "pattern": "^\\s+|\\s+$",
+          "replacement": ""
+        }
+      },
+      "normalizer": {
+        "trim_normalizer": {
+          "type": "custom",
+          "char_filter": ["custom_trim"]
+        },
+        "lowercase_normalizer": {
+          "type": "custom",
+          "char_filter": ["custom_trim"],
+          "filter": ["lowercase"]
+        },
+        "lowercase_folding_normalizer": {
+          "type": "custom",
+          "char_filter": ["custom_trim"],
+          "filter": ["lowercase" ,"asciifolding"]
+        }
+      },
+      "analyzer": {
+        "norwegian_html": {
+          "tokenizer":  "standard",
+          "filter": [
+            "lowercase",
+            "norwegian_stop",
+            "norwegian_stemmer"
+          ],
+          "char_filter": [
+            "html_strip"
+          ]
+        }
+      }
+    }
+  }
+}

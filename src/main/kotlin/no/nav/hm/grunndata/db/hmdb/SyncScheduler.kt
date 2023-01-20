@@ -29,6 +29,11 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
         private val LOG = LoggerFactory.getLogger(SyncScheduler::class.java)
     }
 
+    init {
+        hmdbBatchRepository.findByName(SYNC_SUPPLIERS) ?: syncSuppliers()
+        hmdbBatchRepository.findByName(SYNC_AGREEMENTS) ?: syncAgreements()
+    }
+
     @Scheduled(cron = "0 15 0 * * *")
     fun syncSuppliers() {
         val syncBatchJob = hmdbBatchRepository.findByName(SYNC_SUPPLIERS) ?:
@@ -72,11 +77,11 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
         }
     }
 
-    @Scheduled(fixedDelay = "2m")
+    @Scheduled(fixedDelay = "1m")
     fun syncProducts() {
         val syncBatchJob = hmdbBatchRepository.findByName(SYNC_PRODUCTS) ?:
         hmdbBatchRepository.save(HmDbBatch(name= SYNC_PRODUCTS,
-            syncfrom = LocalDateTime.now().minusYears(10).truncatedTo(ChronoUnit.SECONDS)))
+            syncfrom = LocalDateTime.now().minusYears(12).truncatedTo(ChronoUnit.SECONDS)))
         val from = syncBatchJob.syncfrom
         val to = from.plusMonths(2)
         LOG.info("Calling product sync from ${from} to $to")
