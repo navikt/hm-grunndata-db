@@ -37,16 +37,16 @@ class AgreementIndexerController(private val indexer: AgreementIndexer,
     suspend fun indexAgreements(indexName: String) {
         LOG.info("creating index $indexName")
         val success = indexer.createIndex(indexName)
-        if (success) {
+        //if (success) {
             LOG.info("index to $indexName")
             agreementRepository.findAll()
                 .onEach {
                     val document = AgreementDocument (it, agreementPostRepository.findByAgreementId(it.id))
                     indexer.index(document.toDoc())
                 }
-                .catch { e -> LOG.error("Got exception while indexint ${e.message}") }
+                .catch { e -> LOG.error("Got exception while indexing ${e.message}") }
                 .collect()
-        }
+        //}
     }
 
     @Put("/agreements/alias/{indexName}")
