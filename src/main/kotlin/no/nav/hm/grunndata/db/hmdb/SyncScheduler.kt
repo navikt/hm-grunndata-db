@@ -39,19 +39,21 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
         val syncBatchJob = hmdbBatchRepository.findByName(SYNC_SUPPLIERS) ?:
             hmdbBatchRepository.save(HmDbBatch(name= SYNC_SUPPLIERS,
                 syncfrom = LocalDateTime.now().minusYears(20).truncatedTo(ChronoUnit.SECONDS)))
-        val suppliers = hmDbClient.fetchSuppliers(syncBatchJob.syncfrom)
-        LOG.info("Calling supplier sync from ${syncBatchJob.syncfrom}, Got total of ${suppliers.size} suppliers")
-        val entities = suppliers.map { it.toSupplier() }.sortedBy { it.updated }
-        runBlocking {
-            entities.forEach {
-                val saved = supplierRepository.findByIdentifier(it.identifier)?.let { inDb->
-                    supplierRepository.update(it.copy(id=inDb.id, created = inDb.created))
-                } ?: run {
-                    supplierRepository.save(it)
+        hmDbClient.fetchSuppliers(syncBatchJob.syncfrom)?.let { suppliers ->
+
+            LOG.info("Calling supplier sync from ${syncBatchJob.syncfrom}, Got total of ${suppliers.size} suppliers")
+            val entities = suppliers.map { it.toSupplier() }.sortedBy { it.updated }
+            runBlocking {
+                entities.forEach {
+                    val saved = supplierRepository.findByIdentifier(it.identifier)?.let { inDb ->
+                        supplierRepository.update(it.copy(id = inDb.id, created = inDb.created))
+                    } ?: run {
+                        supplierRepository.save(it)
+                    }
+                    LOG.info("saved supplier ${saved.id} with identifier ${saved.identifier} and lastupdated ${saved.updated}")
                 }
-                LOG.info("saved supplier ${saved.id} with identifier ${saved.identifier} and lastupdated ${saved.updated}")
+                hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = suppliers.last().lastupdated))
             }
-            hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = suppliers.last().lastupdated))
         }
     }
 
@@ -60,20 +62,21 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
         val syncBatchJob = hmdbBatchRepository.findByName(SYNC_AGREEMENTS) ?:
         hmdbBatchRepository.save(HmDbBatch(name= SYNC_AGREEMENTS,
             syncfrom = LocalDateTime.now().minusYears(10).truncatedTo(ChronoUnit.SECONDS)))
-        val hmdbagreements = hmDbClient.fetchAgreements()
-        LOG.info("Calling agreement sync, got total of ${hmdbagreements.size} agreements")
-        val agreements = hmdbagreements.map { mapAgreement(it) }
-        runBlocking {
-            agreements.forEach {
-                agreementRepository.findByIdentifier(it.agreement.identifier)?.let { agree ->
-                    LOG.info("updating agreement ${agree.id} with identifier ${agree.identifier}")
-                    updateAgreement(it, agree)
-                } ?: run {
-                    LOG.info("saved new agreement ${it.agreement.id}")
-                    saveAgreement(it)
+        hmDbClient.fetchAgreements()?.let { hmdbagreements ->
+            LOG.info("Calling agreement sync, got total of ${hmdbagreements.size} agreements")
+            val agreements = hmdbagreements.map { mapAgreement(it) }
+            runBlocking {
+                agreements.forEach {
+                    agreementRepository.findByIdentifier(it.agreement.identifier)?.let { agree ->
+                        LOG.info("updating agreement ${agree.id} with identifier ${agree.identifier}")
+                        updateAgreement(it, agree)
+                    } ?: run {
+                        LOG.info("saved new agreement ${it.agreement.id}")
+                        saveAgreement(it)
+                    }
                 }
+                hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = agreements.last().agreement.updated))
             }
-            hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = agreements.last().agreement.updated))
         }
     }
 
@@ -85,9 +88,9 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
         val from = syncBatchJob.syncfrom
         val to = from.plusMonths(2)
         LOG.info("Calling product sync from ${from} to $to")
-        val hmdbProductsBatch = hmDbClient.fetchProducts(from, to)
-        LOG.info("Got total of ${hmdbProductsBatch.products.size} products")
-        if (hmdbProductsBatch.products.isNotEmpty()) {
+        hmDbClient.fetchProducts(from, to)?.let { hmdbProductsBatch ->
+            LOG.info("Got total of ${hmdbProductsBatch.products.size} products")
+
             runBlocking {
                 val products = extractProductBatch(hmdbProductsBatch)
                 products.forEach {
@@ -107,12 +110,12 @@ class SyncScheduler(private val hmDbClient: HmDbClient,
                 LOG.info("finished batch and update last sync time ${last.updated}")
                 hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = last.updated))
             }
+        } ?: run {
+            if (to.isBefore(LocalDateTime.now().minusHours(24))){
+                LOG.info("Empty list, skip to next batch $to")
+                hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = to))
+            }
         }
-        else if (to.isBefore(LocalDateTime.now().minusHours(1))){
-            LOG.info("Empty list, skip to next batch $to")
-            hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = to))
-        }
-
     }
 
     private suspend fun extractProductBatch(batch: HmDbProductBatchDTO): List<Product> {

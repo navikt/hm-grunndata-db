@@ -17,6 +17,7 @@ val mockkVersion = "1.13.2"
 val kotestVersion = "5.5.0"
 val apachePoiVersion = "5.2.3"
 val openSearchRestClientVersion = "1.3.7"
+val rapidsRiversVersion = "202301061300"
 
 group = "no.nav.hm"
 version = properties["version"] ?: "local-build"
@@ -37,8 +38,6 @@ configurations.all {
 }
 
 dependencies {
-    //implementation("com.github.navikt:hm-rapids-and-rivers-v2-core:1.0-SNAPSHOT")
-    //implementation("com.github.navikt:hm-rapids-and-rivers-v2-micronaut:1.0-SNAPSHOT")
     api("ch.qos.logback:logback-classic:$logbackClassicVersion")
     api("net.logstash.logback:logstash-logback-encoder:$logbackEncoderVersion")
     // coroutines
@@ -59,8 +58,10 @@ dependencies {
     implementation("io.micronaut:micronaut-http-client")
     implementation("org.opensearch.client:opensearch-rest-high-level-client:${openSearchRestClientVersion}")
     implementation("io.micronaut.cache:micronaut-cache-caffeine")
-    // Apache POI for excel file handling
-    //implementation("org.apache.poi:poi:$apachePoiVersion")
+
+    implementation("com.github.navikt:hm-rapids-and-rivers-v2-core:$rapidsRiversVersion")
+    implementation("com.github.navikt:hm-rapids-and-rivers-v2-micronaut:$rapidsRiversVersion")
+
     testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("io.micronaut.test:micronaut-test-kotest5")
     testImplementation("io.kotest:kotest-runner-junit5-jvm:$kotestVersion")
@@ -117,6 +118,7 @@ repositories {
     mavenLocal()
     mavenCentral()
     maven("https://packages.confluent.io/maven/")
+    maven("https://github-package-registry-mirror.gc.nav.no/cached/maven-release")
 
 }
 

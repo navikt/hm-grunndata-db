@@ -47,3 +47,6 @@ opensearch:
 
 hmdb:
   url: ${HMDB_URL:`http://localhost:8080`}
+
+rapidsandrivers:
+  enabled: false
