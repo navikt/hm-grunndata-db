@@ -48,5 +48,8 @@ opensearch:
 hmdb:
   url: ${HMDB_URL:`http://localhost:8080`}
 
+# Rapids and rivers config
 rapidsandrivers:
   enabled: false
+kafka:
+  topic: hm-grunndata-v1
