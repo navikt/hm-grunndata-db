@@ -12,7 +12,7 @@ micronaut:
       read-timeout: "15m"
   server:
     max-request-size: 100833718
-    port: 8080
+    port: 8888
   caches:
     suppliers:
       charset: 'UTF-8'
@@ -53,3 +53,4 @@ rapidsandrivers:
   enabled: false
 kafka:
   topic: hm-grunndata-v1
+  consumerGroupId: hm-grunndata-db-g1

@@ -41,11 +41,6 @@ data class Product (
     val updatedBy: String = HMDB
 )
 
-data class Description(val name: String?=null,
-                       val shortDescription: String?=null,
-                       val text: String?=null)
-
-
 data class AgreementInfo (
     val id: UUID,
     val identifier: String?=null,
@@ -55,7 +50,6 @@ data class AgreementInfo (
     val postIdentifier: String?=null,
     val reference: String?=null,
 )
-
 
 enum class ProductStatus {
     ACTIVE, INACTIVE
