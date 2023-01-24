@@ -46,7 +46,7 @@ opensearch:
   url: ${OPEN_SEARCH_URI:`https://localhost:9200`}
 
 hmdb:
-  url: ${HMDB_URL:`http://localhost:8080`}
+  url: ${HMDB_URL:`http://localhost:8081`}
 
 # Rapids and rivers config
 rapidsandrivers:

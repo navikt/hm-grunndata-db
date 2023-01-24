@@ -31,3 +31,15 @@ data class SupplierInfo (
 )
 
 const val SupplierTableName="supplier_v1"
+
+data class SupplierDTO(
+    val id: UUID,
+    val identifier: String,
+    val name: String,
+    val info: SupplierInfo,
+    val createdBy: String,
+    val created: LocalDateTime,
+    val updated: LocalDateTime
+)
+
+fun Supplier.toDTO(): SupplierDTO = SupplierDTO(id, identifier, name, info, createdBy, created, updated)

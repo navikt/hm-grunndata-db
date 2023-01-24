@@ -46,3 +46,38 @@ data class AgreementAttachment (
     val media: List<Media> = emptyList(),
     val description: String?,
 )
+
+data class AgreementDTO(
+    val id: UUID,
+    val identifier: String,
+    val title: String,
+    val resume: String?,
+    val text: String?,
+    val reference: String,
+    val publish: LocalDateTime,
+    val expire: LocalDateTime?,
+    val attachments: List<AgreementAttachment> = emptyList(),
+    val createdBy:String,
+    val created: LocalDateTime,
+    val updated: LocalDateTime,
+)
+
+data class AgreementPostDTO (
+    val id: UUID,
+    val agreementId: UUID,
+    val identifier: String,
+    val nr: Int,
+    val title: String,
+    val description: String,
+    val createdBy:String,
+    val created: LocalDateTime,
+)
+
+fun Agreement.toDTO(): AgreementDTO = AgreementDTO(
+    id = id, identifier = identifier, title = title, resume = resume, text = text, reference=reference,
+    publish = publish, expire = expire, attachments = attachments, createdBy = createdBy, created = created,
+    updated = updated )
+
+fun AgreementPost.toDTO(): AgreementPostDTO = AgreementPostDTO(
+    id = id, agreementId = agreementId, identifier = identifier, nr = nr, title = title, description = description,
+    createdBy = createdBy, created = created )

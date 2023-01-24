@@ -5,7 +5,9 @@ import io.micronaut.http.annotation.Get
 import org.slf4j.LoggerFactory
 
 @Controller("/internal/sync")
-class SyncController(private val syncScheduler: SyncScheduler) {
+class SyncController(private val productSyncScheduler: ProductSyncScheduler,
+                     private val agreementSyncScheduler: AgreementSyncScheduler,
+                     private val supplierSyncScheduler: SupplierSyncScheduler) {
 
     companion object {
         private val LOG = LoggerFactory.getLogger(SyncController::class.java)
@@ -14,19 +16,19 @@ class SyncController(private val syncScheduler: SyncScheduler) {
     @Get("/suppliers")
     fun syncSuppliers() {
         LOG.info("call sync suppliers from HMDB")
-        syncScheduler.syncSuppliers()
+        supplierSyncScheduler.syncSuppliers()
     }
 
     @Get("/agreements")
     fun syncAgreements() {
         LOG.info("call sync agreements from HMDB")
-        syncScheduler.syncAgreements()
+        agreementSyncScheduler.syncAgreements()
     }
 
     @Get("/products")
     fun syncProducts() {
         LOG.info("call sync products from HMDB")
-        syncScheduler.syncProducts()
+        productSyncScheduler.syncProducts()
     }
 
 }
