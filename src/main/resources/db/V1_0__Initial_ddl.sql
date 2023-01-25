@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS supplier_v1 (
     name VARCHAR(255) NOT NULL,
     info JSONB NOT NULL,
     created_by VARCHAR(64) NOT NULL,
+    updated_by VARCHAR(64) NOT NULL,
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (identifier)
@@ -31,6 +32,7 @@ CREATE TABLE IF NOT EXISTS agreement_v1 (
     expire TIMESTAMP,
     attachments JSONB NOT NULL,
     created_by VARCHAR(64) NOT NULL,
+    updated_by VARCHAR(64) NOT NULL,
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(identifier),
@@ -45,7 +47,6 @@ CREATE TABLE IF NOT EXISTS agreement_post_v1 (
     title VARCHAR(1024) NOT NULL,
     description TEXT,
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    created_by VARCHAR(64) NOT NULL,
     UNIQUE(identifier),
     CONSTRAINT fk_agreement_post_v1_log FOREIGN KEY (agreement_id) REFERENCES agreement_v1(id)
 );

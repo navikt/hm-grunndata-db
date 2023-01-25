@@ -37,7 +37,7 @@ class SupplierSyncScheduler(private val supplierRepository: SupplierRepository,
             runBlocking {
                 entities.forEach {
                     val saved = supplierRepository.findByIdentifier(it.identifier)?.let { inDb ->
-                        supplierRepository.update(it.copy(id = inDb.id, created = inDb.created))
+                        supplierRepository.update(it.copy(id = inDb.id, created = inDb.created, createdBy = inDb.createdBy))
                     } ?: run {
                         supplierRepository.save(it)
                     }

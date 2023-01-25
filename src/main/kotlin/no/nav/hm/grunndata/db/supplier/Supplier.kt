@@ -19,6 +19,7 @@ data class Supplier(
     @field:TypeDef(type=DataType.JSON)
     val info:       SupplierInfo,
     val createdBy: String = HMDB,
+    val updatedBy: String = HMDB,
     val created:    LocalDateTime = LocalDateTime.now(),
     val updated:    LocalDateTime = LocalDateTime.now()
 )
@@ -38,8 +39,9 @@ data class SupplierDTO(
     val name: String,
     val info: SupplierInfo,
     val createdBy: String,
+    val updatedBy: String,
     val created: LocalDateTime,
     val updated: LocalDateTime
 )
 
-fun Supplier.toDTO(): SupplierDTO = SupplierDTO(id, identifier, name, info, createdBy, created, updated)
+fun Supplier.toDTO(): SupplierDTO = SupplierDTO(id, identifier, name, info, createdBy, updatedBy, created, updated)

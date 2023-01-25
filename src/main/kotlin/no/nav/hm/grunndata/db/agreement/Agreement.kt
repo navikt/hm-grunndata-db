@@ -24,6 +24,7 @@ data class Agreement (
     @field:TypeDef(type = DataType.JSON)
     val attachments: List<AgreementAttachment> = emptyList(),
     val createdBy: String = HMDB,
+    val updatedBy: String = HMDB,
     val created: LocalDateTime = LocalDateTime.now(),
     val updated: LocalDateTime = LocalDateTime.now()
 )
@@ -37,7 +38,6 @@ data class AgreementPost (
     val nr: Int,
     val title: String,
     val description: String,
-    val createdBy: String = HMDB,
     val created: LocalDateTime = LocalDateTime.now()
 )
 
@@ -58,6 +58,7 @@ data class AgreementDTO(
     val expire: LocalDateTime?,
     val attachments: List<AgreementAttachment> = emptyList(),
     val createdBy:String,
+    val updatedBy: String,
     val created: LocalDateTime,
     val updated: LocalDateTime,
 )
@@ -69,15 +70,14 @@ data class AgreementPostDTO (
     val nr: Int,
     val title: String,
     val description: String,
-    val createdBy:String,
     val created: LocalDateTime,
 )
 
 fun Agreement.toDTO(): AgreementDTO = AgreementDTO(
     id = id, identifier = identifier, title = title, resume = resume, text = text, reference=reference,
-    publish = publish, expire = expire, attachments = attachments, createdBy = createdBy, created = created,
+    publish = publish, expire = expire, attachments = attachments, createdBy = createdBy, updatedBy = updatedBy, created = created,
     updated = updated )
 
 fun AgreementPost.toDTO(): AgreementPostDTO = AgreementPostDTO(
     id = id, agreementId = agreementId, identifier = identifier, nr = nr, title = title, description = description,
-    createdBy = createdBy, created = created )
+    created = created )

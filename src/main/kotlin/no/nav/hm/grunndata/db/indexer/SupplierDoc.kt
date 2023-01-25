@@ -13,9 +13,11 @@ data class SupplierDoc(
     val phone: String?,
     val homepage: String?,
     val createdBy: String,
+    val updatedBy: String,
     val created: LocalDateTime,
     val updated: LocalDateTime) : SearchDoc
 
 fun Supplier.toDoc(): SupplierDoc = SupplierDoc (
     id = id.toString(), identifier = identifier, name = name, address = info.address, email = info.email,
-    phone = info.phone, homepage = info.homepage, createdBy = createdBy, created = created, updated = updated)
+    phone = info.phone, homepage = info.homepage, createdBy = createdBy, updatedBy = updatedBy,
+    created = created, updated = updated)
