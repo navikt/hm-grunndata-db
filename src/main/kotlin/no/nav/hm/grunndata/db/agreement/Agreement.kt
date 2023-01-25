@@ -8,7 +8,6 @@ import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.db.product.Media
 import java.time.LocalDateTime
 import java.util.*
-import javax.management.monitor.StringMonitor
 
 @MappedEntity("agreement_v1")
 data class Agreement (
@@ -19,8 +18,8 @@ data class Agreement (
     val resume: String?,
     val text: String?,
     val reference: String,
-    val publish: LocalDateTime,
-    val expire: LocalDateTime?,
+    val published: LocalDateTime,
+    val expired: LocalDateTime,
     @field:TypeDef(type = DataType.JSON)
     val attachments: List<AgreementAttachment> = emptyList(),
     val createdBy: String = HMDB,
@@ -54,8 +53,8 @@ data class AgreementDTO(
     val resume: String?,
     val text: String?,
     val reference: String,
-    val publish: LocalDateTime,
-    val expire: LocalDateTime?,
+    val published: LocalDateTime,
+    val expired: LocalDateTime?,
     val attachments: List<AgreementAttachment> = emptyList(),
     val createdBy:String,
     val updatedBy: String,
@@ -75,7 +74,7 @@ data class AgreementPostDTO (
 
 fun Agreement.toDTO(): AgreementDTO = AgreementDTO(
     id = id, identifier = identifier, title = title, resume = resume, text = text, reference=reference,
-    publish = publish, expire = expire, attachments = attachments, createdBy = createdBy, updatedBy = updatedBy, created = created,
+    published = published, expired = expired, attachments = attachments, createdBy = createdBy, updatedBy = updatedBy, created = created,
     updated = updated )
 
 fun AgreementPost.toDTO(): AgreementPostDTO = AgreementPostDTO(

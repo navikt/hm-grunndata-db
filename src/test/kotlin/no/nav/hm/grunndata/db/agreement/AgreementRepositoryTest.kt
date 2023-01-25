@@ -12,7 +12,7 @@ class AgreementRepositoryTest(private val agreementRepository: AgreementReposito
     @Test
     fun crudTest() {
         val agreement = Agreement(identifier = "HMDB-123", title = "Rammeavtale Rullestoler", resume = "En kort beskrivelse", reference="23-10234",
-        text = "En lang beskrivelse", publish = LocalDateTime.now(), expire = LocalDateTime.now().plusYears(3))
+        text = "En lang beskrivelse", published = LocalDateTime.now(), expired = LocalDateTime.now().plusYears(3))
         val post = AgreementPost(agreementId = agreement.id, title = "Post 1", identifier = "HMDB-321", nr = 1, description = "En beskrive av posten")
         runBlocking {
             agreementRepository.save(agreement)

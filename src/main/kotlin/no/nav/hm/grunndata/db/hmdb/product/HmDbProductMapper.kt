@@ -9,7 +9,6 @@ import no.nav.hm.grunndata.db.product.*
 import no.nav.hm.grunndata.db.product.AttributeNames.*
 import no.nav.hm.grunndata.db.supplier.SupplierRepository
 import java.time.LocalDateTime
-import java.util.*
 
 @Singleton
 class HmDBProductMapper(private val supplierRepository: SupplierRepository,
@@ -50,7 +49,8 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
             postId = post.id,
             postNr = post.nr,
             postIdentifier = post.identifier,
-            reference = agreement.reference
+            reference = agreement.reference,
+            expired = agreement.expired
         )
     }
 

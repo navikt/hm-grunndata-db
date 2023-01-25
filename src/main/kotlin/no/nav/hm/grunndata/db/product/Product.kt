@@ -49,6 +49,7 @@ data class AgreementInfo (
     val postNr: Int,
     val postIdentifier: String?=null,
     val reference: String?=null,
+    val expired: LocalDateTime,
 )
 
 enum class ProductStatus {
@@ -101,7 +102,7 @@ data class ProductDTO(
     val published: LocalDateTime = LocalDateTime.now(),
     val expired: LocalDateTime = updated.plusYears(20),
     val agreementInfo: AgreementInfo?,
-    val hasAgreement: Boolean = (agreementInfo!=null),
+    val hasAgreement: Boolean = (agreementInfo!=null && agreementInfo.expired.isAfter(LocalDateTime.now())),
     val createdBy: String = HMDB,
     val updatedBy: String = HMDB
 )

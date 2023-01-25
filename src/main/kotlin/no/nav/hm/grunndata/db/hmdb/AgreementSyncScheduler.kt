@@ -67,8 +67,8 @@ class AgreementSyncScheduler(private val agreementDocumentService: AgreementDocu
         title= newsDTO.newstitle,
         resume= newsDTO.newsresume,
         text = newsDTO.newstext,
-        publish = newsDTO.newspublish,
-        expire = newsDTO.newsexpire,
+        published = newsDTO.newspublish,
+        expired = newsDTO.newsexpire,
         reference = newsDTO.externid,
         attachments =  mapNewsDocHolder(newsDocHolder)
     )

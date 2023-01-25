@@ -38,7 +38,6 @@ class ProductSyncScheduler(private val productRepository: ProductRepository,
         LOG.info("Calling product sync from ${from} to $to")
         hmDbClient.fetchProducts(from, to)?.let { hmdbProductsBatch ->
             LOG.info("Got total of ${hmdbProductsBatch.products.size} products")
-
             runBlocking {
                 val products = extractProductBatch(hmdbProductsBatch)
                 products.forEach {
