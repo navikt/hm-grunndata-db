@@ -1,5 +1,6 @@
 package no.nav.hm.grunndata.db.hmdb
 
+import io.micronaut.data.exceptions.DataAccessException
 import io.micronaut.scheduling.annotation.Scheduled
 import jakarta.inject.Singleton
 import kotlinx.coroutines.runBlocking
@@ -40,7 +41,13 @@ class SupplierSyncScheduler(private val supplierRepository: SupplierRepository,
                     val saved = supplierRepository.findByIdentifier(it.identifier)?.let { inDb ->
                         supplierRepository.update(it.copy(id = inDb.id, created = inDb.created, createdBy = inDb.createdBy))
                     } ?: run {
-                        supplierRepository.save(it)
+                        try {
+                            supplierRepository.save(it)
+                        }
+                        catch (e: DataAccessException) {
+                            LOG.error("Got exception ${e.message}")
+                            supplierRepository.save(it.copy(name = it.name+ " DUPLICATE"))
+                        }
                     }
                     LOG.info("saved supplier ${saved.id} with identifier ${saved.identifier} and lastupdated ${saved.updated}")
                     kafkaRapidService.pushToRapid(key="${EventNames.hmdbsuppliersync}-${saved.id}",
