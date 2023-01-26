@@ -18,4 +18,5 @@ interface SupplierRepository: CoroutineCrudRepository<Supplier, UUID> {
 
     @Cacheable
     override suspend fun findById(id: UUID): Supplier?
+
 }

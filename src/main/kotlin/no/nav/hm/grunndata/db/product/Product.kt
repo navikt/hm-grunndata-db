@@ -89,7 +89,7 @@ data class ProductDTO(
     val attributes: Map<String, Any>,
     val status: ProductStatus = ProductStatus.ACTIVE,
     val HMSArtNr: String?=null,
-    val identifier: String?=null,
+    val identifier: String,
     val supplierRef: String,
     val isoCategory: String,
     val accessory: Boolean = false,

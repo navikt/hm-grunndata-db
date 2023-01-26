@@ -1,6 +1,7 @@
 package no.nav.hm.grunndata.db.indexer
 
 import no.nav.hm.grunndata.db.supplier.Supplier
+import no.nav.hm.grunndata.db.supplier.SupplierDTO
 import java.time.LocalDateTime
 import java.util.*
 
@@ -21,3 +22,9 @@ fun Supplier.toDoc(): SupplierDoc = SupplierDoc (
     id = id.toString(), identifier = identifier, name = name, address = info.address, email = info.email,
     phone = info.phone, homepage = info.homepage, createdBy = createdBy, updatedBy = updatedBy,
     created = created, updated = updated)
+
+fun SupplierDTO.toDoc(): SupplierDoc = SupplierDoc(
+    id = id.toString(), identifier = identifier, name = name, address = info.address, email = info.email,
+    phone = info.phone, homepage = info.homepage, createdBy = createdBy, updatedBy = updatedBy,
+    created = created, updated = updated
+)

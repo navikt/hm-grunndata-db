@@ -1,30 +1,30 @@
 version: '3'
 services:
-#  opensearchgrunndatadb:
-#    image: opensearchproject/opensearch:1.3.7
-#    hostname: opensearchgrunndatadb
-#    container_name: opensearchgrunndatadb
-#    ports:
-#      - 9200:9200
-#    environment:
-#      - cluster.name=gdb
-#      - node.name=opensearchgrunndatadb
-#      - discovery.type=single-node
-#      - bootstrap.memory_lock=true
-#      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
-#    networks:
-#      - opensearch-net
-#  dashboardsgrunndatadb:
-#    depends_on:
-#      - opensearchgrunndatadb
-#    image: opensearchproject/opensearch-dashboards:1.3.7
-#    ports:
-#      - 5601:5601
-#    environment:
-#      LOGGING_SILENT: "false"
-#      OPENSEARCH_HOSTS: '["https://opensearchgrunndatadb:9200"]'
-#    networks:
-#      - opensearch-net
+  opensearchgrunndatadb:
+    image: opensearchproject/opensearch:1.3.7
+    hostname: opensearchgrunndatadb
+    container_name: opensearchgrunndatadb
+    ports:
+      - 9200:9200
+    environment:
+      - cluster.name=gdb
+      - node.name=opensearchgrunndatadb
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+    networks:
+      - opensearch-net
+  dashboardsgrunndatadb:
+    depends_on:
+      - opensearchgrunndatadb
+    image: opensearchproject/opensearch-dashboards:1.3.7
+    ports:
+      - 5601:5601
+    environment:
+      LOGGING_SILENT: "false"
+      OPENSEARCH_HOSTS: '["https://opensearchgrunndatadb:9200"]'
+    networks:
+      - opensearch-net
   postgresgrunndatadb:
     hostname: postgres
     container_name: postgresgrunndatadb

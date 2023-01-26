@@ -47,6 +47,15 @@ fun Product.toDoc(supplier: Supplier): ProductDoc = ProductDoc (
     filters = mapTechDataFilters(techData)
 )
 
+fun ProductDTO.toDoc(supplier: Supplier) : ProductDoc = ProductDoc (
+    id = id.toString(), supplier = ProductSupplier(id=supplier.id.toString(), identifier=supplier.identifier, name= supplier.name),
+    title = title, attributes = attributes, status = status, HMSArtNr = HMSArtNr, identifier = identifier,
+    supplierRef = supplierRef, isoCategory = isoCategory, accessory = accessory, sparePart = sparePart, seriesId = seriesId,
+    data = techData, media = media, created = created, updated = updated, expired = expired, createdBy = createdBy,
+    updatedBy = updatedBy, agreementInfo = agreementInfo, hasAgreement = agreementInfo!=null,
+    filters = mapTechDataFilters(techData)
+)
+
 fun mapTechDataFilters(data: List<TechData>): TechDataFilters {
     var fyllmateriale:String? = null
     var setebreddeMaksCM: Int? = null
