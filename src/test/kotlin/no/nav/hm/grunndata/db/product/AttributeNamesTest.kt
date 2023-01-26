@@ -9,13 +9,13 @@ class AttributeNamesTest {
 
     @Test
     fun attributNameTest() {
-        val attributes: Map<String, Any> = mapOf(Pair(compatibility.name, listOf("Product 1", "Product 2")), Pair(shortdescription.name,"short description"),
+        val attributes: Map<String, Any> = mapOf(Pair(compatible.name, listOf("Product 1", "Product 2")), Pair(shortdescription.name,"short description"),
         Pair(text.name, "A long description of product"))
         attributes.keys.map {
             enumContains<AttributeNames>(it)
         }.shouldNotContain(false)
 
-        val attributesNotSupported : Map<String, Any> = mapOf(Pair(compatibility.name, listOf("Product 1", "Product 2")), Pair(shortdescription.name,"short description"),
+        val attributesNotSupported : Map<String, Any> = mapOf(Pair(compatible.name, listOf("Product 1", "Product 2")), Pair(shortdescription.name,"short description"),
             Pair(text.name, "A long description of product"), Pair("notsupported", "test"))
 
         attributesNotSupported.keys.map { enumContains<AttributeNames>(it) }.shouldContain(false)

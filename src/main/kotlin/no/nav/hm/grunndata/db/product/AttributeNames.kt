@@ -6,10 +6,10 @@ enum class AttributeNames(private val type: AttributeType) {
 
     manufacturer(AttributeType.STRING),
     articlename(AttributeType.STRING),
-    compatibility(AttributeType.LIST),
+    compatible(AttributeType.LIST),
     keywords(AttributeType.LIST),
     shortdescription(AttributeType.HTML),
-    text(AttributeType.STRING),
+    text(AttributeType.HTML),
     url(AttributeType.URL)
 }
 
