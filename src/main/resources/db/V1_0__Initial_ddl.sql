@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS hmdbbatch_v1 (
 CREATE TABLE IF NOT EXISTS supplier_v1 (
     id UUID NOT NULL PRIMARY KEY,
     identifier VARCHAR(255) NOT NULL,
+    status VARCHAR(32) NOT NULL,
     name VARCHAR(255) NOT NULL,
     info JSONB NOT NULL,
     created_by VARCHAR(64) NOT NULL,

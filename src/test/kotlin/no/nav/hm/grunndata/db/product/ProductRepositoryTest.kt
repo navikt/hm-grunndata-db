@@ -9,6 +9,7 @@ import no.nav.hm.grunndata.db.product.AttributeNames.*
 import no.nav.hm.grunndata.db.supplier.Supplier
 import no.nav.hm.grunndata.db.supplier.SupplierInfo
 import no.nav.hm.grunndata.db.supplier.SupplierRepository
+import no.nav.hm.grunndata.db.supplier.SupplierStatus
 import org.junit.jupiter.api.Test
 
 @MicronautTest
@@ -18,7 +19,8 @@ class ProductRepositoryTest(private val productRepository: ProductRepository,
     @Test
     fun readSavedDb() {
         runBlocking {
-            val supplier = supplierRepository.save(Supplier(name = "supplier 1", identifier = "unik-identifier", info = SupplierInfo(email = "test@test")))
+            val supplier = supplierRepository.save(Supplier(name = "supplier 1", identifier = "unik-identifier",
+                status = SupplierStatus.ACTIVE, info = SupplierInfo(email = "test@test")))
             val product = productRepository.save(Product(
                 supplierId = supplier.id, identifier = "123", title = "Dette er et produkt", supplierRef = "123", isoCategory = "123456",
                 attributes = mapOf(Pair(articlename.name, "Produkt 1"),
