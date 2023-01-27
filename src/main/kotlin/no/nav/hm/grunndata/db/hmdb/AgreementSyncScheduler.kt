@@ -14,7 +14,7 @@ import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
 @Singleton
-class AgreementSyncScheduler(private val agreementDocumentService: AgreementDocumentService,
+class AgreementSyncScheduler(private val agreementRepository: AgreementRepository,
                              private val hmDbClient: HmDbClient,
                              private val hmdbBatchRepository: HmDbBatchRepository,
                              private val kafkaRapidService: KafkaRapidService
@@ -35,26 +35,22 @@ class AgreementSyncScheduler(private val agreementDocumentService: AgreementDocu
             syncfrom = LocalDateTime.now().minusYears(10).truncatedTo(ChronoUnit.SECONDS)))
         hmDbClient.fetchAgreements()?.let { hmdbagreements ->
             LOG.info("Calling agreement sync, got total of ${hmdbagreements.size} agreements")
-            val agreements = hmdbagreements.map { mapAgreement(it) }
+            val agreements = hmdbagreements.map { it.toAgreement() }
             runBlocking {
-                agreements.forEach {
-                    val doc = agreementDocumentService.saveAgreementDocument(it).toDTO()
-                    kafkaRapidService.pushToRapid(key = "${EventNames.hmdbagreementsync}-${doc.agreement.id}",
-                        eventName = EventNames.hmdbagreementsync, payload = doc)
+                agreements.forEach { agreement ->
+                    val dto = agreementRepository.findByIdentifier(agreement.identifier)?.let {
+                        it.toDTO()
+                    } ?: agreementRepository.save(agreement).toDTO()
+
+                    kafkaRapidService.pushToRapid(key = "${EventNames.hmdbagreementsync}-${dto.id}",
+                        eventName = EventNames.hmdbagreementsync, payload = dto)
                 }
-                hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = agreements.last().agreement.updated))
+                hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = agreements.last().updated))
             }
         }
     }
 
-    private fun mapAgreement(hmdbag: HmDbAgreementDTO): AgreementDocument {
-        val agreement = hmdbag.toAgreement()
-        return AgreementDocument(agreement = agreement,
-            agreementPost = hmdbag.poster.map { it.toAgreementPost(agreement) })
-    }
-
-    private fun AvtalePostDTO.toAgreementPost(agreement: Agreement): AgreementPost = AgreementPost(
-        agreementId = agreement.id ,
+    private fun AvtalePostDTO.toAgreementPost(): AgreementPost = AgreementPost(
         identifier = "$apostid".HmDbIdentifier(),
         nr = apostnr,
         title = aposttitle,
@@ -62,7 +58,7 @@ class AgreementSyncScheduler(private val agreementDocumentService: AgreementDocu
     )
 
 
-    private fun HmDbAgreementDTO.toAgreement(): Agreement = Agreement(
+    private fun HmDbAgreementDTO.toAgreement(): Agreement = Agreement (
         identifier = "${newsDTO.newsid}".HmDbIdentifier(),
         title= newsDTO.newstitle,
         resume= newsDTO.newsresume,
@@ -70,7 +66,8 @@ class AgreementSyncScheduler(private val agreementDocumentService: AgreementDocu
         published = newsDTO.newspublish,
         expired = newsDTO.newsexpire,
         reference = newsDTO.externid,
-        attachments =  mapNewsDocHolder(newsDocHolder)
+        attachments =  mapNewsDocHolder(newsDocHolder),
+        posts = poster.map { it.toAgreementPost() }
     )
 
     private fun mapNewsDocHolder(newsdocHolder: List<NewsDocHolder>): List<AgreementAttachment> = newsdocHolder.map {

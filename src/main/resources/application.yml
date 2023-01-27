@@ -50,7 +50,7 @@ hmdb:
 
 # Rapids and rivers config
 rapidsandrivers:
-  enabled: false
+  enabled: ${RAPIDSANDRIVERS_ENABLED:false}
 kafka:
   topic: hm-grunndata-v1
   consumerGroupId: hm-grunndata-db-g1

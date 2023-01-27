@@ -33,24 +33,13 @@ CREATE TABLE IF NOT EXISTS agreement_v1 (
     published TIMESTAMP NOT NULL,
     expired TIMESTAMP NOT NULL,
     attachments JSONB NOT NULL,
+    posts JSONB NOT NULL,
     created_by VARCHAR(64) NOT NULL,
     updated_by VARCHAR(64) NOT NULL,
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(identifier),
     UNIQUE(reference)
-);
-
-CREATE TABLE IF NOT EXISTS agreement_post_v1 (
-    id UUID NOT NULL NOT NULL PRIMARY KEY,
-    identifier VARCHAR(255) NOT NULL,
-    agreement_id UUID NOT NULL,
-    nr INTEGER NOT NULL,
-    title VARCHAR(1024) NOT NULL,
-    description TEXT,
-    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(identifier),
-    CONSTRAINT fk_agreement_post_v1_log FOREIGN KEY (agreement_id) REFERENCES agreement_v1(id)
 );
 
 CREATE TABLE IF NOT EXISTS product_v1 (

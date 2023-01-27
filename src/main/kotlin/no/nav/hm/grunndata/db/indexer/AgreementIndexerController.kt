@@ -4,19 +4,14 @@ import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Post
 import io.micronaut.http.annotation.Put
 import kotlinx.coroutines.flow.*
-import no.nav.hm.grunndata.db.agreement.AgreementDocument
-import no.nav.hm.grunndata.db.agreement.AgreementPostRepository
 import no.nav.hm.grunndata.db.agreement.AgreementRepository
-import no.nav.hm.grunndata.db.product.ProductRepository
-import no.nav.hm.grunndata.db.supplier.SupplierRepository
 import org.slf4j.LoggerFactory
 
 
 @Controller("/internal/index")
 class AgreementIndexerController(
     private val indexer: AgreementIndexer,
-    private val agreementRepository: AgreementRepository,
-    private val agreementPostRepository: AgreementPostRepository
+    private val agreementRepository: AgreementRepository
 ) {
     companion object {
         private val LOG = LoggerFactory.getLogger(AgreementIndexerController::class.java)
@@ -27,10 +22,9 @@ class AgreementIndexerController(
         LOG.info("Indexing all agreements")
         agreementRepository.findAll()
             .onEach {
-                val document = AgreementDocument(it, agreementPostRepository.findByAgreementId(it.id))
-                indexer.index(document.toDoc())
+                indexer.index(it.toDoc())
             }
-            .catch { e -> LOG.error("Got exception while indexint ${e.message}") }
+            .catch { e -> LOG.error("Got exception while indexing ${e.message}") }
             .collect()
     }
 
@@ -40,8 +34,7 @@ class AgreementIndexerController(
         LOG.info("index to $indexName")
         agreementRepository.findAll()
             .onEach {
-                val document = AgreementDocument(it, agreementPostRepository.findByAgreementId(it.id))
-                indexer.index(document.toDoc(), indexName)
+                indexer.index(it.toDoc(), indexName)
             }
             .catch { e -> LOG.error("Got exception while indexing ${e.message}") }
             .collect()

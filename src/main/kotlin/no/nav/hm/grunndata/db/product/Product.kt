@@ -45,7 +45,6 @@ data class AgreementInfo (
     val id: UUID,
     val identifier: String?=null,
     val rank: Int,
-    val postId: UUID,
     val postNr: Int,
     val postIdentifier: String?=null,
     val reference: String?=null,

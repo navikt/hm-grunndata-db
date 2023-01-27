@@ -22,17 +22,15 @@ data class Agreement (
     val expired: LocalDateTime,
     @field:TypeDef(type = DataType.JSON)
     val attachments: List<AgreementAttachment> = emptyList(),
+    @field:TypeDef(type = DataType.JSON)
+    val posts: List<AgreementPost> = emptyList(),
     val createdBy: String = HMDB,
     val updatedBy: String = HMDB,
     val created: LocalDateTime = LocalDateTime.now(),
     val updated: LocalDateTime = LocalDateTime.now()
 )
 
-@MappedEntity("agreement_post_v1")
 data class AgreementPost (
-    @field:Id
-    val id: UUID = UUID.randomUUID(),
-    val agreementId: UUID,
     val identifier: String,
     val nr: Int,
     val title: String,
@@ -56,27 +54,16 @@ data class AgreementDTO(
     val published: LocalDateTime,
     val expired: LocalDateTime?,
     val attachments: List<AgreementAttachment> = emptyList(),
+    val posts: List<AgreementPost> = emptyList(),
     val createdBy:String,
     val updatedBy: String,
     val created: LocalDateTime,
     val updated: LocalDateTime,
 )
 
-data class AgreementPostDTO (
-    val id: UUID,
-    val agreementId: UUID,
-    val identifier: String,
-    val nr: Int,
-    val title: String,
-    val description: String,
-    val created: LocalDateTime,
-)
 
 fun Agreement.toDTO(): AgreementDTO = AgreementDTO(
     id = id, identifier = identifier, title = title, resume = resume, text = text, reference=reference,
     published = published, expired = expired, attachments = attachments, createdBy = createdBy, updatedBy = updatedBy, created = created,
-    updated = updated )
+    updated = updated, posts = posts )
 
-fun AgreementPost.toDTO(): AgreementPostDTO = AgreementPostDTO(
-    id = id, agreementId = agreementId, identifier = identifier, nr = nr, title = title, description = description,
-    created = created )

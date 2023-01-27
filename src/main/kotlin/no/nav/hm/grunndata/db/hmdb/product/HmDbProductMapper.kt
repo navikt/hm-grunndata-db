@@ -2,7 +2,6 @@ package no.nav.hm.grunndata.db.hmdb.product
 
 import jakarta.inject.Singleton
 import no.nav.hm.grunndata.db.HMDB
-import no.nav.hm.grunndata.db.agreement.AgreementPostRepository
 import no.nav.hm.grunndata.db.agreement.AgreementRepository
 import no.nav.hm.grunndata.db.hmdb.HmDbIdentifier
 import no.nav.hm.grunndata.db.product.*
@@ -12,8 +11,7 @@ import java.time.LocalDateTime
 
 @Singleton
 class HmDBProductMapper(private val supplierRepository: SupplierRepository,
-                        private val agreementRepository: AgreementRepository,
-                        private val agreementPostRepository: AgreementPostRepository) {
+                        private val agreementRepository: AgreementRepository) {
 
     suspend fun mapProduct(prod: HmDbProductDTO, batch: HmDbProductBatchDTO): Product =
         Product(
@@ -38,15 +36,12 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
 
     private suspend fun mapAgreementInfo(prod: HmDbProductDTO): AgreementInfo {
         val agreement = agreementRepository.findByIdentifier("${prod.newsid}".HmDbIdentifier())
-        val post = agreementPostRepository.findByIdentifier("${prod.apostid}".HmDbIdentifier())
-        if (post!!.agreementId!=agreement!!.id) {
-            throw RuntimeException("Wrong agreement state!, should never happen")
-        }
+        val post = agreement!!.posts.find { it.identifier == "${prod.apostid}".HmDbIdentifier() }
+            ?: throw RuntimeException("Wrong agreement state!, should never happen")
         return AgreementInfo(
             id = agreement.id,
             identifier = agreement.identifier,
             rank = prod.postrank,
-            postId = post.id,
             postNr = post.nr,
             postIdentifier = post.identifier,
             reference = agreement.reference,

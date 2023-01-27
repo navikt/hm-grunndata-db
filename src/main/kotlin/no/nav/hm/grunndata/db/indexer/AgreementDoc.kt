@@ -1,9 +1,9 @@
 package no.nav.hm.grunndata.db.indexer
 
-import no.nav.hm.grunndata.db.agreement.AgreementDocument
-import no.nav.hm.grunndata.db.agreement.AgreementDocumentDTO
+import no.nav.hm.grunndata.db.agreement.Agreement
+import no.nav.hm.grunndata.db.agreement.AgreementDTO
+import no.nav.hm.grunndata.db.agreement.AgreementPost
 import java.time.LocalDateTime
-import java.util.UUID
 
 data class AgreementDoc(
     override val id: String,
@@ -17,36 +17,21 @@ data class AgreementDoc(
     val createdBy: String,
     val created: LocalDateTime,
     val updated: LocalDateTime,
-    val posts: List<AgreementPostDoc>
+    val posts: List<AgreementPost>
 ) : SearchDoc
 
-data class AgreementPostDoc (
-    val id: UUID,
-    val identifier: String,
-    val nr: Int,
-    val title: String,
-    val description: String,
-    val created: LocalDateTime
+
+fun Agreement.toDoc() : AgreementDoc = AgreementDoc(
+    id = id.toString(), identifier = identifier,
+    title = title, resume = resume, text = text,
+    reference = reference, publish = published, expire = expired,
+    createdBy = createdBy, created = created, updated = updated,
+    posts =  posts
 )
 
-fun AgreementDocument.toDoc() : AgreementDoc = AgreementDoc(
-    id = agreement.id.toString(), identifier = agreement.identifier,
-    title = agreement.title, resume = agreement.resume, text = agreement.text,
-    reference = agreement.reference, publish = agreement.published, expire = agreement.expired,
-    createdBy = agreement.createdBy, created = agreement.created, updated = agreement.updated,
-    posts = agreementPost.map { AgreementPostDoc(
-        id = it.id, identifier = it.identifier, nr = it.nr, title = it.title, description = it.description,
-        created = it.created
-    ) }
-)
-
-fun AgreementDocumentDTO.toDoc(): AgreementDoc = AgreementDoc(
-    id = agreement.id.toString(), identifier = agreement.identifier,
-    title = agreement.title, resume = agreement.resume, text = agreement.text,
-    reference = agreement.reference, publish = agreement.published, expire = agreement.expired,
-    createdBy = agreement.createdBy, created = agreement.created, updated = agreement.updated,
-    posts = agreementPost.map { AgreementPostDoc(
-        id = it.id, identifier = it.identifier, nr = it.nr, title = it.title, description = it.description,
-        created = it.created
-    ) }
-)
+fun AgreementDTO.toDoc() : AgreementDoc = AgreementDoc (
+    id = id.toString(), identifier = identifier,
+    title = title, resume = resume, text = text,
+    reference = reference, publish = published, expire = expired,
+    createdBy = createdBy, created = created, updated = updated,
+    posts =  posts )
