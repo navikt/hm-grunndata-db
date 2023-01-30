@@ -5,7 +5,7 @@ import java.time.LocalDateTime
 
 data class HmDbProductDTO (
     val artid: Long,
-    val adescshort: String?,
+    val adescshort: String,
     val adraft: Boolean?,
     val aindate: LocalDateTime,
     val achange: LocalDateTime,

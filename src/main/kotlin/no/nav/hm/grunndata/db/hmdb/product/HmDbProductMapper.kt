@@ -79,9 +79,10 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
     }
 
     fun mapAttributes(produkt: HmDbProductDTO): Map<String, Any> = mapOf(
-        Pair(articlename.name, listOf(produkt.artname)),
-        Pair(shortdescription.name, listOfNotNull(produkt.adescshort)),
-        Pair(text.name, listOf(produkt.pshortdesc))
+        articlename.name to produkt.artname,
+        shortdescription.name to produkt.adescshort,
+        text.name to produkt.pshortdesc,
+        series.name to listOf(produkt.prodname)
     )
 }
 
