@@ -78,11 +78,11 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
         return Media(type = mediaType, text = blobDTO.blobtype.trim(), uri = blobDTO.blobfile.trim())
     }
 
-    fun mapAttributes(produkt: HmDbProductDTO): Map<String, Any> = mapOf(
-        articlename.name to produkt.artname,
-        shortdescription.name to produkt.adescshort,
-        text.name to produkt.pshortdesc,
-        series.name to listOf(produkt.prodname)
+    fun mapAttributes(produkt: HmDbProductDTO): Map<AttributeNames, Any> = mapOf(
+        articlename to produkt.artname,
+        shortdescription to produkt.adescshort,
+        text to produkt.pshortdesc,
+        series to listOf(produkt.prodname)
     )
 }
 

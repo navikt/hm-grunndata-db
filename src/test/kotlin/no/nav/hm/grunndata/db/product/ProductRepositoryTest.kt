@@ -2,6 +2,7 @@ package no.nav.hm.grunndata.db.product
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.kotest.common.runBlocking
+import io.kotest.matchers.maps.shouldContain
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
@@ -23,13 +24,14 @@ class ProductRepositoryTest(private val productRepository: ProductRepository,
                 status = SupplierStatus.ACTIVE, info = SupplierInfo(email = "test@test")))
             val product = productRepository.save(Product(
                 supplierId = supplier.id, identifier = "123", title = "Dette er et produkt", supplierRef = "123", isoCategory = "123456",
-                attributes = mapOf(Pair(articlename.name, "Produkt 1"),
-                    Pair(manufacturer.name, "Samsung"), Pair(compatible.name, listOf("produkt 2", "product 3")))
+                attributes = mapOf(articlename to  "Produkt 1",
+                    manufacturer to  "Samsung",  compatible to listOf("produkt 2", "product 3"))
             ))
             val db = productRepository.findById(product.id)
             db.shouldNotBeNull()
             db.supplierId shouldBe product.supplierId
             db.title shouldBe product.title
+            db.attributes shouldContain Pair(articlename, "Produkt 1")
             val updated = productRepository.update(db.copy(title = "Dette er et nytt produkt"))
             updated.shouldNotBeNull()
             updated.title shouldBe "Dette er et nytt produkt"

@@ -16,7 +16,7 @@ data class Product (
     val supplierId: UUID,
     val title: String,
     @field:TypeDef(type = DataType.JSON)
-    val attributes: Map<String, Any>,
+    val attributes: Map<AttributeNames, Any>,
     val status: ProductStatus = ProductStatus.ACTIVE,
     @field:Column(name="hms_artnr")
     val HMSArtNr: String?=null,
@@ -85,7 +85,7 @@ data class ProductDTO(
     val id: UUID,
     val supplierId: UUID,
     val title: String,
-    val attributes: Map<String, Any>,
+    val attributes: Map<AttributeNames, Any>,
     val status: ProductStatus = ProductStatus.ACTIVE,
     val HMSArtNr: String?=null,
     val identifier: String,
