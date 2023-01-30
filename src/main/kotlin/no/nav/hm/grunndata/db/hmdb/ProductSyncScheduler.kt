@@ -3,9 +3,9 @@ package no.nav.hm.grunndata.db.hmdb
 import io.micronaut.data.exceptions.DataAccessException
 import jakarta.inject.Singleton
 import kotlinx.coroutines.runBlocking
-import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.db.hmdb.product.HmDBProductMapper
 import no.nav.hm.grunndata.db.hmdb.product.HmDbProductBatchDTO
+import no.nav.hm.grunndata.db.product.HMDB
 import no.nav.hm.grunndata.db.product.Product
 import no.nav.hm.grunndata.db.product.ProductRepository
 import no.nav.hm.grunndata.db.product.toDTO

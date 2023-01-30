@@ -1,6 +1,5 @@
 package no.nav.hm.grunndata.db.product
 
-import no.nav.hm.grunndata.db.HMDB
 import java.time.LocalDateTime
 import java.util.*
 
@@ -89,3 +88,5 @@ enum class AttributeType {
 inline fun <reified T : Enum<T>> enumContains(name: String): Boolean {
     return T::class.java.enumConstants.any { it.name == name}
 }
+
+const val HMDB = "HMDB"

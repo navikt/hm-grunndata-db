@@ -1,14 +1,12 @@
 package no.nav.hm.grunndata.db.supplier
 
-import io.micronaut.data.annotation.GeneratedValue
 import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.MappedEntity
 import io.micronaut.data.annotation.TypeDef
 import io.micronaut.data.model.DataType
-import no.nav.hm.grunndata.db.HMDB
+import no.nav.hm.grunndata.db.product.HMDB
 import java.time.LocalDateTime
-import java.util.UUID
-import javax.persistence.Table
+import java.util.*
 
 @MappedEntity(SupplierTableName)
 data class Supplier(

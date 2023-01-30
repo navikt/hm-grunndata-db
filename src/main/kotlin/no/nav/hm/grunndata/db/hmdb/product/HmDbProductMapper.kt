@@ -1,7 +1,6 @@
 package no.nav.hm.grunndata.db.hmdb.product
 
 import jakarta.inject.Singleton
-import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.db.agreement.AgreementRepository
 import no.nav.hm.grunndata.db.hmdb.HmDbIdentifier
 import no.nav.hm.grunndata.db.product.*
