@@ -69,3 +69,23 @@ enum class MediaType {
     VIDEO,
     OTHER
 }
+
+enum class AttributeNames(private val type: AttributeType) {
+
+    manufacturer(AttributeType.STRING),
+    articlename(AttributeType.STRING),
+    compatible(AttributeType.LIST),
+    series(AttributeType.LIST),
+    keywords(AttributeType.LIST),
+    shortdescription(AttributeType.HTML),
+    text(AttributeType.HTML),
+    url(AttributeType.URL)
+}
+
+enum class AttributeType {
+    STRING, HTML, URL, LIST, JSON
+}
+
+inline fun <reified T : Enum<T>> enumContains(name: String): Boolean {
+    return T::class.java.enumConstants.any { it.name == name}
+}
