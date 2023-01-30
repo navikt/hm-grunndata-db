@@ -25,29 +25,7 @@ data class Supplier(
     val updated:    LocalDateTime = LocalDateTime.now()
 )
 
-
-enum class SupplierStatus {
-    INACTIVE, ACTIVE
-}
-data class SupplierInfo (
-    val address: String?=null,
-    val email: String?=null,
-    val phone: String?=null,
-    val homepage: String?=null
-)
-
 const val SupplierTableName="supplier_v1"
 
-data class SupplierDTO(
-    val id: UUID,
-    val identifier: String,
-    val status : SupplierStatus = SupplierStatus.ACTIVE,
-    val name: String,
-    val info: SupplierInfo,
-    val createdBy: String,
-    val updatedBy: String,
-    val created: LocalDateTime,
-    val updated: LocalDateTime
-)
 
 fun Supplier.toDTO(): SupplierDTO = SupplierDTO(id, identifier, status,  name, info, createdBy, updatedBy, created, updated)

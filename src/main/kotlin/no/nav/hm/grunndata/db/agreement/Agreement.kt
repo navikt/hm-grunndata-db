@@ -30,38 +30,6 @@ data class Agreement (
     val updated: LocalDateTime = LocalDateTime.now()
 )
 
-data class AgreementPost (
-    val identifier: String,
-    val nr: Int,
-    val title: String,
-    val description: String,
-    val created: LocalDateTime = LocalDateTime.now()
-)
-
-data class AgreementAttachment (
-    val title: String?,
-    val media: List<Media> = emptyList(),
-    val description: String?,
-)
-
-data class AgreementDTO(
-    val id: UUID,
-    val identifier: String,
-    val title: String,
-    val resume: String?,
-    val text: String?,
-    val reference: String,
-    val published: LocalDateTime,
-    val expired: LocalDateTime?,
-    val attachments: List<AgreementAttachment> = emptyList(),
-    val posts: List<AgreementPost> = emptyList(),
-    val createdBy:String,
-    val updatedBy: String,
-    val created: LocalDateTime,
-    val updated: LocalDateTime,
-)
-
-
 fun Agreement.toDTO(): AgreementDTO = AgreementDTO(
     id = id, identifier = identifier, title = title, resume = resume, text = text, reference=reference,
     published = published, expired = expired, attachments = attachments, createdBy = createdBy, updatedBy = updatedBy, created = created,
