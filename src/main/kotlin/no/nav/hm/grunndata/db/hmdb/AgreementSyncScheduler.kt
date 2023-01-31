@@ -8,7 +8,7 @@ import no.nav.hm.grunndata.db.hmdb.agreement.*
 import no.nav.hm.grunndata.db.product.Media
 import no.nav.hm.grunndata.db.product.MediaType
 import no.nav.hm.grunndata.db.rapid.EventNames
-import no.nav.hm.rapids_rivers.micronaut.KafkaRapidService
+import no.nav.hm.rapids_rivers.micronaut.RapidPushService
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
@@ -17,7 +17,7 @@ import java.time.temporal.ChronoUnit
 class AgreementSyncScheduler(private val agreementRepository: AgreementRepository,
                              private val hmDbClient: HmDbClient,
                              private val hmdbBatchRepository: HmDbBatchRepository,
-                             private val kafkaRapidService: KafkaRapidService
+                             private val rapidPushService: RapidPushService
 ) {
 
     companion object {
@@ -42,7 +42,7 @@ class AgreementSyncScheduler(private val agreementRepository: AgreementRepositor
                         it.toDTO()
                     } ?: agreementRepository.save(agreement).toDTO()
 
-                    kafkaRapidService.pushToRapid(key = "${EventNames.hmdbagreementsync}-${dto.id}",
+                    rapidPushService.pushToRapid(key = "${EventNames.hmdbagreementsync}-${dto.id}",
                         eventName = EventNames.hmdbagreementsync, payload = dto)
                 }
                 hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = agreements.last().updated))

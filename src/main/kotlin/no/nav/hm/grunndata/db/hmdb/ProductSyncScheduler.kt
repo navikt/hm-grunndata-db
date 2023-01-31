@@ -10,7 +10,7 @@ import no.nav.hm.grunndata.db.product.Product
 import no.nav.hm.grunndata.db.product.ProductRepository
 import no.nav.hm.grunndata.db.product.toDTO
 import no.nav.hm.grunndata.db.rapid.EventNames
-import no.nav.hm.rapids_rivers.micronaut.KafkaRapidService
+import no.nav.hm.rapids_rivers.micronaut.RapidPushService
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
@@ -21,7 +21,7 @@ class ProductSyncScheduler(private val productRepository: ProductRepository,
                     private val hmdbBatchRepository: HmDbBatchRepository,
                     private val hmDBProductMapper: HmDBProductMapper,
                     private val hmDbClient: HmDbClient,
-                    private val kafkaRapidService: KafkaRapidService
+                    private val rapidPushService: RapidPushService
 ) {
 
     companion object {
@@ -46,7 +46,7 @@ class ProductSyncScheduler(private val productRepository: ProductRepository,
                         val saved = productRepository.findByIdentifier(it.identifier)?.let { inDb ->
                             productRepository.update(it.copy(id = inDb.id, created = inDb.created))
                         } ?: productRepository.save(it)
-                        kafkaRapidService.pushToRapid(key = "${EventNames.hmdbproductsync}-${saved.id}",
+                        rapidPushService.pushToRapid(key = "${EventNames.hmdbproductsync}-${saved.id}",
                             eventName = EventNames.hmdbproductsync, payload = saved.toDTO())
                     }
                     catch (e: DataAccessException) {

@@ -8,6 +8,7 @@ import no.nav.hm.grunndata.db.rapid.EventNames
 import no.nav.hm.grunndata.db.supplier.SupplierRepository
 import no.nav.hm.grunndata.db.supplier.toDTO
 import no.nav.hm.rapids_rivers.micronaut.KafkaRapidService
+import no.nav.hm.rapids_rivers.micronaut.RapidPushService
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
@@ -16,7 +17,7 @@ import java.time.temporal.ChronoUnit
 class SupplierSyncScheduler(private val supplierRepository: SupplierRepository,
                             private val hmdbBatchRepository: HmDbBatchRepository,
                             private val hmDbClient: HmDbClient,
-                            private val kafkaRapidService: KafkaRapidService
+                            private val rapidPushService: RapidPushService
 ) {
 
     companion object {
@@ -50,7 +51,7 @@ class SupplierSyncScheduler(private val supplierRepository: SupplierRepository,
                         }
                     }
                     LOG.info("saved supplier ${saved.id} with identifier ${saved.identifier} and lastupdated ${saved.updated}")
-                    kafkaRapidService.pushToRapid(key="${EventNames.hmdbsuppliersync}-${saved.id}",
+                    rapidPushService.pushToRapid(key="${EventNames.hmdbsuppliersync}-${saved.id}",
                         eventName = EventNames.hmdbsuppliersync, payload = saved.toDTO())
                 }
                 hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = suppliers.last().lastupdated))
