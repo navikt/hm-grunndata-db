@@ -1,5 +1,7 @@
 package no.nav.hm.grunndata.db.product
 
+
+import no.nav.hm.grunndata.db.GDB
 import java.time.LocalDateTime
 import java.util.*
 
@@ -24,8 +26,8 @@ data class ProductDTO(
     val expired: LocalDateTime = updated.plusYears(20),
     val agreementInfo: AgreementInfo?,
     val hasAgreement: Boolean = (agreementInfo!=null && agreementInfo.expired.isAfter(LocalDateTime.now())),
-    val createdBy: String = HMDB,
-    val updatedBy: String = HMDB
+    val createdBy: String = GDB,
+    val updatedBy: String = GDB
 )
 
 data class TechData (
@@ -78,15 +80,16 @@ enum class AttributeNames(private val type: AttributeType) {
     keywords(AttributeType.LIST),
     shortdescription(AttributeType.HTML),
     text(AttributeType.HTML),
-    url(AttributeType.URL)
+    url(AttributeType.URL),
+    tags(AttributeType.LIST),
+    bestillingsordning(AttributeType.BOOLEAN)
+
 }
 
 enum class AttributeType {
-    STRING, HTML, URL, LIST, JSON
+    STRING, HTML, URL, LIST, JSON, BOOLEAN
 }
 
 inline fun <reified T : Enum<T>> enumContains(name: String): Boolean {
     return T::class.java.enumConstants.any { it.name == name}
 }
-
-const val HMDB = "HMDB"
