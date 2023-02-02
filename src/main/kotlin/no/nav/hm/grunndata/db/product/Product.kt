@@ -4,6 +4,7 @@ import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.MappedEntity
 import io.micronaut.data.annotation.TypeDef
 import io.micronaut.data.model.DataType
+import no.nav.hm.grunndata.db.HMDB
 import java.time.LocalDateTime
 import java.util.UUID
 import javax.persistence.Column
@@ -45,5 +46,12 @@ fun Product.toDTO():ProductDTO =  ProductDTO (
     identifier = identifier, supplierRef=supplierRef, isoCategory=isoCategory, accessory=accessory, sparePart=sparePart,
     seriesId=seriesId, techData=techData, media= media, created=created, updated=updated, published=published, expired=expired,
     agreementInfo = agreementInfo, hasAgreement = (agreementInfo!=null), createdBy=createdBy, updatedBy=updatedBy
+)
+
+fun ProductDTO.toEntity(): Product = Product (
+    id = id, supplierId = supplierId, title = title, attributes=attributes, status = status, HMSArtNr = HMSArtNr,
+    identifier = identifier, supplierRef=supplierRef, isoCategory=isoCategory, accessory=accessory, sparePart=sparePart,
+    seriesId=seriesId, techData=techData, media= media, created=created, updated=updated, published=published, expired=expired,
+    agreementInfo = agreementInfo, createdBy=createdBy, updatedBy=updatedBy
 )
 

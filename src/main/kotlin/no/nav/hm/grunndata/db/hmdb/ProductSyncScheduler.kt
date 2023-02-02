@@ -3,12 +3,10 @@ package no.nav.hm.grunndata.db.hmdb
 import io.micronaut.data.exceptions.DataAccessException
 import jakarta.inject.Singleton
 import kotlinx.coroutines.runBlocking
+import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.db.hmdb.product.HmDBProductMapper
 import no.nav.hm.grunndata.db.hmdb.product.HmDbProductBatchDTO
-import no.nav.hm.grunndata.db.product.HMDB
-import no.nav.hm.grunndata.db.product.Product
-import no.nav.hm.grunndata.db.product.ProductRepository
-import no.nav.hm.grunndata.db.product.toDTO
+import no.nav.hm.grunndata.db.product.*
 import no.nav.hm.grunndata.db.rapid.EventNames
 import no.nav.hm.rapids_rivers.micronaut.RapidPushService
 import org.slf4j.LoggerFactory
@@ -18,12 +16,11 @@ import javax.transaction.Transactional
 
 
 @Singleton
-open class ProductSyncScheduler(private val productRepository: ProductRepository,
+open class ProductSyncScheduler(
                     private val hmdbBatchRepository: HmDbBatchRepository,
                     private val hmDBProductMapper: HmDBProductMapper,
                     private val hmDbClient: HmDbClient,
-                    private val rapidPushService: RapidPushService
-) {
+                    private val productService: ProductService) {
 
     companion object {
         private val LOG = LoggerFactory.getLogger(ProductSyncScheduler::class.java)
@@ -44,7 +41,7 @@ open class ProductSyncScheduler(private val productRepository: ProductRepository
                     val products = extractProductBatch(hmdbProductsBatch)
                     products.forEach {
                         LOG.info("saving to db: ${it.identifier}")
-                        saveAndPushTokafka(it)
+                        productService.saveAndPushTokafka(it.toDTO())
                     }
                     val last = products.last()
                     LOG.info("finished batch and update last sync time ${last.updated}")
@@ -62,17 +59,7 @@ open class ProductSyncScheduler(private val productRepository: ProductRepository
         }
     }
 
-    @Transactional
-    open fun saveAndPushTokafka(product: Product): Product = runBlocking {
-            val saved = productRepository.findByIdentifier(product.identifier)?.let { inDb ->
-                productRepository.update(product.copy(id = inDb.id, created = inDb.created))
-            } ?: productRepository.save(product)
-            rapidPushService.pushToRapid(
-                key = "${EventNames.hmdbproductsync}-${saved.id}",
-                eventName = EventNames.hmdbproductsync, payload = saved.toDTO()
-            )
-            saved
-        }
+
 
 
 
