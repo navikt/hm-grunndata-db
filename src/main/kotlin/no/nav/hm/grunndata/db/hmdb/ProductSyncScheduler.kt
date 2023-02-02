@@ -14,10 +14,11 @@ import no.nav.hm.rapids_rivers.micronaut.RapidPushService
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
+import javax.transaction.Transactional
 
 
 @Singleton
-class ProductSyncScheduler(private val productRepository: ProductRepository,
+open class ProductSyncScheduler(private val productRepository: ProductRepository,
                     private val hmdbBatchRepository: HmDbBatchRepository,
                     private val hmDBProductMapper: HmDBProductMapper,
                     private val hmDbClient: HmDbClient,
@@ -39,23 +40,19 @@ class ProductSyncScheduler(private val productRepository: ProductRepository,
         hmDbClient.fetchProducts(from, to)?.let { hmdbProductsBatch ->
             LOG.info("Got total of ${hmdbProductsBatch.products.size} products")
             runBlocking {
-                val products = extractProductBatch(hmdbProductsBatch)
-                products.forEach {
-                    try {
-                        LOG.info("finding from db: ${it.identifier}")
-                        val saved = productRepository.findByIdentifier(it.identifier)?.let { inDb ->
-                            productRepository.update(it.copy(id = inDb.id, created = inDb.created))
-                        } ?: productRepository.save(it)
-                        rapidPushService.pushToRapid(key = "${EventNames.hmdbproductsync}-${saved.id}",
-                            eventName = EventNames.hmdbproductsync, payload = saved.toDTO())
+                try {
+                    val products = extractProductBatch(hmdbProductsBatch)
+                    products.forEach {
+                        LOG.info("saving to db: ${it.identifier}")
+                        saveAndPushTokafka(it)
                     }
-                    catch (e: DataAccessException) {
-                        LOG.error("Got exception while persisting ${it.supplierId}-${it.supplierRef} ${it.identifier}",e)
-                    }
+                    val last = products.last()
+                    LOG.info("finished batch and update last sync time ${last.updated}")
+                    hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = last.updated))
                 }
-                val last = products.last()
-                LOG.info("finished batch and update last sync time ${last.updated}")
-                hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = last.updated))
+                catch (e: Exception) {
+                    LOG.error("Got exception while syncing products", e)
+                }
             }
         } ?: run {
             if (to.isBefore(LocalDateTime.now().minusHours(24))){
@@ -64,6 +61,20 @@ class ProductSyncScheduler(private val productRepository: ProductRepository,
             }
         }
     }
+
+    @Transactional
+    open fun saveAndPushTokafka(product: Product): Product = runBlocking {
+            val saved = productRepository.findByIdentifier(product.identifier)?.let { inDb ->
+                productRepository.update(product.copy(id = inDb.id, created = inDb.created))
+            } ?: productRepository.save(product)
+            rapidPushService.pushToRapid(
+                key = "${EventNames.hmdbproductsync}-${saved.id}",
+                eventName = EventNames.hmdbproductsync, payload = saved.toDTO()
+            )
+            saved
+        }
+
+
 
     private suspend fun extractProductBatch(batch: HmDbProductBatchDTO): List<Product> {
        return batch.products.map { prod ->
