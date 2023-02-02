@@ -5,6 +5,7 @@ import io.micronaut.http.annotation.Post
 import io.micronaut.http.annotation.Put
 import kotlinx.coroutines.flow.*
 import no.nav.hm.grunndata.db.product.ProductRepository
+import no.nav.hm.grunndata.db.product.toDTO
 import no.nav.hm.grunndata.db.supplier.SupplierRepository
 import org.slf4j.LoggerFactory
 
@@ -23,7 +24,7 @@ class ProductIndexerController(
     suspend fun indexProducts() {
         LOG.info("Indexing all products")
         repository.findAll()
-            .onEach { indexer.index(it.toDoc(supplier = supplierRepository.findById(it.supplierId)!!)) }
+            .onEach { indexer.index(it.toDTO().toDoc(supplier = supplierRepository.findById(it.supplierId)!!)) }
             .catch { e -> LOG.error("Got exception while indexint ${e.message}") }
             .collect()
     }
@@ -41,7 +42,7 @@ class ProductIndexerController(
                     Thread.sleep(2000) // aiven dev seems to having problems.
                     docList.clear()
                 }
-                docList.add(it.toDoc(supplier = supplierRepository.findById(it.supplierId)!!))
+                docList.add(it.toDTO().toDoc(supplier = supplierRepository.findById(it.supplierId)!!))
             }
             .catch { e -> LOG.error("Got exception while indexing ${e.message}") }
             .collect()
