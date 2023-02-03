@@ -22,7 +22,7 @@
 <!--        <appender-ref ref="secureLog" />-->
 <!--    </logger>-->
 
-    <logger name="no.nav.hm.grunndata" level="INFO" />
+    <logger name="no.nav" level="INFO" />
 
     <root level="INFO">
         <appender-ref ref="STDOUT_JSON" />

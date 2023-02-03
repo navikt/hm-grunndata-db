@@ -25,7 +25,7 @@ class ProductIndexerController(
         LOG.info("Indexing all products")
         repository.findAll()
             .onEach { indexer.index(it.toDTO().toDoc(supplier = supplierRepository.findById(it.supplierId)!!)) }
-            .catch { e -> LOG.error("Got exception while indexint ${e.message}") }
+            .catch { e -> LOG.error("Got exception while indexing ${e.message}") }
             .collect()
     }
 

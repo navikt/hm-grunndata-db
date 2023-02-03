@@ -8,7 +8,8 @@
 <!--   <logger name="io.micronaut.data.query" level="DEBUG" />-->
 <!--    <logger name="io.micronaut.transaction.jdbc.DataSourceTransactionManager" level="DEBUG"/>-->
 
-    <logger name="no.nav.hm" level="DEBUG" />
+    <logger name="no.nav" level="INFO" />
+    <logger name="no.nav.hm" level="DEBYG" />
 
     <root level="INFO">
         <appender-ref ref="stdout"/>
