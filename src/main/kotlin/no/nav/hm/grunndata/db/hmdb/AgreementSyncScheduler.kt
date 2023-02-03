@@ -1,8 +1,11 @@
 package no.nav.hm.grunndata.db.hmdb
 
 import io.micronaut.context.annotation.Context
+import io.micronaut.context.annotation.Requires
 import io.micronaut.scheduling.annotation.Scheduled
+import jakarta.inject.Singleton
 import kotlinx.coroutines.runBlocking
+import no.nav.helse.rapids_rivers.KafkaRapid
 import no.nav.hm.grunndata.db.agreement.*
 import no.nav.hm.grunndata.db.hmdb.agreement.*
 import no.nav.hm.grunndata.db.product.Media
@@ -14,6 +17,7 @@ import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
 @Context
+@Requires(bean = KafkaRapid::class)
 class AgreementSyncScheduler(private val agreementRepository: AgreementRepository,
                              private val hmDbClient: HmDbClient,
                              private val hmdbBatchRepository: HmDbBatchRepository,
