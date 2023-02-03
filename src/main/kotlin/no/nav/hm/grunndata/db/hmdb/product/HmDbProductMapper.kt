@@ -16,7 +16,7 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
     suspend fun mapProduct(prod: HmDbProductDTO, batch: HmDbProductBatchDTO): Product =
         Product(
             supplierId =  supplierRepository.findByIdentifier(prod.supplier!!.HmDbIdentifier())!!.id,
-            title = prod.prodname,
+            title = prod.artname,
             attributes = mapAttributes(prod),
             status = mapStatus(prod),
             HMSArtNr = prod.stockid,
@@ -80,7 +80,7 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
 
     fun mapAttributes(produkt: HmDbProductDTO): Map<AttributeNames, Any> = mapOf(
         articlename to produkt.artname,
-        shortdescription to produkt.adescshort,
+        shortdescription to (produkt.adescshort ?: ""),
         text to produkt.pshortdesc,
         series to listOf(produkt.prodname)
     )
