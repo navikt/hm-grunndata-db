@@ -76,7 +76,7 @@ enum class AttributeNames(private val type: AttributeType) {
     manufacturer(AttributeType.STRING),
     articlename(AttributeType.STRING),
     compatible(AttributeType.LIST),
-    series(AttributeType.LIST),
+    series(AttributeType.STRING),
     keywords(AttributeType.LIST),
     shortdescription(AttributeType.HTML),
     text(AttributeType.HTML),

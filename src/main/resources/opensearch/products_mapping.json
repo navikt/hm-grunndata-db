@@ -16,9 +16,6 @@
         "identifier": {
           "type": "keyword"
         },
-        "postId": {
-          "type": "keyword"
-        },
         "postIdentifier": {
           "type": "keyword"
         },
@@ -51,6 +48,15 @@
         "keywords": {
           "type": "keyword",
           "copy_to": "keywords_suggest"
+        },
+        "compatible": {
+          "type": "keyword"
+        },
+        "bestillingsordning": {
+          "type": "boolean"
+        },
+        "series": {
+          "type": "keyword"
         }
       }
     },
