@@ -60,5 +60,9 @@ kafka:
   keystorePassword: ${KAFKA_CREDSTORE_PASSWORD}
   health:
     enabled: false
+
 bestillingsordning:
   url: ${BESTILLINGSORDNING_URL:`https://navikt.github.io/digihot-sortiment/bestillingsordning_sortiment.json`}
+
+isocategory:
+  url: ${ISOCATEGORY_URL:`https://navikt.github.io/digihot-sortiment/isokategorier.json`}
