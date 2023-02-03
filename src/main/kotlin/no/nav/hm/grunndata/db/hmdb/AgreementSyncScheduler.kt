@@ -1,7 +1,7 @@
 package no.nav.hm.grunndata.db.hmdb
 
+import io.micronaut.context.annotation.Context
 import io.micronaut.scheduling.annotation.Scheduled
-import jakarta.inject.Singleton
 import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.db.agreement.*
 import no.nav.hm.grunndata.db.hmdb.agreement.*
@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
-@Singleton
+@Context
 class AgreementSyncScheduler(private val agreementRepository: AgreementRepository,
                              private val hmDbClient: HmDbClient,
                              private val hmdbBatchRepository: HmDbBatchRepository,

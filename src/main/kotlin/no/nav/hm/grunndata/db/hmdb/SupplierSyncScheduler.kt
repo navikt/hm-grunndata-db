@@ -1,19 +1,18 @@
 package no.nav.hm.grunndata.db.hmdb
 
+import io.micronaut.context.annotation.Context
 import io.micronaut.data.exceptions.DataAccessException
 import io.micronaut.scheduling.annotation.Scheduled
-import jakarta.inject.Singleton
 import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.db.rapid.EventNames
 import no.nav.hm.grunndata.db.supplier.SupplierRepository
 import no.nav.hm.grunndata.db.supplier.toDTO
-import no.nav.hm.rapids_rivers.micronaut.KafkaRapidService
 import no.nav.hm.rapids_rivers.micronaut.RapidPushService
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
-@Singleton
+@Context
 class SupplierSyncScheduler(private val supplierRepository: SupplierRepository,
                             private val hmdbBatchRepository: HmDbBatchRepository,
                             private val hmDbClient: HmDbClient,
