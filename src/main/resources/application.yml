@@ -54,10 +54,10 @@ rapidsandrivers:
 kafka:
   topic: teamdigihot.hm-grunndata-v1
   consumerGroupId: hm-grunndata-db-g1
-  trustStorePath: ${KAFKA_TRUSTSTORE_PATH}
-  trustStorePassword: ${KAFKA_CREDSTORE_PASSWORD}
-  keystorePath: ${KAFKA_KEYSTORE_PATH}
-  keystorePassword: ${KAFKA_CREDSTORE_PASSWORD}
+  trustStorePath: ${KAFKA_TRUSTSTORE_PATH:}
+  trustStorePassword: ${KAFKA_CREDSTORE_PASSWORD:}
+  keystorePath: ${KAFKA_KEYSTORE_PATH:}
+  keystorePassword: ${KAFKA_CREDSTORE_PASSWORD:}
   health:
     enabled: false
 
