@@ -1,21 +1,23 @@
 package no.nav.hm.grunndata.db.hmdb
 
-import io.micronaut.data.exceptions.DataAccessException
+import io.micronaut.context.annotation.Requires
+import io.micronaut.scheduling.annotation.Scheduled
 import jakarta.inject.Singleton
 import kotlinx.coroutines.runBlocking
+import no.nav.helse.rapids_rivers.KafkaRapid
 import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.db.hmdb.product.HmDBProductMapper
 import no.nav.hm.grunndata.db.hmdb.product.HmDbProductBatchDTO
-import no.nav.hm.grunndata.db.product.*
-import no.nav.hm.grunndata.db.rapid.EventNames
-import no.nav.hm.rapids_rivers.micronaut.RapidPushService
+import no.nav.hm.grunndata.db.product.Product
+import no.nav.hm.grunndata.db.product.ProductService
+import no.nav.hm.grunndata.db.product.toDTO
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
-import javax.transaction.Transactional
 
 
 @Singleton
+@Requires(bean = KafkaRapid::class)
 open class ProductSyncScheduler(
                     private val hmdbBatchRepository: HmDbBatchRepository,
                     private val hmDBProductMapper: HmDBProductMapper,
@@ -36,21 +38,16 @@ open class ProductSyncScheduler(
         LOG.info("Calling product sync from ${from} to $to")
         hmDbClient.fetchProducts(from, to)?.let { hmdbProductsBatch ->
             LOG.info("Got total of ${hmdbProductsBatch.products.size} products")
-            runBlocking {
-                try {
-                    val products = extractProductBatch(hmdbProductsBatch)
-                    products.forEach {
-                        LOG.info("saving to db: ${it.identifier}")
-                        productService.saveAndPushTokafka(it.toDTO())
-                    }
-                    val last = products.last()
-                    LOG.info("finished batch and update last sync time ${last.updated}")
-                    hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = last.updated))
+
+                val products = extractProductBatch(hmdbProductsBatch)
+                products.forEach {
+                    LOG.info("saving to db: ${it.identifier}")
+                    productService.saveAndPushTokafka(it.toDTO())
                 }
-                catch (e: Exception) {
-                    LOG.error("Got exception while syncing products", e)
-                }
-            }
+                val last = products.last()
+                LOG.info("finished batch and update last sync time ${last.updated}")
+                hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = last.updated))
+
         } ?: run {
             if (to.isBefore(LocalDateTime.now().minusHours(24))){
                 LOG.info("Empty list, skip to next batch $to")
