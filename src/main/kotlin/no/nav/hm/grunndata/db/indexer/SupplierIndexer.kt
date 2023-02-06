@@ -8,14 +8,10 @@ import org.slf4j.LoggerFactory
 @Singleton
 class SupplierIndexer(private val indexer: Indexer,
                       @Value("\${SUPPLIER_ALIASNAME:supplier}") private val aliasName: String,
-                      @Value("\${SUPPLIER_INDEXNAME:supplier_2022}") private val indexName: String ) {
+                      @Value("\${SUPPLIER_INDEXNAME:supplier_2023}") private val indexName: String ) {
 
     companion object {
         private val LOG = LoggerFactory.getLogger(SupplierIndexer::class.java)
-//        private val SETTINGS = ProductIndexer::class.java
-//            .getResource("/opensearch/product-settings.json").readText()
-//        private val MAPPING = ProductIndexer::class.java
-//            .getResource("/opensearch/product-mapping.json").readText()
     }
 
     init {

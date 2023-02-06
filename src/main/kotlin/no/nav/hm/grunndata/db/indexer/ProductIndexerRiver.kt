@@ -9,7 +9,6 @@ import no.nav.helse.rapids_rivers.KafkaRapid
 import no.nav.helse.rapids_rivers.MessageContext
 import no.nav.helse.rapids_rivers.River
 import no.nav.hm.grunndata.db.product.ProductDTO
-import no.nav.hm.grunndata.db.supplier.SupplierDTO
 import no.nav.hm.grunndata.db.supplier.SupplierRepository
 import no.nav.hm.rapids_rivers.micronaut.RiverHead
 import org.slf4j.LoggerFactory

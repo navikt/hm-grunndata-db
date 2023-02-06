@@ -33,7 +33,7 @@ class SupplierSyncScheduler(private val supplierRepository: SupplierRepository,
         }
     }
 
-    @Scheduled(cron = "0 15 0 * * *")
+    //@Scheduled(cron = "15 * * * * *")
     fun syncSuppliers() {
         runBlocking {
             val syncBatchJob = hmdbBatchRepository.findByName(SYNC_SUPPLIERS) ?: hmdbBatchRepository.save(

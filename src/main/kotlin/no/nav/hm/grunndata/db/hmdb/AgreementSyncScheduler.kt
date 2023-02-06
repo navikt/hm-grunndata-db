@@ -34,7 +34,7 @@ class AgreementSyncScheduler(private val agreementRepository: AgreementRepositor
         }
     }
 
-    @Scheduled(cron="0 30 1 * * *")
+    //@Scheduled(cron="0 * * * * *")
     fun syncAgreements() {
         runBlocking {
             val syncBatchJob = hmdbBatchRepository.findByName(SYNC_AGREEMENTS) ?: hmdbBatchRepository.save(
