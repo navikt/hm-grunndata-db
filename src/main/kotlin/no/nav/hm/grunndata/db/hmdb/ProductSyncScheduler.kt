@@ -30,14 +30,18 @@ open class ProductSyncScheduler(
 
     //@Scheduled(fixedDelay = "1m")
     fun syncProducts() {
-        val syncBatchJob = hmdbBatchRepository.findByName(SYNC_PRODUCTS) ?:
-        hmdbBatchRepository.save(HmDbBatch(name= SYNC_PRODUCTS,
-            syncfrom = LocalDateTime.now().minusYears(12).truncatedTo(ChronoUnit.SECONDS)))
-        val from = syncBatchJob.syncfrom
-        val to = from.plusMonths(2)
-        LOG.info("Calling product sync from ${from} to $to")
-        hmDbClient.fetchProducts(from, to)?.let { hmdbProductsBatch ->
-            LOG.info("Got total of ${hmdbProductsBatch.products.size} products")
+        runBlocking {
+            val syncBatchJob = hmdbBatchRepository.findByName(SYNC_PRODUCTS) ?: hmdbBatchRepository.save(
+                HmDbBatch(
+                    name = SYNC_PRODUCTS,
+                    syncfrom = LocalDateTime.now().minusYears(12).truncatedTo(ChronoUnit.SECONDS)
+                )
+            )
+            val from = syncBatchJob.syncfrom
+            val to = from.plusMonths(2)
+            LOG.info("Calling product sync from ${from} to $to")
+            hmDbClient.fetchProducts(from, to)?.let { hmdbProductsBatch ->
+                LOG.info("Got total of ${hmdbProductsBatch.products.size} products")
 
                 val products = extractProductBatch(hmdbProductsBatch)
                 products.forEach {
@@ -48,14 +52,14 @@ open class ProductSyncScheduler(
                 LOG.info("finished batch and update last sync time ${last.updated}")
                 hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = last.updated))
 
-        } ?: run {
-            if (to.isBefore(LocalDateTime.now().minusHours(24))){
-                LOG.info("Empty list, skip to next batch $to")
-                hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = to))
+            } ?: run {
+                if (to.isBefore(LocalDateTime.now().minusHours(24))) {
+                    LOG.info("Empty list, skip to next batch $to")
+                    hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = to))
+                }
             }
         }
     }
-
 
 
 

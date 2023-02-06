@@ -2,6 +2,7 @@ package no.nav.hm.grunndata.db.product
 
 import io.micronaut.data.exceptions.DataAccessException
 import jakarta.inject.Singleton
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.supervisorScope
 import no.nav.hm.grunndata.db.HMDB
@@ -23,7 +24,7 @@ open class ProductService(
     }
 
     @Transactional
-    open fun saveAndPushTokafka(dto: ProductDTO): ProductDTO = runBlocking {
+    open suspend fun saveAndPushTokafka(dto: ProductDTO): ProductDTO = coroutineScope {
         supervisorScope {
             try {
                 val entity = attributeTagService.addBestillingsordningAttribute(dto.toEntity())

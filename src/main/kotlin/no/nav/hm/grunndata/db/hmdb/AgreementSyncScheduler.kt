@@ -29,27 +29,36 @@ class AgreementSyncScheduler(private val agreementRepository: AgreementRepositor
     }
 
     init {
-        hmdbBatchRepository.findByName(SYNC_AGREEMENTS) ?: syncAgreements()
+        runBlocking {
+            hmdbBatchRepository.findByName(SYNC_AGREEMENTS) ?: syncAgreements()
+        }
     }
 
     @Scheduled(cron="0 30 1 * * *")
     fun syncAgreements() {
-        val syncBatchJob = hmdbBatchRepository.findByName(SYNC_AGREEMENTS) ?:
-        hmdbBatchRepository.save(HmDbBatch(name= SYNC_AGREEMENTS,
-            syncfrom = LocalDateTime.now().minusYears(10).truncatedTo(ChronoUnit.SECONDS)))
-        hmDbClient.fetchAgreements()?.let { hmdbagreements ->
-            LOG.info("Calling agreement sync, got total of ${hmdbagreements.size} agreements")
-            val agreements = hmdbagreements.map { it.toAgreement() }
-            runBlocking {
-                agreements.forEach { agreement ->
-                    val dto = agreementRepository.findByIdentifier(agreement.identifier)?.let {
-                        it.toDTO()
-                    } ?: agreementRepository.save(agreement).toDTO()
+        runBlocking {
+            val syncBatchJob = hmdbBatchRepository.findByName(SYNC_AGREEMENTS) ?: hmdbBatchRepository.save(
+                HmDbBatch(
+                    name = SYNC_AGREEMENTS,
+                    syncfrom = LocalDateTime.now().minusYears(10).truncatedTo(ChronoUnit.SECONDS)
+                )
+            )
+            hmDbClient.fetchAgreements()?.let { hmdbagreements ->
+                LOG.info("Calling agreement sync, got total of ${hmdbagreements.size} agreements")
+                val agreements = hmdbagreements.map { it.toAgreement() }
+                runBlocking {
+                    agreements.forEach { agreement ->
+                        val dto = agreementRepository.findByIdentifier(agreement.identifier)?.let {
+                            it.toDTO()
+                        } ?: agreementRepository.save(agreement).toDTO()
 
-                    rapidPushService.pushToRapid(key = "${EventNames.hmdbagreementsync}-${dto.id}",
-                        eventName = EventNames.hmdbagreementsync, payload = dto)
+                        rapidPushService.pushToRapid(
+                            key = "${EventNames.hmdbagreementsync}-${dto.id}",
+                            eventName = EventNames.hmdbagreementsync, payload = dto
+                        )
+                    }
+                    hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = agreements.last().updated))
                 }
-                hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = agreements.last().updated))
             }
         }
     }

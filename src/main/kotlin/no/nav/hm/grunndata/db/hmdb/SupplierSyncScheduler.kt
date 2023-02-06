@@ -28,36 +28,50 @@ class SupplierSyncScheduler(private val supplierRepository: SupplierRepository,
     }
 
     init {
-        hmdbBatchRepository.findByName(SYNC_SUPPLIERS) ?: syncSuppliers()
+        runBlocking {
+            hmdbBatchRepository.findByName(SYNC_SUPPLIERS) ?: syncSuppliers()
+        }
     }
 
     @Scheduled(cron = "0 15 0 * * *")
     fun syncSuppliers() {
-        val syncBatchJob = hmdbBatchRepository.findByName(SYNC_SUPPLIERS) ?:
-        hmdbBatchRepository.save(HmDbBatch(name= SYNC_SUPPLIERS,
-            syncfrom = LocalDateTime.now().minusYears(20).truncatedTo(ChronoUnit.SECONDS)))
-        hmDbClient.fetchSuppliers(syncBatchJob.syncfrom)?.let { suppliers ->
+        runBlocking {
+            val syncBatchJob = hmdbBatchRepository.findByName(SYNC_SUPPLIERS) ?: hmdbBatchRepository.save(
+                HmDbBatch(
+                    name = SYNC_SUPPLIERS,
+                    syncfrom = LocalDateTime.now().minusYears(20).truncatedTo(ChronoUnit.SECONDS)
+                )
+            )
+            hmDbClient.fetchSuppliers(syncBatchJob.syncfrom)?.let { suppliers ->
 
-            LOG.info("Calling supplier sync from ${syncBatchJob.syncfrom}, Got total of ${suppliers.size} suppliers")
-            val entities = suppliers.map { it.toSupplier() }.sortedBy { it.updated }
-            runBlocking {
-                entities.forEach {
-                    val saved = supplierRepository.findByIdentifier(it.identifier)?.let { inDb ->
-                        supplierRepository.update(it.copy(id = inDb.id, created = inDb.created, createdBy = inDb.createdBy))
-                    } ?: run {
-                        try {
-                            supplierRepository.save(it)
+                LOG.info("Calling supplier sync from ${syncBatchJob.syncfrom}, Got total of ${suppliers.size} suppliers")
+                val entities = suppliers.map { it.toSupplier() }.sortedBy { it.updated }
+                runBlocking {
+                    entities.forEach {
+                        val saved = supplierRepository.findByIdentifier(it.identifier)?.let { inDb ->
+                            supplierRepository.update(
+                                it.copy(
+                                    id = inDb.id,
+                                    created = inDb.created,
+                                    createdBy = inDb.createdBy
+                                )
+                            )
+                        } ?: run {
+                            try {
+                                supplierRepository.save(it)
+                            } catch (e: DataAccessException) {
+                                LOG.error("Got exception ${e.message}")
+                                supplierRepository.save(it.copy(name = it.name + " DUPLICATE"))
+                            }
                         }
-                        catch (e: DataAccessException) {
-                            LOG.error("Got exception ${e.message}")
-                            supplierRepository.save(it.copy(name = it.name+ " DUPLICATE"))
-                        }
+                        LOG.info("saved supplier ${saved.id} with identifier ${saved.identifier} and lastupdated ${saved.updated}")
+                        rapidPushService.pushToRapid(
+                            key = "${EventNames.hmdbsuppliersync}-${saved.id}",
+                            eventName = EventNames.hmdbsuppliersync, payload = saved.toDTO()
+                        )
                     }
-                    LOG.info("saved supplier ${saved.id} with identifier ${saved.identifier} and lastupdated ${saved.updated}")
-                    rapidPushService.pushToRapid(key="${EventNames.hmdbsuppliersync}-${saved.id}",
-                        eventName = EventNames.hmdbsuppliersync, payload = saved.toDTO())
+                    hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = suppliers.last().lastupdated))
                 }
-                hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = suppliers.last().lastupdated))
             }
         }
     }
