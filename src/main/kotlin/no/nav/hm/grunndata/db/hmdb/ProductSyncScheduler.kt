@@ -4,15 +4,14 @@ import io.micronaut.context.annotation.Requires
 import io.micronaut.data.exceptions.DataAccessException
 import io.micronaut.scheduling.annotation.Scheduled
 import jakarta.inject.Singleton
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import no.nav.helse.rapids_rivers.KafkaRapid
 import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.db.hmdb.product.HmDBProductMapper
 import no.nav.hm.grunndata.db.hmdb.product.HmDbProductBatchDTO
-import no.nav.hm.grunndata.db.product.*
-import no.nav.hm.grunndata.db.rapid.EventNames
-import no.nav.hm.rapids_rivers.micronaut.RapidPushService
+import no.nav.hm.grunndata.db.product.Product
+import no.nav.hm.grunndata.db.product.ProductService
+import no.nav.hm.grunndata.db.product.toDTO
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
@@ -20,6 +19,7 @@ import java.time.temporal.ChronoUnit
 
 @Singleton
 @Requires(bean = KafkaRapid::class)
+@Requires(property = "schedulers.enabled", value = "true")
 open class ProductSyncScheduler(
     private val hmdbBatchRepository: HmDbBatchRepository,
     private val hmDBProductMapper: HmDBProductMapper,
@@ -32,7 +32,7 @@ open class ProductSyncScheduler(
         private var stopped = false
     }
 
-    //@Scheduled(fixedDelay = "15s")
+    @Scheduled(fixedDelay = "15s")
     fun syncProducts() {
         if (stopped) {
             LOG.warn("scheduler is stopped, maybe because of uncaught errors!")

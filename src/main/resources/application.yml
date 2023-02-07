@@ -66,3 +66,6 @@ bestillingsordning:
 
 isocategory:
   url: ${ISOCATEGORY_URL:`https://navikt.github.io/digihot-sortiment/isokategorier.json`}
+
+schedulers:
+  enabled: ${SCHEDULERS_ENABLED:false}

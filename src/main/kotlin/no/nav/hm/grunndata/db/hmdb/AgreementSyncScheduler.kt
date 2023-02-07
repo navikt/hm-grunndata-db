@@ -16,8 +16,9 @@ import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
-@Context
+@Singleton
 @Requires(bean = KafkaRapid::class)
+@Requires(property = "schedulers.enabled", value = "true")
 class AgreementSyncScheduler(private val agreementRepository: AgreementRepository,
                              private val hmDbClient: HmDbClient,
                              private val hmdbBatchRepository: HmDbBatchRepository,
@@ -28,13 +29,7 @@ class AgreementSyncScheduler(private val agreementRepository: AgreementRepositor
         private val LOG = LoggerFactory.getLogger(AgreementSyncScheduler::class.java)
     }
 
-    init {
-        runBlocking {
-            hmdbBatchRepository.findByName(SYNC_AGREEMENTS) ?: syncAgreements()
-        }
-    }
-
-    //@Scheduled(cron="0 * * * * *")
+    @Scheduled(cron="0 30 0 * * *")
     fun syncAgreements() {
         runBlocking {
             val syncBatchJob = hmdbBatchRepository.findByName(SYNC_AGREEMENTS) ?: hmdbBatchRepository.save(

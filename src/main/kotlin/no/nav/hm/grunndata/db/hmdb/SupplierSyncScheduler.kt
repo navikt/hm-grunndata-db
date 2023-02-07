@@ -15,8 +15,9 @@ import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
-@Context
+@Singleton
 @Requires(bean = KafkaRapid::class)
+@Requires(property = "schedulers.enabled", value = "true")
 class SupplierSyncScheduler(private val supplierRepository: SupplierRepository,
                             private val hmdbBatchRepository: HmDbBatchRepository,
                             private val hmDbClient: HmDbClient,
@@ -27,13 +28,7 @@ class SupplierSyncScheduler(private val supplierRepository: SupplierRepository,
         private val LOG = LoggerFactory.getLogger(SupplierSyncScheduler::class.java)
     }
 
-    init {
-        runBlocking {
-            hmdbBatchRepository.findByName(SYNC_SUPPLIERS) ?: syncSuppliers()
-        }
-    }
-
-    //@Scheduled(cron = "15 * * * * *")
+    @Scheduled(cron = "0 15 * * * *")
     fun syncSuppliers() {
         runBlocking {
             val syncBatchJob = hmdbBatchRepository.findByName(SYNC_SUPPLIERS) ?: hmdbBatchRepository.save(
