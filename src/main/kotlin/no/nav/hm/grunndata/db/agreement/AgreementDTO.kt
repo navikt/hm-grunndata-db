@@ -12,7 +12,7 @@ data class AgreementDTO(
     val text: String?,
     val reference: String,
     val published: LocalDateTime,
-    val expired: LocalDateTime?,
+    val expired: LocalDateTime,
     val attachments: List<AgreementAttachment> = emptyList(),
     val posts: List<AgreementPost> = emptyList(),
     val createdBy:String,
