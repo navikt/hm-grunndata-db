@@ -1,10 +1,6 @@
 package no.nav.hm.grunndata.db.product
 
-import io.micronaut.data.exceptions.DataAccessException
 import jakarta.inject.Singleton
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.supervisorScope
 import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.db.rapid.EventNames
 import no.nav.hm.rapids_rivers.micronaut.RapidPushService
@@ -30,6 +26,7 @@ open class ProductService(
         else productRepository.findById(entity.id))?.let { inDb ->
             productRepository.update(entity.copy(id = inDb.id, created = inDb.created))
         } ?: productRepository.save(entity)
+        LOG.info("saved hmsartnr ${saved.hmsartNr}")
         rapidPushService.pushToRapid(
             key = "${EventNames.hmdbproductsync}-${saved.id}",
             eventName = EventNames.hmdbproductsync, payload = saved.toDTO()

@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory
 @Singleton
 class ProductIndexer(private val indexer: Indexer,
                      @Value("\${ALIASNAME:product}") private val aliasName: String,
-                     @Value("\${INDEXNAME:product_2023}") private val indexName: String) {
+                     @Value("\${INDEXNAME:product_202302}") private val indexName: String) {
 
     companion object {
         private val LOG = LoggerFactory.getLogger(ProductIndexer::class.java)
@@ -34,7 +34,10 @@ class ProductIndexer(private val indexer: Indexer,
     fun index(docs: List<ProductDoc>): BulkResponse = indexer.index(docs, indexName)
 
 
-    fun index(doc: ProductDoc): BulkResponse = indexer.index(listOf(doc), indexName)
+    fun index(doc: ProductDoc): BulkResponse {
+        LOG.info("indexing hmsnr ${doc.hmsartNr}")
+        return indexer.index(listOf(doc), indexName)
+    }
 
 
     fun index(doc: ProductDoc, indexName: String): BulkResponse =

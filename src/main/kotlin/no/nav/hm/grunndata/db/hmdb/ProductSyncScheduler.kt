@@ -32,7 +32,7 @@ open class ProductSyncScheduler(
         private var stopped = false
     }
 
-    @Scheduled(fixedDelay = "15s")
+    @Scheduled(fixedDelay = "10s")
     fun syncProducts() {
         if (stopped) {
             LOG.warn("scheduler is stopped, maybe because of uncaught errors!")
@@ -54,7 +54,7 @@ open class ProductSyncScheduler(
                     val products = extractProductBatch(hmdbProductsBatch)
                     products.forEach {
                         try {
-                            LOG.info("saving to db: ${it.identifier}")
+                            LOG.info("saving to db: ${it.identifier} with hmsnr ${it.hmsartNr}")
                             productService.saveAndPushTokafka(it.toDTO())
                         } catch (e: DataAccessException) {
                             LOG.error("got exception", e)

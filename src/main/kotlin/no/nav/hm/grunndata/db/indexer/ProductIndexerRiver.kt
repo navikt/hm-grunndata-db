@@ -33,7 +33,7 @@ class ProductIndexerRiver(river: RiverHead, private val objectMapper: ObjectMapp
     override fun onPacket(packet: JsonMessage, context: MessageContext) {
         val dto = objectMapper.treeToValue(packet["payload"], ProductDTO::class.java)
 
-        LOG.info("indexing product ${dto.id} ")
+        LOG.info("indexing product id: ${dto.id} hmsnr: ${dto.hmsartNr}")
         runBlocking {
             productIndexer.index(dto.toDoc(supplier = supplierRepository.findById(dto.supplierId)!!))
         }

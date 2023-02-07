@@ -19,7 +19,7 @@ data class Product (
     val attributes: Map<AttributeNames, Any>,
     val status: ProductStatus = ProductStatus.ACTIVE,
     @field:Column(name="hms_artnr")
-    val HMSArtNr: String?=null,
+    val hmsartNr: String?=null,
     val identifier: String,
     val supplierRef: String,
     val isoCategory: String,
@@ -42,14 +42,14 @@ data class Product (
 )
 
 fun Product.toDTO():ProductDTO =  ProductDTO (
-    id = id, supplierId = supplierId, title = title, attributes=attributes, status = status, HMSArtNr = HMSArtNr,
+    id = id, supplierId = supplierId, title = title, attributes=attributes, status = status, hmsartNr = hmsartNr,
     identifier = identifier, supplierRef=supplierRef, isoCategory=isoCategory, accessory=accessory, sparePart=sparePart,
     seriesId=seriesId, techData=techData, media= media, created=created, updated=updated, published=published, expired=expired,
     agreementInfo = agreementInfo, hasAgreement = (agreementInfo!=null), createdBy=createdBy, updatedBy=updatedBy
 )
 
 fun ProductDTO.toEntity(): Product = Product (
-    id = id, supplierId = supplierId, title = title, attributes=attributes, status = status, HMSArtNr = HMSArtNr,
+    id = id, supplierId = supplierId, title = title, attributes=attributes, status = status, hmsartNr = hmsartNr,
     identifier = identifier, supplierRef=supplierRef, isoCategory=isoCategory, accessory=accessory, sparePart=sparePart,
     seriesId=seriesId, techData=techData, media= media, created=created, updated=updated, published=published, expired=expired,
     agreementInfo = agreementInfo, createdBy=createdBy, updatedBy=updatedBy

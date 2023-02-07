@@ -10,9 +10,9 @@ class AttributeTagService(private val bestillingsordning: Bestillingsordning) {
         private val LOG = LoggerFactory.getLogger(AttributeTagService::class.java)
     }
     fun addBestillingsordningAttribute(entity: Product): Product =
-        entity.HMSArtNr?.let {
-            if (bestillingsordning.isBestillingsordning(entity.HMSArtNr)) {
-                LOG.debug("Got product in bestillingsordning ${entity.HMSArtNr}")
+        entity.hmsartNr?.let {
+            if (bestillingsordning.isBestillingsordning(entity.hmsartNr)) {
+                LOG.debug("Got product in bestillingsordning ${entity.hmsartNr}")
                 entity.copy(attributes = entity.attributes.plus(AttributeNames.bestillingsordning to true))
             }
             else
