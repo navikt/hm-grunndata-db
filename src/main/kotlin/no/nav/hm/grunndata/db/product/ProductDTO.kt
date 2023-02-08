@@ -24,7 +24,7 @@ data class ProductDTO(
     val updated: LocalDateTime = LocalDateTime.now(),
     val published: LocalDateTime = LocalDateTime.now(),
     val expired: LocalDateTime = updated.plusYears(20),
-    val agreementInfo: AgreementInfo?,
+    val agreementInfo: AgreementInfo?=null,
     val hasAgreement: Boolean = (agreementInfo!=null && agreementInfo.expired.isAfter(LocalDateTime.now())),
     val createdBy: String = GDB,
     val updatedBy: String = GDB
