@@ -12,7 +12,7 @@ class AttributeTagServiceTest(private val attributeTagService: AttributeTagServi
     @Test
     fun attributeTagTest() {
         val product = Product (
-            supplierId = UUID.randomUUID(), hmsartNr = "255734", identifier = "123", title = "Dette er et produkt",
+            supplierId = UUID.randomUUID(), hmsArtNr = "255734", identifier = "123", title = "Dette er et produkt",
             supplierRef = "123", isoCategory = "123456",
             attributes = mapOf(
                 AttributeNames.articlename to  "Produkt 1",
@@ -20,7 +20,7 @@ class AttributeTagServiceTest(private val attributeTagService: AttributeTagServi
                 AttributeNames.compatible to listOf("produkt 2", "product 3"))
         )
         val product2 = Product (
-            supplierId = UUID.randomUUID(), hmsartNr = "12345A", identifier = "123", title = "Dette er et produkt",
+            supplierId = UUID.randomUUID(), hmsArtNr = "12345A", identifier = "123", title = "Dette er et produkt",
             supplierRef = "123", isoCategory = "123456",
             attributes = mapOf(
                 AttributeNames.articlename to  "Produkt 1",

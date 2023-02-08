@@ -35,7 +35,7 @@ class ProductIndexer(private val indexer: Indexer,
 
 
     fun index(doc: ProductDoc): BulkResponse {
-        LOG.info("indexing hmsnr ${doc.hmsartNr}")
+        LOG.info("indexing hmsnr ${doc.hmsArtNr}")
         return indexer.index(listOf(doc), indexName)
     }
 

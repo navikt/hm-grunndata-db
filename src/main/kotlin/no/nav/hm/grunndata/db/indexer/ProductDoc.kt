@@ -10,7 +10,7 @@ data class ProductDoc (
     val title: String,
     val attributes: Map<AttributeNames,Any> = emptyMap(),
     val status: ProductStatus,
-    val hmsartNr: String?=null,
+    val hmsArtNr: String?=null,
     val identifier: String,
     val supplierRef: String,
     val isoCategory: String,
@@ -40,7 +40,7 @@ data class ProductSupplier(val id: String, val identifier: String, val name: Str
 
 fun ProductDTO.toDoc(supplier: Supplier) : ProductDoc = ProductDoc (
     id = id.toString(), supplier = ProductSupplier(id=supplier.id.toString(), identifier=supplier.identifier, name= supplier.name),
-    title = title, attributes = attributes, status = status, hmsartNr = hmsartNr, identifier = identifier,
+    title = title, attributes = attributes, status = status, hmsArtNr = hmsArtNr, identifier = identifier,
     supplierRef = supplierRef, isoCategory = isoCategory, accessory = accessory, sparePart = sparePart, seriesId = seriesId,
     data = techData, media = media, created = created, updated = updated, expired = expired, createdBy = createdBy,
     updatedBy = updatedBy, agreementInfo = agreementInfo, hasAgreement = agreementInfo!=null,

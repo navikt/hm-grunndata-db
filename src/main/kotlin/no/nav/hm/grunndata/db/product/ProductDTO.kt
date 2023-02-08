@@ -11,7 +11,7 @@ data class ProductDTO(
     val title: String,
     val attributes: Map<AttributeNames, Any>,
     val status: ProductStatus = ProductStatus.ACTIVE,
-    val hmsartNr: String?=null,
+    val hmsArtNr: String?=null,
     val identifier: String,
     val supplierRef: String,
     val isoCategory: String,

@@ -54,7 +54,7 @@ open class ProductSyncScheduler(
                     val products = extractProductBatch(hmdbProductsBatch)
                     products.forEach {
                         try {
-                            LOG.info("saving to db: ${it.identifier} with hmsnr ${it.hmsartNr}")
+                            LOG.info("saving to db: ${it.identifier} with hmsnr ${it.hmsArtNr}")
                             productService.saveAndPushTokafka(it.toDTO())
                         } catch (e: DataAccessException) {
                             LOG.error("got exception", e)

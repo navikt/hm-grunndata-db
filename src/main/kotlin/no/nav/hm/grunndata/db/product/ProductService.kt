@@ -26,7 +26,7 @@ open class ProductService(
         else productRepository.findById(entity.id))?.let { inDb ->
             productRepository.update(entity.copy(id = inDb.id, created = inDb.created))
         } ?: productRepository.save(entity)
-        LOG.info("saved hmsartnr ${saved.hmsartNr}")
+        LOG.info("saved hmsartnr ${saved.hmsArtNr}")
         rapidPushService.pushToRapid(
             key = "${EventNames.hmdbproductsync}-${saved.id}",
             eventName = EventNames.hmdbproductsync, payload = saved.toDTO()
