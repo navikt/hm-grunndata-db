@@ -60,3 +60,6 @@ spec:
     outbound:
       rules:
         - application: hm-grunndata-hmdb2gdb
+    inbound:
+      rules:
+        - application: hm-grunndata-index
