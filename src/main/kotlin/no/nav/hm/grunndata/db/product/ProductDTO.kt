@@ -2,12 +2,13 @@ package no.nav.hm.grunndata.db.product
 
 
 import no.nav.hm.grunndata.db.GDB
+import no.nav.hm.grunndata.db.supplier.SupplierDTO
 import java.time.LocalDateTime
 import java.util.*
 
 data class ProductDTO(
     val id: UUID,
-    val supplierId: UUID,
+    val supplier: SupplierDTO,
     val title: String,
     val attributes: Map<AttributeNames, Any>,
     val status: ProductStatus = ProductStatus.ACTIVE,

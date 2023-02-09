@@ -1,5 +1,6 @@
 package no.nav.hm.grunndata.db.supplier
 
+import no.nav.hm.grunndata.db.GDB
 import java.time.LocalDateTime
 import java.util.*
 

@@ -41,15 +41,8 @@ data class Product (
     val updatedBy: String = HMDB
 )
 
-fun Product.toDTO():ProductDTO =  ProductDTO (
-    id = id, supplierId = supplierId, title = title, attributes=attributes, status = status, hmsArtNr = hmsArtNr,
-    identifier = identifier, supplierRef=supplierRef, isoCategory=isoCategory, accessory=accessory, sparePart=sparePart,
-    seriesId=seriesId, techData=techData, media= media, created=created, updated=updated, published=published, expired=expired,
-    agreementInfo = agreementInfo, hasAgreement = (agreementInfo!=null), createdBy=createdBy, updatedBy=updatedBy
-)
-
 fun ProductDTO.toEntity(): Product = Product (
-    id = id, supplierId = supplierId, title = title, attributes=attributes, status = status, hmsArtNr = hmsArtNr,
+    id = id, supplierId = supplier.id, title = title, attributes=attributes, status = status, hmsArtNr = hmsArtNr,
     identifier = identifier, supplierRef=supplierRef, isoCategory=isoCategory, accessory=accessory, sparePart=sparePart,
     seriesId=seriesId, techData=techData, media= media, created=created, updated=updated, published=published, expired=expired,
     agreementInfo = agreementInfo, createdBy=createdBy, updatedBy=updatedBy

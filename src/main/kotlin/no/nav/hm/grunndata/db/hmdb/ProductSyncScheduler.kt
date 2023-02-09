@@ -9,9 +9,8 @@ import no.nav.helse.rapids_rivers.KafkaRapid
 import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.db.hmdb.product.HmDBProductMapper
 import no.nav.hm.grunndata.db.hmdb.product.HmDbProductBatchDTO
-import no.nav.hm.grunndata.db.product.Product
+import no.nav.hm.grunndata.db.product.ProductDTO
 import no.nav.hm.grunndata.db.product.ProductService
-import no.nav.hm.grunndata.db.product.toDTO
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
@@ -55,7 +54,7 @@ open class ProductSyncScheduler(
                     products.forEach {
                         try {
                             LOG.info("saving to db: ${it.identifier} with hmsnr ${it.hmsArtNr}")
-                            productService.saveAndPushTokafka(it.toDTO())
+                            productService.saveAndPushTokafka(it)
                         } catch (e: DataAccessException) {
                             LOG.error("got exception", e)
                         }
@@ -78,7 +77,7 @@ open class ProductSyncScheduler(
     }
 
 
-    private suspend fun extractProductBatch(batch: HmDbProductBatchDTO): List<Product> {
+    private suspend fun extractProductBatch(batch: HmDbProductBatchDTO): List<ProductDTO> {
         return batch.products.map { prod ->
             LOG.info("Mapping product prodid: ${prod.prodid} artid: ${prod.artid} artno: ${prod.artno} from supplier ${prod.supplier}")
             hmDBProductMapper.mapProduct(prod, batch)

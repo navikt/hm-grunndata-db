@@ -7,15 +7,18 @@ import no.nav.hm.grunndata.db.hmdb.HmDbIdentifier
 import no.nav.hm.grunndata.db.product.*
 import no.nav.hm.grunndata.db.product.AttributeNames.*
 import no.nav.hm.grunndata.db.supplier.SupplierRepository
+import no.nav.hm.grunndata.db.supplier.toDTO
 import java.time.LocalDateTime
+import java.util.*
 
 @Singleton
 class HmDBProductMapper(private val supplierRepository: SupplierRepository,
                         private val agreementRepository: AgreementRepository) {
 
-    suspend fun mapProduct(prod: HmDbProductDTO, batch: HmDbProductBatchDTO): Product =
-        Product(
-            supplierId =  supplierRepository.findByIdentifier(prod.supplier!!.HmDbIdentifier())!!.id,
+    suspend fun mapProduct(prod: HmDbProductDTO, batch: HmDbProductBatchDTO): ProductDTO =
+        ProductDTO(
+            id = UUID.randomUUID(),
+            supplier =  supplierRepository.findByIdentifier(prod.supplier!!.HmDbIdentifier())!!.toDTO(),
             title = prod.artname,
             attributes = mapAttributes(prod),
             status = mapStatus(prod),
