@@ -28,11 +28,6 @@ spec:
   prometheus:
     enabled: true
     path: /internal/prometheus
-  openSearch:
-    access: admin
-    instance: grunndata
-#  envFrom:
-#    - secret: hm-grunndata-db
   env:
     - name: DB_DRIVER
       value: "org.postgresql.Driver"

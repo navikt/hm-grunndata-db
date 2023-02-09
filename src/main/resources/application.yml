@@ -40,11 +40,6 @@ flyway:
       locations: classpath:db
       clean-on-validation-error: true # only during dev and poc, will remove when we go to production.
 
-opensearch:
-  password: ${OPEN_SEARCH_PASSWORD:admin}
-  user: ${OPEN_SEARCH_USERNAME:admin}
-  url: ${OPEN_SEARCH_URI:`https://localhost:9200`}
-
 hmdb:
   url: ${HMDB_URL:`http://localhost:8081`}
 

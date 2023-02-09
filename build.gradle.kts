@@ -10,13 +10,10 @@ val junitJupiterVersion = "5.9.0"
 val jacksonVersion = "2.13.4"
 val logbackClassicVersion = "1.2.11"
 val logbackEncoderVersion = "7.2"
-val kafkaEmbeddedVersion = "3.2.1"
 val postgresqlVersion= "42.3.3"
 val tcVersion= "1.16.3"
 val mockkVersion = "1.13.2"
 val kotestVersion = "5.5.0"
-val apachePoiVersion = "5.2.3"
-val openSearchRestClientVersion = "1.3.7"
 val rapidsRiversVersion = "202301310932"
 
 group = "no.nav.hm"
@@ -56,7 +53,6 @@ dependencies {
     implementation("io.micronaut.kotlin:micronaut-kotlin-runtime")
     implementation("io.micronaut:micronaut-http-server-netty")
     implementation("io.micronaut:micronaut-http-client")
-    implementation("org.opensearch.client:opensearch-rest-high-level-client:${openSearchRestClientVersion}")
     implementation("io.micronaut.cache:micronaut-cache-caffeine")
 
     implementation("com.github.navikt:hm-rapids-and-rivers-v2-core:$rapidsRiversVersion")
