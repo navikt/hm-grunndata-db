@@ -1,8 +1,8 @@
 package no.nav.hm.grunndata.db.hmdb
 
 import no.nav.hm.grunndata.db.supplier.Supplier
-import no.nav.hm.grunndata.db.supplier.SupplierInfo
-import no.nav.hm.grunndata.db.supplier.SupplierStatus
+import no.nav.hm.grunndata.dto.SupplierInfo
+import no.nav.hm.grunndata.dto.SupplierStatus
 import java.time.LocalDateTime
 
 data class HmdbSupplierDTO (
@@ -21,4 +21,5 @@ data class HmdbSupplierDTO (
 
 fun HmdbSupplierDTO.toSupplier() = Supplier(identifier = "$adressid".HmDbIdentifier(), name = adressnamn1!!,
     created = adrinsertdate ?: LocalDateTime.now(), updated = lastupdated, status = SupplierStatus.ACTIVE,info = SupplierInfo(
-        address = postadress1, email = epost, phone = telefon, homepage = www))
+        address = postadress1, email = epost, phone = telefon, homepage = www)
+)

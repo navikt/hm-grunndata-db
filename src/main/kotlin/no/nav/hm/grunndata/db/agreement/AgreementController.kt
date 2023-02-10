@@ -3,6 +3,7 @@ package no.nav.hm.grunndata.db.agreement
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import kotlinx.coroutines.runBlocking
+import no.nav.hm.grunndata.dto.AgreementDTO
 import java.util.UUID
 
 @Controller("/api/v1/agreement")

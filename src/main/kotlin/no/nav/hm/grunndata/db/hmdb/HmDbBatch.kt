@@ -3,8 +3,6 @@ package no.nav.hm.grunndata.db.hmdb
 import io.micronaut.data.annotation.GeneratedValue
 import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.MappedEntity
-import no.nav.hm.grunndata.db.supplier.Supplier
-import no.nav.hm.grunndata.db.supplier.SupplierInfo
 import java.time.LocalDateTime
 import javax.persistence.Table
 

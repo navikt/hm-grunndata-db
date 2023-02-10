@@ -9,8 +9,8 @@ import no.nav.helse.rapids_rivers.KafkaRapid
 import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.db.hmdb.product.HmDBProductMapper
 import no.nav.hm.grunndata.db.hmdb.product.HmDbProductBatchDTO
-import no.nav.hm.grunndata.db.product.ProductDTO
 import no.nav.hm.grunndata.db.product.ProductService
+import no.nav.hm.grunndata.dto.ProductDTO
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit

@@ -4,8 +4,10 @@ import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import no.nav.hm.grunndata.db.GDB
-import no.nav.hm.grunndata.db.supplier.SupplierDTO
-import no.nav.hm.grunndata.db.supplier.SupplierInfo
+import no.nav.hm.grunndata.dto.AttributeNames
+import no.nav.hm.grunndata.dto.ProductDTO
+import no.nav.hm.grunndata.dto.SupplierDTO
+import no.nav.hm.grunndata.dto.SupplierInfo
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 import java.util.*
@@ -23,7 +25,9 @@ class AttributeTagServiceTest(private val attributeTagService: AttributeTagServi
             attributes = mapOf(
                 AttributeNames.articlename to  "Produkt 1",
                 AttributeNames.manufacturer to  "Samsung",
-                AttributeNames.compatible to listOf("produkt 2", "product 3"))
+                AttributeNames.compatible to listOf("produkt 2", "product 3")),
+            createdBy = GDB,
+            updatedBy = GDB
         )
         val product2 = ProductDTO (id = UUID.randomUUID(),
             supplier = supplier, hmsArtNr = "12345A", identifier = "123", title = "Dette er et produkt",
@@ -32,7 +36,9 @@ class AttributeTagServiceTest(private val attributeTagService: AttributeTagServi
                 AttributeNames.articlename to  "Produkt 1",
                 AttributeNames.manufacturer to  "Samsung",
                 AttributeNames.compatible to listOf("produkt 2", "product 3"),
-                AttributeNames.bestillingsordning to true)
+                AttributeNames.bestillingsordning to true),
+            createdBy = GDB,
+            updatedBy = GDB
         )
         val withBestillingsordning = attributeTagService.addBestillingsordningAttribute(product)
         val withNoBestillingsordning = attributeTagService.addBestillingsordningAttribute(product2)

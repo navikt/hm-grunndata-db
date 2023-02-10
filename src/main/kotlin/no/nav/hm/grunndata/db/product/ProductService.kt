@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory
 import java.util.*
 import javax.transaction.Transactional
 import kotlinx.coroutines.async
+import no.nav.hm.grunndata.dto.ProductDTO
 
 
 @Singleton

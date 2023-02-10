@@ -5,9 +5,9 @@ import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.db.agreement.AgreementRepository
 import no.nav.hm.grunndata.db.hmdb.HmDbIdentifier
 import no.nav.hm.grunndata.db.product.*
-import no.nav.hm.grunndata.db.product.AttributeNames.*
 import no.nav.hm.grunndata.db.supplier.SupplierRepository
 import no.nav.hm.grunndata.db.supplier.toDTO
+import no.nav.hm.grunndata.dto.*
 import java.time.LocalDateTime
 import java.util.*
 
@@ -82,10 +82,10 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
     }
 
     fun mapAttributes(produkt: HmDbProductDTO): Map<AttributeNames, Any> = mapOf(
-        articlename to produkt.artname,
-        shortdescription to (produkt.adescshort ?: ""),
-        text to produkt.pshortdesc,
-        series to listOf(produkt.prodname)
+        AttributeNames.articlename to produkt.artname,
+        AttributeNames.shortdescription to (produkt.adescshort ?: ""),
+        AttributeNames.text to produkt.pshortdesc,
+        AttributeNames.series to listOf(produkt.prodname)
     )
 }
 

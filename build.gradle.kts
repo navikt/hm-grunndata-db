@@ -15,6 +15,7 @@ val tcVersion= "1.16.3"
 val mockkVersion = "1.13.2"
 val kotestVersion = "5.5.0"
 val rapidsRiversVersion = "202301310932"
+val grunndataDtoVersion = "202302100934"
 
 group = "no.nav.hm"
 version = properties["version"] ?: "local-build"
@@ -35,6 +36,7 @@ configurations.all {
 }
 
 dependencies {
+
     api("ch.qos.logback:logback-classic:$logbackClassicVersion")
     api("net.logstash.logback:logstash-logback-encoder:$logbackEncoderVersion")
     // coroutines
@@ -57,6 +59,8 @@ dependencies {
 
     implementation("com.github.navikt:hm-rapids-and-rivers-v2-core:$rapidsRiversVersion")
     implementation("com.github.navikt:hm-rapids-and-rivers-v2-micronaut:$rapidsRiversVersion")
+
+    implementation("no.nav.hm.grunndata:hm-grunndata-rapid-dto:$grunndataDtoVersion")
 
     testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("io.micronaut.test:micronaut-test-kotest5")

@@ -4,6 +4,7 @@ import io.kotest.common.runBlocking
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
+import no.nav.hm.grunndata.dto.AgreementPost
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 import java.util.*
