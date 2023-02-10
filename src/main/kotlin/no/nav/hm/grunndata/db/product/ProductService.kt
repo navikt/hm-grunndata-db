@@ -2,17 +2,23 @@ package no.nav.hm.grunndata.db.product
 
 import io.micronaut.data.model.Page
 import io.micronaut.data.model.Pageable
+import io.micronaut.data.repository.jpa.criteria.PredicateSpecification
+import io.micronaut.data.runtime.criteria.get
+import io.micronaut.data.runtime.criteria.where
 import jakarta.inject.Singleton
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.db.rapid.EventNames
 import no.nav.hm.grunndata.db.supplier.SupplierRepository
 import no.nav.hm.grunndata.db.supplier.toDTO
+import no.nav.hm.grunndata.dto.ProductDTO
 import no.nav.hm.rapids_rivers.micronaut.RapidPushService
 import org.slf4j.LoggerFactory
 import java.util.*
 import javax.transaction.Transactional
-import kotlinx.coroutines.async
-import no.nav.hm.grunndata.dto.ProductDTO
 
 
 @Singleton
@@ -46,12 +52,23 @@ open class ProductService(
     @Transactional
     open suspend fun findById(id: UUID): ProductDTO? = productRepository.findById(id)?.let { it.toDTO() }
 
-    suspend fun Product.toDTO():ProductDTO =  ProductDTO (
-        id = id, supplier = supplierRepository.findById(supplierId)!!.toDTO(), title = title, attributes=attributes, status = status, hmsArtNr = hmsArtNr,
+    private fun Product.toDTO():ProductDTO = ProductDTO (
+        id = id, supplier = runBlocking{supplierRepository.findById(supplierId)!!.toDTO()}, title = title, attributes=attributes, status = status, hmsArtNr = hmsArtNr,
         identifier = identifier, supplierRef=supplierRef, isoCategory=isoCategory, accessory=accessory, sparePart=sparePart,
         seriesId=seriesId, techData=techData, media= media, created=created, updated=updated, published=published, expired=expired,
         agreementInfo = agreementInfo, hasAgreement = (agreementInfo!=null), createdBy=createdBy, updatedBy=updatedBy
     )
 
+    @Transactional
+    open suspend fun findProducts(params: HashMap<String, String>?, pageable: Pageable) : Page<ProductDTO> =
+        productRepository.findAll(buildCriteriaSpec(params), pageable).map {  it.toDTO() }
 
+
+    private fun buildCriteriaSpec(params: HashMap<String, String>?): PredicateSpecification<Product>?
+            = params?.let {
+        where {
+            if (params.contains("supplierRef")) root[Product::supplierRef] eq params["supplierRef"]
+            if (params.contains("supplierId"))  root[Product::supplierId] eq UUID.fromString(params["supplierId"]!!)
+        }
+    }
 }

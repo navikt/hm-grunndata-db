@@ -3,8 +3,8 @@ package no.nav.hm.grunndata.db.hmdb
 import io.micronaut.data.annotation.GeneratedValue
 import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.MappedEntity
+import jakarta.persistence.Table
 import java.time.LocalDateTime
-import javax.persistence.Table
 
 @MappedEntity
 @Table(name="hmdbbatch_v1")
