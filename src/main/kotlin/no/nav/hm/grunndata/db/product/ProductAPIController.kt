@@ -8,7 +8,7 @@ import io.micronaut.http.annotation.QueryValue
 import no.nav.hm.grunndata.dto.ProductDTO
 import java.util.*
 
-@Controller
+@Controller("/api/v1/products")
 class ProductAPIController(private val productService: ProductService) {
 
     @Get("/{?params*}")

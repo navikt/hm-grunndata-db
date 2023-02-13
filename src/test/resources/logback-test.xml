@@ -9,7 +9,7 @@
 <!--    <logger name="io.micronaut.transaction.jdbc.DataSourceTransactionManager" level="DEBUG"/>-->
 
     <logger name="no.nav" level="INFO" />
-    <logger name="no.nav.hm" level="DEBYG" />
+    <logger name="no.nav.hm" level="DEBUG" />
 
     <root level="INFO">
         <appender-ref ref="stdout"/>

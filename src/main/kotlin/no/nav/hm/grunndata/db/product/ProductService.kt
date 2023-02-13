@@ -53,10 +53,11 @@ open class ProductService(
     open suspend fun findById(id: UUID): ProductDTO? = productRepository.findById(id)?.let { it.toDTO() }
 
     private fun Product.toDTO():ProductDTO = ProductDTO (
-        id = id, supplier = runBlocking{supplierRepository.findById(supplierId)!!.toDTO()}, title = title, attributes=attributes, status = status, hmsArtNr = hmsArtNr,
-        identifier = identifier, supplierRef=supplierRef, isoCategory=isoCategory, accessory=accessory, sparePart=sparePart,
-        seriesId=seriesId, techData=techData, media= media, created=created, updated=updated, published=published, expired=expired,
-        agreementInfo = agreementInfo, hasAgreement = (agreementInfo!=null), createdBy=createdBy, updatedBy=updatedBy
+        id = id, supplier = runBlocking{supplierRepository.findById(supplierId)!!.toDTO()}, title = title, attributes=attributes,
+        status = status, hmsArtNr = hmsArtNr, identifier = identifier, supplierRef=supplierRef, isoCategory=isoCategory,
+        accessory=accessory, sparePart=sparePart, seriesId=seriesId, techData=techData, media= media, created=created,
+        updated=updated, published=published, expired=expired, agreementInfo = agreementInfo, hasAgreement = (agreementInfo!=null),
+        createdBy=createdBy, updatedBy=updatedBy
     )
 
     @Transactional
