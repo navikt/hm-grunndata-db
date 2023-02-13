@@ -6,15 +6,15 @@ import io.micronaut.data.jdbc.annotation.JdbcRepository
 import io.micronaut.data.model.Page
 import io.micronaut.data.model.Pageable
 import io.micronaut.data.model.query.builder.sql.Dialect
+import io.micronaut.data.repository.jpa.kotlin.CoroutineJpaSpecificationExecutor
 import io.micronaut.data.repository.kotlin.CoroutineCrudRepository
 import java.util.*
 
 @JdbcRepository(dialect = Dialect.POSTGRES)
 @CacheConfig("agreements")
-interface AgreementRepository: CoroutineCrudRepository<Agreement, UUID> {
+interface AgreementRepository: CoroutineCrudRepository<Agreement, UUID>, CoroutineJpaSpecificationExecutor<Agreement> {
     @Cacheable
     suspend fun findByIdentifier(identifier: String): Agreement?
 
-    suspend fun findAgreements(params: HashMap<String, String>?, pageable: Pageable): Page<Agreement>
 
 }

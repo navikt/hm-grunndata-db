@@ -12,7 +12,7 @@ import java.util.*
 class ProductAPIController(private val productService: ProductService) {
 
     @Get("/{?params*}")
-    suspend fun findProducts(@QueryValue params: HashMap<String, String>?,
+    suspend fun findProducts(@QueryValue params: Map<String, String>?,
                              pageable: Pageable): Page<ProductDTO> = productService.findProducts(params, pageable)
 
 }

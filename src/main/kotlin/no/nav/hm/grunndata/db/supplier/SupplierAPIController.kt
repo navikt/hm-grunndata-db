@@ -2,16 +2,27 @@ package no.nav.hm.grunndata.db.supplier
 
 import io.micronaut.data.model.Page
 import io.micronaut.data.model.Pageable
+import io.micronaut.data.repository.jpa.criteria.PredicateSpecification
+import io.micronaut.data.runtime.criteria.get
+import io.micronaut.data.runtime.criteria.where
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.QueryValue
 import no.nav.hm.grunndata.dto.SupplierDTO
-import java.util.HashMap
+import java.time.LocalDateTime
+import java.util.*
 
 @Controller
 class SupplierAPIController(private val supplierRepository: SupplierRepository) {
 
     @Get("/{?params*}")
-    suspend fun findSuppliers(@QueryValue params: HashMap<String, String>?, pageable: Pageable
-    ): Page<SupplierDTO> = supplierRepository.findSuppliers(params, pageable).map { it.toDTO() }
+    suspend fun findSuppliers(@QueryValue params: Map<String, String>?, pageable: Pageable
+    ): Page<SupplierDTO> = supplierRepository.findAll(buildCriteriaSpec(params), pageable).map { it.toDTO() }
+
+    private fun buildCriteriaSpec(params: Map<String, String>?): PredicateSpecification<Supplier>?
+            = params?.let {
+        where {
+            if (params.contains("updated")) root[Supplier::updated] greaterThanOrEqualTo LocalDateTime.parse(params["updated"])
+        }
+    }
 }

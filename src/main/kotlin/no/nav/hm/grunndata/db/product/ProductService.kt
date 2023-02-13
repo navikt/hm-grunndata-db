@@ -62,11 +62,11 @@ open class ProductService(
     )
 
     @Transactional
-    open suspend fun findProducts(params: HashMap<String, String>?, pageable: Pageable) : Page<ProductDTO> =
+    open suspend fun findProducts(params: Map<String, String>?, pageable: Pageable) : Page<ProductDTO> =
         productRepository.findAll(buildCriteriaSpec(params), pageable).map {  it.toDTO() }
 
 
-    private fun buildCriteriaSpec(params: HashMap<String, String>?): PredicateSpecification<Product>?
+    private fun buildCriteriaSpec(params: Map<String, String>?): PredicateSpecification<Product>?
             = params?.let {
         where {
             if (params.contains("supplierRef")) root[Product::supplierRef] eq params["supplierRef"]
