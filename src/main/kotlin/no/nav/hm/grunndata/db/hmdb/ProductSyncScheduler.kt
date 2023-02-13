@@ -31,7 +31,7 @@ open class ProductSyncScheduler(
         private var stopped = false
     }
 
-    @Scheduled(fixedDelay = "10s")
+    //@Scheduled(fixedDelay = "10s")
     fun syncProducts() {
         if (stopped) {
             LOG.warn("scheduler is stopped, maybe because of uncaught errors!")

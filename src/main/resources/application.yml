@@ -20,6 +20,10 @@ micronaut:
       charset: 'UTF-8'
     agreementposts:
       charset: 'UTF-8'
+  data:
+    pageable:
+      max-page-size: 1000
+
 jackson:
   bean-introspection-module: true
   serialization:
