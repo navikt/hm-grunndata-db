@@ -17,6 +17,7 @@ import no.nav.hm.grunndata.db.supplier.toDTO
 import no.nav.hm.grunndata.dto.ProductDTO
 import no.nav.hm.rapids_rivers.micronaut.RapidPushService
 import org.slf4j.LoggerFactory
+import java.time.LocalDateTime
 import java.util.*
 import javax.transaction.Transactional
 
@@ -70,6 +71,8 @@ open class ProductService(
         where {
             if (params.contains("supplierRef")) root[Product::supplierRef] eq params["supplierRef"]
             if (params.contains("supplierId"))  root[Product::supplierId] eq UUID.fromString(params["supplierId"]!!)
+            if (params.contains("updated")) root[Product::updated] greaterThanOrEqualTo LocalDateTime.parse(params["updated"])
         }
     }
 }
+

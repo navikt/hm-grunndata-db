@@ -69,3 +69,4 @@ CREATE TABLE IF NOT EXISTS product_v1 (
     CONSTRAINT fk_supplier_product_v1_log FOREIGN KEY (supplier_id) REFERENCES supplier_v1(id)
 )
 
+CREATE INDEX product_v1_updated_idx ON product_v1(updated);
