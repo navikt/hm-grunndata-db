@@ -12,7 +12,7 @@ import no.nav.hm.grunndata.dto.SupplierDTO
 import java.time.LocalDateTime
 import java.util.*
 
-@Controller
+@Controller("/api/v1/suppliers")
 class SupplierAPIController(private val supplierRepository: SupplierRepository) {
 
     @Get("/{?params*}")

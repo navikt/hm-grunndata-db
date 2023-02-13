@@ -16,7 +16,7 @@ import java.time.LocalDateTime
 import java.util.HashMap
 import java.util.UUID
 
-@Controller("/api/v1/agreement")
+@Controller("/api/v1/agreements")
 class AgreementDocumentController(private val agreementRepository: AgreementRepository) {
 
     @Get("/{id}")
