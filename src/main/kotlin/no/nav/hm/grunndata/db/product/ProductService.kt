@@ -63,8 +63,7 @@ open class ProductService(
 
     @Transactional
     open suspend fun findProducts(params: Map<String, String>?, pageable: Pageable) : Page<ProductDTO> =
-        productRepository.findAll(buildCriteriaSpec(params), pageable).map {  it.toDTO() }
-
+        productRepository.findAll(buildCriteriaSpec(params), pageable).map {it.toDTO()}
 
     private fun buildCriteriaSpec(params: Map<String, String>?): PredicateSpecification<Product>?
             = params?.let {

@@ -22,7 +22,7 @@ micronaut:
       charset: 'UTF-8'
   data:
     pageable:
-      max-page-size: 1000
+      max-page-size: 2000
 
 jackson:
   bean-introspection-module: true
