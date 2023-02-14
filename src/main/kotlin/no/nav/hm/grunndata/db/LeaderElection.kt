@@ -1,5 +1,6 @@
 package no.nav.hm.grunndata.db
 
+import io.micronaut.context.annotation.Value
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.client.annotation.Client
 import jakarta.inject.Singleton
@@ -7,7 +8,8 @@ import org.slf4j.LoggerFactory
 import java.net.InetAddress
 
 @Singleton
-class LeaderElection(private val client: GetLeaderClient) {
+class LeaderElection(private val client: GetLeaderClient,
+                     @Value("\${elector.path}") val electorPath: String) {
 
     private val hostname = InetAddress.getLocalHost().hostName
 
@@ -20,9 +22,7 @@ class LeaderElection(private val client: GetLeaderClient) {
         private val LOG = LoggerFactory.getLogger(LeaderElection::class.java)
     }
 
-    fun isLeader(): Boolean {
-        return hostname == getLeader()
-    }
+    fun isLeader(): Boolean = if (electorPath =="localhost") true else hostname == getLeader()
 
     private fun getLeader(): String = client.getLeader().name
 

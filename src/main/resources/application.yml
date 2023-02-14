@@ -74,3 +74,6 @@ isocategory:
 
 schedulers:
   enabled: ${SCHEDULERS_ENABLED:false}
+
+elector:
+  path: ${ELECTOR_PATH:localhost}
