@@ -9,7 +9,13 @@ micronaut:
   http:
     client:
       max-content-length: 100833718
-      read-timeout: "15m"
+      read-timeout: "5m"
+      event-loop-group: http
+  netty:
+    event-loops:
+      http:
+        num-threads: 10
+        prefer-native-transport: true
   server:
     max-request-size: 100833718
     port: 8888
