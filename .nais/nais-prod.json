@@ -4,5 +4,6 @@
   "kafka_cluster": "nav-prod",
   "rapidsandrivers_enabled": true,
   "min_replicas": 2,
-  "max_replicas": 2
+  "max_replicas": 2,
+  "schedulers_enabled": false
 }

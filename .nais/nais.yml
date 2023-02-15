@@ -35,6 +35,8 @@ spec:
       value: "http://hm-grunndata-hmdb2gdb"
     - name: RAPIDSANDRIVERS_ENABLED
       value: "{{ rapidsandrivers_enabled }}"
+    - name: SCHEDULERS_ENABLED
+      value: "{{ schedulers_enabled }}"
   gcp:
     sqlInstances:
       - name: hm-grunndata-db
