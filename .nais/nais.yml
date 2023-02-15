@@ -51,6 +51,7 @@ spec:
         cascadingDelete: false
   kafka:
     pool: {{ kafka_cluster }}
+  leaderElection: true
   accessPolicy:
     outbound:
       rules:
