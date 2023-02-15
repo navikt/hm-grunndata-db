@@ -5,6 +5,7 @@ import io.micronaut.scheduling.annotation.Scheduled
 import jakarta.inject.Singleton
 import kotlinx.coroutines.runBlocking
 import no.nav.helse.rapids_rivers.KafkaRapid
+import no.nav.hm.grunndata.db.LeaderElection
 import no.nav.hm.grunndata.db.agreement.*
 import no.nav.hm.grunndata.db.hmdb.agreement.*
 import no.nav.hm.grunndata.db.rapid.EventNames
@@ -23,7 +24,8 @@ import java.time.temporal.ChronoUnit
 class AgreementSyncScheduler(private val agreementRepository: AgreementRepository,
                              private val hmDbClient: HmDbClient,
                              private val hmdbBatchRepository: HmDbBatchRepository,
-                             private val rapidPushService: RapidPushService
+                             private val rapidPushService: RapidPushService,
+                             private val leaderElection: LeaderElection
 ) {
 
     companion object {
@@ -32,28 +34,31 @@ class AgreementSyncScheduler(private val agreementRepository: AgreementRepositor
 
     @Scheduled(cron="0 30 0 * * *")
     fun syncAgreements() {
-        runBlocking {
-            val syncBatchJob = hmdbBatchRepository.findByName(SYNC_AGREEMENTS) ?: hmdbBatchRepository.save(
-                HmDbBatch(
-                    name = SYNC_AGREEMENTS,
-                    syncfrom = LocalDateTime.now().minusYears(10).truncatedTo(ChronoUnit.SECONDS)
-                )
-            )
-            hmDbClient.fetchAgreements()?.let { hmdbagreements ->
-                LOG.info("Calling agreement sync, got total of ${hmdbagreements.size} agreements")
-                val agreements = hmdbagreements.map { it.toAgreement() }
-                runBlocking {
-                    agreements.forEach { agreement ->
-                        val dto = agreementRepository.findByIdentifier(agreement.identifier)?.let {
-                            it.toDTO()
-                        } ?: agreementRepository.save(agreement).toDTO()
+        if (leaderElection.isLeader()) {
 
-                        rapidPushService.pushToRapid(
-                            key = "${EventNames.hmdbagreementsync}-${dto.id}",
-                            eventName = EventNames.hmdbagreementsync, payload = dto
-                        )
+            runBlocking {
+                val syncBatchJob = hmdbBatchRepository.findByName(SYNC_AGREEMENTS) ?: hmdbBatchRepository.save(
+                    HmDbBatch(
+                        name = SYNC_AGREEMENTS,
+                        syncfrom = LocalDateTime.now().minusYears(10).truncatedTo(ChronoUnit.SECONDS)
+                    )
+                )
+                hmDbClient.fetchAgreements()?.let { hmdbagreements ->
+                    LOG.info("Calling agreement sync, got total of ${hmdbagreements.size} agreements")
+                    val agreements = hmdbagreements.map { it.toAgreement() }
+                    runBlocking {
+                        agreements.forEach { agreement ->
+                            val dto = agreementRepository.findByIdentifier(agreement.identifier)?.let {
+                                it.toDTO()
+                            } ?: agreementRepository.save(agreement).toDTO()
+
+                            rapidPushService.pushToRapid(
+                                key = "${EventNames.hmdbagreementsync}-${dto.id}",
+                                eventName = EventNames.hmdbagreementsync, payload = dto
+                            )
+                        }
+                        hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = agreements.last().updated))
                     }
-                    hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = agreements.last().updated))
                 }
             }
         }
