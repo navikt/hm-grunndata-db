@@ -31,9 +31,10 @@ open class ProductSyncScheduler(
     companion object {
         private val LOG = LoggerFactory.getLogger(ProductSyncScheduler::class.java)
         private var stopped = false
+        private var lastChanged : LocalDateTime = LocalDateTime.now()
     }
 
-    //@Scheduled(fixedDelay = "60s")
+    @Scheduled(fixedDelay = "60s")
     fun syncProducts() {
         if (stopped) {
             LOG.warn("scheduler is stopped, maybe because of uncaught errors!")
@@ -53,6 +54,13 @@ open class ProductSyncScheduler(
                     LOG.info("Calling product sync from ${from} to $to")
                     hmDbClient.fetchProducts(from, to)?.let { hmdbProductsBatch ->
                         LOG.info("Got total of ${hmdbProductsBatch.products.size} products")
+                        if (hmdbProductsBatch.products.size == 1) {
+                            if (lastChanged == hmdbProductsBatch.products[0].achange) {
+                                LOG.info("skipped run, cause we have seen this")
+                                return@runBlocking
+                            }
+                            else lastChanged = hmdbProductsBatch.products[0].achange
+                        }
                         val products = extractProductBatch(hmdbProductsBatch)
                         products.forEach {
                             try {
