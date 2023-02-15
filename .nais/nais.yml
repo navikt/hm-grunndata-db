@@ -56,6 +56,8 @@ spec:
     outbound:
       rules:
         - application: hm-grunndata-hmdb2gdb
+      external:
+        - host: navikt.github.io
     inbound:
       rules:
         - application: hm-grunndata-index
