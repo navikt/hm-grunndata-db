@@ -3,6 +3,7 @@ package no.nav.hm.grunndata.db.hmdb
 import io.micronaut.context.annotation.Requires
 import io.micronaut.scheduling.annotation.Scheduled
 import jakarta.inject.Singleton
+import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.db.LeaderElection
 import org.slf4j.LoggerFactory
 
@@ -18,7 +19,9 @@ class SupplierSyncScheduler(private val supplierSync: SupplierSync,
     @Scheduled(cron = "0 15 0 * * *")
     fun syncSuppliers() {
         if (leaderElection.isLeader()) {
-            supplierSync.syncSuppliers()
+            runBlocking {
+                supplierSync.syncSuppliers()
+            }
         }
     }
 }

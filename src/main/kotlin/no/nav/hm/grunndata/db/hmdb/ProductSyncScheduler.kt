@@ -3,6 +3,7 @@ package no.nav.hm.grunndata.db.hmdb
 import io.micronaut.context.annotation.Requires
 import io.micronaut.scheduling.annotation.Scheduled
 import jakarta.inject.Singleton
+import kotlinx.coroutines.runBlocking
 import no.nav.helse.rapids_rivers.KafkaRapid
 import no.nav.hm.grunndata.db.LeaderElection
 import org.slf4j.LoggerFactory
@@ -21,17 +22,18 @@ open class ProductSyncScheduler(private val productSync: ProductSync,
 
     @Scheduled(fixedDelay = "60s")
     fun syncProducts() {
-        if (stopped) {
-            LOG.warn("scheduler is stopped, maybe because of uncaught errors!")
-            return
-        }
         if (leaderElection.isLeader()) {
-            try {
-                productSync.syncProducts()
+            if (stopped) {
+                LOG.warn("scheduler is stopped, maybe because of uncaught errors!")
+                return
             }
-            catch (e: Exception) {
-                LOG.error("Got uncaught exception while run product sync, stop scheduler", e)
-                stopped = true
+            runBlocking {
+                try {
+                    productSync.syncProducts()
+                } catch (e: Exception) {
+                    LOG.error("Got uncaught exception while run product sync, stop scheduler", e)
+                    stopped = true
+                }
             }
         }
     }
