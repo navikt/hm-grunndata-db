@@ -4,9 +4,9 @@ import io.micronaut.context.annotation.Requires
 import io.micronaut.data.exceptions.DataAccessException
 import jakarta.inject.Singleton
 import no.nav.helse.rapids_rivers.KafkaRapid
-import no.nav.hm.grunndata.db.rapid.EventNames
 import no.nav.hm.grunndata.db.supplier.SupplierRepository
 import no.nav.hm.grunndata.db.supplier.toDTO
+import no.nav.hm.grunndata.rapid.event.EventName
 import no.nav.hm.rapids_rivers.micronaut.RapidPushService
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
@@ -55,8 +55,8 @@ class SupplierSync(
                 }
                 LOG.info("saved supplier ${saved.id} with identifier ${saved.identifier} and lastupdated ${saved.updated}")
                 rapidPushService.pushToRapid(
-                    key = "${EventNames.hmdbsuppliersync}-${saved.id}",
-                    eventName = EventNames.hmdbsuppliersync, payload = saved.toDTO()
+                    key = "${EventName.hmdbsuppliersync}-${saved.id}",
+                    eventName = EventName.hmdbsuppliersync, payload = saved.toDTO()
                 )
             }
             hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = suppliers.last().lastupdated))

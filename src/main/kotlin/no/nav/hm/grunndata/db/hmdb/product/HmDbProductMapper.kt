@@ -7,7 +7,7 @@ import no.nav.hm.grunndata.db.hmdb.HmDbIdentifier
 import no.nav.hm.grunndata.db.product.*
 import no.nav.hm.grunndata.db.supplier.SupplierRepository
 import no.nav.hm.grunndata.db.supplier.toDTO
-import no.nav.hm.grunndata.dto.*
+import no.nav.hm.grunndata.rapid.dto.*
 import java.time.LocalDateTime
 import java.util.*
 

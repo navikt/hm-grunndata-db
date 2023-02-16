@@ -6,15 +6,12 @@ import io.micronaut.data.repository.jpa.criteria.PredicateSpecification
 import io.micronaut.data.runtime.criteria.get
 import io.micronaut.data.runtime.criteria.where
 import jakarta.inject.Singleton
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import no.nav.hm.grunndata.db.HMDB
-import no.nav.hm.grunndata.db.rapid.EventNames
 import no.nav.hm.grunndata.db.supplier.SupplierRepository
 import no.nav.hm.grunndata.db.supplier.toDTO
-import no.nav.hm.grunndata.dto.ProductDTO
+import no.nav.hm.grunndata.rapid.dto.ProductDTO
+import no.nav.hm.grunndata.rapid.event.EventName
 import no.nav.hm.rapids_rivers.micronaut.RapidPushService
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
@@ -44,8 +41,8 @@ open class ProductService(
         } ?: productRepository.save(product)
         LOG.info("saved hmsArtnr ${saved.hmsArtNr}")
         rapidPushService.pushToRapid(
-            key = "${EventNames.hmdbproductsync}-${saved.id}",
-            eventName = EventNames.hmdbproductsync, payload = saved.toDTO()
+            key = "${EventName.hmdbproductsync}-${saved.id}",
+            eventName = EventName.hmdbproductsync, payload = saved.toDTO()
         )
         return saved.toDTO()
     }

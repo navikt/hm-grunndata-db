@@ -7,11 +7,11 @@ import no.nav.hm.grunndata.db.agreement.Agreement
 import no.nav.hm.grunndata.db.agreement.AgreementRepository
 import no.nav.hm.grunndata.db.agreement.toDTO
 import no.nav.hm.grunndata.db.hmdb.agreement.*
-import no.nav.hm.grunndata.db.rapid.EventNames
-import no.nav.hm.grunndata.dto.AgreementAttachment
-import no.nav.hm.grunndata.dto.AgreementPost
-import no.nav.hm.grunndata.dto.Media
-import no.nav.hm.grunndata.dto.MediaType
+import no.nav.hm.grunndata.rapid.dto.AgreementAttachment
+import no.nav.hm.grunndata.rapid.dto.AgreementPost
+import no.nav.hm.grunndata.rapid.dto.Media
+import no.nav.hm.grunndata.rapid.dto.MediaType
+import no.nav.hm.grunndata.rapid.event.EventName
 import no.nav.hm.rapids_rivers.micronaut.RapidPushService
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
@@ -45,8 +45,8 @@ class AgreementSync(
                     it.toDTO()
                 } ?: agreementRepository.save(agreement).toDTO()
                 rapidPushService.pushToRapid(
-                    key = "${EventNames.hmdbagreementsync}-${dto.id}",
-                    eventName = EventNames.hmdbagreementsync, payload = dto
+                    key = "${EventName.hmdbagreementsync}-${dto.id}",
+                    eventName = EventName.hmdbagreementsync, payload = dto
                 )
             }
             hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = agreements.last().updated))

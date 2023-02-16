@@ -9,12 +9,9 @@ import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.QueryValue
 import kotlinx.coroutines.runBlocking
-import no.nav.hm.grunndata.db.product.Product
-import no.nav.hm.grunndata.dto.AgreementDTO
-import no.nav.hm.grunndata.dto.ProductDTO
+import no.nav.hm.grunndata.rapid.dto.AgreementDTO
 import java.time.LocalDateTime
-import java.util.HashMap
-import java.util.UUID
+import java.util.*
 
 @Controller("/api/v1/agreements")
 class AgreementDocumentController(private val agreementRepository: AgreementRepository) {

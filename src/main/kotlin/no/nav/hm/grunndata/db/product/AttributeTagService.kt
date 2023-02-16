@@ -1,8 +1,8 @@
 package no.nav.hm.grunndata.db.product
 
 import jakarta.inject.Singleton
-import no.nav.hm.grunndata.dto.AttributeNames
-import no.nav.hm.grunndata.dto.ProductDTO
+import no.nav.hm.grunndata.rapid.dto.AttributeNames
+import no.nav.hm.grunndata.rapid.dto.ProductDTO
 import org.slf4j.LoggerFactory
 
 @Singleton

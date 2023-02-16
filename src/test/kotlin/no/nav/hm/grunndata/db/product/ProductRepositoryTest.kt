@@ -6,11 +6,11 @@ import io.kotest.matchers.maps.shouldContain
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
-import no.nav.hm.grunndata.dto.AttributeNames.*
+import no.nav.hm.grunndata.rapid.dto.AttributeNames.*
 import no.nav.hm.grunndata.db.supplier.Supplier
-import no.nav.hm.grunndata.dto.SupplierInfo
+import no.nav.hm.grunndata.rapid.dto.SupplierInfo
 import no.nav.hm.grunndata.db.supplier.SupplierRepository
-import no.nav.hm.grunndata.dto.SupplierStatus
+import no.nav.hm.grunndata.rapid.dto.SupplierStatus
 import org.junit.jupiter.api.Test
 
 @MicronautTest

@@ -6,7 +6,7 @@ import io.micronaut.data.annotation.TypeDef
 import io.micronaut.data.model.DataType
 import jakarta.persistence.Column
 import no.nav.hm.grunndata.db.HMDB
-import no.nav.hm.grunndata.dto.*
+import no.nav.hm.grunndata.rapid.dto.*
 import java.time.LocalDateTime
 import java.util.UUID
 

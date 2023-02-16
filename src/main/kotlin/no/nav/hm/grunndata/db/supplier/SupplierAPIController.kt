@@ -8,7 +8,7 @@ import io.micronaut.data.runtime.criteria.where
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.QueryValue
-import no.nav.hm.grunndata.dto.SupplierDTO
+import no.nav.hm.grunndata.rapid.dto.SupplierDTO
 import java.time.LocalDateTime
 import java.util.*
 

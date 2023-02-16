@@ -5,9 +5,9 @@ import io.micronaut.data.annotation.MappedEntity
 import io.micronaut.data.annotation.TypeDef
 import io.micronaut.data.model.DataType
 import no.nav.hm.grunndata.db.HMDB
-import no.nav.hm.grunndata.dto.AgreementAttachment
-import no.nav.hm.grunndata.dto.AgreementDTO
-import no.nav.hm.grunndata.dto.AgreementPost
+import no.nav.hm.grunndata.rapid.dto.AgreementAttachment
+import no.nav.hm.grunndata.rapid.dto.AgreementDTO
+import no.nav.hm.grunndata.rapid.dto.AgreementPost
 import java.time.LocalDateTime
 import java.util.*
 

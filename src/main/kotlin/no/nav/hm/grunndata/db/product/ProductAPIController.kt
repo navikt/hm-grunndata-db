@@ -5,7 +5,7 @@ import io.micronaut.data.model.Pageable
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.QueryValue
-import no.nav.hm.grunndata.dto.ProductDTO
+import no.nav.hm.grunndata.rapid.dto.ProductDTO
 import java.util.*
 
 @Controller("/api/v1/products")

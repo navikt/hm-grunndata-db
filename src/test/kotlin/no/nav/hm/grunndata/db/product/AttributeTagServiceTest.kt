@@ -4,10 +4,10 @@ import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import no.nav.hm.grunndata.db.GDB
-import no.nav.hm.grunndata.dto.AttributeNames
-import no.nav.hm.grunndata.dto.ProductDTO
-import no.nav.hm.grunndata.dto.SupplierDTO
-import no.nav.hm.grunndata.dto.SupplierInfo
+import no.nav.hm.grunndata.rapid.dto.AttributeNames
+import no.nav.hm.grunndata.rapid.dto.ProductDTO
+import no.nav.hm.grunndata.rapid.dto.SupplierDTO
+import no.nav.hm.grunndata.rapid.dto.SupplierInfo
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 import java.util.*

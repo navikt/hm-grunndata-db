@@ -1,8 +1,8 @@
 package no.nav.hm.grunndata.db.hmdb
 
 import no.nav.hm.grunndata.db.supplier.Supplier
-import no.nav.hm.grunndata.dto.SupplierInfo
-import no.nav.hm.grunndata.dto.SupplierStatus
+import no.nav.hm.grunndata.rapid.dto.SupplierInfo
+import no.nav.hm.grunndata.rapid.dto.SupplierStatus
 import java.time.LocalDateTime
 
 data class HmdbSupplierDTO (
