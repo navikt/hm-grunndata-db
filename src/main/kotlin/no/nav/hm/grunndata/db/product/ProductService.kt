@@ -7,11 +7,11 @@ import io.micronaut.data.runtime.criteria.get
 import io.micronaut.data.runtime.criteria.where
 import jakarta.inject.Singleton
 import kotlinx.coroutines.runBlocking
+import no.nav.hm.grunndata.db.GDB
 import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.db.supplier.SupplierRepository
 import no.nav.hm.grunndata.db.supplier.toDTO
 import no.nav.hm.grunndata.rapid.dto.ProductDTO
-import no.nav.hm.grunndata.rapid.event.EventName
 import no.nav.hm.rapids_rivers.micronaut.RapidPushService
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
@@ -32,19 +32,20 @@ open class ProductService(
     }
 
     @Transactional
-    open suspend fun saveAndPushTokafka(dto: ProductDTO): ProductDTO {
+    open suspend fun saveAndPushTokafka(dto: ProductDTO, eventName: String): ProductDTO {
         val product = attributeTagService.addBestillingsordningAttribute(dto).toEntity()
         val saved = (if (product.createdBy == HMDB) productRepository.findByIdentifier(product.identifier)
         else productRepository.findById(product.id))?.let { inDb ->
             productRepository.update(product.copy(id = inDb.id, created = inDb.created,
                 createdBy = inDb.createdBy))
         } ?: productRepository.save(product)
-        LOG.info("saved hmsArtnr ${saved.hmsArtNr}")
+        val productDTO = saved.toDTO()
+        LOG.info("saved hmsArtnr ${productDTO.hmsArtNr}")
         rapidPushService.pushToRapid(
-            key = "${EventName.hmdbproductsync}-${saved.id}",
-            eventName = EventName.hmdbproductsync, payload = saved.toDTO()
+            key = "${eventName}-${saved.id}",
+            eventName = eventName, payload = productDTO, keyValues = mapOf("createdBy" to GDB)
         )
-        return saved.toDTO()
+        return productDTO
     }
 
     @Transactional

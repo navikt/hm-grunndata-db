@@ -9,6 +9,7 @@ import no.nav.hm.grunndata.db.hmdb.product.HmDBProductMapper
 import no.nav.hm.grunndata.db.hmdb.product.HmDbProductBatchDTO
 import no.nav.hm.grunndata.db.product.ProductService
 import no.nav.hm.grunndata.rapid.dto.ProductDTO
+import no.nav.hm.grunndata.rapid.event.EventName
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
@@ -50,7 +51,7 @@ open class ProductSync(
             products.forEach {
                 try {
                     LOG.info("saving to db: ${it.identifier} with hmsnr ${it.hmsArtNr}")
-                    productService.saveAndPushTokafka(it)
+                    productService.saveAndPushTokafka(it, EventName.hmdbproductsync)
                 } catch (e: DataAccessException) {
                     LOG.error("got exception", e)
                 }
