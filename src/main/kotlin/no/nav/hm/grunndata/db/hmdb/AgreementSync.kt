@@ -3,6 +3,7 @@ package no.nav.hm.grunndata.db.hmdb
 import io.micronaut.context.annotation.Requires
 import jakarta.inject.Singleton
 import no.nav.helse.rapids_rivers.KafkaRapid
+import no.nav.hm.grunndata.db.GdbRapidPushService
 import no.nav.hm.grunndata.db.agreement.Agreement
 import no.nav.hm.grunndata.db.agreement.AgreementRepository
 import no.nav.hm.grunndata.db.agreement.toDTO
@@ -23,7 +24,7 @@ class AgreementSync(
     private val agreementRepository: AgreementRepository,
     private val hmDbClient: HmDbClient,
     private val hmdbBatchRepository: HmDbBatchRepository,
-    private val rapidPushService: RapidPushService
+    private val gdbRapidPushService: GdbRapidPushService
 ) {
 
     companion object {
@@ -44,10 +45,7 @@ class AgreementSync(
                 val dto = agreementRepository.findByIdentifier(agreement.identifier)?.let {
                     it.toDTO()
                 } ?: agreementRepository.save(agreement).toDTO()
-                rapidPushService.pushToRapid(
-                    key = "${EventName.hmdbagreementsync}-${dto.id}",
-                    eventName = EventName.hmdbagreementsync, payload = dto
-                )
+                gdbRapidPushService.pushDTOToKafka(dto, EventName.hmdbagreementsync)
             }
             hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = agreements.last().updated))
         }

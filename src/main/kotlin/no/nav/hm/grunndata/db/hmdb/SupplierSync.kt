@@ -4,6 +4,7 @@ import io.micronaut.context.annotation.Requires
 import io.micronaut.data.exceptions.DataAccessException
 import jakarta.inject.Singleton
 import no.nav.helse.rapids_rivers.KafkaRapid
+import no.nav.hm.grunndata.db.GdbRapidPushService
 import no.nav.hm.grunndata.db.supplier.SupplierRepository
 import no.nav.hm.grunndata.db.supplier.toDTO
 import no.nav.hm.grunndata.rapid.event.EventName
@@ -18,7 +19,7 @@ class SupplierSync(
     private val supplierRepository: SupplierRepository,
     private val hmdbBatchRepository: HmDbBatchRepository,
     private val hmDbClient: HmDbClient,
-    private val rapidPushService: RapidPushService) {
+    private val gdbRapidPushService: GdbRapidPushService) {
 
     companion object {
         private val LOG = LoggerFactory.getLogger(SupplierSync::class.java)
@@ -54,10 +55,7 @@ class SupplierSync(
                     }
                 }
                 LOG.info("saved supplier ${saved.id} with identifier ${saved.identifier} and lastupdated ${saved.updated}")
-                rapidPushService.pushToRapid(
-                    key = "${EventName.hmdbsuppliersync}-${saved.id}",
-                    eventName = EventName.hmdbsuppliersync, payload = saved.toDTO()
-                )
+                gdbRapidPushService.pushDTOToKafka(saved.toDTO(), EventName.hmdbsuppliersync)
             }
             hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = suppliers.last().lastupdated))
         }

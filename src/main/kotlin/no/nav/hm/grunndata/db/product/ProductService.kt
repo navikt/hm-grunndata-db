@@ -7,12 +7,11 @@ import io.micronaut.data.runtime.criteria.get
 import io.micronaut.data.runtime.criteria.where
 import jakarta.inject.Singleton
 import kotlinx.coroutines.runBlocking
-import no.nav.hm.grunndata.db.GDB
+import no.nav.hm.grunndata.db.GdbRapidPushService
 import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.db.supplier.SupplierRepository
 import no.nav.hm.grunndata.db.supplier.toDTO
 import no.nav.hm.grunndata.rapid.dto.ProductDTO
-import no.nav.hm.rapids_rivers.micronaut.RapidPushService
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.util.*
@@ -22,9 +21,9 @@ import javax.transaction.Transactional
 @Singleton
 open class ProductService(
     private val productRepository: ProductRepository,
-    private val rapidPushService: RapidPushService,
     private val attributeTagService: AttributeTagService,
-    private val supplierRepository: SupplierRepository
+    private val supplierRepository: SupplierRepository,
+    private val gdbRapidPushService: GdbRapidPushService
 ) {
 
     companion object {
@@ -41,10 +40,7 @@ open class ProductService(
         } ?: productRepository.save(product)
         val productDTO = saved.toDTO()
         LOG.info("saved hmsArtnr ${productDTO.hmsArtNr}")
-        rapidPushService.pushToRapid(
-            key = "${eventName}-${saved.id}",
-            eventName = eventName, payload = productDTO, keyValues = mapOf("createdBy" to GDB)
-        )
+        gdbRapidPushService.pushDTOToKafka(productDTO, eventName)
         return productDTO
     }
 
