@@ -1,7 +1,6 @@
 package no.nav.hm.grunndata.db.supplier
 
 import io.kotest.common.runBlocking
-import io.kotest.matchers.longs.shouldBeGreaterThan
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
