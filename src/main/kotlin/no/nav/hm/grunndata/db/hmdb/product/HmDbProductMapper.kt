@@ -60,7 +60,7 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
         if (prod.aisapproved && prod.isactive) ProductStatus.ACTIVE else
             ProductStatus.INACTIVE
 
-    fun mapBlobs(blobs: List<BlobDTO>): List<Media> =
+    fun mapBlobs(blobs: List<BlobDTO>): List<MediaDTO> =
         blobs.associateBy { it.blobfile }
             .values
             .map { mapBlob(it) }
@@ -68,7 +68,7 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
             .mapIndexed { index, media -> media.copy(order = index + 1) }
 
 
-    fun mapBlob(blobDTO: BlobDTO): Media {
+    fun mapBlob(blobDTO: BlobDTO): MediaDTO {
         val mediaType = when (blobDTO.blobtype.trim().lowercase()) {
             "billede" -> MediaType.IMAGE
             "brosjyre", "produktbl", "bruksanvisning", "brugsanvisning", "quickguide", "målskjema", "batterioversikt" -> MediaType.PDF
@@ -78,7 +78,7 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
                 else MediaType.OTHER
             }
         }
-        return Media(type = mediaType, text = blobDTO.blobtype.trim(), uri = blobDTO.blobfile.trim(), source = MediaSourceType.HMDB)
+        return MediaDTO(type = mediaType, text = blobDTO.blobtype.trim(), uri = blobDTO.blobfile.trim(), source = MediaSourceType.HMDB)
     }
 
     fun mapAttributes(produkt: HmDbProductDTO): Map<AttributeNames, Any> = mapOf(

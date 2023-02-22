@@ -10,10 +10,9 @@ import no.nav.hm.grunndata.db.agreement.toDTO
 import no.nav.hm.grunndata.db.hmdb.agreement.*
 import no.nav.hm.grunndata.rapid.dto.AgreementAttachment
 import no.nav.hm.grunndata.rapid.dto.AgreementPost
-import no.nav.hm.grunndata.rapid.dto.Media
+import no.nav.hm.grunndata.rapid.dto.MediaDTO
 import no.nav.hm.grunndata.rapid.dto.MediaType
 import no.nav.hm.grunndata.rapid.event.EventName
-import no.nav.hm.rapids_rivers.micronaut.RapidPushService
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
@@ -80,12 +79,12 @@ class AgreementSync(
     }
 
 
-    private fun mapMedia(newsDoc: NewsDocDTO, newsDocAdr: List<NewsDocAdr>): List<Media> {
+    private fun mapMedia(newsDoc: NewsDocDTO, newsDocAdr: List<NewsDocAdr>): List<MediaDTO> {
         val mediaList = if (!newsDoc.hmidocfilename.isNullOrBlank())
-            listOf(Media(uri = newsDoc.hmidocfilename, type = getFileType(newsDoc.hmidocfilename)))
+            listOf(MediaDTO(uri = newsDoc.hmidocfilename, type = getFileType(newsDoc.hmidocfilename)))
         else emptyList()
         return mediaList.plus(newsDocAdr.map {
-            Media(uri = it.docadrfile, type = getFileType(it.docadrfile))
+            MediaDTO(uri = it.docadrfile, type = getFileType(it.docadrfile))
         })
     }
 

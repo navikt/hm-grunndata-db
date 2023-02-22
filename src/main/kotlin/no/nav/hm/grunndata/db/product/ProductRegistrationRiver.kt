@@ -26,6 +26,7 @@ class ProductRegistrationRiver(river: RiverHead,
     }
 
     init {
+        LOG.info("Using rapid dto version: $rapidDTOVersion")
         river
             .validate { it.demandValue("eventName", EventName.productRegistration)}
             .validate { it.demandValue("payloadType", ProductRegistrationDTO::class.java.simpleName)}
