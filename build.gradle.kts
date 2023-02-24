@@ -15,7 +15,7 @@ val tcVersion= "1.16.3"
 val mockkVersion = "1.13.2"
 val kotestVersion = "5.5.0"
 val rapidsRiversVersion = "202301310932"
-val grunndataDtoVersion = "202302221558"
+val grunndataDtoVersion = "202302241543"
 
 group = "no.nav.hm"
 version = properties["version"] ?: "local-build"
@@ -117,8 +117,7 @@ tasks.withType<Wrapper> {
 repositories {
     mavenLocal()
     mavenCentral()
-    maven("https://packages.confluent.io/maven/")
     maven("https://github-package-registry-mirror.gc.nav.no/cached/maven-release")
-
+    maven("https://packages.confluent.io/maven/")
 }
 
