@@ -50,7 +50,7 @@ micronaut:
       prometheus:
         enabled: true
         step: PT1M
-        descriptions: true
+        descriptions: false
 endpoints:
   metrics:
     enabled: true

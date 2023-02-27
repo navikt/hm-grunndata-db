@@ -57,6 +57,9 @@ dependencies {
     implementation("io.micronaut:micronaut-http-client")
     implementation("io.micronaut.cache:micronaut-cache-caffeine")
 
+    implementation("io.micronaut.micrometer:micronaut-micrometer-core")
+    implementation("io.micronaut.micrometer:micronaut-micrometer-registry-prometheus")
+
     implementation("com.github.navikt:hm-rapids-and-rivers-v2-core:$rapidsRiversVersion")
     implementation("com.github.navikt:hm-rapids-and-rivers-v2-micronaut:$rapidsRiversVersion")
 
