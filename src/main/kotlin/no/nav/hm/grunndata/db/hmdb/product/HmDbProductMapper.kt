@@ -65,7 +65,7 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
             .values
             .map { mapBlob(it) }
             .sortedBy { "${it.type}-${it.uri}" }
-            .mapIndexed { index, media -> media.copy(order = index + 1) }
+            .mapIndexed { index, media -> media.copy(priority = index + 1) }
 
 
     fun mapBlob(blobDTO: BlobDTO): MediaDTO {
