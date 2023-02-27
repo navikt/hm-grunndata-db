@@ -29,6 +29,36 @@ micronaut:
   data:
     pageable:
       max-page-size: 2000
+  metrics:
+    enabled: true
+    binders:
+      uptime:
+        enabled: true
+      processor:
+        enabled: true
+      jvm:
+        enabled: true
+      web:
+        enabled: true
+      logback:
+        enabled: true
+      jdbc:
+        enabled: true
+      kafka:
+        enabled: true
+    export:
+      prometheus:
+        enabled: true
+        step: PT1M
+        descriptions: true
+endpoints:
+  metrics:
+    enabled: true
+  prometheus:
+    sensitive: false
+    enabled: true
+  all:
+    path: "/internal"
 
 jackson:
   bean-introspection-module: true
