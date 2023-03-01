@@ -85,14 +85,17 @@ class AgreementSync(
         else emptyList()
         return mediaList.plus(newsDocAdr.map {
             MediaDTO(uri = it.docadrfile, type = getFileType(it.docadrfile))
-        })
+        }.filter { it.type != MediaType.OTHER })
     }
 
     private fun getFileType(filename: String): MediaType =
         when (filename.substringAfterLast('.', "").lowercase()) {
             "pdf" -> MediaType.PDF
             "jpg", "png" -> MediaType.IMAGE
-            else -> MediaType.OTHER
+            else -> {
+                LOG.error("Got unknown media attachment from agreement with $filename")
+                MediaType.OTHER
+            }
         }
 
 }

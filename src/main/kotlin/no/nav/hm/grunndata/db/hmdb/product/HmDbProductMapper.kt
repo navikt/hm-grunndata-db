@@ -8,6 +8,7 @@ import no.nav.hm.grunndata.db.product.*
 import no.nav.hm.grunndata.db.supplier.SupplierRepository
 import no.nav.hm.grunndata.db.supplier.toDTO
 import no.nav.hm.grunndata.rapid.dto.*
+import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.util.*
 
@@ -15,6 +16,9 @@ import java.util.*
 class HmDBProductMapper(private val supplierRepository: SupplierRepository,
                         private val agreementRepository: AgreementRepository) {
 
+    companion object {
+        private val LOG = LoggerFactory.getLogger(HmDBProductMapper::class.java)
+    }
     suspend fun mapProduct(prod: HmDbProductDTO, batch: HmDbProductBatchDTO): ProductDTO =
         ProductDTO(
             id = UUID.randomUUID(),
@@ -63,7 +67,7 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
     fun mapBlobs(blobs: List<BlobDTO>): List<MediaDTO> =
         blobs.associateBy { it.blobfile }
             .values
-            .map { mapBlob(it) }
+            .map { mapBlob(it) }.filter{ it.type != MediaType.OTHER }
             .sortedBy { "${it.type}-${it.uri}" }
             .mapIndexed { index, media -> media.copy(priority = index + 1) }
 
@@ -72,10 +76,12 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
         val mediaType = when (blobDTO.blobtype.trim().lowercase()) {
             "billede" -> MediaType.IMAGE
             "brosjyre", "produktbl", "bruksanvisning", "brugsanvisning", "quickguide", "målskjema", "batterioversikt" -> MediaType.PDF
-            "video" -> MediaType.VIDEO
             else -> {
                 if (blobDTO.blobfile.endsWith("pdf", true)) MediaType.PDF
-                else MediaType.OTHER
+                else {
+                    LOG.error("Unrecognized media type with file: ${blobDTO.blobfile} and type: ${blobDTO.blobtype}")
+                    MediaType.OTHER
+                }
             }
         }
         return MediaDTO(type = mediaType, text = blobDTO.blobtype.trim(), uri = blobDTO.blobfile.trim(), source = MediaSourceType.HMDB)
