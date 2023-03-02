@@ -1,5 +1,6 @@
 package no.nav.hm.grunndata.db.hmdb
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.micronaut.context.annotation.Requires
 import jakarta.inject.Singleton
 import no.nav.helse.rapids_rivers.KafkaRapid
@@ -23,7 +24,8 @@ class AgreementSync(
     private val agreementRepository: AgreementRepository,
     private val hmDbClient: HmDbClient,
     private val hmdbBatchRepository: HmDbBatchRepository,
-    private val gdbRapidPushService: GdbRapidPushService
+    private val gdbRapidPushService: GdbRapidPushService,
+    private val objectMapper: ObjectMapper
 ) {
 
     companion object {
@@ -80,11 +82,11 @@ class AgreementSync(
 
 
     private fun mapMedia(newsDoc: NewsDocDTO, newsDocAdr: List<NewsDocAdr>): List<MediaDTO> {
-        val mediaList = if (!newsDoc.hmidocfilename.isNullOrBlank())
-            listOf(MediaDTO(uri = newsDoc.hmidocfilename, type = getFileType(newsDoc.hmidocfilename)))
+        val mediaList = if (!newsDoc.hmidocfile.isNullOrBlank())
+            listOf(MediaDTO(uri = newsDoc.hmidocfile, type = getFileType(newsDoc.hmidocfile), text = newsDoc.hmidoctitle))
         else emptyList()
         return mediaList.plus(newsDocAdr.map {
-            MediaDTO(uri = it.docadrfile, type = getFileType(it.docadrfile))
+            MediaDTO(uri = it.docadrfile, type = getFileType(it.docadrfile), text = newsDoc.hmidoctitle)
         }.filter { it.type != MediaType.OTHER })
     }
 
@@ -92,6 +94,7 @@ class AgreementSync(
         when (filename.substringAfterLast('.', "").lowercase()) {
             "pdf" -> MediaType.PDF
             "jpg", "png" -> MediaType.IMAGE
+            "xls", "xlsx" -> MediaType.XLS
             else -> {
                 LOG.error("Got unknown media attachment from agreement with $filename")
                 MediaType.OTHER

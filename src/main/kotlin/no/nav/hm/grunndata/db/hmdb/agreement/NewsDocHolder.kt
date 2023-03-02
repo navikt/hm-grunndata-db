@@ -11,6 +11,7 @@ data class NewsDocDTO (
     val newsid: Long,
     val hmidoctitle: String?,
     val hmidocdesc: String?,
+    val hmidocfile: String?, 
     val hmidocfilename: String?,
     val hmidocrank: Int,
     val ldbid: Int,
