@@ -4,11 +4,13 @@ import jakarta.inject.Singleton
 import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.db.agreement.AgreementRepository
 import no.nav.hm.grunndata.db.hmdb.HmDbIdentifier
+import no.nav.hm.grunndata.db.hmdbMediaUrl
 import no.nav.hm.grunndata.db.product.*
 import no.nav.hm.grunndata.db.supplier.SupplierRepository
 import no.nav.hm.grunndata.db.supplier.toDTO
 import no.nav.hm.grunndata.rapid.dto.*
 import org.slf4j.LoggerFactory
+import java.net.URI
 import java.time.LocalDateTime
 import java.util.*
 
@@ -87,8 +89,9 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
                 }
             }
         }
-        return MediaDTO(type = mediaType, text = blobType, sourceUri = blobFile, uri = "${blobDTO.prodid}_${blobFile}",
-            source = MediaSourceType.HMDB)
+
+        return MediaDTO(type = mediaType, text = blobType, sourceUri = "$hmdbMediaUrl/orig/$blobFile",
+            uri = "${blobDTO.prodid}_${blobFile}", source = MediaSourceType.HMDB)
     }
 
     fun mapAttributes(produkt: HmDbProductDTO): Map<AttributeNames, Any> = mapOf(
