@@ -30,11 +30,11 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
             status = mapStatus(prod),
             hmsArtNr = prod.stockid,
             identifier = "${prod.artid}".HmDbIdentifier(),
-            supplierRef = if (prod.artno!=null && prod.artno.isNotBlank()) prod.artno else prod.artid.toString().HmDbIdentifier(),
+            supplierRef = if (!prod.artno.isNullOrBlank()) prod.artno else prod.artid.toString().HmDbIdentifier(),
             isoCategory = prod.isocode,
             seriesId = "${prod.prodid}".HmDbIdentifier(),
             techData = mapTechData(batch.techdata[prod.artid] ?: emptyList()),
-            media =  mapBlobs(batch.blobs[prod.prodid] ?: emptyList()),
+            media =  mapBlobs(batch.blobs[prod.prodid] ?: emptyList(), prod),
             agreementInfo = if(prod.newsid!=null) mapAgreementInfo(prod) else null,
             created = prod.aindate,
             updated = prod.achange,
@@ -66,16 +66,16 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
         if (prod.aisapproved && prod.isactive) ProductStatus.ACTIVE else
             ProductStatus.INACTIVE
 
-    fun mapBlobs(blobs: List<BlobDTO>): List<MediaDTO> =
+    fun mapBlobs(blobs: List<BlobDTO>, prod: HmDbProductDTO  ): List<MediaDTO> =
         blobs.associateBy { it.blobfile }
             .values
-            .map { mapBlob(it) }
+            .map { mapBlob(it, prod) }
             .filter{ it.type != MediaType.OTHER }
             .sortedBy { "${it.type}-${it.uri}" }
             .mapIndexed { index, media -> media.copy(priority = index + 1) }
 
 
-    fun mapBlob(blobDTO: BlobDTO): MediaDTO {
+    fun mapBlob(blobDTO: BlobDTO, prod: HmDbProductDTO): MediaDTO {
         val blobFile = blobDTO.blobfile.trim()
         val blobType = blobDTO.blobtype.trim()
         val mediaType = when (blobType.lowercase()) {
@@ -91,7 +91,7 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
         }
 
         return MediaDTO(type = mediaType, text = blobType, sourceUri = "$hmdbMediaUrl/orig/$blobFile",
-            uri = "${blobDTO.prodid}_${blobFile}", source = MediaSourceType.HMDB)
+            uri = "${prod.artid}_${blobFile}", source = MediaSourceType.HMDB)
     }
 
     fun mapAttributes(produkt: HmDbProductDTO): Map<AttributeNames, Any> = mapOf(
