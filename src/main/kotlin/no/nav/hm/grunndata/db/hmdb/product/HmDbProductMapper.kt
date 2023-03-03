@@ -77,8 +77,8 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
 
     fun mapBlob(blobDTO: BlobDTO, prod: HmDbProductDTO): MediaDTO {
         val blobFile = blobDTO.blobfile.trim()
-        val blobType = blobDTO.blobtype.trim()
-        val mediaType = when (blobType.lowercase()) {
+        val blobType = blobDTO.blobtype.trim().lowercase()
+        val mediaType = when (blobType) {
             "billede" -> MediaType.IMAGE
             "brosjyre", "produktbl", "bruksanvisning", "brugsanvisning", "quickguide", "målskjema", "batterioversikt" -> MediaType.PDF
             else -> {
@@ -89,8 +89,13 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
                 }
             }
         }
+        val typePath = when (blobType) {
+            "bruksanvisning", "brugsanvisning" -> "brugsvejl"
+            "brosjyre", "produktbl" -> "produktblade"
+            else -> "orig"
+        }
 
-        return MediaDTO(type = mediaType, text = blobType, sourceUri = "$hmdbMediaUrl/orig/$blobFile",
+        return MediaDTO(type = mediaType, text = blobType, sourceUri = "$hmdbMediaUrl/$typePath/$blobFile",
             uri = "${prod.artid}_${blobFile}", source = MediaSourceType.HMDB)
     }
 
