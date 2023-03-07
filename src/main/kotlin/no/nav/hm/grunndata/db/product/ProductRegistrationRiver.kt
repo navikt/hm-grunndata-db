@@ -38,9 +38,10 @@ class ProductRegistrationRiver(river: RiverHead,
         val createdTime = packet["createdTime"].asLocalDateTime()
         if (dtoVersion > rapidDTOVersion) LOG.warn("dto version $dtoVersion is newer than $rapidDTOVersion")
         val dto = objectMapper.treeToValue(packet["payload"], ProductRegistrationDTO::class.java)
-        LOG.info("got product registration id: ${dto.id} eventId $eventId eventTime: $createdTime")
+        LOG.info("got product registration id: ${dto.id} eventId $eventId eventTime: $createdTime adminStatus: ${dto.adminStatus}")
         runBlocking {
-            productService.saveAndPushTokafka(dto.productDTO, EventName.registerProductSync)
+            if (dto.adminStatus == AdminStatus.APPROVED)
+                productService.saveAndPushTokafka(dto.productDTO, EventName.registerProductSync)
         }
     }
 
