@@ -96,7 +96,7 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
         }
 
         return MediaDTO(type = mediaType, text = blobType, sourceUri = "$hmdbMediaUrl/$typePath/$blobFile",
-            uri = "${prod.artid}_${blobFile}", source = MediaSourceType.HMDB)
+            uri = "${blobFile}", source = MediaSourceType.HMDB)
     }
 
     fun mapAttributes(produkt: HmDbProductDTO): Map<AttributeNames, Any> = mapOf(
