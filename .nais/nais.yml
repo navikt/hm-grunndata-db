@@ -7,7 +7,7 @@ metadata:
     team: teamdigihot
 spec:
   image: {{ image }}
-  port: 8888
+  port: 8080
   liveness:
     path: /internal/isAlive
     initialDelay: 20
