@@ -45,7 +45,7 @@ class AgreementSync(
             val agreements = hmdbagreements.map { it.toAgreement() }
             agreements.forEach { agreement ->
                 val dto = agreementRepository.findByIdentifier(agreement.identifier)?.let {
-                    it.toDTO()
+                    agreementRepository.update(agreement.copy(id = it.id, created = it.created)).toDTO()
                 } ?: agreementRepository.save(agreement).toDTO()
                 gdbRapidPushService.pushDTOToKafka(dto, EventName.hmdbagreementsync)
             }
