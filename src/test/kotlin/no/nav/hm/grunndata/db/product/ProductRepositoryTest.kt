@@ -15,7 +15,8 @@ import org.junit.jupiter.api.Test
 
 @MicronautTest
 class ProductRepositoryTest(private val productRepository: ProductRepository,
-                            private val supplierRepository: SupplierRepository, private val objectMapper: ObjectMapper) {
+                            private val supplierRepository: SupplierRepository,
+                            private val objectMapper: ObjectMapper) {
 
     @Test
     fun readSavedDb() {
