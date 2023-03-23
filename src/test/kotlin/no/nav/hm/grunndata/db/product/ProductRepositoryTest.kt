@@ -24,15 +24,16 @@ class ProductRepositoryTest(private val productRepository: ProductRepository,
             val supplier = supplierRepository.save(Supplier(name = "supplier 1", identifier = "unik-identifier",
                 status = SupplierStatus.ACTIVE, info = SupplierInfo(email = "test@test")))
             val product = productRepository.save(Product(
-                supplierId = supplier.id, identifier = "123", title = "Dette er et produkt", supplierRef = "123", isoCategory = "123456",
-                attributes = mapOf(articlename to  "Produkt 1",
+                supplierId = supplier.id, identifier = "123", title = "Dette er et produkt", articleName = "Produkt 1",
+                supplierRef = "123", isoCategory = "123456",
+                attributes = mapOf(
                     manufacturer to  "Samsung",  compatible to listOf("produkt 2", "product 3"))
             ))
             val db = productRepository.findById(product.id)
             db.shouldNotBeNull()
             db.supplierId shouldBe product.supplierId
             db.title shouldBe product.title
-            db.attributes shouldContain Pair(articlename, "Produkt 1")
+            db.articleName shouldBe "Produkt 1"
             val updated = productRepository.update(db.copy(title = "Dette er et nytt produkt"))
             updated.shouldNotBeNull()
             updated.title shouldBe "Dette er et nytt produkt"

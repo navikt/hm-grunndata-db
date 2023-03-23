@@ -21,9 +21,8 @@ class AttributeTagServiceTest(private val attributeTagService: AttributeTagServi
             createdBy = GDB, updatedBy = GDB, updated = LocalDateTime.now(), created = LocalDateTime.now())
         val product = ProductDTO (id = UUID.randomUUID(),
             supplier = supplier , hmsArtNr = "255734", identifier = "123", title = "Dette er et produkt",
-            supplierRef = "123", isoCategory = "123456",
+            articleName = "Product 1", supplierRef = "123", isoCategory = "123456",
             attributes = mapOf(
-                AttributeNames.articlename to  "Produkt 1",
                 AttributeNames.manufacturer to  "Samsung",
                 AttributeNames.compatible to listOf("produkt 2", "product 3")),
             createdBy = GDB,
@@ -31,9 +30,8 @@ class AttributeTagServiceTest(private val attributeTagService: AttributeTagServi
         )
         val product2 = ProductDTO (id = UUID.randomUUID(),
             supplier = supplier, hmsArtNr = "12345A", identifier = "123", title = "Dette er et produkt",
-            supplierRef = "1234", isoCategory = "123456",
+            articleName = "Produkt1", supplierRef = "1234", isoCategory = "123456",
             attributes = mapOf(
-                AttributeNames.articlename to  "Produkt 1",
                 AttributeNames.manufacturer to  "Samsung",
                 AttributeNames.compatible to listOf("produkt 2", "product 3"),
                 AttributeNames.bestillingsordning to true),

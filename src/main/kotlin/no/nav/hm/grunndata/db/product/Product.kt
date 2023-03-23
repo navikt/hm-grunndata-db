@@ -16,6 +16,7 @@ data class Product (
     val id: UUID = UUID.randomUUID(),
     val supplierId: UUID,
     val title: String,
+    val articleName: String,
     @field:TypeDef(type = DataType.JSON)
     val attributes: Map<AttributeNames, Any>,
     val status: ProductStatus = ProductStatus.ACTIVE,
@@ -43,7 +44,7 @@ data class Product (
 )
 
 fun ProductDTO.toEntity(): Product = Product (
-    id = id, supplierId = supplier.id, title = title, attributes=attributes, status = status, hmsArtNr = hmsArtNr,
+    id = id, supplierId = supplier.id, title = title, articleName = articleName, attributes=attributes, status = status, hmsArtNr = hmsArtNr,
     identifier = identifier, supplierRef=supplierRef, isoCategory=isoCategory, accessory=accessory, sparePart=sparePart,
     seriesId=seriesId, techData=techData, media= media, created=created, updated=updated, published=published, expired=expired,
     agreementInfo = agreementInfo, createdBy=createdBy, updatedBy=updatedBy
