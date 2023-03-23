@@ -1,0 +1,1 @@
+ALTER TABLE product_v1 ADD COLUMN article_name VARCHAR(255) NOT NULL DEFAULT '';

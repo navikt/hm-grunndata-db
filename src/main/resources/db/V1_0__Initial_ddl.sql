@@ -70,4 +70,3 @@ CREATE TABLE IF NOT EXISTS product_v1 (
 );
 
 CREATE INDEX product_v1_updated_idx ON product_v1(updated);
-ALTER TABLE product_v1 ADD COLUMN article_name VARCHAR(255) NOT NULL DEFAULT '';
