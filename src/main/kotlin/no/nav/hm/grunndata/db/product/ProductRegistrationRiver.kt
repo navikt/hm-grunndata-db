@@ -40,7 +40,7 @@ class ProductRegistrationRiver(river: RiverHead,
         val dto = objectMapper.treeToValue(packet["payload"], ProductRegistrationDTO::class.java)
         LOG.info("got product registration id: ${dto.id} eventId $eventId eventTime: $createdTime adminStatus: ${dto.adminStatus}")
         runBlocking {
-            if (dto.adminStatus == AdminStatus.APPROVED)
+            if (dto.adminStatus == AdminStatus.APPROVED && dto.draftStatus == DraftStatus.DONE)
                 productService.saveAndPushTokafka(dto.productDTO, EventName.registerProductSync)
         }
     }

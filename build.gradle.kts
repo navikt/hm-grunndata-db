@@ -15,7 +15,7 @@ val tcVersion= "1.16.3"
 val mockkVersion = "1.13.2"
 val kotestVersion = "5.5.0"
 val rapidsRiversVersion = "202303011052"
-val grunndataDtoVersion = "202303231302"
+val grunndataDtoVersion = "202303231418"
 
 group = "no.nav.hm"
 version = properties["version"] ?: "local-build"
@@ -23,7 +23,6 @@ version = properties["version"] ?: "local-build"
 plugins {
     kotlin("jvm") version "1.7.0"
     kotlin("kapt") version "1.7.0"
-    kotlin("plugin.allopen") version "1.7.0"
     id("java")
     id("com.github.johnrengelman.shadow") version "7.1.0"
     id("io.micronaut.application") version "3.7.2"
