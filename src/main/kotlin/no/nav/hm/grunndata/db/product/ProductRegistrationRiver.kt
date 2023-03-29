@@ -23,7 +23,7 @@ class ProductRegistrationRiver(river: RiverHead,
     init {
         LOG.info("Using rapid dto version: $rapidDTOVersion")
         river
-            .validate { it.demandValue("eventName", EventName.productRegistration)}
+            .validate { it.demandValue("eventName", EventName.registeredProductV1)}
             .validate { it.demandValue("payloadType", ProductRegistrationDTO::class.java.simpleName)}
             .validate { it.demandKey("payload")}
             .validate { it.demandKey("eventId")}
@@ -41,7 +41,7 @@ class ProductRegistrationRiver(river: RiverHead,
         LOG.info("got product registration id: ${dto.id} eventId $eventId eventTime: $createdTime adminStatus: ${dto.adminStatus}")
         runBlocking {
             if (dto.adminStatus == AdminStatus.APPROVED && dto.draftStatus == DraftStatus.DONE)
-                productService.saveAndPushTokafka(dto.productDTO, EventName.registerProductSync)
+                productService.saveAndPushTokafka(dto.productDTO, EventName.syncedRegisterProductV1)
         }
     }
 

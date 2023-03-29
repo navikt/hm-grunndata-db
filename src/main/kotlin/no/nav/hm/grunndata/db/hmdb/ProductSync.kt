@@ -51,7 +51,7 @@ open class ProductSync(
             products.forEach {
                 try {
                     LOG.info("saving to db: ${it.identifier} with hmsnr ${it.hmsArtNr}")
-                    productService.saveAndPushTokafka(it, EventName.hmdbproductsync)
+                    productService.saveAndPushTokafka(it, EventName.hmdbproductsyncV1)
                 } catch (e: DataAccessException) {
                     LOG.error("got exception", e)
                 }

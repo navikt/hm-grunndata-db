@@ -70,13 +70,13 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
     fun mapBlobs(blobs: List<BlobDTO>, prod: HmDbProductDTO  ): List<MediaDTO> =
         blobs.associateBy { it.blobfile }
             .values
-            .map { mapBlob(it, prod) }
+            .map { mapBlob(it)}
             .filter{ it.type != MediaType.OTHER }
             .sortedBy { "${it.type}-${it.uri}" }
             .mapIndexed { index, media -> media.copy(priority = index + 1) }
 
 
-    fun mapBlob(blobDTO: BlobDTO, prod: HmDbProductDTO): MediaDTO {
+    fun mapBlob(blobDTO: BlobDTO): MediaDTO {
         val blobFile = blobDTO.blobfile.trim()
         val blobType = blobDTO.blobtype.trim().lowercase()
         val mediaType = when (blobType) {
@@ -101,7 +101,6 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
     }
 
     fun mapAttributes(produkt: HmDbProductDTO): Map<AttributeNames, Any> = mapOf(
-        AttributeNames.articlename to produkt.artname,
         AttributeNames.shortdescription to (produkt.adescshort ?: ""),
         AttributeNames.text to produkt.pshortdesc,
         AttributeNames.series to listOf(produkt.prodname)

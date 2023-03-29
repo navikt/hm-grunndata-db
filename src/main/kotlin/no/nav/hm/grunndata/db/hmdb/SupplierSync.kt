@@ -59,7 +59,7 @@ class SupplierSync(
                     }
                 }
                 LOG.info("saved supplier ${saved.id} with identifier ${saved.identifier} and lastupdated ${saved.updated}")
-                gdbRapidPushService.pushDTOToKafka(saved.toDTO(), EventName.hmdbsuppliersync)
+                gdbRapidPushService.pushDTOToKafka(saved.toDTO(), EventName.hmdbsuppliersyncV1)
             }
             hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = suppliers.last().lastupdated))
         }
