@@ -31,7 +31,7 @@ data class Product (
     @field:TypeDef(type = DataType.JSON)
     val techData: List<TechData> = emptyList(),
     @field:TypeDef(type = DataType.JSON)
-    val media: List<MediaDTO> = emptyList(),
+    val media: List<MediaInfo> = emptyList(),
     @field:TypeDef(type = DataType.JSON)
     @field:Column(name="agreement")
     val agreementInfo: AgreementInfo?=null,

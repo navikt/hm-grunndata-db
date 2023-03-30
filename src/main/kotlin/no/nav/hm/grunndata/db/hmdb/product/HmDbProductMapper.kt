@@ -35,7 +35,7 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
             isoCategory = prod.isocode,
             seriesId = "${prod.prodid}".HmDbIdentifier(),
             techData = mapTechData(batch.techdata[prod.artid] ?: emptyList()),
-            media =  mapBlobs(batch.blobs[prod.prodid] ?: emptyList(), prod),
+            media =  mapBlobs(batch.blobs[prod.prodid] ?: emptyList()),
             agreementInfo = if(prod.newsid!=null) mapAgreementInfo(prod) else null,
             created = prod.aindate,
             updated = prod.achange,
@@ -67,7 +67,7 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
         if (prod.aisapproved && prod.isactive) ProductStatus.ACTIVE else
             ProductStatus.INACTIVE
 
-    fun mapBlobs(blobs: List<BlobDTO>, prod: HmDbProductDTO  ): List<MediaDTO> =
+    fun mapBlobs(blobs: List<BlobDTO>): List<MediaInfo> =
         blobs.associateBy { it.blobfile }
             .values
             .map { mapBlob(it)}
@@ -76,7 +76,7 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
             .mapIndexed { index, media -> media.copy(priority = index + 1) }
 
 
-    fun mapBlob(blobDTO: BlobDTO): MediaDTO {
+    fun mapBlob(blobDTO: BlobDTO): MediaInfo {
         val blobFile = blobDTO.blobfile.trim()
         val blobType = blobDTO.blobtype.trim().lowercase()
         val mediaType = when (blobType) {
@@ -96,7 +96,7 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
             else -> "orig"
         }
 
-        return MediaDTO(type = mediaType, text = blobType, sourceUri = "$hmdbMediaUrl/$typePath/$blobFile",
+        return MediaInfo(type = mediaType, text = blobType, sourceUri = "$hmdbMediaUrl/$typePath/$blobFile",
             uri = "${blobFile}", source = MediaSourceType.HMDB)
     }
 
