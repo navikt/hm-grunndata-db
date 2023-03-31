@@ -24,7 +24,7 @@ class ProductRegistrationRiver(river: RiverHead,
         LOG.info("Using rapid dto version: $rapidDTOVersion")
         river
             .validate { it.demandValue("eventName", EventName.registeredProductV1)}
-            .validate { it.demandValue("payloadType", ProductRegistrationDTO::class.java.simpleName)}
+            .validate { it.demandValue("payloadType", ProductRegistrationRapidDTO::class.java.simpleName)}
             .validate { it.demandKey("payload")}
             .validate { it.demandKey("eventId")}
             .validate { it.demandKey("dtoVersion")}
@@ -37,7 +37,7 @@ class ProductRegistrationRiver(river: RiverHead,
         val dtoVersion = packet["dtoVersion"].asLong()
         val createdTime = packet["createdTime"].asLocalDateTime()
         if (dtoVersion > rapidDTOVersion) LOG.warn("dto version $dtoVersion is newer than $rapidDTOVersion")
-        val dto = objectMapper.treeToValue(packet["payload"], ProductRegistrationDTO::class.java)
+        val dto = objectMapper.treeToValue(packet["payload"], ProductRegistrationRapidDTO::class.java)
         LOG.info("got product registration id: ${dto.id} eventId $eventId eventTime: $createdTime adminStatus: ${dto.adminStatus}")
         runBlocking {
             if (dto.adminStatus == AdminStatus.APPROVED && dto.draftStatus == DraftStatus.DONE)

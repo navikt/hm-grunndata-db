@@ -4,10 +4,7 @@ import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import no.nav.hm.grunndata.db.GDB
-import no.nav.hm.grunndata.rapid.dto.AttributeNames
-import no.nav.hm.grunndata.rapid.dto.ProductDTO
-import no.nav.hm.grunndata.rapid.dto.SupplierDTO
-import no.nav.hm.grunndata.rapid.dto.SupplierInfo
+import no.nav.hm.grunndata.rapid.dto.*
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 import java.util.*
@@ -22,25 +19,27 @@ class AttributeTagServiceTest(private val attributeTagService: AttributeTagServi
         val product = ProductDTO (id = UUID.randomUUID(),
             supplier = supplier , hmsArtNr = "255734", identifier = "123", title = "Dette er et produkt",
             articleName = "Product 1", supplierRef = "123", isoCategory = "123456",
-            attributes = mapOf(
-                AttributeNames.manufacturer to  "Samsung",
-                AttributeNames.compatible to listOf("produkt 2", "product 3")),
+            attributes = Attributes (
+                manufacturer =  "Samsung",
+                compatible = listOf(CompatibleAttribute(hmsArtNr = "123"))
+            ),
             createdBy = GDB,
             updatedBy = GDB
         )
         val product2 = ProductDTO (id = UUID.randomUUID(),
             supplier = supplier, hmsArtNr = "12345A", identifier = "123", title = "Dette er et produkt",
             articleName = "Produkt1", supplierRef = "1234", isoCategory = "123456",
-            attributes = mapOf(
-                AttributeNames.manufacturer to  "Samsung",
-                AttributeNames.compatible to listOf("produkt 2", "product 3"),
-                AttributeNames.bestillingsordning to true),
+            attributes = Attributes (
+                manufacturer = "Samsung",
+                compatible =  listOf(CompatibleAttribute(hmsArtNr = "124")),
+                bestillingsordning= true
+            ),
             createdBy = GDB,
             updatedBy = GDB
         )
         val withBestillingsordning = attributeTagService.addBestillingsordningAttribute(product)
         val withNoBestillingsordning = attributeTagService.addBestillingsordningAttribute(product2)
-        withBestillingsordning.attributes[AttributeNames.bestillingsordning] shouldBe true
-        withNoBestillingsordning.attributes[AttributeNames.bestillingsordning].shouldBeNull()
+        withBestillingsordning.attributes.bestillingsordning shouldBe true
+        withNoBestillingsordning.attributes.bestillingsordning shouldBe false
     }
 }

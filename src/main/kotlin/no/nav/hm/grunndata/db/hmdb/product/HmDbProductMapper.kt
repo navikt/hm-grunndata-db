@@ -10,6 +10,7 @@ import no.nav.hm.grunndata.db.supplier.SupplierRepository
 import no.nav.hm.grunndata.db.supplier.toDTO
 import no.nav.hm.grunndata.rapid.dto.*
 import org.slf4j.LoggerFactory
+import java.awt.SystemColor.text
 import java.net.URI
 import java.time.LocalDateTime
 import java.util.*
@@ -100,10 +101,10 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
             uri = "${blobFile}", source = MediaSourceType.HMDB)
     }
 
-    fun mapAttributes(produkt: HmDbProductDTO): Map<AttributeNames, Any> = mapOf(
-        AttributeNames.shortdescription to (produkt.adescshort ?: ""),
-        AttributeNames.text to produkt.pshortdesc,
-        AttributeNames.series to listOf(produkt.prodname)
+    private fun mapAttributes(produkt: HmDbProductDTO): Attributes = Attributes (
+        shortdescription  = produkt.adescshort ?: "",
+        text  = produkt.pshortdesc,
+        series  = produkt.prodname
     )
 }
 

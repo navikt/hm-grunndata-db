@@ -18,7 +18,7 @@ data class Product (
     val title: String,
     val articleName: String,
     @field:TypeDef(type = DataType.JSON)
-    val attributes: Map<AttributeNames, Any>,
+    val attributes: Attributes,
     val status: ProductStatus = ProductStatus.ACTIVE,
     @field:Column(name="hms_artnr")
     val hmsArtNr: String?=null,

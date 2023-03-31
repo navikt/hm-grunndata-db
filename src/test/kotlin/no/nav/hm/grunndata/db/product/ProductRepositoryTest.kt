@@ -6,10 +6,11 @@ import io.kotest.matchers.maps.shouldContain
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
-import no.nav.hm.grunndata.rapid.dto.AttributeNames.*
 import no.nav.hm.grunndata.db.supplier.Supplier
 import no.nav.hm.grunndata.rapid.dto.SupplierInfo
 import no.nav.hm.grunndata.db.supplier.SupplierRepository
+import no.nav.hm.grunndata.rapid.dto.Attributes
+import no.nav.hm.grunndata.rapid.dto.CompatibleAttribute
 import no.nav.hm.grunndata.rapid.dto.SupplierStatus
 import org.junit.jupiter.api.Test
 
@@ -26,8 +27,8 @@ class ProductRepositoryTest(private val productRepository: ProductRepository,
             val product = productRepository.save(Product(
                 supplierId = supplier.id, identifier = "123", title = "Dette er et produkt", articleName = "Produkt 1",
                 supplierRef = "123", isoCategory = "123456",
-                attributes = mapOf(
-                    manufacturer to  "Samsung",  compatible to listOf("produkt 2", "product 3"))
+                attributes = Attributes (
+                    manufacturer =  "Samsung",  compatible = listOf(CompatibleAttribute(hmsArtNr = "1")))
             ))
             val db = productRepository.findById(product.id)
             db.shouldNotBeNull()
