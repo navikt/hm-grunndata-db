@@ -20,7 +20,7 @@ open class ProductSyncScheduler(private val productSync: ProductSync,
         private var stopped = false
     }
 
-    @Scheduled(fixedDelay = "5m")
+    @Scheduled(fixedDelay = "3m")
     fun syncProducts() {
         if (leaderElection.isLeader()) {
             if (stopped) {
