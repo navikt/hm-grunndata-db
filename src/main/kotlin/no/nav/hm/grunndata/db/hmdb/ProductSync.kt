@@ -37,7 +37,7 @@ open class ProductSync(
             )
         )
         val from = syncBatchJob.syncfrom
-        val to = from.plusDays(14)
+        val to = from.plusDays(2)
         LOG.info("Calling product sync from ${from} to $to")
         hmDbClient.fetchProducts(from, to)?.let { hmdbProductsBatch ->
             LOG.info("Got total of ${hmdbProductsBatch.products.size} products")
