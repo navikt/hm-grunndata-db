@@ -72,7 +72,7 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
         blobs.associateBy { it.blobfile }
             .values
             .map { mapBlob(it)}
-            .filter{ it.type != MediaType.OTHER }
+            .filter{ it.type != MediaType.OTHER && it.type != MediaType.VIDEO}
             .sortedBy { "${it.type}-${it.uri}" }
             .mapIndexed { index, media -> media.copy(priority = index + 1) }
 
@@ -83,22 +83,23 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
         val mediaType = when (blobType) {
             "billede" -> MediaType.IMAGE
             "brosjyre", "produktbl", "bruksanvisning", "brugsanvisning", "quickguide", "målskjema", "batterioversikt" -> MediaType.PDF
+            "video" -> MediaType.VIDEO
             else -> {
-                if (blobFile.endsWith("pdf", true)) MediaType.PDF
-                else {
-                    LOG.error("Unrecognized media type with file: ${blobDTO.blobfile} and type: ${blobDTO.blobtype}")
-                    MediaType.OTHER
-                }
+                LOG.error("Unrecognized media type with file: ${blobDTO.blobfile} and type: ${blobDTO.blobtype}")
+                MediaType.OTHER
             }
         }
         val typePath = when (blobType) {
             "bruksanvisning", "brugsanvisning" -> "brugsvejl"
             "brosjyre", "produktbl" -> "produktblade"
+            "quickguide" -> "seriedok/8606"
+            "målskjema" -> "seriedok/1468"
+            "batterioversikt" -> "seriedok/8694"
             else -> "orig"
         }
 
         return MediaInfo(type = mediaType, text = blobType, sourceUri = "$hmdbMediaUrl/$typePath/$blobFile",
-            uri = "${blobFile}", source = MediaSourceType.HMDB)
+            uri = "$typePath/${blobFile}", source = MediaSourceType.HMDB)
     }
 
     private fun mapAttributes(produkt: HmDbProductDTO): Attributes = Attributes (
