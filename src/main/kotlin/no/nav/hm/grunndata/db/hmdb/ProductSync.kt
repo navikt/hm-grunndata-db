@@ -69,6 +69,19 @@ open class ProductSync(
 
     }
 
+    suspend fun syncProductsById(productId: Long) {
+        hmDbClient.fetchProductsById(productId)?.let { batch ->
+            extractProductBatch(batch).forEach {
+                try {
+                    LOG.info("saving to db: ${it.identifier} with hmsnr ${it.hmsArtNr}")
+                    productService.saveAndPushTokafka(it, EventName.hmdbproductsyncV1)
+                } catch (e: DataAccessException) {
+                    LOG.error("got exception", e)
+                }
+            }
+        } ?: LOG.error("Could not find $productId")
+    }
+
     private suspend fun extractProductBatch(batch: HmDbProductBatchDTO): List<ProductDTO> {
         return batch.products.map { prod ->
             LOG.info("Mapping product prodid: ${prod.prodid} artid: ${prod.artid} artno: ${prod.artno} from supplier ${prod.supplier}")

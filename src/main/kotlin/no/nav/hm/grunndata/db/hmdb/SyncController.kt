@@ -31,4 +31,10 @@ class SyncController(private val productSync: ProductSync,
         productSync.syncProducts()
     }
 
+    @Get("/products/{productId}")
+    suspend fun syncProductsById(productId:Long) {
+        LOG.info("call sync products from HDMB for $productId")
+        productSync.syncProductsById(productId)
+    }
+
 }
