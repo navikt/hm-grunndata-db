@@ -89,13 +89,16 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
                 MediaType.OTHER
             }
         }
-        val typePath = when (blobType) {
+
+        val typePath = if (mediaType == MediaType.IMAGE) "orig" else {
+            when (blobType) {
             "bruksanvisning", "brugsanvisning" -> "brugsvejl"
             "brosjyre", "produktbl" -> "produktblade"
             "quickguide" -> "seriedok/8606"
             "målskjema" -> "seriedok/1468"
             "batterioversikt" -> "seriedok/8694"
-            else -> "orig"
+            else -> "unknown"
+            }
         }
 
         return MediaInfo(type = mediaType, text = blobType, sourceUri = "$hmdbMediaUrl/$typePath/$blobFile",
