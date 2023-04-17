@@ -24,4 +24,6 @@ class IsoCategoryService(private val isoCategoryRepository: IsoCategoryRepositor
 
     fun lookUpCode(isoCode: String): IsoCategoryDTO? = isoCategories[isoCode]
 
+    fun retrieveAllCategories(): List<IsoCategoryDTO> = isoCategories.values.toList()
+
 }
