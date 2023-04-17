@@ -2,6 +2,11 @@ package no.nav.hm.grunndata.db.iso
 
 import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.MappedEntity
+import io.micronaut.data.annotation.TypeDef
+import io.micronaut.data.model.DataType
+import java.time.LocalDateTime
+
+
 
 @MappedEntity("isocategory_v1")
 data class IsoCategory(
@@ -11,12 +16,46 @@ data class IsoCategory(
     val isoText: String,
     val isoTextShort: String,
     val isoTextLong: String,
-    val isoTitleEn: String,
-    val isoTextShortEn: String,
-    val isoTextLongEn: String,
+    @field:TypeDef(type = DataType.JSON)
+    val isoTranslations: IsoTranslations = IsoTranslations(),
     val isoLevel: Int,
-    val isActive: Boolean,
-    val showTech: Boolean,
-    val allowMulti: Boolean,
+    val isActive: Boolean = true,
+    val showTech: Boolean = true,
+    val allowMulti: Boolean = true,
+    val created: LocalDateTime = LocalDateTime.now(),
+    val updated: LocalDateTime = LocalDateTime.now()
+)
 
+data class IsoTranslations(
+    val titleEn: String?=null,
+    val textLongEn: String?=null,
+    val textShortEn: String?=null
+)
+
+data class IsoCategoryDTO(
+    val isoCode: String,
+    val isoTitle: String,
+    val isoText: String,
+    val isoTextShort: String,
+    val isoTextLong: String,
+    val isoTranslations: IsoTranslations = IsoTranslations(),
+    val isoLevel: Int,
+    val isActive: Boolean = true,
+    val showTech: Boolean = true,
+    val allowMulti: Boolean = true,
+    val created: LocalDateTime = LocalDateTime.now(),
+    val updated: LocalDateTime = LocalDateTime.now()
+)
+
+fun IsoCategory.toDTO(): IsoCategoryDTO = IsoCategoryDTO(
+    isoCode = isoCode,
+    isoTitle = isoTitle,
+    isoText = isoText,
+    isoTextShort = isoTextShort,
+    isoTextLong = isoTextLong,
+    isoTranslations = isoTranslations,
+    isoLevel = isoLevel,
+    isActive = isActive,
+    showTech = showTech,
+    allowMulti = allowMulti
 )
