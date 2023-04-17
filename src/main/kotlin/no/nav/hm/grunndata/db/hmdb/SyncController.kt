@@ -48,4 +48,21 @@ class SyncController(private val productSync: ProductSync,
             hmDbBatchRepository.update(it.copy(syncfrom=syncFrom))
         }
     }
+
+    @Put("/suppliers/syncFrom/{syncFrom}")
+    suspend fun setSuppliersSyncFrom(syncFrom: LocalDateTime) {
+        LOG.info("Reset syncfrom for suppliers to $syncFrom")
+        hmDbBatchRepository.findByName(SYNC_SUPPLIERS)?.let {
+            hmDbBatchRepository.update(it.copy(syncfrom=syncFrom))
+        }
+    }
+
+    @Put("/agreements/syncFrom/{syncFrom}")
+    suspend fun setAgreementsSyncFrom(syncFrom: LocalDateTime) {
+        LOG.info("Reset syncfrom for agreements to $syncFrom")
+        hmDbBatchRepository.findByName(SYNC_AGREEMENTS)?.let {
+            hmDbBatchRepository.update(it.copy(syncfrom=syncFrom))
+        }
+    }
+
 }
