@@ -11,7 +11,8 @@ import java.time.LocalDateTime
 class SyncController(private val productSync: ProductSync,
                      private val hmDbBatchRepository: HmDbBatchRepository,
                      private val agreementSync: AgreementSync,
-                     private val supplierSync: SupplierSync) {
+                     private val supplierSync: SupplierSync,
+                     private val isoSync: IsoSync) {
 
     companion object {
         private val LOG = LoggerFactory.getLogger(SyncController::class.java)
@@ -33,6 +34,13 @@ class SyncController(private val productSync: ProductSync,
     suspend fun syncProducts() {
         LOG.info("call sync products from HMDB")
         productSync.syncProducts()
+    }
+
+
+    @Get("/iso")
+    suspend fun syncIso() {
+        LOG.info("call sync iso from HMDB")
+        isoSync.syncIso()
     }
 
     @Get("/products/{productId}")
@@ -64,5 +72,6 @@ class SyncController(private val productSync: ProductSync,
             hmDbBatchRepository.update(it.copy(syncfrom=syncFrom))
         }
     }
+
 
 }

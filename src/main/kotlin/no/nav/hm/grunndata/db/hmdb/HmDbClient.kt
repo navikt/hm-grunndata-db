@@ -9,6 +9,7 @@ import io.micronaut.http.HttpHeaders.USER_AGENT
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.QueryValue
 import no.nav.hm.grunndata.db.hmdb.agreement.HmDbAgreementDTO
+import no.nav.hm.grunndata.db.hmdb.iso.IsoDTO
 import no.nav.hm.grunndata.db.hmdb.product.HmDbProductBatchDTO
 import java.time.LocalDateTime
 
@@ -31,4 +32,7 @@ interface HmDbClient {
 
     @Get("/api/v1/sync/products/{productId}")
     fun fetchProductsById(productId: Long): HmDbProductBatchDTO?
+
+    @Get("/api/v1/sync/iso")
+    fun fetchIso(): List<IsoDTO>
 }
