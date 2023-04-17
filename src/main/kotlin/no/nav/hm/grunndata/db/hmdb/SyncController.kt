@@ -2,10 +2,14 @@ package no.nav.hm.grunndata.db.hmdb
 
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
+import io.micronaut.http.annotation.Put
 import org.slf4j.LoggerFactory
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Controller("/internal/sync")
 class SyncController(private val productSync: ProductSync,
+                     private val hmDbBatchRepository: HmDbBatchRepository,
                      private val agreementSync: AgreementSync,
                      private val supplierSync: SupplierSync) {
 
@@ -37,4 +41,11 @@ class SyncController(private val productSync: ProductSync,
         productSync.syncProductsById(productId)
     }
 
+    @Put("/products/syncFrom/{syncFrom}")
+    suspend fun setProductsSyncFrom(syncFrom: LocalDateTime) {
+        LOG.info("Reset syncfrom for products to $syncFrom")
+        hmDbBatchRepository.findByName(SYNC_PRODUCTS)?.let {
+            hmDbBatchRepository.update(it.copy(syncfrom=syncFrom))
+        }
+    }
 }

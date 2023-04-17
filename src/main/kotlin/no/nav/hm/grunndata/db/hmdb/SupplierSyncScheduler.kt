@@ -16,7 +16,7 @@ class SupplierSyncScheduler(private val supplierSync: SupplierSync,
         private val LOG = LoggerFactory.getLogger(SupplierSyncScheduler::class.java)
     }
 
-    @Scheduled(cron = "0 15 0 * * *")
+    @Scheduled(cron = "0 15 * * * *")
     fun syncSuppliers() {
         if (leaderElection.isLeader()) {
             runBlocking {

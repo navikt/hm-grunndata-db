@@ -26,7 +26,6 @@ class SupplierSync(
     }
 
     suspend fun syncSuppliers() {
-
         val syncBatchJob = hmdbBatchRepository.findByName(SYNC_SUPPLIERS) ?: hmdbBatchRepository.save(
             HmDbBatch(
                 name = SYNC_SUPPLIERS,
