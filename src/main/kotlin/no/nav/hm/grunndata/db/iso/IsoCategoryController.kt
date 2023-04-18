@@ -10,7 +10,19 @@ class IsoCategoryController(private val isoCategoryService: IsoCategoryService) 
 
 
     @Get("/")
-    fun retrieveAllCategories(): List<IsoCategoryDTO> = isoCategoryService.retrieveAllCategories()
+    fun retrieveAllCategories(): List<IsoCategoryDTO> = isoCategoryService.retrieveAllCategories().map {
+        IsoCategoryDTO(
+            isoCode = it.isoCode,
+            isoTitle = it.isoTitle,
+            isoText = it.isoText,
+            isoTextShort = it.isoTextShort,
+            isoTextLong = it.isoTextLong,
+            isoLevel = it.isoLevel,
+            isActive = it.isActive,
+            showTech = it.showTech,
+            allowMulti = it.allowMulti
+        )
+    }
 
     @Get("/{isoCode}")
     fun lookupIsoCode(isoCode: String): IsoCategoryDTO? = isoCategoryService.lookUpCode(isoCode)
