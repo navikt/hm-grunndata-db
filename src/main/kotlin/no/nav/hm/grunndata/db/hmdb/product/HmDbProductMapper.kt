@@ -5,6 +5,7 @@ import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.db.agreement.AgreementRepository
 import no.nav.hm.grunndata.db.hmdb.HmDbIdentifier
 import no.nav.hm.grunndata.db.hmdbMediaUrl
+import no.nav.hm.grunndata.db.iso.IsoCategoryService
 import no.nav.hm.grunndata.db.product.*
 import no.nav.hm.grunndata.db.supplier.SupplierRepository
 import no.nav.hm.grunndata.db.supplier.toDTO
@@ -17,7 +18,8 @@ import java.util.*
 
 @Singleton
 class HmDBProductMapper(private val supplierRepository: SupplierRepository,
-                        private val agreementRepository: AgreementRepository) {
+                        private val agreementRepository: AgreementRepository,
+                        private val isoCategoryService: IsoCategoryService) {
 
     companion object {
         private val LOG = LoggerFactory.getLogger(HmDBProductMapper::class.java)
@@ -33,7 +35,7 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
             hmsArtNr = prod.stockid,
             identifier = "${prod.artid}".HmDbIdentifier(),
             supplierRef = if (!prod.artno.isNullOrBlank()) prod.artno else prod.artid.toString().HmDbIdentifier(),
-            isoCategory = prod.isocode,
+            isoCategory = isoCategoryService.lookUpCode(prod.isocode)?.isoCode ?: prod.isocode,
             seriesId = "${prod.prodid}".HmDbIdentifier(),
             techData = mapTechData(batch.techdata[prod.artid] ?: emptyList()),
             media =  mapBlobs(batch.blobs[prod.prodid] ?: emptyList()),

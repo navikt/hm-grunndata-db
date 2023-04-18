@@ -22,7 +22,11 @@ class IsoCategoryService(private val isoCategoryRepository: IsoCategoryRepositor
         }
     }
 
-    fun lookUpCode(isoCode: String): IsoCategoryDTO? = isoCategories[isoCode]
+    fun lookUpCode(isoCode: String): IsoCategoryDTO? {
+        val cat = isoCategories[isoCode]
+        if (cat==null) LOG.error("IsoCode: $isoCode not found!")
+        return cat
+    }
 
     fun retrieveAllCategories(): List<IsoCategoryDTO> = isoCategories.values.toList()
 
