@@ -5,7 +5,7 @@ import jakarta.inject.Singleton
 import no.nav.hm.grunndata.db.hmdb.iso.IsoDTO
 import no.nav.hm.grunndata.db.iso.IsoCategory
 import no.nav.hm.grunndata.db.iso.IsoCategoryRepository
-import no.nav.hm.grunndata.db.iso.IsoTranslations
+import no.nav.hm.grunndata.rapid.dto.IsoTranslations
 import org.slf4j.LoggerFactory
 
 @Singleton

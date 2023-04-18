@@ -4,6 +4,8 @@ import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.MappedEntity
 import io.micronaut.data.annotation.TypeDef
 import io.micronaut.data.model.DataType
+import no.nav.hm.grunndata.rapid.dto.IsoCategoryDTO
+import no.nav.hm.grunndata.rapid.dto.IsoTranslations
 import java.time.LocalDateTime
 
 
@@ -26,26 +28,7 @@ data class IsoCategory(
     val updated: LocalDateTime = LocalDateTime.now()
 )
 
-data class IsoTranslations(
-    val titleEn: String?=null,
-    val textLongEn: String?=null,
-    val textShortEn: String?=null
-)
 
-data class IsoCategoryDTO(
-    val isoCode: String,
-    val isoTitle: String,
-    val isoText: String,
-    val isoTextShort: String,
-    val isoTextLong: String,
-    val isoTranslations: IsoTranslations = IsoTranslations(),
-    val isoLevel: Int,
-    val isActive: Boolean = true,
-    val showTech: Boolean = true,
-    val allowMulti: Boolean = true,
-    val created: LocalDateTime = LocalDateTime.now(),
-    val updated: LocalDateTime = LocalDateTime.now()
-)
 
 fun IsoCategory.toDTO(): IsoCategoryDTO = IsoCategoryDTO(
     isoCode = isoCode,

@@ -3,6 +3,7 @@ package no.nav.hm.grunndata.db.iso
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
+import no.nav.hm.grunndata.rapid.dto.IsoCategoryDTO
 import org.slf4j.LoggerFactory
 
 class IsoCategoryService(private val isoCategoryRepository: IsoCategoryRepository) {

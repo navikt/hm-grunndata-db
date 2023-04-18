@@ -4,6 +4,7 @@ import io.kotest.common.runBlocking
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
+import no.nav.hm.grunndata.rapid.dto.IsoTranslations
 import org.junit.jupiter.api.Test
 
 @MicronautTest
