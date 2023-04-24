@@ -82,13 +82,13 @@ class AgreementSync(
     private fun mapMedia(newsDoc: NewsDocDTO, newsDocAdr: List<NewsDocAdr>): List<MediaInfo> {
         val mediaList = if (!newsDoc.hmidocfile.isNullOrBlank())
             listOf(
-                MediaInfo(uri = "${newsDoc.hmidocfile}",
+                MediaInfo(uri = "hmidocfiles/${newsDoc.hmidocfile}",
                 sourceUri = "$hmdbMediaUrl/hmidocfiles/${newsDoc.hmidocfile}", type = getFileType(newsDoc.hmidocfile),
                 text = newsDoc.hmidoctitle)
             )
         else emptyList()
         return mediaList.plus(newsDocAdr.map {
-            MediaInfo(uri = "${it.docadrfile}", sourceUri = "$hmdbMediaUrl/doclevfiles/${it.docadrfile}",
+            MediaInfo(uri = "doclevfiles/${it.docadrfile}", sourceUri = "$hmdbMediaUrl/doclevfiles/${it.docadrfile}",
                 type = getFileType(it.docadrfile), text = newsDoc.hmidoctitle)
         }.filter { it.type != MediaType.OTHER })
     }
