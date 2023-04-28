@@ -13,13 +13,9 @@ import java.util.*
 
 
 @JdbcRepository(dialect = Dialect.POSTGRES)
-@CacheConfig("suppliers")
 interface SupplierRepository: CoroutineCrudRepository<Supplier, UUID>, CoroutineJpaSpecificationExecutor<Supplier> {
 
-    @Cacheable
     suspend fun findByIdentifier(identifier: String): Supplier?
 
-    @Cacheable
-    override suspend fun findById(id: UUID): Supplier?
 
 }

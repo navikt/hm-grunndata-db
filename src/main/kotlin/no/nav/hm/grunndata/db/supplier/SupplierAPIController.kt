@@ -13,11 +13,11 @@ import java.time.LocalDateTime
 import java.util.*
 
 @Controller("/api/v1/suppliers")
-class SupplierAPIController(private val supplierRepository: SupplierRepository) {
+class SupplierAPIController(private val supplierService: SupplierService) {
 
     @Get("/{?params*}")
     suspend fun findSuppliers(@QueryValue params: Map<String, String>?, pageable: Pageable
-    ): Page<SupplierDTO> = supplierRepository.findAll(buildCriteriaSpec(params), pageable).map { it.toDTO() }
+    ): Page<SupplierDTO> = supplierService.findAll(buildCriteriaSpec(params), pageable).map { it.toDTO() }
 
     private fun buildCriteriaSpec(params: Map<String, String>?): PredicateSpecification<Supplier>?
             = params?.let {
