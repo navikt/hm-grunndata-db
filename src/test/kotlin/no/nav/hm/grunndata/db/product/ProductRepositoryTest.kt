@@ -2,13 +2,13 @@ package no.nav.hm.grunndata.db.product
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.kotest.common.runBlocking
-import io.kotest.matchers.maps.shouldContain
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import no.nav.hm.grunndata.db.supplier.Supplier
 import no.nav.hm.grunndata.rapid.dto.SupplierInfo
 import no.nav.hm.grunndata.db.supplier.SupplierRepository
+import no.nav.hm.grunndata.db.supplier.SupplierService
 import no.nav.hm.grunndata.rapid.dto.Attributes
 import no.nav.hm.grunndata.rapid.dto.CompatibleAttribute
 import no.nav.hm.grunndata.rapid.dto.SupplierStatus
@@ -16,13 +16,13 @@ import org.junit.jupiter.api.Test
 
 @MicronautTest
 class ProductRepositoryTest(private val productRepository: ProductRepository,
-                            private val supplierRepository: SupplierRepository,
+                            private val supplierService: SupplierService,
                             private val objectMapper: ObjectMapper) {
 
     @Test
     fun readSavedDb() {
         runBlocking {
-            val supplier = supplierRepository.save(Supplier(name = "supplier 1", identifier = "unik-identifier",
+            val supplier = supplierService.save(Supplier(name = "supplier 1", identifier = "unik-identifier",
                 status = SupplierStatus.ACTIVE, info = SupplierInfo(email = "test@test")))
             val product = productRepository.save(Product(
                 supplierId = supplier.id, identifier = "123", title = "Dette er et produkt", articleName = "Produkt 1",

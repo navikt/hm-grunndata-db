@@ -6,18 +6,16 @@ import no.nav.hm.grunndata.db.agreement.AgreementRepository
 import no.nav.hm.grunndata.db.hmdb.HmDbIdentifier
 import no.nav.hm.grunndata.db.hmdbMediaUrl
 import no.nav.hm.grunndata.db.iso.IsoCategoryService
-import no.nav.hm.grunndata.db.product.*
 import no.nav.hm.grunndata.db.supplier.SupplierRepository
+import no.nav.hm.grunndata.db.supplier.SupplierService
 import no.nav.hm.grunndata.db.supplier.toDTO
 import no.nav.hm.grunndata.rapid.dto.*
 import org.slf4j.LoggerFactory
-import java.awt.SystemColor.text
-import java.net.URI
 import java.time.LocalDateTime
 import java.util.*
 
 @Singleton
-class HmDBProductMapper(private val supplierRepository: SupplierRepository,
+class HmDBProductMapper(private val supplierService: SupplierService,
                         private val agreementRepository: AgreementRepository,
                         private val isoCategoryService: IsoCategoryService) {
 
@@ -27,7 +25,7 @@ class HmDBProductMapper(private val supplierRepository: SupplierRepository,
     suspend fun mapProduct(prod: HmDbProductDTO, batch: HmDbProductBatchDTO): ProductDTO =
         ProductDTO(
             id = UUID.randomUUID(),
-            supplier =  supplierRepository.findByIdentifier(prod.supplier!!.HmDbIdentifier())!!.toDTO(),
+            supplier =  supplierService.findByIdentifier(prod.supplier!!.HmDbIdentifier())!!.toDTO(),
             title = prod.prodname,
             articleName = prod.artname,
             attributes = mapAttributes(prod),

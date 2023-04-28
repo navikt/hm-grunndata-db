@@ -10,6 +10,7 @@ import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.db.GdbRapidPushService
 import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.db.supplier.SupplierRepository
+import no.nav.hm.grunndata.db.supplier.SupplierService
 import no.nav.hm.grunndata.db.supplier.toDTO
 import no.nav.hm.grunndata.rapid.dto.ProductDTO
 import org.slf4j.LoggerFactory
@@ -22,7 +23,7 @@ import javax.transaction.Transactional
 open class ProductService(
     private val productRepository: ProductRepository,
     private val attributeTagService: AttributeTagService,
-    private val supplierRepository: SupplierRepository,
+    private val supplierService: SupplierService,
     private val gdbRapidPushService: GdbRapidPushService
 ) {
 
@@ -48,7 +49,7 @@ open class ProductService(
     open suspend fun findById(id: UUID): ProductDTO? = productRepository.findById(id)?.let { it.toDTO() }
 
     private fun Product.toDTO():ProductDTO = ProductDTO (
-        id = id, supplier = runBlocking{supplierRepository.findById(supplierId)!!.toDTO()}, title = title, articleName = articleName,  attributes=attributes,
+        id = id, supplier = runBlocking{supplierService.findById(supplierId)!!.toDTO()}, title = title, articleName = articleName,  attributes=attributes,
         status = status, hmsArtNr = hmsArtNr, identifier = identifier, supplierRef=supplierRef, isoCategory=isoCategory,
         accessory=accessory, sparePart=sparePart, seriesId=seriesId, techData=techData, media= media, created=created,
         updated=updated, published=published, expired=expired, agreementInfo = agreementInfo, hasAgreement = (agreementInfo!=null),

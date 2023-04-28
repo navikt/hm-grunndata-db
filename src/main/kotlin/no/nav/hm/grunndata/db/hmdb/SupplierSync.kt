@@ -6,9 +6,9 @@ import jakarta.inject.Singleton
 import no.nav.helse.rapids_rivers.KafkaRapid
 import no.nav.hm.grunndata.db.GdbRapidPushService
 import no.nav.hm.grunndata.db.supplier.SupplierRepository
+import no.nav.hm.grunndata.db.supplier.SupplierService
 import no.nav.hm.grunndata.db.supplier.toDTO
 import no.nav.hm.grunndata.rapid.event.EventName
-import no.nav.hm.rapids_rivers.micronaut.RapidPushService
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
@@ -16,7 +16,7 @@ import java.time.temporal.ChronoUnit
 @Singleton
 @Requires(bean = KafkaRapid::class)
 class SupplierSync(
-    private val supplierRepository: SupplierRepository,
+    private val supplierService: SupplierService,
     private val hmdbBatchRepository: HmDbBatchRepository,
     private val hmDbClient: HmDbClient,
     private val gdbRapidPushService: GdbRapidPushService) {
@@ -37,9 +37,9 @@ class SupplierSync(
             val entities = suppliers.map { it.toSupplier() }.sortedBy { it.updated }
 
             entities.forEach {
-                val saved = supplierRepository.findByIdentifier(it.identifier)?.let { inDb ->
+                val saved = supplierService.findByIdentifier(it.identifier)?.let { inDb ->
                     if (it.updated.isAfter(inDb.updated)) { // hack to fix duplicate errors
-                            supplierRepository.update(
+                            supplierService.update(
                                 it.copy(
                                     id = inDb.id,
                                     created = inDb.created,
@@ -51,10 +51,10 @@ class SupplierSync(
 
                 } ?: run {
                     try {
-                        supplierRepository.save(it)
+                        supplierService.save(it)
                     } catch (e: DataAccessException) {
                         LOG.error("Got exception ${e.message}")
-                        supplierRepository.save(it.copy(name = it.name + " DUPLICATE"))
+                        supplierService.save(it.copy(name = it.name + " DUPLICATE"))
                     }
                 }
                 LOG.info("saved supplier ${saved.id} with identifier ${saved.identifier} and lastupdated ${saved.updated}")
