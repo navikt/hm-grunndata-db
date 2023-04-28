@@ -7,18 +7,23 @@ import io.micronaut.data.model.Pageable
 import io.micronaut.data.repository.jpa.criteria.PredicateSpecification
 import jakarta.inject.Singleton
 import kotlinx.coroutines.runBlocking
+import org.slf4j.LoggerFactory
 import java.util.*
 
 @Singleton
 @CacheConfig("suppliers")
 open class SupplierService(private val supplierRepository: SupplierRepository) {
 
-    @Cacheable
+    companion object {
+        private val LOG = LoggerFactory.getLogger(SupplierService::class.java)
+
+    }
+    @Cacheable(parameters = ["identifier"])
     open fun findByIdentifier(identifier: String) = runBlocking {
         supplierRepository.findByIdentifier(identifier)
     }
 
-    @Cacheable
+    @Cacheable(parameters = ["id"])
     open fun findById(id: UUID) = runBlocking {
         supplierRepository.findById(id)
     }

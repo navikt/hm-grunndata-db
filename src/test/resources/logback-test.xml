@@ -10,6 +10,8 @@
 
     <logger name="no.nav" level="INFO" />
     <logger name="no.nav.hm" level="DEBUG" />
+    <logger name="io.micronaut.cache" level="DEBUG" />
+    <logger name="io.micronaut.caffeine" level="DEVBUG" />
 
     <root level="INFO">
         <appender-ref ref="stdout"/>

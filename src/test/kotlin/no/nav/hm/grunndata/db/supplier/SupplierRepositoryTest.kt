@@ -27,12 +27,14 @@ class SupplierServiceTest(private val supplierService: SupplierService) {
             val saved2 = supplierService.save(supplier2)
             val db = supplierService.findById(saved.id)
             val db2 = supplierService.findById(saved2.id)
+            val db3 = supplierService.findById(saved2.id)
             db.shouldNotBeNull()
             db.name shouldBe "legacy company"
             db.identifier shouldBe "HMDB-1000"
             db.info.email shouldBe "epost@epost.test"
             db2.shouldNotBeNull()
             db2.identifier shouldBe "HMDB-1001"
+            db3!!.identifier shouldBe "HMDB-1001"
         }
 
     }
