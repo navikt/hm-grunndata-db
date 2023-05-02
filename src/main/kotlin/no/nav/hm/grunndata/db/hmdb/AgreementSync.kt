@@ -1,12 +1,12 @@
 package no.nav.hm.grunndata.db.hmdb
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.micronaut.context.annotation.Requires
 import jakarta.inject.Singleton
 import no.nav.helse.rapids_rivers.KafkaRapid
 import no.nav.hm.grunndata.db.GdbRapidPushService
 import no.nav.hm.grunndata.db.agreement.Agreement
 import no.nav.hm.grunndata.db.agreement.AgreementRepository
+import no.nav.hm.grunndata.db.agreement.AgreementService
 import no.nav.hm.grunndata.db.agreement.toDTO
 import no.nav.hm.grunndata.db.hmdb.agreement.*
 import no.nav.hm.grunndata.db.hmdbMediaUrl
@@ -19,11 +19,10 @@ import java.time.temporal.ChronoUnit
 @Singleton
 @Requires(bean = KafkaRapid::class)
 class AgreementSync(
-    private val agreementRepository: AgreementRepository,
+    private val agreementService: AgreementService,
     private val hmDbClient: HmDbClient,
     private val hmdbBatchRepository: HmDbBatchRepository,
-    private val gdbRapidPushService: GdbRapidPushService,
-    private val objectMapper: ObjectMapper
+    private val gdbRapidPushService: GdbRapidPushService
 ) {
 
     companion object {
@@ -41,9 +40,9 @@ class AgreementSync(
             LOG.info("Calling agreement sync, got total of ${hmdbagreements.size} agreements")
             val agreements = hmdbagreements.map { it.toAgreement() }
             agreements.forEach { agreement ->
-                val dto = agreementRepository.findByIdentifier(agreement.identifier)?.let {
-                    agreementRepository.update(agreement.copy(id = it.id, created = it.created)).toDTO()
-                } ?: agreementRepository.save(agreement).toDTO()
+                val dto = agreementService.findByIdentifier(agreement.identifier)?.let {
+                    agreementService.update(agreement.copy(id = it.id, created = it.created)).toDTO()
+                } ?: agreementService.save(agreement).toDTO()
                 gdbRapidPushService.pushDTOToKafka(dto, EventName.hmdbagreementsyncV1)
             }
             hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = agreements.last().updated))

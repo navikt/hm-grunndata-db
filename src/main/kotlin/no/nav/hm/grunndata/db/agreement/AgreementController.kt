@@ -14,18 +14,17 @@ import java.time.LocalDateTime
 import java.util.*
 
 @Controller("/api/v1/agreements")
-class AgreementDocumentController(private val agreementRepository: AgreementRepository) {
+class AgreementDocumentController(private val agreementService: AgreementService) {
 
     @Get("/{id}")
-    fun getAgreementDocument(id:UUID): AgreementDTO? = runBlocking {
-        agreementRepository.findById(id)?.let {
+    suspend fun getAgreementDocument(id:UUID): AgreementDTO? = agreementService.findById(id)?.let {
                 it.toDTO()
         }
-    }
+
 
     @Get("/{?params*}")
     suspend fun findAgreements(@QueryValue params: Map<String, String>?, pageable: Pageable
-    ): Page<AgreementDTO> = agreementRepository.findAll(buildCriteriaSpec(params), pageable).map { it.toDTO() }
+    ): Page<AgreementDTO> = agreementService.findAll(buildCriteriaSpec(params), pageable).map { it.toDTO() }
 
 
 

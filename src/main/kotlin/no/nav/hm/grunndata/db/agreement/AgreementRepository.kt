@@ -11,10 +11,7 @@ import io.micronaut.data.repository.kotlin.CoroutineCrudRepository
 import java.util.*
 
 @JdbcRepository(dialect = Dialect.POSTGRES)
-@CacheConfig("agreements")
 interface AgreementRepository: CoroutineCrudRepository<Agreement, UUID>, CoroutineJpaSpecificationExecutor<Agreement> {
-    @Cacheable
     suspend fun findByIdentifier(identifier: String): Agreement?
-
 
 }

@@ -3,10 +3,10 @@ package no.nav.hm.grunndata.db.hmdb.product
 import jakarta.inject.Singleton
 import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.db.agreement.AgreementRepository
+import no.nav.hm.grunndata.db.agreement.AgreementService
 import no.nav.hm.grunndata.db.hmdb.HmDbIdentifier
 import no.nav.hm.grunndata.db.hmdbMediaUrl
 import no.nav.hm.grunndata.db.iso.IsoCategoryService
-import no.nav.hm.grunndata.db.supplier.SupplierRepository
 import no.nav.hm.grunndata.db.supplier.SupplierService
 import no.nav.hm.grunndata.db.supplier.toDTO
 import no.nav.hm.grunndata.rapid.dto.*
@@ -16,7 +16,7 @@ import java.util.*
 
 @Singleton
 class HmDBProductMapper(private val supplierService: SupplierService,
-                        private val agreementRepository: AgreementRepository,
+                        private val agreementService: AgreementService,
                         private val isoCategoryService: IsoCategoryService) {
 
     companion object {
@@ -45,8 +45,8 @@ class HmDBProductMapper(private val supplierService: SupplierService,
             updatedBy = HMDB
         )
 
-    private suspend fun mapAgreementInfo(prod: HmDbProductDTO): AgreementInfo {
-        val agreement = agreementRepository.findByIdentifier("${prod.newsid}".HmDbIdentifier())
+    private fun mapAgreementInfo(prod: HmDbProductDTO): AgreementInfo {
+        val agreement = agreementService.findByIdentifier("${prod.newsid}".HmDbIdentifier())
         val post = agreement!!.posts.find { it.identifier == "${prod.apostid}".HmDbIdentifier() }
             ?: throw RuntimeException("Wrong agreement state!, should never happen")
         return AgreementInfo(
