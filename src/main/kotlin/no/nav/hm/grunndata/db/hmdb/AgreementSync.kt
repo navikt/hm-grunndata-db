@@ -30,6 +30,7 @@ class AgreementSync(
     }
 
     suspend fun syncAgreements() {
+        // syncFrom is not supported in old HMDB
         val syncBatchJob = hmdbBatchRepository.findByName(SYNC_AGREEMENTS) ?: hmdbBatchRepository.save(
             HmDbBatch(
                 name = SYNC_AGREEMENTS,

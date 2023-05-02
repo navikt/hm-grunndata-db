@@ -45,28 +45,28 @@ open class ProductSync(
                 if (lastChanged == hmdbProductsBatch.products[0].achange) {
                     LOG.info("skipped run, cause we have seen this")
                     return
-                } else lastChanged = hmdbProductsBatch.products[0].achange
+                }
+                else lastChanged = hmdbProductsBatch.products[0].achange
             }
             val products = extractProductBatch(hmdbProductsBatch)
-            products.forEach {
-                try {
-                    LOG.info("saving to db: ${it.identifier} with hmsnr ${it.hmsArtNr}")
-                    productService.saveAndPushTokafka(it, EventName.hmdbproductsyncV1)
-                } catch (e: DataAccessException) {
-                    LOG.error("got exception", e)
+            if (products.isNotEmpty()) {
+                products.forEach {
+                    try {
+                        LOG.info("saving to db: ${it.identifier} with hmsnr ${it.hmsArtNr}")
+                        productService.saveAndPushTokafka(it, EventName.hmdbproductsyncV1)
+                    } catch (e: DataAccessException) {
+                        LOG.error("note we are skipping the product that has DataAccessException!", e)
+                    }
                 }
+                val last = products.last()
+                LOG.info("finished batch and update last sync time ${last.updated}")
+                hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = last.updated))
             }
-            val last = products.last()
-            LOG.info("finished batch and update last sync time ${last.updated}")
-            hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = last.updated))
-
-        } ?: run {
-            if (to.isBefore(LocalDateTime.now().minusHours(24))) {
+            else {
                 LOG.info("Empty list, skip to next batch $to")
                 hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = to))
             }
         }
-
     }
 
     suspend fun syncProductsById(productId: Long) {
