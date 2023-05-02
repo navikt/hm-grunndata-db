@@ -18,7 +18,7 @@ micronaut:
         prefer-native-transport: true
   server:
     max-request-size: 100833718
-    port: ${SERVER_PORT:8080}
+    port: ${SERVER_PORT:8082}
   caches:
     suppliers:
       charset: 'UTF-8'
@@ -78,7 +78,7 @@ flyway:
       locations: classpath:db
 
 hmdb:
-  url: ${HMDB_URL:`http://localhost:8081`}
+  url: ${HMDB_URL:`http://localhost:8080`}
 
 # Rapids and rivers config
 rapidsandrivers:

@@ -5,5 +5,5 @@
   "rapidsandrivers_enabled": true,
   "min_replicas": 1,
   "max_replicas": 1,
-  "schedulers_enabled": false
+  "schedulers_enabled": true
 }

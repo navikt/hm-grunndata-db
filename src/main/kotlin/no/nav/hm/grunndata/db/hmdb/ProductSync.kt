@@ -82,7 +82,7 @@ open class ProductSync(
         } ?: LOG.error("Could not find $productId")
     }
 
-    private suspend fun extractProductBatch(batch: HmDbProductBatchDTO): List<ProductDTO> {
+    private fun extractProductBatch(batch: HmDbProductBatchDTO): List<ProductDTO> {
         return batch.products.map { prod ->
             LOG.info("Mapping product prodid: ${prod.prodid} artid: ${prod.artid} artno: ${prod.artno} from supplier ${prod.supplier}")
             hmDBProductMapper.mapProduct(prod, batch)

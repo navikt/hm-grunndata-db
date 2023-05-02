@@ -8,7 +8,7 @@ import no.nav.hm.grunndata.rapid.dto.IsoCategoryDTO
 import org.slf4j.LoggerFactory
 
 @Singleton
-class IsoCategoryService(private val isoCategoryRepository: IsoCategoryRepository) {
+open class IsoCategoryService(private val isoCategoryRepository: IsoCategoryRepository) {
 
     private var isoCategories: Map<String, IsoCategoryDTO>
 

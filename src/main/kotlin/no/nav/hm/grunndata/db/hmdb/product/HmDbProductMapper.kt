@@ -22,7 +22,7 @@ class HmDBProductMapper(private val supplierService: SupplierService,
     companion object {
         private val LOG = LoggerFactory.getLogger(HmDBProductMapper::class.java)
     }
-    suspend fun mapProduct(prod: HmDbProductDTO, batch: HmDbProductBatchDTO): ProductDTO =
+    fun mapProduct(prod: HmDbProductDTO, batch: HmDbProductBatchDTO): ProductDTO =
         ProductDTO(
             id = UUID.randomUUID(),
             supplier =  supplierService.findByIdentifier(prod.supplier!!.HmDbIdentifier())!!.toDTO(),
