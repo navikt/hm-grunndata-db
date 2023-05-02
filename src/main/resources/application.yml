@@ -24,8 +24,6 @@ micronaut:
       charset: 'UTF-8'
     agreements:
       charset: 'UTF-8'
-    agreementposts:
-      charset: 'UTF-8'
   data:
     pageable:
       max-page-size: 2000
