@@ -1,20 +1,19 @@
 package no.nav.hm.grunndata.db.hmdb
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.kotest.assertions.any
 import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
-import io.mockk.MockKSettings.relaxed
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkClass
 import no.nav.hm.grunndata.db.agreement.Agreement
 import no.nav.hm.grunndata.db.agreement.AgreementService
 import no.nav.hm.grunndata.db.hmdb.product.HmDBProductMapper
+import no.nav.hm.grunndata.db.hmdb.product.HmDbProductBatchDTO
 import no.nav.hm.grunndata.db.iso.IsoCategoryService
 import no.nav.hm.grunndata.db.supplier.Supplier
 import no.nav.hm.grunndata.db.supplier.SupplierService
 import no.nav.hm.grunndata.rapid.dto.AgreementPost
+import no.nav.hm.grunndata.rapid.dto.ProductDTO
 import no.nav.hm.grunndata.rapid.dto.SupplierInfo
 import no.nav.hm.grunndata.rapid.dto.SupplierStatus
 import org.junit.jupiter.api.Test
@@ -35,7 +34,8 @@ class HmdbFetchClientTest(private val fetchClient: HmDbClient,
     @MockBean(IsoCategoryService::class)
     fun isoCategoryService(): IsoCategoryService = mockk(relaxed = true)
 
-    //@Test integration test
+    // integration test
+    //@Test
     fun testHmdbFetchClient() {
         every {
             supplierService().findByIdentifier(any())
@@ -50,12 +50,18 @@ class HmdbFetchClientTest(private val fetchClient: HmDbClient,
                 posts = listOf(AgreementPost(title = "Post 1", identifier = "HMDB-321", nr = 1, description = "En beskrive av posten")))
         }
         val batch = fetchClient.fetchProducts(LocalDateTime.of(2009,9,25,0,0),
-            LocalDateTime.of(2009,10,26,0,0))
-        val products = batch!!.products.map { prod ->
-             hmDBProductMapper.mapProduct(prod, batch)
-        }.sortedBy { it.updated }
+            LocalDateTime.of(2009,10,25,0,0))
+        val products = extractProductBatch(batch!!)
+        println(batch.products.size)
         //println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(products))
         val last = products.last()
         println(last.updated)
+    }
+
+    private fun extractProductBatch(batch: HmDbProductBatchDTO): List<ProductDTO> {
+        return batch.products.map { prod ->
+            println("mapping ${prod.artid} with ${prod.achange}")
+            hmDBProductMapper.mapProduct(prod, batch)
+        }.sortedBy { it.updated }
     }
 }

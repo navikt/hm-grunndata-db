@@ -39,34 +39,33 @@ open class ProductSync(
         val from = syncBatchJob.syncfrom
         val to = from.plusDays(30)
         LOG.info("Calling product sync from ${from} to $to")
-        hmDbClient.fetchProducts(from, to)?.let { hmdbProductsBatch ->
-            LOG.info("Got total of ${hmdbProductsBatch.products.size} products")
-            if (hmdbProductsBatch.products.size == 1) {
-                if (lastChanged == hmdbProductsBatch.products[0].achange) {
-                    LOG.info("skipped run, cause we have seen this")
-                    return
-                }
-                else lastChanged = hmdbProductsBatch.products[0].achange
-            }
-            val products = extractProductBatch(hmdbProductsBatch)
-            if (products.isNotEmpty()) {
-                products.forEach {
-                    try {
-                        LOG.info("saving to db: ${it.identifier} with hmsnr ${it.hmsArtNr}")
-                        productService.saveAndPushTokafka(it, EventName.hmdbproductsyncV1)
-                    } catch (e: DataAccessException) {
-                        LOG.error("note we are skipping the product that has DataAccessException!", e)
-                    }
-                }
-                val last = products.last()
-                LOG.info("finished batch and update last sync time ${last.updated}")
-                hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = last.updated))
-            }
-            else {
-                LOG.info("Empty list, skip to next batch $to")
-                hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = to))
-            }
+        val hmdbProductsBatch = hmDbClient.fetchProducts(from, to)
+        LOG.info("Got total of ${hmdbProductsBatch!!.products.size} products")
+        if (hmdbProductsBatch.products.size == 1) {
+            if (lastChanged == hmdbProductsBatch.products[0].achange) {
+                LOG.info("skipped run, cause we have seen this")
+                return
+            } else lastChanged = hmdbProductsBatch.products[0].achange
         }
+        val products = extractProductBatch(hmdbProductsBatch)
+        LOG.info("Got products sorted size ${products.size}")
+        if (products.isNotEmpty()) {
+            products.forEach {
+                try {
+                    LOG.info("saving to db: ${it.identifier} with hmsnr ${it.hmsArtNr}")
+                    productService.saveAndPushTokafka(it, EventName.hmdbproductsyncV1)
+                } catch (e: DataAccessException) {
+                    LOG.error("note we are skipping the product that has DataAccessException!", e)
+                }
+            }
+            val last = products.last()
+            LOG.info("finished batch and update last sync time ${last.updated}")
+            hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = last.updated))
+        } else {
+            LOG.info("Empty list, skip to next batch $to")
+            hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = to))
+        }
+
     }
 
     suspend fun syncProductsById(productId: Long) {
