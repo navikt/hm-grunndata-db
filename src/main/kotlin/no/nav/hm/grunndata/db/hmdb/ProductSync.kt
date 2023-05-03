@@ -43,12 +43,13 @@ open class ProductSync(
         val hmdbProductsBatch = hmDbClient.fetchProducts(from, to)
         LOG.info("Got total of ${hmdbProductsBatch!!.products.size} products")
 
-        if (lastSize == hmdbProductsBatch.products.size && lastChanged == hmdbProductsBatch.products[0].achange) {
-            LOG.info("Last Size $lastSize and lastChanged $lastChanged is the same, skipping this batch")
-            hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = from.plusSeconds(1)))
-        }
         val products = extractProductBatch(hmdbProductsBatch)
         LOG.info("Got products sorted size ${products.size}")
+        if (lastSize == products.size && lastChanged == products.last().updated) {
+            LOG.info("Last Size $lastSize and lastChanged $lastChanged is the same, skipping this batch")
+            hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = from.plusSeconds(1)))
+            return
+        }
         if (products.isNotEmpty()) {
             products.forEach {
                 try {
