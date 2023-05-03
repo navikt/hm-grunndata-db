@@ -27,6 +27,7 @@ open class ProductSync(
     companion object {
         private val LOG = LoggerFactory.getLogger(ProductSync::class.java)
         private var lastChanged: LocalDateTime = LocalDateTime.now()
+        private var lastSize: Int = -1
     }
 
     suspend fun syncProducts() {
@@ -41,11 +42,10 @@ open class ProductSync(
         LOG.info("Calling product sync from ${from} to $to")
         val hmdbProductsBatch = hmDbClient.fetchProducts(from, to)
         LOG.info("Got total of ${hmdbProductsBatch!!.products.size} products")
-        if (hmdbProductsBatch.products.size == 1) {
-            if (lastChanged == hmdbProductsBatch.products[0].achange) {
-                LOG.info("skipped run, cause we have seen this")
-                return
-            } else lastChanged = hmdbProductsBatch.products[0].achange
+
+        if (lastSize == hmdbProductsBatch.products.size && lastChanged == hmdbProductsBatch.products[0].achange) {
+            LOG.info("Last Size $lastSize and lastChanged $lastChanged is the same, skipping this batch")
+            hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = from.plusSeconds(1)))
         }
         val products = extractProductBatch(hmdbProductsBatch)
         LOG.info("Got products sorted size ${products.size}")
@@ -61,6 +61,8 @@ open class ProductSync(
             val last = products.last()
             LOG.info("finished batch and update last sync time ${last.updated}")
             hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = last.updated))
+            lastSize = products.size
+            lastChanged = last.updated
         } else {
             LOG.info("Empty list, skip to next batch $to")
             hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = to))
