@@ -42,7 +42,6 @@ open class ProductSync(
         LOG.info("Calling product sync from ${from} to $to")
         val hmdbProductsBatch = hmDbClient.fetchProducts(from, to)
         LOG.info("Got total of ${hmdbProductsBatch!!.products.size} products")
-
         val products = extractProductBatch(hmdbProductsBatch)
         LOG.info("Got products sorted size ${products.size}")
         if (lastSize == products.size && lastChanged == products.last().updated) {
