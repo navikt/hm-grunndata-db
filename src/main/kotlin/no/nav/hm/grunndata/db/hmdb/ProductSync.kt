@@ -65,8 +65,9 @@ open class ProductSync(
             lastSize = products.size
             lastChanged = last.updated
         } else {
-            LOG.info("Empty list, skip to next batch $to")
-            hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = to))
+            LOG.info("Empty list")
+            if (to.isBefore(LocalDateTime.now()))
+                hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = to))
         }
 
     }
