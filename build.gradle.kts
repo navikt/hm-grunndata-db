@@ -14,7 +14,7 @@ val postgresqlVersion= "42.5.4"
 val tcVersion= "1.17.6"
 val mockkVersion = "1.13.4"
 val kotestVersion = "5.5.5"
-val rapidsRiversVersion = "202303011052"
+val rapidsRiversVersion = "202305081226"
 val grunndataDtoVersion = "202304180956"
 
 group = "no.nav.hm"
