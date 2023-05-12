@@ -6,12 +6,9 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import no.nav.hm.grunndata.db.supplier.Supplier
-import no.nav.hm.grunndata.rapid.dto.SupplierInfo
 import no.nav.hm.grunndata.db.supplier.SupplierRepository
 import no.nav.hm.grunndata.db.supplier.SupplierService
-import no.nav.hm.grunndata.rapid.dto.Attributes
-import no.nav.hm.grunndata.rapid.dto.CompatibleAttribute
-import no.nav.hm.grunndata.rapid.dto.SupplierStatus
+import no.nav.hm.grunndata.rapid.dto.*
 import org.junit.jupiter.api.Test
 
 @MicronautTest
@@ -30,6 +27,12 @@ class ProductRepositoryTest(private val productRepository: ProductRepository,
                 attributes = Attributes (
                     manufacturer =  "Samsung",  compatible = listOf(CompatibleAttribute(hmsArtNr = "1")))
             ))
+            val product2 = productRepository.save(Product(
+                supplierId = supplier.id, identifier = "124", title = "Dette er et produkt2", articleName = "Produkt 2",
+                supplierRef = "124", isoCategory = "123456",
+                attributes = Attributes (
+                    manufacturer =  "Samsung",  compatible = listOf(CompatibleAttribute(hmsArtNr = "2")))
+            ))
             val db = productRepository.findById(product.id)
             db.shouldNotBeNull()
             db.supplierId shouldBe product.supplierId
@@ -39,6 +42,11 @@ class ProductRepositoryTest(private val productRepository: ProductRepository,
             updated.shouldNotBeNull()
             updated.title shouldBe "Dette er et nytt produkt"
             println(objectMapper.writeValueAsString(updated))
+            val ids = productRepository.findIdsByStatus(status=ProductStatus.ACTIVE)
+            ids.size shouldBe 2
+            ids.map {
+                println(it.identifier)
+            }
         }
     }
 }

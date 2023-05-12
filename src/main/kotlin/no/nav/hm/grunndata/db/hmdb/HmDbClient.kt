@@ -35,4 +35,5 @@ interface HmDbClient {
 
     @Get("/api/v1/sync/iso")
     fun fetchIso(): List<IsoDTO>
+
 }
