@@ -55,6 +55,7 @@ class HmDBProductMapper(private val supplierService: SupplierService,
             rank = prod.postrank,
             postNr = post.nr,
             postIdentifier = post.identifier,
+            postTitle = post.title,
             reference = agreement.reference,
             expired = agreement.expired
         )
