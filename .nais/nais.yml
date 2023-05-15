@@ -36,6 +36,8 @@ spec:
       value: "{{ rapidsandrivers_enabled }}"
     - name: SCHEDULERS_ENABLED
       value: "{{ schedulers_enabled }}"
+    - name: JAVA_OPTS
+      value: "{{ java_opts }}"
   gcp:
     sqlInstances:
       - name: hm-grunndata-db
