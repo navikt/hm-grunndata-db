@@ -36,4 +36,6 @@ interface HmDbClient {
     @Get("/api/v1/sync/iso")
     fun fetchIso(): List<IsoDTO>
 
+    @Get("/api/v1/sync/products/active/ids")
+    fun fetchProductsIdActive(): List<Long>?
 }

@@ -1,5 +1,6 @@
 package no.nav.hm.grunndata.db.product
 
+import io.micronaut.context.annotation.Requires
 import io.micronaut.data.model.Page
 import io.micronaut.data.model.Pageable
 import io.micronaut.data.repository.jpa.criteria.PredicateSpecification
@@ -7,12 +8,14 @@ import io.micronaut.data.runtime.criteria.get
 import io.micronaut.data.runtime.criteria.where
 import jakarta.inject.Singleton
 import kotlinx.coroutines.runBlocking
+import no.nav.helse.rapids_rivers.KafkaRapid
 import no.nav.hm.grunndata.db.GdbRapidPushService
 import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.db.supplier.SupplierRepository
 import no.nav.hm.grunndata.db.supplier.SupplierService
 import no.nav.hm.grunndata.db.supplier.toDTO
 import no.nav.hm.grunndata.rapid.dto.ProductDTO
+import no.nav.hm.grunndata.rapid.dto.ProductStatus
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.util.*
@@ -68,5 +71,7 @@ open class ProductService(
             if (params.contains("updated")) root[Product::updated] greaterThanOrEqualTo LocalDateTime.parse(params["updated"])
         }
     }
+
+    suspend fun findIdsByStatus(status: ProductStatus): List<ProductIdDTO> = productRepository.findIdsByStatus(status = status)
 }
 

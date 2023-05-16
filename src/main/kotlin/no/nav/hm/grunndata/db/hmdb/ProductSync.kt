@@ -7,8 +7,10 @@ import no.nav.helse.rapids_rivers.KafkaRapid
 import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.db.hmdb.product.HmDBProductMapper
 import no.nav.hm.grunndata.db.hmdb.product.HmDbProductBatchDTO
+import no.nav.hm.grunndata.db.product.ProductIdDTO
 import no.nav.hm.grunndata.db.product.ProductService
 import no.nav.hm.grunndata.rapid.dto.ProductDTO
+import no.nav.hm.grunndata.rapid.dto.ProductStatus
 import no.nav.hm.grunndata.rapid.event.EventName
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
@@ -16,7 +18,6 @@ import java.time.temporal.ChronoUnit
 
 
 @Singleton
-@Requires(bean = KafkaRapid::class)
 open class ProductSync(
     private val hmdbBatchRepository: HmDbBatchRepository,
     private val hmDBProductMapper: HmDBProductMapper,
@@ -82,6 +83,28 @@ open class ProductSync(
                 }
             }
         } ?: LOG.error("Could not find $productId")
+    }
+
+    suspend fun syncDeletedProductIds(): List<ProductIdDTO> {
+        val toBeDeleted = findToBeDeletedProductIds()
+        toBeDeleted.forEach {
+            productService.findById(it.id)?.let { inDb ->
+                //productService.saveAndPushTokafka(inDb.copy(status = ProductStatus.DELETED), EventName.hmdbproductsyncV1)
+            }
+        }
+        return toBeDeleted
+    }
+
+    private suspend fun findToBeDeletedProductIds(): List<ProductIdDTO> {
+        val activeProductIds = productService.findIdsByStatus(ProductStatus.ACTIVE)
+        val hmdbIds = hmDbClient.fetchProductsIdActive()?.map { "$HMDB-$it" }?.toSet()
+        hmdbIds?.let {
+            LOG.info("Got ${hmdbIds.size} active ids")
+            val toBeDeleted = activeProductIds.filterNot { hmdbIds.contains(it.identifier) }
+            LOG.info("Found ${toBeDeleted.size} to be deleted")
+            return toBeDeleted
+        }
+       return emptyList()
     }
 
     private fun extractProductBatch(batch: HmDbProductBatchDTO): List<ProductDTO> {
