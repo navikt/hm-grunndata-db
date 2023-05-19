@@ -89,7 +89,7 @@ open class ProductSync(
         val toBeDeleted = findToBeDeletedProductIds()
         toBeDeleted.forEach {
             productService.findById(it.id)?.let { inDb ->
-                productService.saveAndPushTokafka(inDb.copy(status = ProductStatus.DELETED), EventName.hmdbproductsyncV1)
+                productService.saveAndPushTokafka(inDb.copy(status = ProductStatus.DELETED, updated = LocalDateTime.now()), EventName.hmdbproductsyncV1)
             }
         }
         return toBeDeleted
