@@ -13,6 +13,7 @@ import no.nav.hm.grunndata.db.hmdbMediaUrl
 import no.nav.hm.grunndata.rapid.dto.*
 import no.nav.hm.grunndata.rapid.event.EventName
 import org.slf4j.LoggerFactory
+import java.awt.SystemColor.text
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
@@ -63,6 +64,7 @@ class AgreementSync(
         identifier = "${newsDTO.newsid}".HmDbIdentifier(),
         title = newsDTO.newstitle,
         resume = newsDTO.newsresume,
+        status = if (newsDTO.newsexpire.isBefore(LocalDateTime.now())) AgreementStatus.INACTIVE else AgreementStatus.ACTIVE,
         text = newsDTO.newstext,
         published = newsDTO.newspublish,
         expired = newsDTO.newsexpire,
