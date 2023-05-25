@@ -46,7 +46,7 @@ data class Product (
 
 
 fun ProductDTO.toEntity(): Product = Product (
-    id = id, supplierId = supplier.id, title = title, articleName = articleName, attributes=attributes, status = status, hmsArtNr = hmsArtNr,
+    id = id, supplierId = supplier.id, agreementId = agreementInfo?.id, title = title, articleName = articleName, attributes=attributes, status = status, hmsArtNr = hmsArtNr,
     identifier = identifier, supplierRef=supplierRef, isoCategory=isoCategory, accessory=accessory, sparePart=sparePart,
     seriesId=seriesId, techData=techData, media= media, created=created, updated=updated, published=published, expired=expired,
     agreementInfo = agreementInfo, createdBy=createdBy, updatedBy=updatedBy
