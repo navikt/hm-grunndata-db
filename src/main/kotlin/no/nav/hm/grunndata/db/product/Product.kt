@@ -28,6 +28,7 @@ data class Product (
     val accessory: Boolean = false,
     val sparePart: Boolean = false,
     val seriesId: String?=null,
+    val agreementId: UUID?=null,
     @field:TypeDef(type = DataType.JSON)
     val techData: List<TechData> = emptyList(),
     @field:TypeDef(type = DataType.JSON)
@@ -42,6 +43,7 @@ data class Product (
     val createdBy: String = HMDB,
     val updatedBy: String = HMDB
 )
+
 
 fun ProductDTO.toEntity(): Product = Product (
     id = id, supplierId = supplier.id, title = title, articleName = articleName, attributes=attributes, status = status, hmsArtNr = hmsArtNr,

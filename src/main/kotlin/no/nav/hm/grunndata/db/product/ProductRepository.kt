@@ -17,6 +17,7 @@ interface ProductRepository: CoroutinePageableCrudRepository<Product, UUID>, Cor
     @Query("""SELECT id, identifier FROM product_v1 WHERE status = :status""")
     suspend fun findIdsByStatus(status: ProductStatus): List<ProductIdDTO>
 
+    suspend fun findByAgreementId(agreementId: UUID): List<Product>
 
 }
 
