@@ -34,6 +34,7 @@ data class Product (
     @field:TypeDef(type = DataType.JSON)
     val media: List<MediaInfo> = emptyList(),
     @field:TypeDef(type = DataType.JSON)
+    @Deprecated("available only in dto")
     @field:Column(name="agreement")
     val agreementInfo: AgreementInfo?=null,
     val created: LocalDateTime = LocalDateTime.now(),
