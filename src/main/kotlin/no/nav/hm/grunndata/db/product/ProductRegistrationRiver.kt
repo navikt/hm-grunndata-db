@@ -41,7 +41,7 @@ class ProductRegistrationRiver(river: RiverHead,
         LOG.info("got product registration id: ${dto.id} eventId $eventId eventTime: $createdTime adminStatus: ${dto.adminStatus}")
         runBlocking {
             if (dto.adminStatus == AdminStatus.APPROVED && dto.draftStatus == DraftStatus.DONE)
-                productService.saveAndPushTokafka(dto.productDTO, EventName.syncedRegisterProductV1)
+                productService.saveAndPushTokafka(dto.productDTO.toEntity(), EventName.syncedRegisterProductV1)
         }
     }
 

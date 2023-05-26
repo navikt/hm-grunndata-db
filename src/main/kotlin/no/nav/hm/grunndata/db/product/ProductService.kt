@@ -1,6 +1,5 @@
 package no.nav.hm.grunndata.db.product
 
-import io.micronaut.context.annotation.Requires
 import io.micronaut.data.model.Page
 import io.micronaut.data.model.Pageable
 import io.micronaut.data.repository.jpa.criteria.PredicateSpecification
@@ -8,13 +7,11 @@ import io.micronaut.data.runtime.criteria.get
 import io.micronaut.data.runtime.criteria.where
 import jakarta.inject.Singleton
 import kotlinx.coroutines.runBlocking
-import no.nav.helse.rapids_rivers.KafkaRapid
 import no.nav.hm.grunndata.db.GdbRapidPushService
 import no.nav.hm.grunndata.db.HMDB
-import no.nav.hm.grunndata.db.supplier.SupplierRepository
 import no.nav.hm.grunndata.db.supplier.SupplierService
 import no.nav.hm.grunndata.db.supplier.toDTO
-import no.nav.hm.grunndata.rapid.dto.ProductDTO
+import no.nav.hm.grunndata.rapid.dto.ProductRapidDTO
 import no.nav.hm.grunndata.rapid.dto.ProductStatus
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
@@ -35,8 +32,8 @@ open class ProductService(
     }
 
     @Transactional
-    open suspend fun saveAndPushTokafka(dto: ProductDTO, eventName: String): ProductDTO {
-        val product = attributeTagService.addBestillingsordningAttribute(dto).toEntity()
+    open suspend fun saveAndPushTokafka(dto: Product, eventName: String): ProductRapidDTO {
+        val product = attributeTagService.addBestillingsordningAttribute(dto)
         val saved = (if (product.createdBy == HMDB) productRepository.findByIdentifier(product.identifier)
         else productRepository.findById(product.id))?.let { inDb ->
             productRepository.update(product.copy(id = inDb.id, created = inDb.created,
@@ -49,9 +46,9 @@ open class ProductService(
     }
 
     @Transactional
-    open suspend fun findById(id: UUID): ProductDTO? = productRepository.findById(id)?.let { it.toDTO() }
+    open suspend fun findById(id: UUID): Product? = productRepository.findById(id)
 
-    private fun Product.toDTO():ProductDTO = ProductDTO (
+    private fun Product.toDTO():ProductRapidDTO = ProductRapidDTO (
         id = id, supplier = runBlocking{supplierService.findById(supplierId)!!.toDTO()}, title = title, articleName = articleName,  attributes=attributes,
         status = status, hmsArtNr = hmsArtNr, identifier = identifier, supplierRef=supplierRef, isoCategory=isoCategory,
         accessory=accessory, sparePart=sparePart, seriesId=seriesId, techData=techData, media= media, created=created,
@@ -60,7 +57,7 @@ open class ProductService(
     )
 
     @Transactional
-    open suspend fun findProducts(params: Map<String, String>?, pageable: Pageable) : Page<ProductDTO> =
+    open suspend fun findProducts(params: Map<String, String>?, pageable: Pageable) : Page<ProductRapidDTO> =
         productRepository.findAll(buildCriteriaSpec(params), pageable).map {it.toDTO()}
 
     private fun buildCriteriaSpec(params: Map<String, String>?): PredicateSpecification<Product>?

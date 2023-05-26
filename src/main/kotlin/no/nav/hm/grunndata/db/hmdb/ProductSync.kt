@@ -1,15 +1,15 @@
 package no.nav.hm.grunndata.db.hmdb
 
-import io.micronaut.context.annotation.Requires
 import io.micronaut.data.exceptions.DataAccessException
 import jakarta.inject.Singleton
-import no.nav.helse.rapids_rivers.KafkaRapid
+
 import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.db.hmdb.product.HmDBProductMapper
 import no.nav.hm.grunndata.db.hmdb.product.HmDbProductBatchDTO
+import no.nav.hm.grunndata.db.product.Product
 import no.nav.hm.grunndata.db.product.ProductIdDTO
 import no.nav.hm.grunndata.db.product.ProductService
-import no.nav.hm.grunndata.rapid.dto.ProductDTO
+
 import no.nav.hm.grunndata.rapid.dto.ProductStatus
 import no.nav.hm.grunndata.rapid.event.EventName
 import org.slf4j.LoggerFactory
@@ -107,7 +107,7 @@ open class ProductSync(
        return emptyList()
     }
 
-    private fun extractProductBatch(batch: HmDbProductBatchDTO): List<ProductDTO> {
+    private fun extractProductBatch(batch: HmDbProductBatchDTO): List<Product> {
         return batch.products.map { prod ->
             LOG.info("Mapping product prodid: ${prod.prodid} artid: ${prod.artid} artno: ${prod.artno} from supplier ${prod.supplier}")
             hmDBProductMapper.mapProduct(prod, batch)

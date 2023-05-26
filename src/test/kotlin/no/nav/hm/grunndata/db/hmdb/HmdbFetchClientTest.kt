@@ -10,12 +10,10 @@ import no.nav.hm.grunndata.db.agreement.AgreementService
 import no.nav.hm.grunndata.db.hmdb.product.HmDBProductMapper
 import no.nav.hm.grunndata.db.hmdb.product.HmDbProductBatchDTO
 import no.nav.hm.grunndata.db.iso.IsoCategoryService
+import no.nav.hm.grunndata.db.product.Product
 import no.nav.hm.grunndata.db.supplier.Supplier
 import no.nav.hm.grunndata.db.supplier.SupplierService
-import no.nav.hm.grunndata.rapid.dto.AgreementPost
-import no.nav.hm.grunndata.rapid.dto.ProductDTO
-import no.nav.hm.grunndata.rapid.dto.SupplierInfo
-import no.nav.hm.grunndata.rapid.dto.SupplierStatus
+import no.nav.hm.grunndata.rapid.dto.*
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 import java.util.*
@@ -58,7 +56,7 @@ class HmdbFetchClientTest(private val fetchClient: HmDbClient,
         println(last.updated)
     }
 
-    private fun extractProductBatch(batch: HmDbProductBatchDTO): List<ProductDTO> {
+    private fun extractProductBatch(batch: HmDbProductBatchDTO): List<Product> {
         return batch.products.map { prod ->
             println("mapping ${prod.artid} with ${prod.achange}")
             hmDBProductMapper.mapProduct(prod, batch)

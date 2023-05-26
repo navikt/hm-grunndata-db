@@ -6,9 +6,10 @@ import no.nav.hm.grunndata.db.agreement.AgreementService
 import no.nav.hm.grunndata.db.hmdb.HmDbIdentifier
 import no.nav.hm.grunndata.db.hmdbMediaUrl
 import no.nav.hm.grunndata.db.iso.IsoCategoryService
+import no.nav.hm.grunndata.db.product.Product
 import no.nav.hm.grunndata.db.supplier.SupplierService
-import no.nav.hm.grunndata.db.supplier.toDTO
 import no.nav.hm.grunndata.rapid.dto.*
+
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.util.*
@@ -21,10 +22,10 @@ class HmDBProductMapper(private val supplierService: SupplierService,
     companion object {
         private val LOG = LoggerFactory.getLogger(HmDBProductMapper::class.java)
     }
-    fun mapProduct(prod: HmDbProductDTO, batch: HmDbProductBatchDTO): ProductDTO =
-        ProductDTO(
+    fun mapProduct(prod: HmDbProductDTO, batch: HmDbProductBatchDTO): Product =
+        Product(
             id = UUID.randomUUID(),
-            supplier =  supplierService.findByIdentifier(prod.supplier!!.HmDbIdentifier())!!.toDTO(),
+            supplierId =  supplierService.findByIdentifier(prod.supplier!!.HmDbIdentifier())!!.id,
             title = prod.prodname,
             articleName = prod.artname,
             attributes = mapAttributes(prod),
@@ -36,7 +37,8 @@ class HmDBProductMapper(private val supplierService: SupplierService,
             seriesId = "${prod.prodid}".HmDbIdentifier(),
             techData = mapTechData(batch.techdata[prod.artid] ?: emptyList()),
             media =  mapBlobs(batch.blobs[prod.prodid] ?: emptyList()),
-            agreementInfo = if(prod.newsid!=null) mapAgreementInfo(prod) else null,
+            agreementId = if (prod.newsid != null) agreementService.findByIdentifier("${prod.newsid}".HmDbIdentifier())?.id else null,
+            agreementInfo = if (prod.newsid!=null) mapAgreementInfo(prod) else null,
             created = prod.aindate,
             updated = prod.achange,
             expired = prod.aoutdate ?: LocalDateTime.now().plusYears(20),

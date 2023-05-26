@@ -1,6 +1,5 @@
 package no.nav.hm.grunndata.db.product
 
-import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import no.nav.hm.grunndata.db.GDB
@@ -16,8 +15,8 @@ class AttributeTagServiceTest(private val attributeTagService: AttributeTagServi
     fun attributeTagTest() {
         val supplier = SupplierDTO(id = UUID.randomUUID(), identifier = "341", name = "leverandør 1", info = SupplierInfo(),
             createdBy = GDB, updatedBy = GDB, updated = LocalDateTime.now(), created = LocalDateTime.now())
-        val product = ProductDTO (id = UUID.randomUUID(),
-            supplier = supplier , hmsArtNr = "255734", identifier = "123", title = "Dette er et produkt",
+        val product = Product (id = UUID.randomUUID(),
+            supplierId = supplier.id , hmsArtNr = "255734", identifier = "123", title = "Dette er et produkt",
             articleName = "Product 1", supplierRef = "123", isoCategory = "123456",
             attributes = Attributes (
                 manufacturer =  "Samsung",
@@ -26,8 +25,8 @@ class AttributeTagServiceTest(private val attributeTagService: AttributeTagServi
             createdBy = GDB,
             updatedBy = GDB
         )
-        val product2 = ProductDTO (id = UUID.randomUUID(),
-            supplier = supplier, hmsArtNr = "12345A", identifier = "123", title = "Dette er et produkt",
+        val product2 = Product (id = UUID.randomUUID(),
+            supplierId = supplier.id, hmsArtNr = "12345A", identifier = "123", title = "Dette er et produkt",
             articleName = "Produkt1", supplierRef = "1234", isoCategory = "123456",
             attributes = Attributes (
                 manufacturer = "Samsung",
