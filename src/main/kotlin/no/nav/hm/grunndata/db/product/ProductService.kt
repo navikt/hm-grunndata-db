@@ -9,8 +9,11 @@ import jakarta.inject.Singleton
 import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.db.GdbRapidPushService
 import no.nav.hm.grunndata.db.HMDB
+import no.nav.hm.grunndata.db.agreement.AgreementService
+import no.nav.hm.grunndata.db.hmdb.HmDbIdentifier
 import no.nav.hm.grunndata.db.supplier.SupplierService
 import no.nav.hm.grunndata.db.supplier.toDTO
+import no.nav.hm.grunndata.rapid.dto.AgreementInfo
 import no.nav.hm.grunndata.rapid.dto.ProductRapidDTO
 import no.nav.hm.grunndata.rapid.dto.ProductStatus
 import org.slf4j.LoggerFactory
@@ -24,7 +27,8 @@ open class ProductService(
     private val productRepository: ProductRepository,
     private val attributeTagService: AttributeTagService,
     private val supplierService: SupplierService,
-    private val gdbRapidPushService: GdbRapidPushService
+    private val gdbRapidPushService: GdbRapidPushService,
+    private val agreementService: AgreementService
 ) {
 
     companion object {
@@ -53,7 +57,21 @@ open class ProductService(
         status = status, hmsArtNr = hmsArtNr, identifier = identifier, supplierRef=supplierRef, isoCategory=isoCategory,
         accessory=accessory, sparePart=sparePart, seriesId=seriesId, techData=techData, media= media, created=created,
         updated=updated, published=published, expired=expired, agreementInfo = agreementInfo, hasAgreement = (agreementInfo!=null),
-        createdBy=createdBy, updatedBy=updatedBy
+        createdBy=createdBy, updatedBy=updatedBy, agreements = agreements.map {agree ->
+            val agreement = agreementService.findByIdentifier(agree.identifier!!)
+            val post = agreement!!.posts.find { it.identifier == agree.postIdentifier }
+                ?: throw RuntimeException("Wrong agreement state!, should never happen")
+            AgreementInfo(
+                id = agree.id,
+                identifier = agree.identifier,
+                rank = agree.rank,
+                postNr = agree.postNr,
+                postIdentifier = agree.postIdentifier,
+                expired = agreement.expired,
+                reference = agreement.reference,
+                postTitle = post.title
+            )
+        }
     )
 
     @Transactional
