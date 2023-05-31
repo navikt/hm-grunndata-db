@@ -7,6 +7,7 @@ import no.nav.hm.grunndata.db.hmdb.HmDbIdentifier
 import no.nav.hm.grunndata.db.hmdbMediaUrl
 import no.nav.hm.grunndata.db.iso.IsoCategoryService
 import no.nav.hm.grunndata.db.product.Product
+import no.nav.hm.grunndata.db.product.ProductAgreement
 import no.nav.hm.grunndata.db.supplier.SupplierService
 import no.nav.hm.grunndata.rapid.dto.*
 
@@ -39,12 +40,28 @@ class HmDBProductMapper(private val supplierService: SupplierService,
             media =  mapBlobs(batch.blobs[prod.prodid] ?: emptyList()),
             agreementId = if (prod.newsid != null) agreementService.findByIdentifier("${prod.newsid}".HmDbIdentifier())?.id else null,
             agreementInfo = if (prod.newsid!=null) mapAgreementInfo(prod) else null,
+            agreements = mapAgreements(batch.articlePosts[prod.artid] ?: emptyList()),
             created = prod.aindate,
             updated = prod.achange,
             expired = prod.aoutdate ?: LocalDateTime.now().plusYears(20),
             createdBy = HMDB,
             updatedBy = HMDB
         )
+
+    private fun mapAgreements(posts: List<ArticlePostDTO>): List<ProductAgreement> = posts.map { apost ->
+            val agreement = agreementService.findByIdentifier("${apost.newsid}".HmDbIdentifier())
+            val post = agreement!!.posts.find { it.identifier == "${apost.apostid}".HmDbIdentifier() }
+                ?: throw RuntimeException("Wrong agreement state!, should never happen")
+            ProductAgreement(
+                id = agreement.id,
+                identifier = agreement.identifier,
+                reference = agreement.reference,
+                rank = apost.postrank,
+                postNr = post.nr,
+                postIdentifier = post.identifier
+            )
+        }
+
 
     private fun mapAgreementInfo(prod: HmDbProductDTO): AgreementInfo {
         val agreement = agreementService.findByIdentifier("${prod.newsid}".HmDbIdentifier())

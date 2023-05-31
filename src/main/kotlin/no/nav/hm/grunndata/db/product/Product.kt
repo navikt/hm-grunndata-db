@@ -34,15 +34,25 @@ data class Product (
     @field:TypeDef(type = DataType.JSON)
     val media: List<MediaInfo> = emptyList(),
     @field:TypeDef(type = DataType.JSON)
-    @Deprecated("available only in dto")
     @field:Column(name="agreement")
     val agreementInfo: AgreementInfo?=null,
+    @field:TypeDef(type = DataType.JSON)
+    val agreements: List<ProductAgreement> = emptyList(),
     val created: LocalDateTime = LocalDateTime.now(),
     val updated: LocalDateTime = LocalDateTime.now(),
     val published: LocalDateTime = LocalDateTime.now(),
     val expired: LocalDateTime = updated.plusYears(20),
     val createdBy: String = HMDB,
     val updatedBy: String = HMDB
+)
+
+data class ProductAgreement(
+    val id: UUID,
+    val identifier: String?=null,
+    val reference: String,
+    val rank: Int,
+    val postNr: Int,
+    val postIdentifier: String?=null,
 )
 
 

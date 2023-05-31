@@ -18,6 +18,8 @@ interface ProductRepository: CoroutinePageableCrudRepository<Product, UUID>, Cor
     suspend fun findIdsByStatus(status: ProductStatus): List<ProductIdDTO>
 
     suspend fun findByAgreementId(agreementId: UUID): List<Product>
+    @Query("""SELECT * FROM "product_v1" WHERE agreements @> CAST(:jsonQuery AS jsonb) """, nativeQuery = true)
+    suspend fun findByAgreementsJson(jsonQuery: String): List<Product>
 
 }
 
