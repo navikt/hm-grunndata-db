@@ -57,7 +57,7 @@ open class ProductService(
         status = status, hmsArtNr = hmsArtNr, identifier = identifier, supplierRef=supplierRef, isoCategory=isoCategory,
         accessory=accessory, sparePart=sparePart, seriesId=seriesId, techData=techData, media= media, created=created,
         updated=updated, published=published, expired=expired, agreementInfo = agreementInfo, hasAgreement = (agreementInfo!=null),
-        createdBy=createdBy, updatedBy=updatedBy, agreements = agreements.map {agree ->
+        createdBy=createdBy, updatedBy=updatedBy, agreements = agreements!!.map {agree ->
             val agreement = agreementService.findByIdentifier(agree.identifier!!)
             val post = agreement!!.posts.find { it.identifier == agree.postIdentifier }
                 ?: throw RuntimeException("Wrong agreement state!, should never happen")

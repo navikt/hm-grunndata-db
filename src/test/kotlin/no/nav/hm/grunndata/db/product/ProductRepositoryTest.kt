@@ -52,8 +52,8 @@ class ProductRepositoryTest(private val productRepository: ProductRepository,
             db.supplierId shouldBe product.supplierId
             db.title shouldBe product.title
             db.articleName shouldBe "Produkt 1"
-            db.agreements.size shouldBe 2
-            db.agreements[0].rank shouldBe 1
+            db.agreements!!.size shouldBe 2
+            db.agreements!![0].rank shouldBe 1
 
             val updated = productRepository.update(db.copy(title = "Dette er et nytt produkt"))
             updated.shouldNotBeNull()
