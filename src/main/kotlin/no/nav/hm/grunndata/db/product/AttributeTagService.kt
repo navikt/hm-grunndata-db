@@ -9,15 +9,15 @@ class AttributeTagService(private val bestillingsordning: Bestillingsordning) {
     companion object {
         private val LOG = LoggerFactory.getLogger(AttributeTagService::class.java)
     }
-    fun addBestillingsordningAttribute(dto: Product): Product =
-        dto.hmsArtNr?.let {
-            if (bestillingsordning.isBestillingsordning(dto.hmsArtNr!!)) {
-                LOG.debug("Got product in bestillingsordning ${dto.hmsArtNr}")
-                dto.copy(attributes = dto.attributes.copy(bestillingsordning=true))
+    fun addBestillingsordningAttribute(product: Product): Product =
+        product.hmsArtNr?.let {
+            if (bestillingsordning.isBestillingsordning(product.hmsArtNr!!)) {
+                LOG.debug("Got product in bestillingsordning ${product.hmsArtNr}")
+                product.copy(attributes = product.attributes.copy(bestillingsordning=true))
             }
             else
-                dto.copy(attributes = dto.attributes.copy(bestillingsordning=false))
-        } ?: dto
+                product.copy(attributes = product.attributes.copy(bestillingsordning=false))
+        } ?: product
 
 
 }

@@ -10,7 +10,6 @@ import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.db.GdbRapidPushService
 import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.db.agreement.AgreementService
-import no.nav.hm.grunndata.db.hmdb.HmDbIdentifier
 import no.nav.hm.grunndata.db.supplier.SupplierService
 import no.nav.hm.grunndata.db.supplier.toDTO
 import no.nav.hm.grunndata.rapid.dto.AgreementInfo
@@ -36,15 +35,15 @@ open class ProductService(
     }
 
     @Transactional
-    open suspend fun saveAndPushTokafka(dto: Product, eventName: String): ProductRapidDTO {
-        val product = attributeTagService.addBestillingsordningAttribute(dto)
+    open suspend fun saveAndPushTokafka(prod: Product, eventName: String): ProductRapidDTO {
+        val product = attributeTagService.addBestillingsordningAttribute(prod)
         val saved = (if (product.createdBy == HMDB) productRepository.findByIdentifier(product.identifier)
         else productRepository.findById(product.id))?.let { inDb ->
             productRepository.update(product.copy(id = inDb.id, created = inDb.created,
                 createdBy = inDb.createdBy))
         } ?: productRepository.save(product)
         val productDTO = saved.toDTO()
-        LOG.info("saved hmsArtnr ${productDTO.hmsArtNr}")
+        LOG.info("saved: ${productDTO.id} ${productDTO.hmsArtNr}")
         gdbRapidPushService.pushDTOToKafka(productDTO, eventName)
         return productDTO
     }
