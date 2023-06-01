@@ -16,8 +16,6 @@ jobs:
       NAIS_RESOURCE: ".nais/nais.yml"
       NAIS_VARS: ".nais/nais-dev.json"
       JAVA_VERSION: 17
-      SNYK_ENABLED: false
-      SNYK_ORG: "hjelpemiddelbehov"
       TEAM: "teamdigihot"
       CODEQL_ENABLED: true
     secrets:
