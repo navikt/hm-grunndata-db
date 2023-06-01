@@ -52,6 +52,10 @@ open class ProductService(
     @Transactional
     open suspend fun findById(id: UUID): Product? = productRepository.findById(id)
 
+    @Transactional
+    open suspend fun findByAgreementId(agreementId: UUID): List<Product> =
+        productRepository.findByAgreementsJson("""[{"id": "$agreementId"}]""")
+
     private fun Product.toDTO():ProductRapidDTO = ProductRapidDTO (
         id = id, supplier = runBlocking{supplierService.findById(supplierId)!!.toDTO()}, title = title, articleName = articleName,  attributes=attributes,
         status = status, hmsArtNr = hmsArtNr, identifier = identifier, supplierRef=supplierRef, isoCategory=isoCategory,
