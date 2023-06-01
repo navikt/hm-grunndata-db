@@ -23,10 +23,11 @@ class HmDBProductMapper(private val supplierService: SupplierService,
     companion object {
         private val LOG = LoggerFactory.getLogger(HmDBProductMapper::class.java)
     }
+
     fun mapProduct(prod: HmDbProductDTO, batch: HmDbProductBatchDTO): Product =
         Product(
             id = UUID.randomUUID(),
-            supplierId =  supplierService.findByIdentifier(prod.supplier!!.HmDbIdentifier())!!.id,
+            supplierId = supplierService.findByIdentifier(prod.supplier!!.HmDbIdentifier())!!.id,
             title = prod.prodname,
             articleName = prod.artname,
             attributes = mapAttributes(prod),
@@ -37,9 +38,9 @@ class HmDBProductMapper(private val supplierService: SupplierService,
             isoCategory = isoCategoryService.lookUpCode(prod.isocode)?.isoCode ?: prod.isocode,
             seriesId = "${prod.prodid}".HmDbIdentifier(),
             techData = mapTechData(batch.techdata[prod.artid] ?: emptyList()),
-            media =  mapBlobs(batch.blobs[prod.prodid] ?: emptyList()),
+            media = mapBlobs(batch.blobs[prod.prodid] ?: emptyList()),
             agreementId = if (prod.newsid != null) agreementService.findByIdentifier("${prod.newsid}".HmDbIdentifier())?.id else null,
-            agreementInfo = if (prod.newsid!=null) mapAgreementInfo(prod) else null,
+            agreementInfo = if (prod.newsid != null) mapAgreementInfo(prod) else null,
             agreements = mapAgreements(batch.articlePosts[prod.artid] ?: emptyList()),
             created = prod.aindate,
             updated = prod.achange,
@@ -49,18 +50,18 @@ class HmDBProductMapper(private val supplierService: SupplierService,
         )
 
     private fun mapAgreements(posts: List<ArticlePostDTO>): List<ProductAgreement> = posts.map { apost ->
-            val agreement = agreementService.findByIdentifier("${apost.newsid}".HmDbIdentifier())
-            val post = agreement!!.posts.find { it.identifier == "${apost.apostid}".HmDbIdentifier() }
-                ?: throw RuntimeException("Wrong agreement state!, should never happen")
-            ProductAgreement(
-                id = agreement.id,
-                identifier = agreement.identifier,
-                reference = agreement.reference,
-                rank = apost.postrank,
-                postNr = post.nr,
-                postIdentifier = post.identifier
-            )
-        }
+        val agreement = agreementService.findByIdentifier("${apost.newsid}".HmDbIdentifier())
+        val post = agreement!!.posts.find { it.identifier == "${apost.apostid}".HmDbIdentifier() }
+            ?: throw RuntimeException("Wrong agreement state!, should never happen")
+        ProductAgreement(
+            id = agreement.id,
+            identifier = agreement.identifier,
+            reference = agreement.reference,
+            rank = apost.postrank,
+            postNr = post.nr,
+            postIdentifier = post.identifier
+        )
+    }
 
 
     private fun mapAgreementInfo(prod: HmDbProductDTO): AgreementInfo {
@@ -90,8 +91,8 @@ class HmDBProductMapper(private val supplierService: SupplierService,
     fun mapBlobs(blobs: List<BlobDTO>): List<MediaInfo> =
         blobs.associateBy { it.blobfile }
             .values
-            .map { mapBlob(it)}
-            .filter{ it.type != MediaType.OTHER && it.type != MediaType.VIDEO}
+            .map { mapBlob(it) }
+            .filter { it.type != MediaType.OTHER && it.type != MediaType.VIDEO }
             .sortedBy { "${it.type}-${it.uri}" }
             .mapIndexed { index, media -> media.copy(priority = index + 1) }
 
@@ -101,7 +102,7 @@ class HmDBProductMapper(private val supplierService: SupplierService,
         val blobType = blobDTO.blobtype.trim().lowercase()
         val mediaType = when (blobType) {
             "billede" -> MediaType.IMAGE
-            "brosjyre", "produktbl", "bruksanvisning", "brugsanvisning", "quickguide", "målskjema", "batterioversikt" -> MediaType.PDF
+            "brosjyre", "produktbl", "bruksanvisning", "brugsanvisning", "quickguide", "målskjema", "batterioversikt", "seil" -> MediaType.PDF
             "video" -> MediaType.VIDEO
             else -> {
                 LOG.error("Unrecognized media type with file: ${blobDTO.blobfile} and type: ${blobDTO.blobtype}")
@@ -111,23 +112,26 @@ class HmDBProductMapper(private val supplierService: SupplierService,
 
         val typePath = if (mediaType == MediaType.IMAGE) "orig" else {
             when (blobType) {
-            "bruksanvisning", "brugsanvisning" -> "brugsvejl"
-            "brosjyre", "produktbl" -> "produktblade"
-            "quickguide" -> "seriedok/8606"
-            "målskjema" -> "seriedok/1468"
-            "batterioversikt" -> "seriedok/8694"
-            else -> "unknown"
+                "bruksanvisning", "brugsanvisning" -> "brugsvejl"
+                "brosjyre", "produktbl" -> "produktblade"
+                "quickguide" -> "seriedok/8606"
+                "målskjema" -> "seriedok/1468"
+                "seil" -> "seriedok/8680"
+                "batterioversikt" -> "seriedok/8694"
+                else -> "unknown"
             }
         }
 
-        return MediaInfo(type = mediaType, text = blobType, sourceUri = "$hmdbMediaUrl/$typePath/$blobFile",
-            uri = "$typePath/${blobFile}", source = MediaSourceType.HMDB)
+        return MediaInfo(
+            type = mediaType, text = blobType, sourceUri = "$hmdbMediaUrl/$typePath/$blobFile",
+            uri = "$typePath/${blobFile}", source = MediaSourceType.HMDB
+        )
     }
 
-    private fun mapAttributes(produkt: HmDbProductDTO): Attributes = Attributes (
-        shortdescription  = produkt.adescshort ?: "",
-        text  = produkt.pshortdesc,
-        series  = produkt.prodname
+    private fun mapAttributes(produkt: HmDbProductDTO): Attributes = Attributes(
+        shortdescription = produkt.adescshort ?: "",
+        text = produkt.pshortdesc,
+        series = produkt.prodname
     )
 }
 
