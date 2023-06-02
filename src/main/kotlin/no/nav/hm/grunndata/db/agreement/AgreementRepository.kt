@@ -8,10 +8,12 @@ import io.micronaut.data.model.Pageable
 import io.micronaut.data.model.query.builder.sql.Dialect
 import io.micronaut.data.repository.jpa.kotlin.CoroutineJpaSpecificationExecutor
 import io.micronaut.data.repository.kotlin.CoroutineCrudRepository
+import no.nav.hm.grunndata.rapid.dto.AgreementStatus
+import java.time.LocalDateTime
 import java.util.*
 
 @JdbcRepository(dialect = Dialect.POSTGRES)
 interface AgreementRepository: CoroutineCrudRepository<Agreement, UUID>, CoroutineJpaSpecificationExecutor<Agreement> {
     suspend fun findByIdentifier(identifier: String): Agreement?
-
+    suspend fun findByStatusAndExpiredBefore(status: AgreementStatus, expired: LocalDateTime? = LocalDateTime.now()): List<Agreement>
 }

@@ -8,6 +8,8 @@ import io.micronaut.data.repository.jpa.criteria.PredicateSpecification
 import jakarta.inject.Singleton
 import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.db.supplier.Supplier
+import no.nav.hm.grunndata.rapid.dto.AgreementStatus
+import java.time.LocalDateTime
 import java.util.*
 
 @Singleton
@@ -28,6 +30,9 @@ open class AgreementService(private val agreementRepository: AgreementRepository
     open fun update(agreement: Agreement, identifier: String = agreement.identifier) = runBlocking {
         agreementRepository.update(agreement)
     }
+
+    suspend fun findByStatusAndExpiredBefore(status:AgreementStatus, expired: LocalDateTime? = LocalDateTime.now())
+        = agreementRepository.findByStatusAndExpiredBefore(status, expired)
 
     /**
      * This function is not cached.
