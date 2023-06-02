@@ -13,7 +13,7 @@ open class AgreementExpiration(private val agreementService: AgreementService,
                                private val productService: ProductService) {
 
     companion object {
-        private const val updatedBy = "AGREEMENTEXPIRATION"
+        private const val expiration = "AGREEMENTEXPIRATION"
         private val LOG = LoggerFactory.getLogger(AgreementExpiration::class.java)
 
     }
@@ -28,15 +28,15 @@ open class AgreementExpiration(private val agreementService: AgreementService,
     open suspend fun deactiveProductsInAgreement(agreement: Agreement) {
         LOG.info("Agreement ${agreement.id} ${agreement.reference} has expired")
         agreementService.update(agreement.copy(status = AgreementStatus.INACTIVE,
-            updated = LocalDateTime.now(), updatedBy = updatedBy))
+            updated = LocalDateTime.now(), updatedBy = expiration))
         val productsInAgreement = productService.findByAgreementId(agreement.id)
         productsInAgreement.forEach { product ->
             LOG.info("Found ${product.id} in expired agreement")
             val notExpired = product.agreements?.filterNot {
                 it.id == agreement.id
-            }
+            }?.toSet()
             productService.saveAndPushTokafka(product.copy(agreements = notExpired,
-                updated = LocalDateTime.now(), updatedBy = updatedBy), eventName = EventName.hmdbproductsyncV1)
+                updated = LocalDateTime.now(), updatedBy = expiration), eventName = EventName.hmdbproductsyncV1)
         }
     }
 }

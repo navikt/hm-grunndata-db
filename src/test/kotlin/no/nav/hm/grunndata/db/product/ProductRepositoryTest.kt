@@ -36,14 +36,14 @@ class ProductRepositoryTest(private val productRepository: ProductRepository,
             val product = productRepository.save(Product(
                 supplierId = supplier.id, identifier = "123", title = "Dette er et produkt", articleName = "Produkt 1",
                 supplierRef = "123", isoCategory = "123456", agreementId = agreementId,
-                agreements = listOf(productAgreement, productAgreement2),
+                agreements = setOf(productAgreement, productAgreement2),
                 attributes = Attributes (
                     manufacturer =  "Samsung",  compatible = listOf(CompatibleAttribute(hmsArtNr = "1")))
             ))
             val product2 = productRepository.save(Product(
                 supplierId = supplier.id, identifier = "124", title = "Dette er et produkt2", articleName = "Produkt 2",
                 supplierRef = "124", isoCategory = "123456", agreementId = agreementId,
-                agreements = listOf(productAgreement),
+                agreements = setOf(productAgreement),
                 attributes = Attributes (
                     manufacturer =  "Samsung",  compatible = listOf(CompatibleAttribute(hmsArtNr = "2")))
             ))
@@ -53,7 +53,7 @@ class ProductRepositoryTest(private val productRepository: ProductRepository,
             db.title shouldBe product.title
             db.articleName shouldBe "Produkt 1"
             db.agreements!!.size shouldBe 2
-            db.agreements!![0].rank shouldBe 1
+            db.agreements!!.elementAt(0).rank shouldBe 1
 
             val updated = productRepository.update(db.copy(title = "Dette er et nytt produkt"))
             updated.shouldNotBeNull()

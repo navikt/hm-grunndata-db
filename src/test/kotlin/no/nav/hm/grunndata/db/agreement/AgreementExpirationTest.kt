@@ -64,7 +64,7 @@ class AgreementExpirationTest(private val agreementExpiration: AgreementExpirati
                     supplierRef = "123",
                     isoCategory = "123456",
                     agreementId = agreementId,
-                    agreements = listOf(productAgreement, productAgreement2),
+                    agreements = setOf(productAgreement, productAgreement2),
                     attributes = Attributes(
                         manufacturer = "Samsung", compatible = listOf(CompatibleAttribute(hmsArtNr = "1"))
                     )
