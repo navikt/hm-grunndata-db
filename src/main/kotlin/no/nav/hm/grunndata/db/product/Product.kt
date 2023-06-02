@@ -28,6 +28,7 @@ data class Product (
     val accessory: Boolean = false,
     val sparePart: Boolean = false,
     val seriesId: String?=null,
+    @Deprecated("use agreements")
     val agreementId: UUID?=null,
     @field:TypeDef(type = DataType.JSON)
     val techData: List<TechData> = emptyList(),
