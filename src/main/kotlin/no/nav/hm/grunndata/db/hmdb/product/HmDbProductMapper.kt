@@ -50,6 +50,7 @@ class HmDBProductMapper(private val supplierService: SupplierService,
         )
 
     private fun mapAgreements(posts: List<ArticlePostDTO>): Set<ProductAgreement> = posts.map { apost ->
+        LOG.info("mapping agreement with ${apost.newsid} identifier and ${apost.apostid} postIdentifier")
         val agreement = agreementService.findByIdentifier("${apost.newsid}".HmDbIdentifier())
         val post = agreement!!.posts.find { it.identifier == "${apost.apostid}".HmDbIdentifier() }
             ?: throw RuntimeException("Wrong agreement state!, should never happen")
