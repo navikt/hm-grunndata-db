@@ -16,7 +16,7 @@ class AttributeTagServiceTest(private val attributeTagService: AttributeTagServi
         val supplier = SupplierDTO(id = UUID.randomUUID(), identifier = "341", name = "leverandør 1", info = SupplierInfo(),
             createdBy = GDB, updatedBy = GDB, updated = LocalDateTime.now(), created = LocalDateTime.now())
         val product = Product (id = UUID.randomUUID(),
-            supplierId = supplier.id , hmsArtNr = "255734", identifier = "123", title = "Dette er et produkt",
+            supplierId = supplier.id , hmsArtNr = "267914", identifier = "123", title = "Dette er et produkt",
             articleName = "Product 1", supplierRef = "123", isoCategory = "123456",
             attributes = Attributes (
                 manufacturer =  "Samsung",
