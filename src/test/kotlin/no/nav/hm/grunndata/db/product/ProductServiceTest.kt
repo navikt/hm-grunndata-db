@@ -52,7 +52,7 @@ class ProductServiceTest(private val productService: ProductService,
                     supplierRef = "123",
                     isoCategory = "123456",
                     agreementId = agreementId,
-                    agreements = listOf(productAgreement, productAgreement),
+                    agreements = listOf(productAgreement),
                     attributes = Attributes(
                         manufacturer = "Samsung", compatible = listOf(CompatibleAttribute(hmsArtNr = "1"))
                     )
