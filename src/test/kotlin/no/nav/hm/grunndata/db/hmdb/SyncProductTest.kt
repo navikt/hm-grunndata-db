@@ -44,14 +44,14 @@ class SyncProductTest(private val productSync: ProductSync,
                 status = SupplierStatus.ACTIVE, info = SupplierInfo(email = "test@test")
                 )
             )
-            val product = productRepository.save(
+            productRepository.save(
                 Product(
                 supplierId = supplier.id, identifier = "HMDB-123", title = "Dette er et produkt", articleName = "Produkt 1",
                 supplierRef = "123", isoCategory = "123456",
                 attributes = Attributes (
                     manufacturer =  "Samsung",  compatible = listOf(CompatibleAttribute(hmsArtNr = "1"))))
             )
-            val product2 = productRepository.save(
+            productRepository.save(
                 Product(
                 supplierId = supplier.id, identifier = "HMDB-124", title = "Dette er et produkt2", articleName = "Produkt 2",
                 supplierRef = "124", isoCategory = "123456",

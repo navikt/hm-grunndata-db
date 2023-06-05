@@ -55,7 +55,7 @@ class AgreementExpirationTest(private val agreementExpiration: AgreementExpirati
         runBlocking {
             agreementService.save(agreement)
             agreementService.save(expired)
-            val product = productService.saveAndPushTokafka(
+            productService.saveAndPushTokafka(
                 Product(
                     supplierId = supplier.id,
                     identifier = "123",
@@ -63,7 +63,6 @@ class AgreementExpirationTest(private val agreementExpiration: AgreementExpirati
                     articleName = "Produkt 1",
                     supplierRef = "123",
                     isoCategory = "123456",
-                    agreementId = agreementId,
                     agreements = setOf(productAgreement, productAgreement2),
                     attributes = Attributes(
                         manufacturer = "Samsung", compatible = listOf(CompatibleAttribute(hmsArtNr = "1"))
