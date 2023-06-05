@@ -89,7 +89,7 @@ class ProductServiceTest(private val productService: ProductService,
             val products = productService.findByAgreementId(agreementId)
             products.size shouldBe 1
             products[0].agreements?.size shouldBe 2
-            products[0].pastAgreements?.size shouldBe 1
+            products[0].pastAgreements.size shouldBe 1
         }
     }
 }
