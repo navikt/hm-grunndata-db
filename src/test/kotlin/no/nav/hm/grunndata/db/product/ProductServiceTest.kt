@@ -14,7 +14,6 @@ import no.nav.hm.grunndata.db.supplier.SupplierService
 import no.nav.hm.grunndata.rapid.dto.*
 import no.nav.hm.rapids_rivers.micronaut.RapidPushService
 import org.junit.jupiter.api.Test
-import org.testcontainers.shaded.org.bouncycastle.asn1.x500.style.RFC4519Style.title
 import java.time.LocalDateTime
 import java.util.*
 
@@ -30,11 +29,21 @@ class ProductServiceTest(private val productService: ProductService,
     @Test
     fun productServiceTest() {
         val agreementId = UUID.randomUUID()
+        val agreementId2 = UUID.randomUUID()
         val agreement = Agreement(id = agreementId, identifier = "HMDB-123", title = "Rammeavtale Rullestoler", resume = "En kort beskrivelse", reference="23-10234",
             text = "En lang beskrivelse 1", published = LocalDateTime.now(), expired = LocalDateTime.now().plusYears(3),
             posts = listOf(
                 AgreementPost(title = "Post 1", identifier = "HMDB-321", nr = 1, description = "En beskrive av posten"),
                 AgreementPost(title = "Post 2", identifier = "HMDB-322", nr = 2, description = "En beskrive av posten")
+            ))
+
+        val pastAgreement = Agreement(id = agreementId2, identifier = "HMDB-124", title = "Rammeavtale Rullestoler",
+            resume = "En kort beskrivelse", reference="23-10235", status = AgreementStatus.INACTIVE,
+            expired = LocalDateTime.now().minusYears(1),
+            text = "En lang beskrivelse 1", published = LocalDateTime.now(),
+            posts = listOf(
+                AgreementPost(title = "Post 1", identifier = "HMDB-333", nr = 1, description = "En beskrive av posten"),
+                AgreementPost(title = "Post 2", identifier = "HMDB-444", nr = 2, description = "En beskrive av posten")
             ))
 
         val productAgreement = ProductAgreement(
@@ -46,6 +55,12 @@ class ProductServiceTest(private val productService: ProductService,
             id = agreement.id, identifier = agreement.identifier, reference = agreement.reference,
             rank = 2, postNr = 2, postIdentifier = agreement.posts[1].identifier
         )
+
+        val pastProductAgreement = ProductAgreement(
+            id = pastAgreement.id, identifier = pastAgreement.identifier, reference = pastAgreement.reference,
+            rank = 2, postNr = 2, postIdentifier = pastAgreement.posts[1].identifier
+        )
+
         val supplier = supplierService.save(
             Supplier(
                 name = "supplier 1", identifier = "unik-identifier",
@@ -63,6 +78,7 @@ class ProductServiceTest(private val productService: ProductService,
                     supplierRef = "123",
                     isoCategory = "123456",
                     agreements = setOf(productAgreement,productAgreement2),
+                    pastAgreements = setOf(pastProductAgreement),
                     attributes = Attributes(
                         manufacturer = "Samsung", compatible = listOf(CompatibleAttribute(hmsArtNr = "1"))
                     )
@@ -72,6 +88,8 @@ class ProductServiceTest(private val productService: ProductService,
             product.shouldNotBeNull()
             val products = productService.findByAgreementId(agreementId)
             products.size shouldBe 1
+            products[0].agreements?.size shouldBe 2
+            products[0].pastAgreements?.size shouldBe 1
         }
     }
 }
