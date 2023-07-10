@@ -29,6 +29,7 @@ open class ProductSync(
         private val LOG = LoggerFactory.getLogger(ProductSync::class.java)
         private var lastChanged: LocalDateTime = LocalDateTime.now()
         private var lastSize: Int = -1
+        private var days = 10L
     }
 
     suspend fun syncProducts() {
@@ -39,7 +40,7 @@ open class ProductSync(
             )
         )
         val from = syncBatchJob.syncfrom
-        val to = from.plusDays(10)
+        val to = from.plusDays(days)
         LOG.info("Calling product sync from ${from} to $to")
         val hmdbProductsBatch = hmDbClient.fetchProducts(from, to)
         LOG.info("Got total of ${hmdbProductsBatch!!.products.size} products")
@@ -64,10 +65,13 @@ open class ProductSync(
             hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = last.updated))
             lastSize = products.size
             lastChanged = last.updated
+            days = 10L
         } else {
             LOG.info("Empty list")
-            if (to.isBefore(LocalDateTime.now()))
+            if (to.isBefore(LocalDateTime.now())) {
                 hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = to))
+                days = 30L // make it run faster
+            }
         }
 
     }
