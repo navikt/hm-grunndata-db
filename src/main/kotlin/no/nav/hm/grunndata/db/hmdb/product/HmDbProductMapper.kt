@@ -131,7 +131,9 @@ class HmDBProductMapper(private val supplierService: SupplierService,
     private fun mapAttributes(produkt: HmDbProductDTO): Attributes = Attributes(
         shortdescription = produkt.adescshort ?: "",
         text = produkt.pshortdesc,
-        series = produkt.prodname
+        series = produkt.prodname,
+        tenderId = produkt.anbudid,
+        hasTender = produkt.hasanbud
     )
 }
 
