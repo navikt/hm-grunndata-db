@@ -4,6 +4,7 @@ import jakarta.inject.Singleton
 import no.nav.hm.grunndata.db.iso.IsoCategoryService
 import no.nav.hm.grunndata.db.product.Product
 import no.nav.hm.grunndata.db.supplier.SupplierService
+import java.time.LocalDateTime
 
 @Singleton
 class LegacyMapper(private val isoCategoryService: IsoCategoryService,
@@ -15,22 +16,22 @@ class LegacyMapper(private val isoCategoryService: IsoCategoryService,
         adraft = false,
         aindate = created.toString(),
         aisapproved = true,
-        anbudid = null,
-        aout = false,
+        anbudid = attributes.tenderId,
+        aout = expired.isBefore(LocalDateTime.now()),
         aoutdate = expired.toString(),
-        apostdesc = agreementInfo?.postTitle,
+        apostdesc = agreementInfo?.postTitle, // mapper ikke dette
         apostid = agreementInfo?.postIdentifier,
         apostnr = agreementInfo?.postNr.toString(),
         aposttitle = agreementInfo?.postTitle,
         artid = identifier,
         artname = articleName,
         artno = supplierRef,
-        artpostid = null,
+        artpostid = null, //mapper ikke dette
         blobfileURL = if (media.isNotEmpty()) media[0].uri else null,
         blobfileURL_snet = null,
         blobtype = if(media.isNotEmpty()) media[0].type.toString() else null,
         blobuse = "1",
-        hasanbud = false,
+        hasanbud = attributes.hasTender,
         isactive = true,
         isocode = isoCategory,
         isotextshort = isoCategoryService.lookUpCode(isoCategory)!!.isoText,
@@ -47,5 +48,15 @@ class LegacyMapper(private val isoCategoryService: IsoCategoryService,
         stockid = hmsArtNr,
         supplier = supplierService.findById(supplierId)?.identifier,
     )
+
+    fun Product.toTekniskeDataDTO() : List<TekniskeDataDTO> = techData.map {
+        TekniskeDataDTO(
+            prodid = seriesId!!,
+            artid = identifier,
+            datavalue = it.value,
+            techdataunit = it.unit,
+            techlabeldk = it.key
+        )
+    }
 }
 
