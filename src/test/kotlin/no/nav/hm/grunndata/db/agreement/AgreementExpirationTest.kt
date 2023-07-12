@@ -69,10 +69,13 @@ class AgreementExpirationTest(private val agreementExpiration: AgreementExpirati
                     )
                 ), "test-event"
             )
+            val expiredList = agreementService.findByStatusAndExpiredBefore(AgreementStatus.ACTIVE)
+            expiredList.size shouldBe 1
             agreementExpiration.expiredAgreements()
             productService.findByAgreementId(expired.id) shouldBe  emptyList()
-            productService.findByAgreementId(agreementId).size shouldBe 1
-
+            val product = productService.findByAgreementId(agreementId)[0]
+            product.pastAgreements.size shouldBe 1
+            product.pastAgreements.elementAt(0).id shouldBe expired.id
         }
 
     }

@@ -1,6 +1,7 @@
 package no.nav.hm.grunndata.db.agreement
 
 import jakarta.inject.Singleton
+import no.nav.hm.grunndata.db.product.ProductAgreement
 import no.nav.hm.grunndata.db.product.ProductService
 import no.nav.hm.grunndata.rapid.dto.AgreementStatus
 import no.nav.hm.grunndata.rapid.event.EventName
@@ -20,22 +21,26 @@ open class AgreementExpiration(private val agreementService: AgreementService,
     suspend fun expiredAgreements() {
         val expiredList = agreementService.findByStatusAndExpiredBefore(AgreementStatus.ACTIVE)
         expiredList.forEach {
-            deactiveProductsInAgreement(it)
+            deactiveProductsInExpiredAgreement(it)
         }
     }
 
     @Transactional
-    open suspend fun deactiveProductsInAgreement(agreement: Agreement) {
-        LOG.info("Agreement ${agreement.id} ${agreement.reference} has expired")
-        agreementService.update(agreement.copy(status = AgreementStatus.INACTIVE,
+    open suspend fun deactiveProductsInExpiredAgreement(expiredAgreement: Agreement) {
+        LOG.info("Agreement ${expiredAgreement.id} ${expiredAgreement.reference} has expired")
+        agreementService.update(expiredAgreement.copy(status = AgreementStatus.INACTIVE,
             updated = LocalDateTime.now(), updatedBy = expiration))
-        val productsInAgreement = productService.findByAgreementId(agreement.id)
+        val productsInAgreement = productService.findByAgreementId(expiredAgreement.id)
         productsInAgreement.forEach { product ->
-            LOG.info("Found ${product.id} in expired agreement")
+            LOG.info("Found product: ${product.id} in expired agreement")
+            val expiredProductAgreements = product.agreements?.filter {
+                it.id == expiredAgreement.id
+            }?.toSet()
             val notExpired = product.agreements?.filterNot {
-                it.id == agreement.id
+                it.id == expiredAgreement.id
             }?.toSet()
             productService.saveAndPushTokafka(product.copy(agreements = notExpired,
+                pastAgreements = product.pastAgreements.plus(expiredProductAgreements as Set<ProductAgreement>),
                 updated = LocalDateTime.now(), updatedBy = expiration), eventName = EventName.hmdbproductsyncV1)
         }
     }
