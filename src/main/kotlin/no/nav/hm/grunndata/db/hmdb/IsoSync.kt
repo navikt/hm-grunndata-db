@@ -18,7 +18,7 @@ class IsoSync(private val hmDbClient: HmDbClient,
     }
 
     suspend fun syncIso() {
-        val isos = hmDbClient.fetchIso()
+        val isos = hmDbClient.fetchIso().filter { it.isotext != null }
         val categories = isos.map { it.toIsoCategory() }
         LOG.info("Got ${categories.size} for updating")
         categories.forEach {
