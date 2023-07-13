@@ -9,4 +9,7 @@ class LegacyAPIController(private val legacyService: LegacyService) {
     @Get("/produkter")
     suspend fun getAllProductsAsLegacyProdukter(): ErstattProdukterDTO = legacyService.retrieveAllProductAndMapToLegacyDTO()
 
+    @Get("/leverandorer")
+    suspend fun getAllSuppliersAsLegacyLeverandorer(): ErstattLeverandorerDTO = legacyService.retriveAllSuppliersAndMapToLegacyDTO()
+
 }
