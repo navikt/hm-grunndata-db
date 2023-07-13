@@ -17,12 +17,6 @@ class SupplierAPIController(private val supplierService: SupplierService) {
 
     @Get("/{?params*}")
     suspend fun findSuppliers(@QueryValue params: Map<String, String>?, pageable: Pageable
-    ): Page<SupplierDTO> = supplierService.findAll(buildCriteriaSpec(params), pageable).map { it.toDTO() }
+    ): Page<SupplierDTO> = supplierService.findSuppliers(params, pageable)
 
-    private fun buildCriteriaSpec(params: Map<String, String>?): PredicateSpecification<Supplier>?
-            = params?.let {
-        where {
-            if (params.contains("updated")) root[Supplier::updated] greaterThanOrEqualTo LocalDateTime.parse(params["updated"])
-        }
-    }
 }

@@ -3,14 +3,12 @@ package no.nav.hm.grunndata.db.legacy
 import io.micronaut.data.model.Pageable
 import io.micronaut.data.model.Sort
 import jakarta.inject.Singleton
-import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.db.iso.IsoCategoryService
-import no.nav.hm.grunndata.db.product.Product
 import no.nav.hm.grunndata.db.product.ProductService
-import no.nav.hm.grunndata.db.product.toEntity
 import no.nav.hm.grunndata.db.supplier.SupplierService
 import no.nav.hm.grunndata.rapid.dto.ProductRapidDTO
 import no.nav.hm.grunndata.rapid.dto.ProductStatus
+import no.nav.hm.grunndata.rapid.dto.SupplierDTO
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 
@@ -23,10 +21,11 @@ class LegacyService(
     companion object {
         private val LOG = LoggerFactory.getLogger(LegacyService::class.java)
     }
+
     suspend fun retrieveAllProductAndMapToLegacyDTO(): ErstattProdukterDTO {
         val page = productService.findProducts(emptyMap(), Pageable.from(0, 50000, Sort.of(Sort.Order("updated"))))
         if (page.numberOfElements > 0) {
-            LOG.info("found numberOfElements: ${page.numberOfElements}")
+            LOG.info("found products numberOfElements: ${page.numberOfElements}")
             val products = page.content.filter { it.status != ProductStatus.DELETED }
             val produkter = mutableListOf<ProduktDTO>()
             val techdata = mutableListOf<TekniskeDataDTO>()
@@ -37,6 +36,17 @@ class LegacyService(
             return ErstattProdukterDTO(produkter, techdata)
         }
         return ErstattProdukterDTO(emptyList(), emptyList())
+    }
+
+    suspend fun retriveAllSuppliersAndMapToLegacyDTO(): ErstattLeverandorerDTO {
+        val page = supplierService.findSuppliers(emptyMap(), Pageable.unpaged())
+        if (page.numberOfElements > 0) {
+            LOG.info("found supplier numberOfElements: ${page.numberOfElements}")
+            return ErstattLeverandorerDTO( leverandorer = page.content.map {
+               it.toLeverandorDTO() }
+            )
+        }
+        return ErstattLeverandorerDTO(leverandorer = emptyList())
     }
 
     fun ProductRapidDTO.toProduktDTO(): ProduktDTO = ProduktDTO(
@@ -86,5 +96,10 @@ class LegacyService(
             techlabeldk = it.key
         )
     }
-}
 
+    fun SupplierDTO.toLeverandorDTO(): LeverandorDTO = LeverandorDTO(
+        leverandorid = identifier,
+        leverandornavn = name, adresse = info.address, postnummer = info.postNr, poststed = info.postLocation,
+        telefon = info.phone, epost = info.email, www = info.homepage, landkode = info.countryCode
+    )
+}
