@@ -59,11 +59,11 @@ open class AgreementService(private val agreementRepository: AgreementRepository
     @Transactional
     open suspend fun saveAndPushTokafka(agreement: Agreement, eventName: String): AgreementDTO {
         val saved =
-            (if (agreement.createdBy == HMDB) agreementRepository.findByIdentifier(agreement.identifier)
-        else agreementRepository.findById(agreement.id))?.let { inDb ->
-            agreementRepository.update(agreement.copy(id = inDb.id, created = inDb.created,
+            (if (agreement.createdBy == HMDB) findByIdentifier(agreement.identifier)
+        else findById(agreement.id))?.let { inDb ->
+            update(agreement.copy(id = inDb.id, created = inDb.created,
                 createdBy = inDb.createdBy))
-        } ?: agreementRepository.save(agreement)
+        } ?: save(agreement)
         val agreementDTO = saved.toDTO()
         LOG.info("saved: ${agreementDTO.id} ${agreementDTO.reference}")
         gdbRapidPushService.pushDTOToKafka(agreementDTO, eventName)

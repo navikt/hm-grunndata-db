@@ -36,7 +36,7 @@ data class Product (
     @field:Column(name="agreement")
     val agreementInfo: AgreementInfo?=null,
     @field:TypeDef(type = DataType.JSON)
-    val agreements: Set<ProductAgreement>? = emptySet(),
+    val agreements: Set<ProductAgreement> = emptySet(),
     @field:TypeDef(type = DataType.JSON)
     val pastAgreements: Set<ProductAgreement> = emptySet(),
     val created: LocalDateTime = LocalDateTime.now(),
