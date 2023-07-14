@@ -41,3 +41,9 @@ fun Agreement.toDTO(): AgreementDTO = AgreementDTO(
     published = published, expired = expired, attachments = attachments, createdBy = createdBy, updatedBy = updatedBy, created = created,
     updated = updated, posts = posts )
 
+fun AgreementDTO.toEntity(): Agreement = Agreement(
+    id = id, identifier = identifier, title = title, status = status, resume = resume, text = text, reference = reference,
+    published = published, expired = expired, attachments = attachments, posts = posts, createdBy = createdBy,
+    updatedBy = updatedBy, created = created
+)
+
