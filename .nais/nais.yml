@@ -30,6 +30,8 @@ spec:
   env:
     - name: DB_DRIVER
       value: "org.postgresql.Driver"
+    - name: DB_JDBC_URL
+      value: "jdbc:postgresql://${DB_HOST}:5432/gdb"
     - name: HMDB_URL
       value: "http://hm-grunndata-hmdb2gdb"
     - name: RAPIDSANDRIVERS_ENABLED
