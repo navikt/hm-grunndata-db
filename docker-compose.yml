@@ -2,7 +2,6 @@ version: '3'
 services:
   postgresgrunndatadb:
     hostname: postgres
-    container_name: postgresgrunndatadb
     image: postgres:14
     ports:
       - "5432:5432"
@@ -13,7 +12,6 @@ services:
     command: ["postgres", "-c", "log_statement=none"]
   kafkagrunndata:
     hostname: kafkagrunndata
-    container_name: kafkagrunndata
     image: confluentinc/cp-kafka:7.3.1
     logging:
       driver: none
@@ -26,7 +24,7 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: 'zookeepergrunndata:2181'
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafkagrunndata:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafkagrunndata:9092,PLAINTEXT_HOST://localhost:29092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
@@ -38,7 +36,6 @@ services:
     hostname: zookeepergrunndata
     logging:
       driver: none
-    container_name: zookeepergrunndata
     ports:
       - "2181:2181"
     environment:
