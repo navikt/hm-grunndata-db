@@ -9,14 +9,8 @@ import jakarta.inject.Singleton
 import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.db.GdbRapidPushService
 import no.nav.hm.grunndata.db.HMDB
-import no.nav.hm.grunndata.db.product.Product
-import no.nav.hm.grunndata.db.product.ProductService
-import no.nav.hm.grunndata.db.supplier.Supplier
 import no.nav.hm.grunndata.rapid.dto.AgreementDTO
-import no.nav.hm.grunndata.rapid.dto.AgreementRegistrationRapidDTO
 import no.nav.hm.grunndata.rapid.dto.AgreementStatus
-import no.nav.hm.grunndata.rapid.dto.ProductRapidDTO
-import no.nav.hm.rapids_rivers.micronaut.RapidPushService
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.util.*
@@ -69,4 +63,6 @@ open class AgreementService(private val agreementRepository: AgreementRepository
         gdbRapidPushService.pushDTOToKafka(agreementDTO, eventName)
         return agreementDTO
     }
+
+    suspend fun findIdsByStatus(status: AgreementStatus): List<AgreementIdDTO>  = agreementRepository.findIdsByStatus(status)
 }

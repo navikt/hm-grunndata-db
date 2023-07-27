@@ -4,8 +4,9 @@ import io.micronaut.context.annotation.Requires
 import jakarta.inject.Singleton
 import no.nav.helse.rapids_rivers.KafkaRapid
 import no.nav.hm.grunndata.db.GdbRapidPushService
+import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.db.agreement.Agreement
-import no.nav.hm.grunndata.db.agreement.AgreementRepository
+import no.nav.hm.grunndata.db.agreement.AgreementIdDTO
 import no.nav.hm.grunndata.db.agreement.AgreementService
 import no.nav.hm.grunndata.db.agreement.toDTO
 import no.nav.hm.grunndata.db.hmdb.agreement.*
@@ -13,7 +14,6 @@ import no.nav.hm.grunndata.db.hmdbMediaUrl
 import no.nav.hm.grunndata.rapid.dto.*
 import no.nav.hm.grunndata.rapid.event.EventName
 import org.slf4j.LoggerFactory
-import java.awt.SystemColor.text
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
@@ -106,4 +106,26 @@ class AgreementSync(
             }
         }
 
+    suspend fun syncDeletedAgreementIds(): List<AgreementIdDTO> {
+        val toBeDeleted = findToBeDeletedAgreementIds()
+        toBeDeleted.forEach {
+            agreementService.findById(it.id)?.let { inDb ->
+                agreementService.saveAndPushTokafka(inDb.copy(status = AgreementStatus.INACTIVE, updated = LocalDateTime.now()), EventName.hmdbagreementsyncV1)
+            }
+        }
+        return toBeDeleted
+    }
+
+    private suspend fun findToBeDeletedAgreementIds(): List<AgreementIdDTO> {
+        val activeIds = agreementService.findIdsByStatus(AgreementStatus.ACTIVE)
+        val hmdbIds = hmDbClient.fetchAgreementsIdActive()?.map { "$HMDB-$it" }?.toSet()
+        hmdbIds?.let {
+            LOG.info("Got ${hmdbIds.size} active ids")
+            val toBeDeleted = activeIds.filterNot { hmdbIds.contains(it.identifier) }
+            LOG.info("Found ${toBeDeleted.size} to be deleted")
+            return toBeDeleted
+        }
+        return emptyList()
+    }
 }
+

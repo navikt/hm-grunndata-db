@@ -30,6 +30,9 @@ interface HmDbClient {
     @Get("/api/v1/sync/agreements")
     fun fetchAgreements(): List<HmDbAgreementDTO>?
 
+    @Get("/api/v1/sync/agreements/active/ids")
+    fun fetchAgreementsIdActive(): List<Long>?
+
     @Get("/api/v1/sync/products/{productId}")
     fun fetchProductsById(productId: Long): HmDbProductBatchDTO?
 

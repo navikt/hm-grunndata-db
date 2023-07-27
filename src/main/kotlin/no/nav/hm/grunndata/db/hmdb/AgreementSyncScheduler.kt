@@ -28,4 +28,13 @@ class AgreementSyncScheduler(
 
     }
 
+    @Scheduled(cron = "0 30 1 * * *")
+    fun syncActiveIds() {
+        if (leaderElection.isLeader()) {
+            runBlocking {
+                agreementSync.syncDeletedAgreementIds()
+            }
+        }
+    }
+
 }
