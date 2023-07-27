@@ -55,6 +55,7 @@ class HmDBProductMapper(private val supplierService: SupplierService,
             ?: throw RuntimeException("Wrong agreement state!, should never happen")
         ProductAgreement(
             id = agreement.id,
+            title = agreement.title,
             identifier = agreement.identifier,
             reference = agreement.reference,
             rank = apost.postrank,

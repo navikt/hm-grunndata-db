@@ -65,8 +65,9 @@ open class ProductService(
             val post = agreement!!.posts.find { it.identifier == agree.postIdentifier }
                 ?: throw RuntimeException("Wrong agreement state!, should never happen")
             AgreementInfo(
-                id = agree.id,
-                identifier = agree.identifier,
+                id = agreement.id,
+                title = agreement.title,
+                identifier = agreement.identifier,
                 rank = agree.rank,
                 postNr = agree.postNr,
                 postIdentifier = agree.postIdentifier,

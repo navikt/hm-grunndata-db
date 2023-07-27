@@ -49,6 +49,7 @@ data class Product (
 
 data class ProductAgreement(
     val id: UUID,
+    val title: String?=null,
     val identifier: String?=null,
     val reference: String,
     val rank: Int,
