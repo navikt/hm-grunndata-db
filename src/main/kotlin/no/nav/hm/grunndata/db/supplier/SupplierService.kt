@@ -11,14 +11,22 @@ import io.micronaut.data.runtime.criteria.where
 import io.micronaut.http.annotation.QueryValue
 import jakarta.inject.Singleton
 import kotlinx.coroutines.runBlocking
+import no.nav.hm.grunndata.db.GdbRapidPushService
+import no.nav.hm.grunndata.db.HMDB
+import no.nav.hm.grunndata.db.agreement.Agreement
+import no.nav.hm.grunndata.db.agreement.AgreementService
+import no.nav.hm.grunndata.db.agreement.toDTO
+import no.nav.hm.grunndata.rapid.dto.AgreementDTO
 import no.nav.hm.grunndata.rapid.dto.SupplierDTO
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.util.*
+import javax.transaction.Transactional
 
 @Singleton
 @CacheConfig("suppliers")
-open class SupplierService(private val supplierRepository: SupplierRepository) {
+open class SupplierService(private val supplierRepository: SupplierRepository,
+                           private val gdbRapidPushService: GdbRapidPushService) {
 
     companion object {
         private val LOG = LoggerFactory.getLogger(SupplierService::class.java)
@@ -52,5 +60,19 @@ open class SupplierService(private val supplierRepository: SupplierRepository) {
         where {
             if (params.contains("updated")) root[Supplier::updated] greaterThanOrEqualTo LocalDateTime.parse(params["updated"])
         }
+    }
+
+    @Transactional
+    open suspend fun saveAndPushTokafka(supplier: Supplier, eventName: String): SupplierDTO {
+        val saved =
+            (if (supplier.createdBy == HMDB) findByIdentifier(supplier.identifier)
+            else findById(supplier.id))?.let { inDb ->
+                update(supplier.copy(id = inDb.id, created = inDb.created,
+                    createdBy = inDb.createdBy))
+            } ?: save(supplier)
+        val supplierDTO = saved.toDTO()
+        LOG.info("saved: ${supplierDTO.id} ")
+        gdbRapidPushService.pushDTOToKafka(supplierDTO, eventName)
+        return supplierDTO
     }
 }

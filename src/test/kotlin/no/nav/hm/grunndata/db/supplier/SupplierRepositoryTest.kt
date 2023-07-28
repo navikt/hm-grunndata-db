@@ -3,14 +3,21 @@ package no.nav.hm.grunndata.db.supplier
 import io.kotest.common.runBlocking
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
+import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
+import io.mockk.mockk
 import no.nav.hm.grunndata.db.hmdb.HmdbSupplierDTO
 import no.nav.hm.grunndata.db.hmdb.toSupplier
+import no.nav.hm.rapids_rivers.micronaut.RapidPushService
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
 @MicronautTest
 class SupplierServiceTest(private val supplierService: SupplierService) {
+
+
+    @MockBean(RapidPushService::class)
+    fun mockRapidService(): RapidPushService = mockk(relaxed = true)
 
     @Test
     fun readSave() {

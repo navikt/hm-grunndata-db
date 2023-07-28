@@ -4,6 +4,7 @@ import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.MappedEntity
 import io.micronaut.data.annotation.TypeDef
 import io.micronaut.data.model.DataType
+import io.micronaut.data.runtime.criteria.update
 import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.rapid.dto.SupplierDTO
 import no.nav.hm.grunndata.rapid.dto.SupplierInfo
@@ -30,3 +31,8 @@ const val SupplierTableName="supplier_v1"
 
 
 fun Supplier.toDTO(): SupplierDTO = SupplierDTO(id, identifier, status,  name, info, createdBy, updatedBy, created, updated)
+
+fun SupplierDTO.toEntity(): Supplier = Supplier(
+    id = id, identifier = identifier, name = name, status = status, info = info , createdBy = createdBy, updatedBy = updatedBy,
+    created = created, updated = updated
+)
