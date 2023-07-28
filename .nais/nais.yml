@@ -66,3 +66,4 @@ spec:
     inbound:
       rules:
         - application: hm-grunndata-index
+        - application: hm-grunndata-register
