@@ -7,6 +7,7 @@ import io.micronaut.data.model.query.builder.sql.Dialect
 import io.micronaut.data.repository.jpa.kotlin.CoroutineJpaSpecificationExecutor
 import io.micronaut.data.repository.kotlin.CoroutinePageableCrudRepository
 import no.nav.hm.grunndata.rapid.dto.ProductStatus
+import java.time.LocalDateTime
 import java.util.*
 
 @JdbcRepository(dialect = Dialect.POSTGRES)
@@ -19,6 +20,8 @@ interface ProductRepository: CoroutinePageableCrudRepository<Product, UUID>, Cor
 
     @Query("""SELECT * FROM "product_v1" WHERE agreements @> CAST(:jsonQuery AS jsonb) """, nativeQuery = true)
     suspend fun findByAgreementsJson(jsonQuery: String): List<Product>
+
+    suspend fun findByStatusAndExpiredBefore(status: ProductStatus, expired: LocalDateTime?): List<Product>
 
 }
 
