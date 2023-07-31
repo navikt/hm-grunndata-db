@@ -76,7 +76,8 @@ class AgreementSync(
     private fun mapNewsDocHolder(newsdocHolder: List<NewsDocHolder>): List<AgreementAttachment> = newsdocHolder.map {
         AgreementAttachment(
             title = it.newsDoc.hmidoctitle,
-            description = it.newsDoc.hmidocdesc, media = mapMedia(it.newsDoc, it.newsDocAdr)
+            description = it.newsDoc.hmidocdesc,
+            media = mapMedia(it.newsDoc, it.newsDocAdr)
         )
     }
 
@@ -86,12 +87,12 @@ class AgreementSync(
             listOf(
                 MediaInfo(uri = "hmidocfiles/${newsDoc.hmidocfile}",
                 sourceUri = "$hmdbMediaUrl/hmidocfiles/${newsDoc.hmidocfile}", type = getFileType(newsDoc.hmidocfile),
-                text = newsDoc.hmidoctitle)
+                text = newsDoc.hmidoctitle, updated = newsDoc.hmidocindate)
             )
         else emptyList()
         return mediaList.plus(newsDocAdr.map {
             MediaInfo(uri = "doclevfiles/${it.docadrfile}", sourceUri = "$hmdbMediaUrl/doclevfiles/${it.docadrfile}",
-                type = getFileType(it.docadrfile), text = newsDoc.hmidoctitle)
+                type = getFileType(it.docadrfile), text = newsDoc.hmidoctitle, updated = it.docadrindate)
         }.filter { it.type != MediaType.OTHER })
     }
 
