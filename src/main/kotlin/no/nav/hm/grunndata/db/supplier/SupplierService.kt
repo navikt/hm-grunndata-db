@@ -10,18 +10,14 @@ import io.micronaut.data.runtime.criteria.get
 import io.micronaut.data.runtime.criteria.where
 import io.micronaut.http.annotation.QueryValue
 import jakarta.inject.Singleton
+import jakarta.transaction.Transactional
 import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.db.GdbRapidPushService
 import no.nav.hm.grunndata.db.HMDB
-import no.nav.hm.grunndata.db.agreement.Agreement
-import no.nav.hm.grunndata.db.agreement.AgreementService
-import no.nav.hm.grunndata.db.agreement.toDTO
-import no.nav.hm.grunndata.rapid.dto.AgreementDTO
 import no.nav.hm.grunndata.rapid.dto.SupplierDTO
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.util.*
-import javax.transaction.Transactional
 
 @Singleton
 @CacheConfig("suppliers")

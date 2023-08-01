@@ -1,11 +1,11 @@
 package no.nav.hm.grunndata.db.product
 
 import jakarta.inject.Singleton
+import jakarta.transaction.Transactional
 import no.nav.hm.grunndata.rapid.dto.ProductStatus
 import no.nav.hm.grunndata.rapid.event.EventName
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
-import javax.transaction.Transactional
 
 @Singleton
 open class ProductExpiration(private val productService: ProductService) {

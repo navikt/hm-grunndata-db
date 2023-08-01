@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 
 val jvmTarget = "17"
-val micronautVersion="3.9.2"
+val micronautVersion="4.0.1"
 val kafkaVersion = "3.2.1"
 val micrometerRegistryPrometheusVersion = "1.9.1"
 val junitJupiterVersion = "5.9.0"
@@ -21,11 +21,11 @@ group = "no.nav.hm"
 version = properties["version"] ?: "local-build"
 
 plugins {
-    kotlin("jvm") version "1.7.0"
-    kotlin("kapt") version "1.7.0"
+    kotlin("jvm") version "1.8.22"
+    kotlin("kapt") version "1.8.22"
     id("java")
     id("com.github.johnrengelman.shadow") version "7.1.0"
-    id("io.micronaut.application") version "3.7.9"
+    id("io.micronaut.application") version "4.0.2"
 }
 
 configurations.all {
@@ -38,6 +38,10 @@ dependencies {
 
     api("ch.qos.logback:logback-classic:$logbackClassicVersion")
     api("net.logstash.logback:logstash-logback-encoder:$logbackEncoderVersion")
+
+    runtimeOnly("org.yaml:snakeyaml")
+    implementation("io.micronaut:micronaut-jackson-databind")
+
     // coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive")

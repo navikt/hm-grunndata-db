@@ -6,6 +6,7 @@ import io.micronaut.cache.annotation.Cacheable
 import io.micronaut.data.model.Pageable
 import io.micronaut.data.repository.jpa.criteria.PredicateSpecification
 import jakarta.inject.Singleton
+import jakarta.transaction.Transactional
 import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.db.GdbRapidPushService
 import no.nav.hm.grunndata.db.HMDB
@@ -14,7 +15,6 @@ import no.nav.hm.grunndata.rapid.dto.AgreementStatus
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.util.*
-import javax.transaction.Transactional
 
 @Singleton
 @CacheConfig("agreements")

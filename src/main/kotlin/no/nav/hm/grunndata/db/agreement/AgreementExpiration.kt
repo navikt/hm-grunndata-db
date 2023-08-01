@@ -1,13 +1,13 @@
 package no.nav.hm.grunndata.db.agreement
 
 import jakarta.inject.Singleton
+import jakarta.transaction.Transactional
 import no.nav.hm.grunndata.db.product.ProductAgreement
 import no.nav.hm.grunndata.db.product.ProductService
 import no.nav.hm.grunndata.rapid.dto.AgreementStatus
 import no.nav.hm.grunndata.rapid.event.EventName
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
-import javax.transaction.Transactional
 
 @Singleton
 open class AgreementExpiration(private val agreementService: AgreementService,
