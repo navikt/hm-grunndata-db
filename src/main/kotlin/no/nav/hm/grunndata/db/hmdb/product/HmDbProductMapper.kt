@@ -6,6 +6,7 @@ import no.nav.hm.grunndata.db.agreement.AgreementService
 import no.nav.hm.grunndata.db.hmdb.HmDbIdentifier
 import no.nav.hm.grunndata.db.hmdbMediaUrl
 import no.nav.hm.grunndata.db.iso.IsoCategoryService
+import no.nav.hm.grunndata.db.media.Media
 import no.nav.hm.grunndata.db.product.Product
 import no.nav.hm.grunndata.db.product.ProductAgreement
 import no.nav.hm.grunndata.db.supplier.SupplierService
@@ -89,7 +90,7 @@ class HmDBProductMapper(private val supplierService: SupplierService,
         if (prod.aisapproved && prod.isactive) ProductStatus.ACTIVE else
             ProductStatus.INACTIVE
 
-    fun mapBlobs(blobs: List<BlobDTO>): List<MediaInfo> =
+    fun mapBlobs(blobs: List<BlobDTO>): List<Media> =
         blobs.associateBy { it.blobfile }
             .values
             .map { mapBlob(it) }
@@ -98,7 +99,7 @@ class HmDBProductMapper(private val supplierService: SupplierService,
             .mapIndexed { index, media -> media.copy(priority = index + 1) }
 
 
-    fun mapBlob(blobDTO: BlobDTO): MediaInfo {
+    fun mapBlob(blobDTO: BlobDTO): Media {
         val blobFile = blobDTO.blobfile.trim()
         val blobType = blobDTO.blobtype.trim().lowercase()
         val mediaType = when (blobType) {
@@ -123,7 +124,7 @@ class HmDBProductMapper(private val supplierService: SupplierService,
             }
         }
 
-        return MediaInfo(
+        return Media (
             type = mediaType, text = blobType, sourceUri = "$hmdbMediaUrl/$typePath/$blobFile",
             uri = "$typePath/${blobFile}", source = MediaSourceType.HMDB
         )

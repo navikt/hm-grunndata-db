@@ -11,6 +11,7 @@ import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.db.GdbRapidPushService
 import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.db.agreement.AgreementService
+import no.nav.hm.grunndata.db.media.toMediaInfo
 import no.nav.hm.grunndata.db.supplier.SupplierService
 import no.nav.hm.grunndata.db.supplier.toDTO
 import no.nav.hm.grunndata.rapid.dto.AgreementInfo
@@ -58,7 +59,7 @@ open class ProductService(
     private fun Product.toDTO():ProductRapidDTO = ProductRapidDTO (
         id = id, supplier = runBlocking{supplierService.findById(supplierId)!!.toDTO()}, title = title, articleName = articleName,  attributes=attributes,
         status = status, hmsArtNr = hmsArtNr, identifier = identifier, supplierRef=supplierRef, isoCategory=isoCategory,
-        accessory=accessory, sparePart=sparePart, seriesId=seriesId, techData=techData, media= media, created=created,
+        accessory=accessory, sparePart=sparePart, seriesId=seriesId, techData=techData, media= media.map { it.toMediaInfo()}, created=created,
         updated=updated, published=published, expired=expired, agreementInfo = agreementInfo, hasAgreement = (agreementInfo!=null),
         createdBy=createdBy, updatedBy=updatedBy, agreements = agreements?.map {agree ->
             val agreement = agreementService.findByIdentifier(agree.identifier!!)
