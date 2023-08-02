@@ -13,6 +13,7 @@ import no.nav.hm.grunndata.db.product.ProductService
 import no.nav.hm.grunndata.rapid.dto.ProductStatus
 import no.nav.hm.grunndata.rapid.event.EventName
 import org.slf4j.LoggerFactory
+import java.time.DateTimeException
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
@@ -87,6 +88,20 @@ open class ProductSync(
                 }
             }
         } ?: LOG.error("Could not find $productId")
+    }
+
+    suspend fun syncProductsByArtIdStartEnd(artIdStart:Long, artIdEnd:Long) {
+        hmDbClient.fetchProductsByArtIdStartEnd(artIdStart, artIdEnd)?.let {
+            batch -> extractProductBatch(batch).forEach {
+                try {
+                    LOG.info("saving to db: ${it.identifier} with hmsnr ${it.hmsArtNr}")
+                    productService.saveAndPushTokafka(it, EventName.hmdbproductsyncV1)
+                }
+                catch (e: DateTimeException) {
+                    LOG.error("Got exception", e)
+                }
+            }
+        } ?: LOG.error("Could not find any from $artIdStart and $artIdEnd")
     }
 
     suspend fun syncDeletedProductIds(): List<ProductIdDTO> {

@@ -49,6 +49,12 @@ class SyncController(private val productSync: ProductSync,
         productSync.syncProductsById(productId)
     }
 
+    @Get("/products/range/{artIdStart}/{artIdEnd}")
+    suspend fun syncProductsByArtIdStartEnd(artIdStart:Long, artIdEnd: Long){
+        LOG.info("call sync products from articleId start $artIdStart end $artIdEnd")
+        productSync.syncProductsByArtIdStartEnd(artIdStart, artIdEnd)
+    }
+
     @Put("/products/syncFrom/{syncFrom}")
     suspend fun setProductsSyncFrom(syncFrom: LocalDateTime) {
         LOG.info("Reset syncfrom for products to $syncFrom")
