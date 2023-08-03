@@ -2,6 +2,7 @@ package no.nav.hm.grunndata.db.hmdb
 
 import io.micronaut.data.exceptions.DataAccessException
 import jakarta.inject.Singleton
+import kotlinx.coroutines.delay
 
 import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.db.hmdb.product.HmDBProductMapper
@@ -88,6 +89,28 @@ open class ProductSync(
                 }
             }
         } ?: LOG.error("Could not find $productId")
+    }
+
+    suspend fun syncAllActiveProducts() {
+        val sortedIds = hmDbClient.fetchProductsIdActive()?.sorted() ?: emptyList()
+        var startIndex = 0
+        var endIndex = 999;
+        while(endIndex < sortedIds.size) {
+            val start = sortedIds.elementAt(startIndex)
+            val end = sortedIds.elementAt(endIndex)
+            LOG.info("from index: $startIndex to endIndex $endIndex, with $start - $end")
+            syncProductsByArtIdStartEnd(start, end)
+            LOG.info("Delay for 60s")
+            delay(60000)
+            startIndex = endIndex+1
+            endIndex = startIndex + 999;
+        }
+        if (startIndex<sortedIds.size) {
+            val start = sortedIds.elementAt(startIndex)
+            val end = sortedIds.last()
+            LOG.info("Getting the rest of elements with $start - $end")
+            syncProductsByArtIdStartEnd(start,end)
+        }
     }
 
     suspend fun syncProductsByArtIdStartEnd(artIdStart:Long, artIdEnd:Long) {
