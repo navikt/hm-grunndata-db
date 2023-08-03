@@ -59,6 +59,7 @@ class SyncController(private val productSync: ProductSync,
     suspend fun syncAllProducts() {
         LOG.info("Call sync all products")
         productSync.syncAllActiveProducts()
+        LOG.info("Sync all finished")
     }
 
 

@@ -108,7 +108,7 @@ class HmDBProductMapper(private val supplierService: SupplierService,
             "brosjyre", "produktbl", "bruksanvisning", "brugsanvisning", "quickguide", "målskjema", "batterioversikt", "seil" -> MediaType.PDF
             "video" -> MediaType.VIDEO
             else -> {
-                LOG.error("Unrecognized media type with file: ${blobDTO.blobfile} and type: ${blobDTO.blobtype}")
+                LOG.error("Unrecognized media type with file: $blobFile and type: $blobType")
                 MediaType.OTHER
             }
         }
