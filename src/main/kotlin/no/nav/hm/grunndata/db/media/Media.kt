@@ -6,7 +6,7 @@ import no.nav.hm.grunndata.rapid.dto.MediaType
 import java.time.LocalDateTime
 
 data class Media (
-    val sourceUri: String?=null,
+    val sourceUri: String,
     val uri:    String,
     val priority: Int = -1,
     val type: MediaType = MediaType.IMAGE,
@@ -21,7 +21,7 @@ fun MediaInfo.toEntity(): Media = Media (
 )
 
 fun Media.toMediaInfo(): MediaInfo = MediaInfo (
-    sourceUri = sourceUri!!,
+    sourceUri = sourceUri,
     uri = uri,
     priority = priority,
     type = type,
