@@ -38,8 +38,7 @@ open class ProductService(
     @Transactional
     open suspend fun saveAndPushTokafka(prod: Product, eventName: String): ProductRapidDTO {
         val product = attributeTagService.addBestillingsordningAttribute(prod)
-        val saved = (if (product.createdBy == HMDB) productRepository.findByIdentifier(product.identifier)
-        else productRepository.findById(product.id))?.let { inDb ->
+        val saved = productRepository.findBySupplierIdAndSupplierRef(product.supplierId, product.supplierRef)?.let { inDb ->
             productRepository.update(product.copy(id = inDb.id, created = inDb.created,
                 createdBy = inDb.createdBy))
         } ?: productRepository.save(product)
