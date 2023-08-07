@@ -25,6 +25,7 @@ class SupplierSync(
         private val LOG = LoggerFactory.getLogger(SupplierSync::class.java)
     }
 
+
     suspend fun syncSuppliers() {
         val syncBatchJob = hmdbBatchRepository.findByName(SYNC_SUPPLIERS) ?: hmdbBatchRepository.save(
             HmDbBatch(
@@ -34,34 +35,41 @@ class SupplierSync(
         )
         hmDbClient.fetchSuppliers(syncBatchJob.syncfrom)?.let { suppliers ->
             LOG.info("Calling supplier sync from ${syncBatchJob.syncfrom}, Got total of ${suppliers.size} suppliers")
-            val entities = suppliers.map { it.toSupplier() }.sortedBy { it.updated }
-
-            entities.forEach {
-                val saved = supplierService.findByIdentifier(it.identifier)?.let { inDb ->
-                    if (it.updated.isAfter(inDb.updated)) { // hack to fix duplicate errors
-                            supplierService.update(
-                                it.copy(
-                                    id = inDb.id,
-                                    created = inDb.created,
-                                    createdBy = inDb.createdBy
-                                )
-                            )
-                        }
-                    else inDb
-
-                } ?: run {
-                    try {
-                        supplierService.save(it)
-                    } catch (e: DataAccessException) {
-                        LOG.error("Got exception ${e.message}")
-                        supplierService.save(it.copy(name = it.name + " DUPLICATE"))
-                    }
-                }
-                LOG.info("saved supplier ${saved.id} with identifier ${saved.identifier} and lastupdated ${saved.updated}")
-                gdbRapidPushService.pushDTOToKafka(saved.toDTO(), EventName.hmdbsuppliersyncV1)
-            }
+            persistAndPushToRapid(suppliers)
             hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = suppliers.last().lastupdated))
         }
+    }
+
+    private fun persistAndPushToRapid(suppliers: List<HmdbSupplierDTO>) {
+        val entities = suppliers.map { it.toSupplier() }.sortedBy { it.updated }
+        entities.forEach {
+            val saved = supplierService.findByIdentifier(it.identifier)?.let { inDb ->
+                if (it.updated.isAfter(inDb.updated)) { // hack to fix duplicate errors
+                    supplierService.update(
+                        it.copy(
+                            id = inDb.id,
+                            created = inDb.created,
+                            createdBy = inDb.createdBy
+                        )
+                    )
+                } else inDb
+
+            } ?: run {
+                try {
+                    supplierService.save(it)
+                } catch (e: DataAccessException) {
+                    LOG.error("Got exception ${e.message}")
+                    supplierService.save(it.copy(name = it.name + " DUPLICATE"))
+                }
+            }
+            LOG.info("saved supplier ${saved.id} with identifier ${saved.identifier} and lastupdated ${saved.updated}")
+            gdbRapidPushService.pushDTOToKafka(saved.toDTO(), EventName.hmdbsuppliersyncV1)
+        }
+    }
+
+    fun syncAllSuppliers() {
+        LOG.info("Sync all suppliers")
+        hmDbClient.fetchAllSuppliers()?.let { persistAndPushToRapid(it) }
     }
 
 }

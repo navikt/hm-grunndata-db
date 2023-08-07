@@ -23,6 +23,9 @@ interface HmDbClient {
     @Get("/api/v1/sync/suppliers")
     fun fetchSuppliers(@QueryValue @Format("yyyy-MM-dd'T'HH:mm:ss") lastupdated: LocalDateTime): List<HmdbSupplierDTO>?
 
+    @Get("/api/v1/sync/suppliers/all")
+    fun fetchAllSuppliers(): List<HmdbSupplierDTO>?
+
     @Get("/api/v1/sync/products")
     fun fetchProducts(@QueryValue @Format("yyyy-MM-dd'T'HH:mm:ss") changeFrom: LocalDateTime,
                       @QueryValue @Format("yyyy-MM-dd'T'HH:mm:ss") changeTo: LocalDateTime): HmDbProductBatchDTO?

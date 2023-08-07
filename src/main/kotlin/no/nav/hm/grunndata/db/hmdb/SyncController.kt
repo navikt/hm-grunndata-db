@@ -18,10 +18,11 @@ class SyncController(private val productSync: ProductSync,
         private val LOG = LoggerFactory.getLogger(SyncController::class.java)
     }
 
-    @Get("/suppliers")
-    suspend fun syncSuppliers() {
-        LOG.info("call sync suppliers from HMDB")
-        supplierSync.syncSuppliers()
+
+    @Get("/suppliers/all")
+    fun syncAllSuppliers() {
+        LOG.info("call sync all suppliers")
+        supplierSync.syncAllSuppliers()
     }
 
     @Get("/agreements")
