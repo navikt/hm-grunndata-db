@@ -138,7 +138,7 @@ open class ProductSync(
     }
 
     private suspend fun findToBeDeletedProductIds(): List<ProductIdDTO> {
-        val activeProductIds = productService.findIdsByStatus(ProductStatus.ACTIVE)
+        val activeProductIds = productService.findIdsByStatusAndCreatedBy(ProductStatus.ACTIVE, HMDB)
         val hmdbIds = hmDbClient.fetchProductsIdActive()?.map { "$HMDB-$it" }?.toSet()
         hmdbIds?.let {
             LOG.info("Got ${hmdbIds.size} active ids")

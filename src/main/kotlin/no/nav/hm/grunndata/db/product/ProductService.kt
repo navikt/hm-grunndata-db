@@ -91,7 +91,8 @@ open class ProductService(
         }
     }
 
-    suspend fun findIdsByStatus(status: ProductStatus): List<ProductIdDTO> = productRepository.findIdsByStatus(status = status)
+    suspend fun findIdsByStatusAndCreatedBy(status: ProductStatus, createdBy: String): List<ProductIdDTO> =
+        productRepository.findIdsByStatusAndCreatedBy(status = status, createdBy = createdBy)
 
     suspend fun findByStatusAndExpiredBefore(status: ProductStatus, expired: LocalDateTime? = LocalDateTime.now()): List<Product> = productRepository.findByStatusAndExpiredBefore(status, expired)
 

@@ -7,6 +7,7 @@ import io.kotest.matchers.shouldBe
 import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import io.mockk.mockk
+import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.db.supplier.Supplier
 import no.nav.hm.grunndata.db.supplier.SupplierService
 import no.nav.hm.grunndata.rapid.dto.*
@@ -65,7 +66,7 @@ class ProductRepositoryTest(private val productRepository: ProductRepository,
             updated.shouldNotBeNull()
             updated.title shouldBe "Dette er et nytt produkt"
             println(objectMapper.writeValueAsString(updated))
-            val ids = productRepository.findIdsByStatus(status=ProductStatus.ACTIVE)
+            val ids = productRepository.findIdsByStatusAndCreatedBy(status=ProductStatus.ACTIVE, HMDB)
             ids.size shouldBe 2
             productRepository.findByAgreementsJson("""[{"id": "$agreementId2"}]""").size shouldBe 1
         }

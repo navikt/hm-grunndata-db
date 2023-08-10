@@ -15,8 +15,8 @@ interface ProductRepository: CoroutinePageableCrudRepository<Product, UUID>, Cor
     suspend fun findBySupplierIdAndSupplierRef(supplierId: UUID, supplierRef: String): Product?
     suspend fun findByIdentifier(identifier: String): Product?
 
-    @Query("""SELECT id, identifier FROM product_v1 WHERE status = :status""")
-    suspend fun findIdsByStatus(status: ProductStatus): List<ProductIdDTO>
+    @Query("""SELECT id, identifier FROM product_v1 WHERE status = :status AND created_by = :createdBy""")
+    suspend fun findIdsByStatusAndCreatedBy(status: ProductStatus, createdBy: String): List<ProductIdDTO>
 
     @Query("""SELECT * FROM "product_v1" WHERE agreements @> CAST(:jsonQuery AS jsonb) """, nativeQuery = true)
     suspend fun findByAgreementsJson(jsonQuery: String): List<Product>
