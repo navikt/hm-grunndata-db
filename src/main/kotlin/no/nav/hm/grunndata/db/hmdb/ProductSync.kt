@@ -132,13 +132,15 @@ open class ProductSync(
             .associateBy { it.identifier.substringAfter("-").toLong()}
         val hmdbIds = hmDbClient.fetchProductsIdActive()?.toSet() ?: emptySet()
         if (hmdbIds.isNotEmpty()) {
+            LOG.info("Found ${hmdbIds.size} active products in HMDB")
             val toBeDeleted = activeProductIds.filterNot { hmdbIds.contains(it.key) }
             LOG.info("Found $toBeDeleted to be deleted")
             val notInDb = hmdbIds.filterNot { activeProductIds.containsKey(it)}
             LOG.info("Found $notInDb active products not in db")
             toBeDeleted.forEach {
                 productService.findById(it.value.id)?.let { inDb ->
-                    productService.saveAndPushTokafka(inDb.copy(status = ProductStatus.DELETED, updated = LocalDateTime.now()), EventName.hmdbproductsyncV1)
+                    productService.saveAndPushTokafka(inDb.copy(status = ProductStatus.DELETED, updatedBy = "HMDB-DELETE",
+                        updated = LocalDateTime.now()), EventName.hmdbproductsyncV1)
                 }
             }
             notInDb.forEach { artid ->
