@@ -15,4 +15,8 @@ class ProductAPIController(private val productService: ProductService) {
     suspend fun findProducts(@QueryValue params: Map<String, String>?,
                              pageable: Pageable): Page<ProductRapidDTO> = productService.findProducts(params, pageable)
 
+    @Get("/{id}")
+    suspend fun findById(id:UUID):ProductRapidDTO? = productService.findByIdDTO(id)
+
+
 }

@@ -51,6 +51,10 @@ open class ProductService(
     @Transactional
     open suspend fun findById(id: UUID): Product? = productRepository.findById(id)
 
+
+    // TODO, combine two functions when have time :)
+    open suspend fun findByIdDTO(id:UUID): ProductRapidDTO? = productRepository.findById(id)?.toDTO()
+
     @Transactional
     open suspend fun findByAgreementId(agreementId: UUID): List<Product> =
         productRepository.findByAgreementsJson("""[{"id": "$agreementId"}]""")
