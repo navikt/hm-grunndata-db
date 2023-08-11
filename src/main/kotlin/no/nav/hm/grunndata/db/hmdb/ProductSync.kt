@@ -120,7 +120,7 @@ open class ProductSync(
                     LOG.info("saving to db: ${it.identifier} with hmsnr ${it.hmsArtNr}")
                     productService.saveAndPushTokafka(it, EventName.hmdbproductsyncV1)
                 }
-                catch (e: DateTimeException) {
+                catch (e: Exception) {
                     LOG.error("Got exception", e)
                 }
             }
@@ -129,27 +129,27 @@ open class ProductSync(
 
     suspend fun syncHMDBProductStates() {
         val activeProductIds = productService.findIdsByStatusAndCreatedBy(ProductStatus.ACTIVE, HMDB)
-        val hmdbIds = hmDbClient.fetchProductsIdActive()?.map { "$HMDB-$it" }?.toSet() ?: emptySet()
+            .associateBy { it.identifier.substringAfter("-").toLong()}
+        val hmdbIds = hmDbClient.fetchProductsIdActive()?.toSet() ?: emptySet()
         if (hmdbIds.isNotEmpty()) {
-            val toBeDeleted = activeProductIds.filterNot { hmdbIds.contains(it.identifier) }
+            val toBeDeleted = activeProductIds.filterNot { hmdbIds.contains(it.key) }
             LOG.info("Found $toBeDeleted to be deleted")
-            val notInDb = hmdbIds.filterNot { activeProductIds.map { a -> a.identifier }.contains(it)}.map {
-                it.substringAfter("-").toLong()
-            }
+            val notInDb = hmdbIds.filterNot { activeProductIds.containsKey(it)}
             LOG.info("Found $notInDb active products not in db")
             toBeDeleted.forEach {
-                productService.findById(it.id)?.let { inDb ->
+                productService.findById(it.value.id)?.let { inDb ->
                     productService.saveAndPushTokafka(inDb.copy(status = ProductStatus.DELETED, updated = LocalDateTime.now()), EventName.hmdbproductsyncV1)
                 }
             }
             notInDb.forEach { artid ->
+                LOG.info("fetching $artid")
                 hmDbClient.fetchProductByArticleId(artid)?.let {
                     batch -> extractProductBatch(batch).forEach {
                         try {
                             LOG.info("saving to db: ${it.identifier} with hmsnr ${it.hmsArtNr}")
                             productService.saveAndPushTokafka(it, EventName.hmdbproductsyncV1)
                         }
-                        catch (e: DateTimeException) {
+                        catch (e: Exception) {
                             LOG.error("Got exception", e)
                         }
                     }
