@@ -127,27 +127,37 @@ open class ProductSync(
         } ?: LOG.error("Could not find any from $artIdStart and $artIdEnd")
     }
 
-    suspend fun syncDeletedProductIds(): List<ProductIdDTO> {
-        val toBeDeleted = findToBeDeletedProductIds()
-        toBeDeleted.forEach {
-            productService.findById(it.id)?.let { inDb ->
-                productService.saveAndPushTokafka(inDb.copy(status = ProductStatus.DELETED, updated = LocalDateTime.now()), EventName.hmdbproductsyncV1)
+    suspend fun syncHMDBProductStates() {
+        val activeProductIds = productService.findIdsByStatusAndCreatedBy(ProductStatus.ACTIVE, HMDB)
+        val hmdbIds = hmDbClient.fetchProductsIdActive()?.map { "$HMDB-$it" }?.toSet() ?: emptySet()
+        if (hmdbIds.isNotEmpty()) {
+            val toBeDeleted = activeProductIds.filterNot { hmdbIds.contains(it.identifier) }
+            LOG.info("Found $toBeDeleted to be deleted")
+            val notInDb = hmdbIds.filterNot { activeProductIds.map { a -> a.identifier }.contains(it)}.map {
+                it.substringAfter("-").toLong()
+            }
+            LOG.info("Found $notInDb active products not in db")
+            toBeDeleted.forEach {
+                productService.findById(it.id)?.let { inDb ->
+                    productService.saveAndPushTokafka(inDb.copy(status = ProductStatus.DELETED, updated = LocalDateTime.now()), EventName.hmdbproductsyncV1)
+                }
+            }
+            notInDb.forEach { artid ->
+                hmDbClient.fetchProductByArticleId(artid)?.let {
+                    batch -> extractProductBatch(batch).forEach {
+                        try {
+                            LOG.info("saving to db: ${it.identifier} with hmsnr ${it.hmsArtNr}")
+                            productService.saveAndPushTokafka(it, EventName.hmdbproductsyncV1)
+                        }
+                        catch (e: DateTimeException) {
+                            LOG.error("Got exception", e)
+                        }
+                    }
+                }
             }
         }
-        return toBeDeleted
     }
 
-    private suspend fun findToBeDeletedProductIds(): List<ProductIdDTO> {
-        val activeProductIds = productService.findIdsByStatusAndCreatedBy(ProductStatus.ACTIVE, HMDB)
-        val hmdbIds = hmDbClient.fetchProductsIdActive()?.map { "$HMDB-$it" }?.toSet()
-        hmdbIds?.let {
-            LOG.info("Got ${hmdbIds.size} active ids")
-            val toBeDeleted = activeProductIds.filterNot { hmdbIds.contains(it.identifier) }
-            LOG.info("Found ${toBeDeleted.size} to be deleted")
-            return toBeDeleted
-        }
-       return emptyList()
-    }
 
     private fun extractProductBatch(batch: HmDbProductBatchDTO): List<Product> {
         return batch.products.map { prod ->

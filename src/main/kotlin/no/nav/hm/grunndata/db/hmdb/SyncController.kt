@@ -64,6 +64,14 @@ class SyncController(private val productSync: ProductSync,
     }
 
 
+    @Get("/products/states")
+    suspend fun syncProductStates() {
+        LOG.info("Call sync product states")
+        productSync.syncHMDBProductStates()
+        LOG.info("Sync product states finished")
+    }
+
+
     @Put("/products/syncFrom/{syncFrom}")
     suspend fun setProductsSyncFrom(syncFrom: LocalDateTime) {
         LOG.info("Reset syncfrom for products to $syncFrom")

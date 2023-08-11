@@ -38,7 +38,7 @@ open class ProductSyncScheduler(private val productSync: ProductSync,
         }
     }
 
-    @Scheduled(fixedDelay = "60m")
+    @Scheduled(cron = "0 30 22 * * *")
     fun syncActiveIds() {
         if (leaderElection.isLeader()) {
             if (stopped) {
@@ -47,7 +47,7 @@ open class ProductSyncScheduler(private val productSync: ProductSync,
             }
             runBlocking {
                 try {
-                    productSync.syncDeletedProductIds()
+                    productSync.syncHMDBProductStates()
                 } catch (e: Exception) {
                     LOG.error("Got uncaught exception while run product deleted sync, stop scheduler", e)
                     stopped = true

@@ -1,13 +1,11 @@
 package no.nav.hm.grunndata.db.hmdb
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.kotest.matchers.shouldBe
 import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
-import no.nav.hm.grunndata.db.GdbRapidPushService
 import no.nav.hm.grunndata.db.product.Product
 import no.nav.hm.grunndata.db.product.ProductRepository
 import no.nav.hm.grunndata.db.supplier.Supplier
@@ -37,7 +35,7 @@ class SyncProductTest(private val productSync: ProductSync,
     }
 
     @Test
-    fun syncProductsId() {
+    fun syncProductStates() {
         runBlocking {
             val supplier = supplierService.save(
                 Supplier(name = "supplier 1", identifier = "unik-identifier",
@@ -69,12 +67,10 @@ class SyncProductTest(private val productSync: ProductSync,
                 hmDbClient.fetchProductsIdActive()
             } answers {
                 listOf(
-                    123, 124
+                    123, 124, 126, 127
                 )
             }
-            val toBeDeleted = productSync.syncDeletedProductIds()
-            toBeDeleted.size shouldBe 1
-            toBeDeleted[0].id shouldBe product3.id
+            productSync.syncHMDBProductStates()
         }
     }
 }

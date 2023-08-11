@@ -42,6 +42,9 @@ interface HmDbClient {
     @Get("/api/v1/sync/products/range/{artIdStart}/{artIdEnd}")
     fun fetchProductsByArtIdStartEnd(artIdStart: Long, artIdEnd: Long): HmDbProductBatchDTO?
 
+    @Get("/api/v1/sync/products/articleId/{articleId}")
+    fun fetchProductByArticleId(articleId: Long): HmDbProductBatchDTO?
+
     @Get("/api/v1/sync/iso")
     fun fetchIso(): List<IsoDTO>
 
