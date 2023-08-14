@@ -6,8 +6,8 @@ import io.kotest.matchers.shouldBe
 import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import io.mockk.mockk
-import no.nav.hm.grunndata.db.hmdb.HmdbSupplierDTO
-import no.nav.hm.grunndata.db.hmdb.toSupplier
+import no.nav.hm.grunndata.db.hmdb.supplier.HmdbSupplierDTO
+import no.nav.hm.grunndata.db.hmdb.supplier.toSupplier
 import no.nav.hm.rapids_rivers.micronaut.RapidPushService
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime

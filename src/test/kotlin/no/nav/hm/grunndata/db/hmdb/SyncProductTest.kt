@@ -1,11 +1,11 @@
 package no.nav.hm.grunndata.db.hmdb
 
-import io.kotest.matchers.shouldBe
 import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
+import no.nav.hm.grunndata.db.hmdb.product.ProductSync
 import no.nav.hm.grunndata.db.product.Product
 import no.nav.hm.grunndata.db.product.ProductRepository
 import no.nav.hm.grunndata.db.supplier.Supplier

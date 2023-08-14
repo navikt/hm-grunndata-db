@@ -11,6 +11,7 @@ import io.micronaut.http.annotation.QueryValue
 import no.nav.hm.grunndata.db.hmdb.agreement.HmDbAgreementDTO
 import no.nav.hm.grunndata.db.hmdb.iso.IsoDTO
 import no.nav.hm.grunndata.db.hmdb.product.HmDbProductBatchDTO
+import no.nav.hm.grunndata.db.hmdb.supplier.HmdbSupplierDTO
 import java.time.LocalDateTime
 
 @Client("\${hmdb.url}")

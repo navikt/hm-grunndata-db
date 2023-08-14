@@ -1,20 +1,20 @@
-package no.nav.hm.grunndata.db.hmdb
+package no.nav.hm.grunndata.db.hmdb.product
 
 import io.micronaut.data.exceptions.DataAccessException
 import jakarta.inject.Singleton
 import kotlinx.coroutines.delay
 
 import no.nav.hm.grunndata.db.HMDB
-import no.nav.hm.grunndata.db.hmdb.product.HmDBProductMapper
-import no.nav.hm.grunndata.db.hmdb.product.HmDbProductBatchDTO
+import no.nav.hm.grunndata.db.hmdb.HmDbBatch
+import no.nav.hm.grunndata.db.hmdb.HmDbBatchRepository
+import no.nav.hm.grunndata.db.hmdb.HmDbClient
+import no.nav.hm.grunndata.db.hmdb.SYNC_PRODUCTS
 import no.nav.hm.grunndata.db.product.Product
-import no.nav.hm.grunndata.db.product.ProductIdDTO
 import no.nav.hm.grunndata.db.product.ProductService
 
 import no.nav.hm.grunndata.rapid.dto.ProductStatus
 import no.nav.hm.grunndata.rapid.event.EventName
 import org.slf4j.LoggerFactory
-import java.time.DateTimeException
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 

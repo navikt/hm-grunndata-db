@@ -1,4 +1,4 @@
-package no.nav.hm.grunndata.db.hmdb
+package no.nav.hm.grunndata.db.hmdb.supplier
 
 import io.micronaut.context.annotation.Requires
 import io.micronaut.scheduling.annotation.Scheduled

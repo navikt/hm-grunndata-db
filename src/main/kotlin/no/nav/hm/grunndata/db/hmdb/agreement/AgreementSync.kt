@@ -1,4 +1,4 @@
-package no.nav.hm.grunndata.db.hmdb
+package no.nav.hm.grunndata.db.hmdb.agreement
 
 import io.micronaut.context.annotation.Requires
 import jakarta.inject.Singleton
@@ -9,7 +9,8 @@ import no.nav.hm.grunndata.db.agreement.Agreement
 import no.nav.hm.grunndata.db.agreement.AgreementIdDTO
 import no.nav.hm.grunndata.db.agreement.AgreementService
 import no.nav.hm.grunndata.db.agreement.toDTO
-import no.nav.hm.grunndata.db.hmdb.agreement.*
+import no.nav.hm.grunndata.db.hmdb.*
+import no.nav.hm.grunndata.db.hmdb.product.HmDbIdentifier
 import no.nav.hm.grunndata.db.hmdbMediaUrl
 import no.nav.hm.grunndata.rapid.dto.*
 import no.nav.hm.grunndata.rapid.event.EventName

@@ -1,8 +1,8 @@
-package no.nav.hm.grunndata.db.hmdb
+package no.nav.hm.grunndata.db.hmdb.iso
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.inject.Singleton
-import no.nav.hm.grunndata.db.hmdb.iso.IsoDTO
+import no.nav.hm.grunndata.db.hmdb.HmDbClient
 import no.nav.hm.grunndata.db.iso.IsoCategory
 import no.nav.hm.grunndata.db.iso.IsoCategoryRepository
 import no.nav.hm.grunndata.db.iso.IsoTranslations

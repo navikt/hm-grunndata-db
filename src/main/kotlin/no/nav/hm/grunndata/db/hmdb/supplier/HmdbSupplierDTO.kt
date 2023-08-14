@@ -1,5 +1,6 @@
-package no.nav.hm.grunndata.db.hmdb
+package no.nav.hm.grunndata.db.hmdb.supplier
 
+import no.nav.hm.grunndata.db.hmdb.product.HmDbIdentifier
 import no.nav.hm.grunndata.db.supplier.Supplier
 import no.nav.hm.grunndata.rapid.dto.SupplierInfo
 import no.nav.hm.grunndata.rapid.dto.SupplierStatus
