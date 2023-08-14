@@ -102,7 +102,7 @@ class SyncController(private val productSync: ProductSync,
         }
     }
 
-    @Get("/techlabels/sync/all")
+    @Get("/techlabels/all")
     suspend fun syncAllTechLabels() {
         LOG.info("Call sync all tech labels")
         techLabelSync.syncAllTechLabels()
