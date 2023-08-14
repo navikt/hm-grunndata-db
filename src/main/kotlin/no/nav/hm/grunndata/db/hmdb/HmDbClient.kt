@@ -11,7 +11,9 @@ import io.micronaut.http.annotation.QueryValue
 import no.nav.hm.grunndata.db.hmdb.agreement.HmDbAgreementDTO
 import no.nav.hm.grunndata.db.hmdb.iso.IsoDTO
 import no.nav.hm.grunndata.db.hmdb.product.HmDbProductBatchDTO
+import no.nav.hm.grunndata.db.hmdb.product.TechDataDTO
 import no.nav.hm.grunndata.db.hmdb.supplier.HmdbSupplierDTO
+import no.nav.hm.grunndata.db.hmdb.techlabel.TechLabelDTO
 import java.time.LocalDateTime
 
 @Client("\${hmdb.url}")
@@ -51,4 +53,8 @@ interface HmDbClient {
 
     @Get("/api/v1/sync/products/active/ids")
     fun fetchProductsIdActive(): List<Long>?
+
+    @Get("/api/v1/sync/techlabels")
+    fun fetchAllTechlabels(): List<TechLabelDTO>
+
 }

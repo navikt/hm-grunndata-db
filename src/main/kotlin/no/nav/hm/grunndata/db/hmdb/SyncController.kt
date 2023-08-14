@@ -7,6 +7,7 @@ import no.nav.hm.grunndata.db.hmdb.agreement.AgreementSync
 import no.nav.hm.grunndata.db.hmdb.iso.IsoSync
 import no.nav.hm.grunndata.db.hmdb.product.ProductSync
 import no.nav.hm.grunndata.db.hmdb.supplier.SupplierSync
+import no.nav.hm.grunndata.db.hmdb.techlabel.TechLabelSync
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 
@@ -15,7 +16,8 @@ class SyncController(private val productSync: ProductSync,
                      private val hmDbBatchRepository: HmDbBatchRepository,
                      private val agreementSync: AgreementSync,
                      private val supplierSync: SupplierSync,
-                     private val isoSync: IsoSync
+                     private val isoSync: IsoSync,
+                     private val techLabelSync: TechLabelSync
 ) {
 
     companion object {
@@ -100,5 +102,10 @@ class SyncController(private val productSync: ProductSync,
         }
     }
 
+    @Get("/techlabels/sync/all")
+    suspend fun syncAllTechLabels() {
+        LOG.info("Call sync all tech labels")
+        techLabelSync.syncAllTechLabels()
+    }
 
 }
