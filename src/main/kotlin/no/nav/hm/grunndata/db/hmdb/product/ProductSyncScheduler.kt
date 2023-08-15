@@ -1,5 +1,8 @@
 package no.nav.hm.grunndata.db.hmdb.product
 
+import io.micrometer.core.instrument.MeterRegistry
+import io.micrometer.core.instrument.binder.MeterBinder
+import io.micrometer.core.instrument.Gauge
 import io.micronaut.context.annotation.Requires
 import io.micronaut.scheduling.annotation.Scheduled
 import jakarta.inject.Singleton
@@ -13,7 +16,7 @@ import org.slf4j.LoggerFactory
 @Requires(bean = KafkaRapid::class)
 @Requires(property = "schedulers.enabled", value = "true")
 open class ProductSyncScheduler(private val productSync: ProductSync,
-                                private val leaderElection: LeaderElection) {
+                                private val leaderElection: LeaderElection): MeterBinder {
 
     companion object {
         private val LOG = LoggerFactory.getLogger(ProductSyncScheduler::class.java)
@@ -55,5 +58,14 @@ open class ProductSyncScheduler(private val productSync: ProductSync,
             }
         }
     }
+
+    override fun bindTo(registry: MeterRegistry) {
+        Gauge.builder("scheduler_active", this) {
+            getSchedulerStatus()
+        }.register(registry)
+    }
+
+    fun getSchedulerStatus(): Double = if (stopped) 0.0 else 1.0
+
 
 }
