@@ -21,7 +21,7 @@ class TechLabelSync(private val hmDbClient: HmDbClient,
                 techLabelRepository.update(label.copy(id = inDb.id, updated = LocalDateTime.now(),
                     createdBy = inDb.createdBy))
             } ?: techLabelRepository.save(label)
-            LOG.info("Saved techlabel ${saved.id} - ${saved.label} ${saved.identifier}")
+            LOG.info("Saved techlabel ${saved.id} - ${saved.label} - ${saved.identifier}")
         }
     }
 }
