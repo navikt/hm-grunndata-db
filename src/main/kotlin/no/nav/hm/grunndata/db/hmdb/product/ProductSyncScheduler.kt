@@ -16,12 +16,22 @@ import org.slf4j.LoggerFactory
 @Requires(bean = KafkaRapid::class)
 @Requires(property = "schedulers.enabled", value = "true")
 open class ProductSyncScheduler(private val productSync: ProductSync,
-                                private val leaderElection: LeaderElection): MeterBinder {
+                                private val leaderElection: LeaderElection,
+                                private val meterRegistry: MeterRegistry) {
 
     companion object {
         private val LOG = LoggerFactory.getLogger(ProductSyncScheduler::class.java)
         private var stopped = false
     }
+
+
+    init {
+        Gauge.builder("scheduler_active", this) {
+            getSchedulerStatus()
+        }.register(meterRegistry)
+    }
+
+    fun getSchedulerStatus(): Double = if (stopped) 0.0 else 1.0
 
     @Scheduled(fixedDelay = "1m")
     fun syncProducts() {
@@ -58,14 +68,6 @@ open class ProductSyncScheduler(private val productSync: ProductSync,
             }
         }
     }
-
-    override fun bindTo(registry: MeterRegistry) {
-        Gauge.builder("scheduler_active", this) {
-            getSchedulerStatus()
-        }.register(registry)
-    }
-
-    fun getSchedulerStatus(): Double = if (stopped) 0.0 else 1.0
 
 
 }
