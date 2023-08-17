@@ -12,6 +12,7 @@ import no.nav.hm.grunndata.db.agreement.toDTO
 import no.nav.hm.grunndata.db.hmdb.*
 import no.nav.hm.grunndata.db.hmdb.product.HmDbIdentifier
 import no.nav.hm.grunndata.db.hmdbMediaUrl
+import no.nav.hm.grunndata.db.supplier.SupplierService
 import no.nav.hm.grunndata.rapid.dto.*
 import no.nav.hm.grunndata.rapid.event.EventName
 import org.slf4j.LoggerFactory
@@ -24,7 +25,8 @@ class AgreementSync(
     private val agreementService: AgreementService,
     private val hmDbClient: HmDbClient,
     private val hmdbBatchRepository: HmDbBatchRepository,
-    private val gdbRapidPushService: GdbRapidPushService
+    private val gdbRapidPushService: GdbRapidPushService,
+    private val supplierService: SupplierService
 ) {
 
     companion object {
@@ -92,8 +94,9 @@ class AgreementSync(
             )
         else emptyList()
         return mediaList.plus(newsDocAdr.map {
+            val supplier = supplierService.findByIdentifier("${it.adressid}".HmDbIdentifier())
             MediaInfo(uri = "doclevfiles/${it.docadrfile}", sourceUri = "$hmdbMediaUrl/doclevfiles/${it.docadrfile}",
-                type = getFileType(it.docadrfile), text = newsDoc.hmidoctitle, updated = it.docadrindate)
+                type = getFileType(it.docadrfile), text = supplier?.name ?: newsDoc.hmidoctitle, updated = it.docadrindate)
         }.filter { it.type != MediaType.OTHER })
     }
 

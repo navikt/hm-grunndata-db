@@ -6,3 +6,5 @@ CREATE USER media with password 'media';
 CREATE DATABASE media owner media;
 CREATE USER import with password 'import';
 CREATE DATABASE import owner import;
+CREATE USER mediaproxy WITH password 'mediaproxy';
+CREATE DATABASE mediaproxy owner mediaproxy;

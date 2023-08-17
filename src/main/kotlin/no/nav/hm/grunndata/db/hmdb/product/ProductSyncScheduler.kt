@@ -1,7 +1,6 @@
 package no.nav.hm.grunndata.db.hmdb.product
 
 import io.micrometer.core.instrument.MeterRegistry
-import io.micrometer.core.instrument.binder.MeterBinder
 import io.micrometer.core.instrument.Gauge
 import io.micronaut.context.annotation.Requires
 import io.micronaut.scheduling.annotation.Scheduled
