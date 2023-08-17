@@ -96,7 +96,7 @@ class AgreementSync(
         return mediaList.plus(newsDocAdr.map {
             val supplier = supplierService.findByIdentifier("${it.adressid}".HmDbIdentifier())
             MediaInfo(uri = "doclevfiles/${it.docadrfile}", sourceUri = "$hmdbMediaUrl/doclevfiles/${it.docadrfile}",
-                type = getFileType(it.docadrfile), text = supplier?.name ?: newsDoc.hmidoctitle, updated = it.docadrindate)
+                type = getFileType(it.docadrfile), text = supplier?.name ?: newsDoc.hmidoctitle, updated = it.docadrupdate)
         }.filter { it.type != MediaType.OTHER })
     }
 
