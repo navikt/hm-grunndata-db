@@ -1,6 +1,7 @@
 package no.nav.hm.grunndata.db.hmdb.agreement
 
 import io.micronaut.context.annotation.Requires
+import io.micronaut.context.annotation.Value
 import jakarta.inject.Singleton
 import no.nav.helse.rapids_rivers.KafkaRapid
 import no.nav.hm.grunndata.db.GdbRapidPushService
@@ -26,8 +27,8 @@ class AgreementSync(
     private val hmDbClient: HmDbClient,
     private val hmdbBatchRepository: HmDbBatchRepository,
     private val gdbRapidPushService: GdbRapidPushService,
-    private val supplierService: SupplierService
-) {
+    private val supplierService: SupplierService,
+    @Value("media.storage.cdnurl") private val cdnUrl: String) {
 
     companion object {
         private val LOG = LoggerFactory.getLogger(AgreementSync::class.java)
@@ -68,13 +69,17 @@ class AgreementSync(
         title = newsDTO.newstitle,
         resume = newsDTO.newsresume,
         status = if (newsDTO.newsexpire.isBefore(LocalDateTime.now())) AgreementStatus.INACTIVE else AgreementStatus.ACTIVE,
-        text = newsDTO.newstext,
+        text = if (newsDTO.newstext!=null) cleanUpText(newsDTO.newstext) else null,
         published = newsDTO.newspublish,
         expired = newsDTO.newsexpire,
         reference = newsDTO.externid,
         attachments = mapNewsDocHolder(newsDocHolder),
         posts = poster.map { it.toAgreementPost() }
     )
+
+    private fun cleanUpText(newstext: String): String =
+        newstext.replace("blobs/hmidocfiles/", "$cdnUrl/hmmidocfiles/")
+
 
     private fun mapNewsDocHolder(newsdocHolder: List<NewsDocHolder>): List<AgreementAttachment> = newsdocHolder.map {
         AgreementAttachment(
