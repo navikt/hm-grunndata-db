@@ -78,7 +78,7 @@ class AgreementSync(
     )
 
     private fun cleanUpText(newstext: String): String =
-        newstext.replace("blobs/hmidocfiles/", "$cdnUrl/hmmidocfiles/")
+        newstext.replace("blobs/hmidocfiles/", "$cdnUrl/hmidocfiles/")
 
 
     private fun mapNewsDocHolder(newsdocHolder: List<NewsDocHolder>): List<AgreementAttachment> = newsdocHolder.map {
