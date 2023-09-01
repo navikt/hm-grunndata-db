@@ -28,7 +28,7 @@ class AgreementSync(
     private val hmdbBatchRepository: HmDbBatchRepository,
     private val gdbRapidPushService: GdbRapidPushService,
     private val supplierService: SupplierService,
-    @Value("media.storage.cdnurl") private val cdnUrl: String) {
+    @Value("\${media.storage.cdnurl}") private val cdnUrl: String) {
 
     companion object {
         private val LOG = LoggerFactory.getLogger(AgreementSync::class.java)
