@@ -45,14 +45,14 @@ class ProductRepositoryTest(private val productRepository: ProductRepository,
                 supplierRef = "123", isoCategory = "123456",
                 agreements = setOf(productAgreement, productAgreement2),
                 attributes = Attributes (
-                    manufacturer =  "Samsung",  compatible = listOf(CompatibleAttribute(hmsArtNr = "1")))
+                    manufacturer =  "Samsung",  compatibleWidth = CompatibleWith(ids = listOf(UUID.randomUUID())))
             ))
            productRepository.save(Product(
                 supplierId = supplier.id, identifier = "124", title = "Dette er et produkt2", articleName = "Produkt 2",
                 supplierRef = "124", isoCategory = "123456",
                 agreements = setOf(productAgreement),
                 attributes = Attributes (
-                    manufacturer =  "Samsung",  compatible = listOf(CompatibleAttribute(hmsArtNr = "2")))
+                    manufacturer =  "Samsung",  compatibleWidth = CompatibleWith(ids = listOf(UUID.randomUUID())))
             ))
             val db = productRepository.findById(product.id)
             db.shouldNotBeNull()

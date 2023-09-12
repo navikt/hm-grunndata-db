@@ -11,11 +11,12 @@ import no.nav.hm.grunndata.db.product.ProductRepository
 import no.nav.hm.grunndata.db.supplier.Supplier
 import no.nav.hm.grunndata.db.supplier.SupplierService
 import no.nav.hm.grunndata.rapid.dto.Attributes
-import no.nav.hm.grunndata.rapid.dto.CompatibleAttribute
+import no.nav.hm.grunndata.rapid.dto.CompatibleWith
 import no.nav.hm.grunndata.rapid.dto.SupplierInfo
 import no.nav.hm.grunndata.rapid.dto.SupplierStatus
 import no.nav.hm.rapids_rivers.micronaut.RapidPushService
 import org.junit.jupiter.api.Test
+import java.util.*
 
 @MicronautTest
 class SyncProductTest(private val productSync: ProductSync,
@@ -47,21 +48,22 @@ class SyncProductTest(private val productSync: ProductSync,
                 supplierId = supplier.id, identifier = "HMDB-123", title = "Dette er et produkt", articleName = "Produkt 1",
                 supplierRef = "123", isoCategory = "123456",
                 attributes = Attributes (
-                    manufacturer =  "Samsung",  compatible = listOf(CompatibleAttribute(hmsArtNr = "1"))))
+                    manufacturer =  "Samsung",  compatibleWidth = CompatibleWith(ids = listOf(UUID.randomUUID())
+                )))
             )
             productRepository.save(
                 Product(
                 supplierId = supplier.id, identifier = "HMDB-124", title = "Dette er et produkt2", articleName = "Produkt 2",
                 supplierRef = "124", isoCategory = "123456",
                 attributes = Attributes (
-                    manufacturer =  "Samsung",  compatible = listOf(CompatibleAttribute(hmsArtNr = "2"))))
+                    manufacturer =  "Samsung",  compatibleWidth = CompatibleWith(ids = listOf(UUID.randomUUID()))))
             )
             val product3 = productRepository.save(
                 Product(
                     supplierId = supplier.id, identifier = "HMDB-125", title = "Dette er et produkt2", articleName = "Produkt 2",
                     supplierRef = "125", isoCategory = "123456",
                     attributes = Attributes (
-                        manufacturer =  "Samsung",  compatible = listOf(CompatibleAttribute(hmsArtNr = "2"))))
+                        manufacturer =  "Samsung",  compatibleWidth = CompatibleWith(ids = listOf(UUID.randomUUID()))))
             )
             every {
                 hmDbClient.fetchProductsIdActive()
