@@ -9,6 +9,8 @@ import kotlinx.coroutines.runBlocking
 import no.nav.helse.rapids_rivers.KafkaRapid
 import no.nav.hm.grunndata.db.LeaderElection
 import org.slf4j.LoggerFactory
+import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 
 
 @Singleton
@@ -35,6 +37,8 @@ open class ProductSyncScheduler(private val productSync: ProductSync,
     @Scheduled(fixedDelay = "1m")
     fun syncProducts() {
         if (leaderElection.isLeader()) {
+            val now = LocalDateTime.now()
+            LOG.info("Running sync products at $now")
             if (stopped) {
                 LOG.warn("scheduler is stopped, maybe because of uncaught errors!")
                 return
@@ -42,6 +46,9 @@ open class ProductSyncScheduler(private val productSync: ProductSync,
             runBlocking {
                 try {
                     productSync.syncProducts()
+                    if (now.minute==0 || now.minute == 30) {
+                        productSync.syncSeries()
+                    }
                 } catch (e: Exception) {
                     LOG.error("Got uncaught exception while run product sync, stop scheduler", e)
                     stopped = true
@@ -49,25 +56,6 @@ open class ProductSyncScheduler(private val productSync: ProductSync,
             }
         }
     }
-
-    @Scheduled(fixedDelay = "10m")
-    fun syncSeries() {
-        if (leaderElection.isLeader()) {
-            if (stopped) {
-                LOG.warn("scheduler is stopped, maybe because of uncaught errors!")
-                return
-            }
-            runBlocking {
-                try {
-                    productSync.syncSeries()
-                } catch (e: Exception) {
-                    LOG.error("Got uncaught exception while run product sync, stop scheduler", e)
-                    stopped = true
-                }
-            }
-        }
-    }
-
 
     @Scheduled(cron = "0 30 22 * * *")
     fun syncActiveIds() {
