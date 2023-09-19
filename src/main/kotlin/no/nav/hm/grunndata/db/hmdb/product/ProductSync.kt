@@ -109,6 +109,8 @@ open class ProductSync(
             }
             val last = hmdbProducts.last()
             LOG.info("finished batch and update last series sync time ${last.pchange}")
+            lastSeriesSize = hmdbProducts.size
+            lastSeriesChanged = last.pchange
             hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = last.pchange))
         }
     }
