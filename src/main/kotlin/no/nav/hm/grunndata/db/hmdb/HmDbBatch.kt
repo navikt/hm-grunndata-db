@@ -20,3 +20,4 @@ data class HmDbBatch(
 const val SYNC_AGREEMENTS="agreements"
 const val SYNC_PRODUCTS="products"
 const val SYNC_SUPPLIERS="suppliers"
+const val SYNC_SERIES="series"

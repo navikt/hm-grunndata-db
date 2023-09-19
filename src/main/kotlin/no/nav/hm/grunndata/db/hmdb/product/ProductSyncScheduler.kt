@@ -50,6 +50,25 @@ open class ProductSyncScheduler(private val productSync: ProductSync,
         }
     }
 
+    @Scheduled(fixedDelay = "10m")
+    fun syncSeries() {
+        if (leaderElection.isLeader()) {
+            if (stopped) {
+                LOG.warn("scheduler is stopped, maybe because of uncaught errors!")
+                return
+            }
+            runBlocking {
+                try {
+                    productSync.syncSeries()
+                } catch (e: Exception) {
+                    LOG.error("Got uncaught exception while run product sync, stop scheduler", e)
+                    stopped = true
+                }
+            }
+        }
+    }
+
+
     @Scheduled(cron = "0 30 22 * * *")
     fun syncActiveIds() {
         if (leaderElection.isLeader()) {

@@ -5,10 +5,7 @@ import jakarta.inject.Singleton
 import kotlinx.coroutines.delay
 
 import no.nav.hm.grunndata.db.HMDB
-import no.nav.hm.grunndata.db.hmdb.HmDbBatch
-import no.nav.hm.grunndata.db.hmdb.HmDbBatchRepository
-import no.nav.hm.grunndata.db.hmdb.HmDbClient
-import no.nav.hm.grunndata.db.hmdb.SYNC_PRODUCTS
+import no.nav.hm.grunndata.db.hmdb.*
 import no.nav.hm.grunndata.db.product.Product
 import no.nav.hm.grunndata.db.product.ProductService
 
@@ -30,7 +27,9 @@ open class ProductSync(
     companion object {
         private val LOG = LoggerFactory.getLogger(ProductSync::class.java)
         private var lastChanged: LocalDateTime = LocalDateTime.now()
+        private var lastSeriesChanged: LocalDateTime = LocalDateTime.now()
         private var lastSize: Int = -1
+        private var lastSeriesSize: Int = -1
         private var days = 10L
     }
 
@@ -76,6 +75,42 @@ open class ProductSync(
             }
         }
 
+    }
+
+    suspend fun syncSeries() {
+        val syncBatchJob = hmdbBatchRepository.findByName(SYNC_SERIES) ?: hmdbBatchRepository.save(
+            HmDbBatch(
+                name = SYNC_SERIES,
+                syncfrom = LocalDateTime.now().truncatedTo(ChronoUnit.HOURS)
+            )
+        )
+        val from = syncBatchJob.syncfrom
+        val to = from.plusDays(1)
+        LOG.info("Calling product series sync from ${from} to $to")
+        val hmdbProductsBatch = hmDbClient.fetchSeries(from, to)
+        LOG.info("Got total of ${hmdbProductsBatch!!.products.size} products")
+        val hmdbProducts = hmdbProductsBatch.products.sortedBy { it.pchange }
+
+        if (lastSeriesSize == hmdbProducts.size && lastSeriesChanged == hmdbProducts.last().pchange) {
+            LOG.info("Last Series size $lastSeriesSize and lastSeriesChanged $lastSeriesChanged is the same, skipping this batch")
+            hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = from.plusSeconds(1)))
+            return
+        }
+        if (hmdbProducts.isNotEmpty()) {
+            val products = extractProductBatch(hmdbProductsBatch)
+            LOG.info("Got products series sorted size ${products.size}")
+            products.forEach {
+                try {
+                    LOG.info("saving to db: ${it.identifier} with hmsnr ${it.hmsArtNr}")
+                    productService.saveAndPushTokafka(it, EventName.hmdbproductsyncV1)
+                } catch (e: DataAccessException) {
+                    LOG.error("note we are skipping the product that has DataAccessException!", e)
+                }
+            }
+            val last = hmdbProducts.last()
+            LOG.info("finished batch and update last series sync time ${last.pchange}")
+            hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = last.pchange))
+        }
     }
 
     suspend fun syncProductsById(productId: Long) {
