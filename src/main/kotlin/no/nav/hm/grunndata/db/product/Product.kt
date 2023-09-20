@@ -30,6 +30,7 @@ data class Product (
     val accessory: Boolean = false,
     val sparePart: Boolean = false,
     val seriesId: String?=null,
+    val seriesIdentifier: String?=null,
     @field:TypeDef(type = DataType.JSON)
     val techData: List<TechData> = emptyList(),
     @field:TypeDef(type = DataType.JSON)
@@ -62,7 +63,7 @@ data class ProductAgreement(
 fun ProductRapidDTO.toEntity(): Product = Product (
     id = id, supplierId = supplier.id, title = title, articleName = articleName, attributes=attributes, status = status, hmsArtNr = hmsArtNr,
     identifier = identifier, supplierRef=supplierRef, isoCategory=isoCategory, accessory=accessory, sparePart=sparePart,
-    seriesId=seriesId, techData=techData, media= media.map { it.toEntity() }, created=created, updated=updated, published=published, expired=expired,
+    seriesId = seriesId, techData=techData, media= media.map { it.toEntity() }, created=created, updated=updated, published=published, expired=expired,
     agreementInfo = agreementInfo, createdBy=createdBy, updatedBy=updatedBy
 )
 

@@ -103,6 +103,7 @@ open class ProductSync(
                 try {
                     LOG.info("saving to db: ${it.identifier} with hmsnr ${it.hmsArtNr}")
                     productService.saveAndPushTokafka(it, EventName.hmdbproductsyncV1)
+
                 } catch (e: DataAccessException) {
                     LOG.error("note we are skipping the product that has DataAccessException!", e)
                 }

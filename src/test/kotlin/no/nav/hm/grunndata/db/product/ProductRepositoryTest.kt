@@ -25,6 +25,7 @@ class ProductRepositoryTest(private val productRepository: ProductRepository,
 
     @Test
     fun readSavedDb() {
+        val seriesId = UUID.randomUUID().toString()
         val agreementId = UUID.randomUUID()
         val agreementId2 = UUID.randomUUID()
         val productAgreement = ProductAgreement(
@@ -42,7 +43,7 @@ class ProductRepositoryTest(private val productRepository: ProductRepository,
                 status = SupplierStatus.ACTIVE, info = SupplierInfo(email = "test@test")))
             val product = productRepository.save(Product(
                 supplierId = supplier.id, identifier = "123", title = "Dette er et produkt", articleName = "Produkt 1",
-                supplierRef = "123", isoCategory = "123456",
+                supplierRef = "123", isoCategory = "123456", seriesId = seriesId, seriesIdentifier = seriesId,
                 agreements = setOf(productAgreement, productAgreement2),
                 attributes = Attributes (
                     manufacturer =  "Samsung",  compatibleWidth = CompatibleWith(ids = listOf(UUID.randomUUID())))
@@ -61,6 +62,8 @@ class ProductRepositoryTest(private val productRepository: ProductRepository,
             db.articleName shouldBe "Produkt 1"
             db.agreements!!.size shouldBe 2
             db.agreements!!.elementAt(0).rank shouldBe 1
+            db.seriesIdentifier shouldBe seriesId
+            db.seriesId shouldBe  seriesId
 
             val updated = productRepository.update(db.copy(title = "Dette er et nytt produkt"))
             updated.shouldNotBeNull()

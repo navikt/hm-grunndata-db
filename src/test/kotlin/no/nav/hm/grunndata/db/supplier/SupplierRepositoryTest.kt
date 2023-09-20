@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
 @MicronautTest
-class SupplierServiceTest(private val supplierService: SupplierService) {
+class SeriesServiceTest(private val supplierService: SupplierService) {
 
 
     @MockBean(RapidPushService::class)
