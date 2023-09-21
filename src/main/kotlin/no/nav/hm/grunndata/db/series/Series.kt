@@ -17,6 +17,7 @@ data class Series(
     val createdBy: String,
     val updatedBy: String,
     val created: LocalDateTime = LocalDateTime.now(),
-    val updated: LocalDateTime = LocalDateTime.now()
+    val updated: LocalDateTime = LocalDateTime.now(),
+    val expired: LocalDateTime = LocalDateTime.now()
 )
 

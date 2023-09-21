@@ -59,15 +59,16 @@ class HmDBProductMapper(private val supplierService: SupplierService,
         val hmDbIdentifier = "${prod.prodid}".HmDbIdentifier()
         val series = seriesService.findByIdentifier(hmDbIdentifier)?.let {
             // if changed name, then we update series
-            if (it.name != prod.prodname) seriesService.update(it.copy(
-                name = prod.prodname, updated = LocalDateTime.now(), updatedBy = HMDB
+            if (it.name != prod.prodname || (prod.poutdate!= null && it.expired != prod.poutdate)) seriesService.update(it.copy(
+                name = prod.prodname, updated = LocalDateTime.now(), updatedBy = HMDB, expired = prod.poutdate ?: it.expired
             )) else {
                 it
             }
         } ?: run {
             LOG.info("Saving new series $hmDbIdentifier")
             seriesService.save(Series (
-                supplierId = supplier.id, name = prod.prodname, identifier = hmDbIdentifier, createdBy = HMDB, updatedBy = HMDB
+                supplierId = supplier.id, name = prod.prodname, identifier = hmDbIdentifier, createdBy = HMDB, updatedBy = HMDB,
+                expired = prod.poutdate ?: LocalDateTime.now().plusYears(20)
             ))
         }
         return series.id.toString()

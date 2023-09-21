@@ -29,5 +29,6 @@ data class HmDbProductDTO (
     val prodname: String,
     val pshortdesc: String,
     val stockid: String?,
-    val supplier: String?
+    val supplier: String?,
+    val poutdate: LocalDateTime?
 )
