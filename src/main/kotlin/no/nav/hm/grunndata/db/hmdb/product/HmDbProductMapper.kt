@@ -55,18 +55,25 @@ class HmDBProductMapper(private val supplierService: SupplierService,
         )
     }
 
+    private fun mapSeriesStatus(prod: HmDbProductDTO): SeriesStatus {
+        return if (prod.poutdate!=null && prod.poutdate.isBefore(LocalDateTime.now()))
+            SeriesStatus.INACTIVE
+        else SeriesStatus.ACTIVE
+    }
+
     private fun mapSeries(prod: HmDbProductDTO, supplier: Supplier): String {
         val hmDbIdentifier = "${prod.prodid}".HmDbIdentifier()
         val series = seriesService.findByIdentifier(hmDbIdentifier)?.let {
             // if changed name, then we update series
             if (it.name != prod.prodname || (prod.poutdate!= null && it.expired != prod.poutdate)) seriesService.update(it.copy(
-                name = prod.prodname, updated = LocalDateTime.now(), updatedBy = HMDB, expired = prod.poutdate ?: it.expired
+                name = prod.prodname, updated = LocalDateTime.now(), updatedBy = HMDB, expired = prod.poutdate ?: it.expired,
+                status = mapSeriesStatus(prod)
             )) else {
                 it
             }
         } ?: run {
             LOG.info("Saving new series $hmDbIdentifier")
-            seriesService.save(Series (
+            seriesService.save(Series ( status = mapSeriesStatus(prod),
                 supplierId = supplier.id, name = prod.prodname, identifier = hmDbIdentifier, createdBy = HMDB, updatedBy = HMDB,
                 expired = prod.poutdate ?: LocalDateTime.now().plusYears(20)
             ))
