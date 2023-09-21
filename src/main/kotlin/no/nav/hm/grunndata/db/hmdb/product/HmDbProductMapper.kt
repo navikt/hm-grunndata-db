@@ -8,6 +8,9 @@ import no.nav.hm.grunndata.db.iso.IsoCategoryService
 import no.nav.hm.grunndata.db.media.Media
 import no.nav.hm.grunndata.db.product.Product
 import no.nav.hm.grunndata.db.product.ProductAgreement
+import no.nav.hm.grunndata.db.series.Series
+import no.nav.hm.grunndata.db.series.SeriesService
+import no.nav.hm.grunndata.db.supplier.Supplier
 import no.nav.hm.grunndata.db.supplier.SupplierService
 import no.nav.hm.grunndata.rapid.dto.*
 
@@ -18,16 +21,18 @@ import java.util.*
 @Singleton
 class HmDBProductMapper(private val supplierService: SupplierService,
                         private val agreementService: AgreementService,
-                        private val isoCategoryService: IsoCategoryService) {
+                        private val isoCategoryService: IsoCategoryService,
+                        private val seriesService: SeriesService) {
 
     companion object {
         private val LOG = LoggerFactory.getLogger(HmDBProductMapper::class.java)
     }
 
-    fun mapProduct(prod: HmDbProductDTO, batch: HmDbProductBatchDTO): Product =
-        Product(
+    fun mapProduct(prod: HmDbProductDTO, batch: HmDbProductBatchDTO): Product {
+        val supplier = supplierService.findByIdentifier(prod.supplier!!.HmDbIdentifier())
+        return Product(
             id = UUID.randomUUID(),
-            supplierId = supplierService.findByIdentifier(prod.supplier!!.HmDbIdentifier())!!.id,
+            supplierId = supplier!!.id,
             title = prod.prodname,
             articleName = prod.artname,
             attributes = mapAttributes(prod),
@@ -36,7 +41,7 @@ class HmDBProductMapper(private val supplierService: SupplierService,
             identifier = "${prod.artid}".HmDbIdentifier(),
             supplierRef = if (!prod.artno.isNullOrBlank()) prod.artno else prod.artid.toString().HmDbIdentifier(),
             isoCategory = isoCategoryService.lookUpCode(prod.isocode)?.isoCode ?: prod.isocode,
-            seriesId = "${prod.prodid}".HmDbIdentifier(),
+            seriesId = mapSeries(prod, supplier),
             seriesIdentifier = "${prod.prodid}".HmDbIdentifier(),
             techData = mapTechData(batch.techdata[prod.artid] ?: emptyList()),
             media = mapBlobs(batch.blobs[prod.prodid] ?: emptyList()),
@@ -48,6 +53,22 @@ class HmDBProductMapper(private val supplierService: SupplierService,
             createdBy = HMDB,
             updatedBy = HMDB
         )
+    }
+
+    private fun mapSeries(prod: HmDbProductDTO, supplier: Supplier): String {
+        val hmDbIdentifier = "${prod.prodid}".HmDbIdentifier()
+        val series = seriesService.findByIdentifier(hmDbIdentifier)?.let {
+            // if changed name, then we update series
+            if (it.name != prod.prodname) seriesService.update(it.copy(
+                name = prod.prodname, updated = LocalDateTime.now(), updatedBy = HMDB
+            )) else {
+                it
+            }
+        } ?: seriesService.save(Series (
+            supplierId = supplier.id, name = prod.prodname, identifier = hmDbIdentifier, createdBy = HMDB, updatedBy = HMDB
+        ))
+        return series.id.toString()
+    }
 
     private fun mapAgreements(posts: List<ArticlePostDTO>): Set<ProductAgreement> = posts.map { apost ->
         LOG.info("mapping agreement with ${apost.newsid} identifier and ${apost.apostid} postIdentifier")
