@@ -41,13 +41,13 @@ open class SeriesService(private val seriesRepository: SeriesRepository,
         seriesRepository.findById(id)
     }
 
-    @CacheInvalidate(parameters = ["id"])
-    open fun save(series: Series, id: UUID = series.id) = runBlocking {
+    @CacheInvalidate(parameters = ["identifier"])
+    open fun save(series: Series, identifier: String = series.identifier) = runBlocking {
         seriesRepository.save(series)
     }
 
-    @CacheInvalidate(parameters = ["id"])
-    open fun update(series:Series, id: UUID = series.id) = runBlocking {
+    @CacheInvalidate(parameters = ["identifier"])
+    open fun update(series:Series, identifier: String = series.identifier) = runBlocking {
         seriesRepository.update(series)
     }
 

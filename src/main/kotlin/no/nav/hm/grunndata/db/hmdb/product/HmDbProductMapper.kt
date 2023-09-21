@@ -64,9 +64,12 @@ class HmDBProductMapper(private val supplierService: SupplierService,
             )) else {
                 it
             }
-        } ?: seriesService.save(Series (
-            supplierId = supplier.id, name = prod.prodname, identifier = hmDbIdentifier, createdBy = HMDB, updatedBy = HMDB
-        ))
+        } ?: run {
+            LOG.info("Saving new series $hmDbIdentifier")
+            seriesService.save(Series (
+                supplierId = supplier.id, name = prod.prodname, identifier = hmDbIdentifier, createdBy = HMDB, updatedBy = HMDB
+            ))
+        }
         return series.id.toString()
     }
 
