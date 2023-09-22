@@ -67,11 +67,6 @@ open class SeriesService(private val seriesRepository: SeriesRepository,
         return seriesDTO
     }
 
-
-    private fun Series.toDTO(): SeriesRapidDTO {
-        TODO("Not yet implemented")
-    }
-
     @Transactional
     open suspend fun findSeries(params: Map<String, String>?, pageable: Pageable): Page<SeriesRapidDTO> =
         seriesRepository.findAll(buildCriteriaSpec(params), pageable).map {it.toDTO()}

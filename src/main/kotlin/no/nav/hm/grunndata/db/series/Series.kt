@@ -2,6 +2,7 @@ package no.nav.hm.grunndata.db.series
 
 import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.MappedEntity
+import no.nav.hm.grunndata.rapid.dto.SeriesRapidDTO
 import no.nav.hm.grunndata.rapid.dto.SeriesStatus
 import java.time.LocalDateTime
 import java.util.*
@@ -21,3 +22,6 @@ data class Series(
     val expired: LocalDateTime = LocalDateTime.now()
 )
 
+
+fun Series.toDTO() = SeriesRapidDTO (id = id, status = status, name = name, supplierId = supplierId,
+    identifier = identifier, createdBy = createdBy, updatedBy = updatedBy, created = created, updated = updated)

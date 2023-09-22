@@ -1,6 +1,7 @@
 package no.nav.hm.grunndata.db.hmdb.product
 
 import jakarta.inject.Singleton
+import no.nav.hm.grunndata.db.GdbRapidPushService
 import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.db.agreement.AgreementService
 import no.nav.hm.grunndata.db.hmdbMediaUrl
@@ -10,9 +11,11 @@ import no.nav.hm.grunndata.db.product.Product
 import no.nav.hm.grunndata.db.product.ProductAgreement
 import no.nav.hm.grunndata.db.series.Series
 import no.nav.hm.grunndata.db.series.SeriesService
+import no.nav.hm.grunndata.db.series.toDTO
 import no.nav.hm.grunndata.db.supplier.Supplier
 import no.nav.hm.grunndata.db.supplier.SupplierService
 import no.nav.hm.grunndata.rapid.dto.*
+import no.nav.hm.grunndata.rapid.event.EventName
 
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
@@ -22,7 +25,8 @@ import java.util.*
 class HmDBProductMapper(private val supplierService: SupplierService,
                         private val agreementService: AgreementService,
                         private val isoCategoryService: IsoCategoryService,
-                        private val seriesService: SeriesService) {
+                        private val seriesService: SeriesService,
+                        private val rapidPushService: GdbRapidPushService) {
 
     companion object {
         private val LOG = LoggerFactory.getLogger(HmDBProductMapper::class.java)
@@ -63,12 +67,14 @@ class HmDBProductMapper(private val supplierService: SupplierService,
 
     private fun mapSeries(prod: HmDbProductDTO, supplier: Supplier): String {
         val hmDbIdentifier = "${prod.prodid}".HmDbIdentifier()
+        var updated = true
         val series = seriesService.findByIdentifier(hmDbIdentifier)?.let {
             // if changed name, then we update series
             if (it.name != prod.prodname || (prod.poutdate!= null && it.expired != prod.poutdate)) seriesService.update(it.copy(
                 name = prod.prodname, updated = LocalDateTime.now(), updatedBy = HMDB, expired = prod.poutdate ?: it.expired,
                 status = mapSeriesStatus(prod)
             )) else {
+                updated = false
                 it
             }
         } ?: run {
@@ -78,6 +84,7 @@ class HmDBProductMapper(private val supplierService: SupplierService,
                 expired = prod.poutdate ?: LocalDateTime.now().plusYears(20)
             ))
         }
+        if (updated) rapidPushService.pushDTOToKafka(series.toDTO(), EventName.hmdbseriessyncV1)
         return series.id.toString()
     }
 
