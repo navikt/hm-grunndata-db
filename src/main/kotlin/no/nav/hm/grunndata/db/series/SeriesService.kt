@@ -14,6 +14,7 @@ import jakarta.transaction.Transactional
 import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.db.GdbRapidPushService
 import no.nav.hm.grunndata.db.HMDB
+import no.nav.hm.grunndata.db.product.Product
 import no.nav.hm.grunndata.db.supplier.SupplierRepository
 import no.nav.hm.grunndata.rapid.dto.RapidDTO
 import no.nav.hm.grunndata.rapid.dto.SeriesRapidDTO
@@ -69,6 +70,20 @@ open class SeriesService(private val seriesRepository: SeriesRepository,
 
     private fun Series.toDTO(): SeriesRapidDTO {
         TODO("Not yet implemented")
+    }
+
+    @Transactional
+    open suspend fun findSeries(params: Map<String, String>?, pageable: Pageable): Page<SeriesRapidDTO> =
+        seriesRepository.findAll(buildCriteriaSpec(params), pageable).map {it.toDTO()}
+
+
+    private fun buildCriteriaSpec(params: Map<String, String>?): PredicateSpecification<Series>?
+            = params?.let {
+        where {
+            if (params.contains("supplierId"))  root[Series::supplierId] eq UUID.fromString(params["supplierId"]!!)
+            if (params.contains("updated")) root[Series::updated] greaterThanOrEqualTo LocalDateTime.parse(params["updated"])
+            if (params.contains("status")) root[Series::status] eq params["status"]
+        }
     }
 
 }
