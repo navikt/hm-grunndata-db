@@ -23,5 +23,5 @@ data class Series(
 )
 
 
-fun Series.toDTO() = SeriesRapidDTO (id = id, status = status, name = name, supplierId = supplierId,
+fun Series.toDTO() = SeriesRapidDTO (id = id, status = status, name = name, supplierId = supplierId, expired = expired,
     identifier = identifier, createdBy = createdBy, updatedBy = updatedBy, created = created, updated = updated)
