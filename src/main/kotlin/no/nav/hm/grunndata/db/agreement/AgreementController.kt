@@ -32,7 +32,9 @@ class AgreementDocumentController(private val agreementService: AgreementService
             = params?.let {
         where {
             if (params.contains("reference")) root[Agreement::reference] eq params["reference"]
-            if (params.contains("updated")) root[Agreement::updated] greaterThanOrEqualTo LocalDateTime.parse(params["updated"])
+            if (params.contains("updatedAfter")) root[Agreement::updated] greaterThanOrEqualTo LocalDateTime.parse(params["updatedAfter"])
+            if (params.contains("status")) root[Agreement::status] eq params["status"]
+            if (params.contains("expiredAfter")) root[Agreement::expired] greaterThanOrEqualTo LocalDateTime.parse(params["expiredAfter"])
         }
     }
 

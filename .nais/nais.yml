@@ -69,3 +69,4 @@ spec:
       rules:
         - application: hm-grunndata-index
         - application: hm-grunndata-register
+        - application: hm-grunndata-import
