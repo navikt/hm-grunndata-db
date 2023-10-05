@@ -18,5 +18,7 @@ class ProductAPIController(private val productService: ProductService) {
     @Get("/{id}")
     suspend fun findById(id:UUID):ProductRapidDTO? = productService.findByIdDTO(id)
 
-
+    @Get("/{supplierId}/{supplierRef}")
+    suspend fun findBySupplierIdAndSupplierRef(supplierId: UUID, supplierRef: String) =
+        productService.findBySupplierIdAndSupplierRef(supplierId,supplierRef)
 }

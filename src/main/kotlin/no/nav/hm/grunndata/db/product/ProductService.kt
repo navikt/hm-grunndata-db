@@ -53,7 +53,9 @@ open class ProductService(
 
 
     // TODO, combine two functions when have time :)
-    open suspend fun findByIdDTO(id:UUID): ProductRapidDTO? = productRepository.findById(id)?.toDTO()
+    suspend fun findByIdDTO(id:UUID): ProductRapidDTO? = productRepository.findById(id)?.toDTO()
+
+    suspend fun findBySupplierIdAndSupplierRef(supplierId: UUID, supplierRef: String) = productRepository.findBySupplierIdAndSupplierRef(supplierId, supplierRef)?.toDTO()
 
     @Transactional
     open suspend fun findByAgreementId(agreementId: UUID): List<Product> =

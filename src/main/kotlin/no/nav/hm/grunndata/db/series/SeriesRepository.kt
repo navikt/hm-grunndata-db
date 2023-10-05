@@ -11,5 +11,6 @@ interface SeriesRepository: CoroutinePageableCrudRepository<Series, UUID>, Corou
 
     suspend fun findByIdentifier(identifier: String): Series?
 
+    suspend fun findBySupplierId(supplierId: UUID): List<Series>
 
 }

@@ -8,17 +8,12 @@ import io.micronaut.data.model.Pageable
 import io.micronaut.data.repository.jpa.criteria.PredicateSpecification
 import io.micronaut.data.runtime.criteria.get
 import io.micronaut.data.runtime.criteria.where
-import io.micronaut.http.annotation.QueryValue
 import jakarta.inject.Singleton
 import jakarta.transaction.Transactional
 import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.db.GdbRapidPushService
 import no.nav.hm.grunndata.db.HMDB
-import no.nav.hm.grunndata.db.product.Product
-import no.nav.hm.grunndata.db.supplier.SupplierRepository
-import no.nav.hm.grunndata.rapid.dto.RapidDTO
 import no.nav.hm.grunndata.rapid.dto.SeriesRapidDTO
-import no.nav.hm.grunndata.rapid.dto.SupplierDTO
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.util.*
@@ -41,8 +36,8 @@ open class SeriesService(private val seriesRepository: SeriesRepository,
     open fun findById(id: UUID) = runBlocking {
         seriesRepository.findById(id)
     }
+    suspend fun findBySupplierId(supplierId: UUID) = seriesRepository.findBySupplierId(supplierId)
 
-    @CacheInvalidate(parameters = ["identifier"])
     open fun save(series: Series, identifier: String = series.identifier) = runBlocking {
         seriesRepository.save(series)
     }
@@ -61,7 +56,7 @@ open class SeriesService(private val seriesRepository: SeriesRepository,
                 update(series.copy(id = inDb.id, created = inDb.created,
                     createdBy = inDb.createdBy))
             } ?: save(series)
-        val seriesDTO = saved.toDTO()
+        val seriesDTO = saved.toRapidDTO()
         LOG.info("saved: ${seriesDTO.id} ")
         gdbRapidPushService.pushDTOToKafka(seriesDTO, eventName)
         return seriesDTO
@@ -69,7 +64,7 @@ open class SeriesService(private val seriesRepository: SeriesRepository,
 
     @Transactional
     open suspend fun findSeries(params: Map<String, String>?, pageable: Pageable): Page<SeriesRapidDTO> =
-        seriesRepository.findAll(buildCriteriaSpec(params), pageable).map {it.toDTO()}
+        seriesRepository.findAll(buildCriteriaSpec(params), pageable).map {it.toRapidDTO()}
 
 
     private fun buildCriteriaSpec(params: Map<String, String>?): PredicateSpecification<Series>?

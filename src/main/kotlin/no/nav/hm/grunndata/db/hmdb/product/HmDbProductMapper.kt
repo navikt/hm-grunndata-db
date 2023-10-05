@@ -11,7 +11,7 @@ import no.nav.hm.grunndata.db.product.Product
 import no.nav.hm.grunndata.db.product.ProductAgreement
 import no.nav.hm.grunndata.db.series.Series
 import no.nav.hm.grunndata.db.series.SeriesService
-import no.nav.hm.grunndata.db.series.toDTO
+import no.nav.hm.grunndata.db.series.toRapidDTO
 import no.nav.hm.grunndata.db.supplier.Supplier
 import no.nav.hm.grunndata.db.supplier.SupplierService
 import no.nav.hm.grunndata.rapid.dto.*
@@ -84,7 +84,7 @@ class HmDBProductMapper(private val supplierService: SupplierService,
                 expired = prod.poutdate ?: LocalDateTime.now().plusYears(20)
             ))
         }
-        if (updated) rapidPushService.pushDTOToKafka(series.toDTO(), EventName.hmdbseriessyncV1)
+        if (updated) rapidPushService.pushDTOToKafka(series.toRapidDTO(), EventName.hmdbseriessyncV1)
         return series.id.toString()
     }
 
