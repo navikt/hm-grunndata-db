@@ -24,7 +24,7 @@ class SeriesController(private val seriesSeries: SeriesService) {
 
 
     @Get("/{id}")
-    fun findById(id: UUID) = seriesSeries.findById(id)
+    suspend fun findById(id: UUID) = seriesSeries.findByIdToDTO(id)
 
     @Get("/supplier/{supplierId}")
     suspend fun findBySupplierId(supplierId: UUID) = seriesSeries.findBySupplierId(supplierId)

@@ -36,7 +36,10 @@ open class SeriesService(private val seriesRepository: SeriesRepository,
     open fun findById(id: UUID) = runBlocking {
         seriesRepository.findById(id)
     }
-    suspend fun findBySupplierId(supplierId: UUID) = seriesRepository.findBySupplierId(supplierId)
+
+    suspend fun findByIdToDTO(id: UUID) = seriesRepository.findById(id)?.toRapidDTO()
+
+    suspend fun findBySupplierId(supplierId: UUID) = seriesRepository.findBySupplierId(supplierId).map { it.toRapidDTO() }
 
     open fun save(series: Series, identifier: String = series.identifier) = runBlocking {
         seriesRepository.save(series)
