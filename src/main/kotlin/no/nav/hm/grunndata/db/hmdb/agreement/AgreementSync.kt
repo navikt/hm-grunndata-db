@@ -66,13 +66,13 @@ class AgreementSync(
 
     private fun HmDbAgreementDTO.toAgreement(): Agreement = Agreement(
         identifier = "${newsDTO.newsid}".HmDbIdentifier(),
-        title = newsDTO.newstitle,
+        title = newsDTO.newstitle.trim(),
         resume = newsDTO.newsresume,
         status = if (newsDTO.newsexpire.isBefore(LocalDateTime.now())) AgreementStatus.INACTIVE else AgreementStatus.ACTIVE,
         text = if (newsDTO.newstext!=null) cleanUpText(newsDTO.newstext) else null,
         published = newsDTO.newspublish,
         expired = newsDTO.newsexpire,
-        reference = newsDTO.externid,
+        reference = newsDTO.externid.trim(),
         attachments = mapNewsDocHolder(newsDocHolder),
         posts = poster.map { it.toAgreementPost() }
     )
