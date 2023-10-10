@@ -38,6 +38,8 @@ open class SupplierService(private val supplierRepository: SupplierRepository,
         supplierRepository.findById(id)
     }
 
+    suspend fun findByIdDTO(supplierId: UUID) = supplierRepository.findById(supplierId)?.toDTO()
+
     @CacheInvalidate(parameters = ["id"])
     open fun save(supplier: Supplier, id: UUID = supplier.id) = runBlocking {
         supplierRepository.save(supplier)

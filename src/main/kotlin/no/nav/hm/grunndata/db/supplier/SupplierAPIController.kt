@@ -19,4 +19,7 @@ class SupplierAPIController(private val supplierService: SupplierService) {
     suspend fun findSuppliers(@QueryValue params: Map<String, String>?, pageable: Pageable
     ): Page<SupplierDTO> = supplierService.findSuppliers(params, pageable)
 
+    @Get("/{supplierId}")
+    suspend fun findById(supplierId:UUID) = supplierService.findByIdDTO(supplierId)
+
 }
