@@ -65,7 +65,7 @@ class AgreementExpirationTest(private val agreementExpiration: AgreementExpirati
                     isoCategory = "123456",
                     agreements = setOf(productAgreement, productAgreement2),
                     attributes = Attributes(
-                        manufacturer = "Samsung", compatibleWidth = CompatibleWith(seriesIds = listOf(UUID.randomUUID().toString()))
+                        manufacturer = "Samsung", compatibleWidth = CompatibleWith(seriesIds = setOf(UUID.randomUUID()))
                     )
                 ), "test-event"
             )

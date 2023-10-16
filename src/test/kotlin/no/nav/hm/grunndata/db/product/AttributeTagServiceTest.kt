@@ -20,7 +20,7 @@ class AttributeTagServiceTest(private val attributeTagService: AttributeTagServi
             articleName = "Product 1", supplierRef = "123", isoCategory = "123456",
             attributes = Attributes (
                 manufacturer =  "Samsung",
-                compatibleWidth = CompatibleWith(ids = listOf(UUID.randomUUID()))
+                compatibleWidth = CompatibleWith(seriesIds = setOf(UUID.randomUUID()))
             ),
             createdBy = GDB,
             updatedBy = GDB
@@ -30,7 +30,7 @@ class AttributeTagServiceTest(private val attributeTagService: AttributeTagServi
             articleName = "Produkt1", supplierRef = "1234", isoCategory = "123456",
             attributes = Attributes (
                 manufacturer = "Samsung",
-                compatibleWidth = CompatibleWith(ids = listOf(UUID.randomUUID())),
+                compatibleWidth = CompatibleWith(seriesIds = setOf(UUID.randomUUID())),
                 bestillingsordning= true
             ),
             createdBy = GDB,

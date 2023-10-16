@@ -48,7 +48,7 @@ class SyncProductTest(private val productSync: ProductSync,
                 supplierId = supplier.id, identifier = "HMDB-123", title = "Dette er et produkt", articleName = "Produkt 1",
                 supplierRef = "123", isoCategory = "123456",
                 attributes = Attributes (
-                    manufacturer =  "Samsung",  compatibleWidth = CompatibleWith(ids = listOf(UUID.randomUUID())
+                    manufacturer =  "Samsung",  compatibleWidth = CompatibleWith(seriesIds = setOf(UUID.randomUUID())
                 )))
             )
             productRepository.save(
@@ -56,14 +56,14 @@ class SyncProductTest(private val productSync: ProductSync,
                 supplierId = supplier.id, identifier = "HMDB-124", title = "Dette er et produkt2", articleName = "Produkt 2",
                 supplierRef = "124", isoCategory = "123456",
                 attributes = Attributes (
-                    manufacturer =  "Samsung",  compatibleWidth = CompatibleWith(ids = listOf(UUID.randomUUID()))))
+                    manufacturer =  "Samsung",  compatibleWidth = CompatibleWith(seriesIds = setOf(UUID.randomUUID()))))
             )
             val product3 = productRepository.save(
                 Product(
                     supplierId = supplier.id, identifier = "HMDB-125", title = "Dette er et produkt2", articleName = "Produkt 2",
                     supplierRef = "125", isoCategory = "123456",
                     attributes = Attributes (
-                        manufacturer =  "Samsung",  compatibleWidth = CompatibleWith(ids = listOf(UUID.randomUUID()))))
+                        manufacturer =  "Samsung",  compatibleWidth = CompatibleWith(seriesIds = setOf(UUID.randomUUID()))))
             )
             every {
                 hmDbClient.fetchProductsIdActive()
