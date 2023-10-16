@@ -16,7 +16,7 @@ class SeriesRepositoryTest(private val seriesRepository: SeriesRepository) {
         val supplierId = UUID.randomUUID()
         val series = Series (
             identifier = "HMDB-12345",
-            name = "en test series 1",
+            title = "en test series 1",
             supplierId = supplierId,
             createdBy = HMDB,
             updatedBy = HMDB )
@@ -26,8 +26,8 @@ class SeriesRepositoryTest(private val seriesRepository: SeriesRepository) {
             found.shouldNotBeNull()
             val identifier = seriesRepository.findByIdentifier(found.identifier)
             identifier.shouldNotBeNull()
-            identifier.name shouldBe series.name
-            val updated = seriesRepository.update(identifier.copy(name = "en test series 2"))
+            identifier.title shouldBe series.title
+            val updated = seriesRepository.update(identifier.copy(title = "en test series 2"))
         }
     }
 }
