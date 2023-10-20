@@ -3,6 +3,7 @@ package no.nav.hm.grunndata.db.series
 import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.MappedEntity
 import no.nav.hm.grunndata.rapid.dto.SeriesRapidDTO
+import no.nav.hm.grunndata.rapid.dto.SeriesRegistrationRapidDTO
 import no.nav.hm.grunndata.rapid.dto.SeriesStatus
 import java.time.LocalDateTime
 import java.util.*
@@ -25,3 +26,16 @@ data class Series(
 
 fun Series.toRapidDTO() = SeriesRapidDTO (id = id, status = status, title = title, supplierId = supplierId, expired = expired,
     identifier = identifier, createdBy = createdBy, updatedBy = updatedBy, created = created, updated = updated)
+
+fun SeriesRegistrationRapidDTO.toEntity() = Series(
+    id = id,
+    supplierId = supplierId,
+    status = status,
+    title = title,
+    identifier = identifier,
+    createdBy = createdBy,
+    updatedBy = updatedBy,
+    created = created,
+    updated = updated,
+    expired = expired
+)
