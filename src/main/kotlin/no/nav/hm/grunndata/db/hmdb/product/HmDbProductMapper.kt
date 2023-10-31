@@ -131,9 +131,7 @@ class HmDBProductMapper(private val supplierService: SupplierService,
             ProductStatus.INACTIVE
 
     fun mapBlobs(blobs: List<BlobDTO>): List<Media> =
-        blobs.associateBy { it.blobfile }
-            .values
-            .map { mapBlob(it) }
+        blobs.map { mapBlob(it) }
             .filter { it.type != MediaType.OTHER && it.type != MediaType.VIDEO }
             .sortedBy { "${it.type}-${it.uri}" }
             .mapIndexed { index, media -> media.copy(priority = index + 1) }
