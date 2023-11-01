@@ -1,0 +1,1 @@
+ALTER TABLE agreement_v1 ADD COLUMN iso_category JSONB NOT NULL DEFAULT '[]'::jsonb;

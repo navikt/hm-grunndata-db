@@ -19,10 +19,11 @@ class AgreementRepositoryTest(private val agreementRepository: AgreementReposito
         val agreementId2 = UUID.randomUUID()
         val agreement = Agreement(id = agreementId, identifier = "HMDB-123", title = "Rammeavtale Rullestoler", resume = "En kort beskrivelse", reference="23-10234",
         text = "En lang beskrivelse 1", published = LocalDateTime.now(), expired = LocalDateTime.now().plusYears(3),
-            posts = listOf(AgreementPost(title = "Post 1", identifier = "HMDB-321", nr = 1, description = "En beskrive av posten")))
+            posts = listOf(AgreementPost(title = "Post 1", identifier = "HMDB-321", nr = 1, description = "En beskrive av posten")), isoCategory = listOf("1", "2"))
         val agreement2 = Agreement(id = agreementId2, identifier = "HMDB-124", title = "Rammeavtale Rullestoler", resume = "En kort beskrivelse", reference="23-10235",
             text = "En lang beskrivelse 2", published = LocalDateTime.now(), expired = LocalDateTime.now().plusYears(3),
-            posts = listOf(AgreementPost(title = "Post 1", identifier = "HMDB-322", nr = 1, description = "En beskrive av posten")))
+            posts = listOf(AgreementPost(title = "Post 1", identifier = "HMDB-322", nr = 1, description = "En beskrive av posten")),
+            isoCategory = listOf("1", "2"))
         runBlocking {
             val saved = agreementRepository.save(agreement)
             val saved2 = agreementRepository.save(agreement2)
@@ -38,6 +39,9 @@ class AgreementRepositoryTest(private val agreementRepository: AgreementReposito
             updated.shouldNotBeNull()
             updated.title shouldBe "Ny title"
             updated.posts.size shouldBe  1
+            updated.isoCategory.size shouldBe 2
+            updated.isoCategory[0] shouldBe "1"
+            updated.isoCategory[1] shouldBe "2"
         }
     }
 }

@@ -74,7 +74,8 @@ class AgreementSync(
         expired = newsDTO.newsexpire,
         reference = newsDTO.externid.trim(),
         attachments = mapNewsDocHolder(newsDocHolder),
-        posts = poster.map { it.toAgreementPost() }
+        posts = poster.map { it.toAgreementPost() },
+        isoCategory = isonumber
     )
 
     private fun cleanUpText(newstext: String): String =
