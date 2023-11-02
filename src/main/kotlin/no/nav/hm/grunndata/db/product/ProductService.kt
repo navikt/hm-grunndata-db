@@ -48,7 +48,7 @@ open class ProductService(
                 createdBy = inDb.createdBy))
         } ?: productRepository.save(product)
         val productDTO = saved.toDTO()
-        LOG.info("saved: ${productDTO.id} ${productDTO.hmsArtNr} ${product.identifier}")
+        LOG.info("saved: ${productDTO.id} ${productDTO.supplierRef} ${productDTO.hmsArtNr} ${productDTO.identifier}")
         gdbRapidPushService.pushDTOToKafka(productDTO, eventName)
         return productDTO
     }
