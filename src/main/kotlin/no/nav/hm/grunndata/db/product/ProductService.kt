@@ -38,12 +38,17 @@ open class ProductService(
     @Transactional
     open suspend fun saveAndPushTokafka(prod: Product, eventName: String): ProductRapidDTO {
         val product = attributeTagService.addBestillingsordningAttribute(prod)
-        val saved = productRepository.findBySupplierIdAndSupplierRef(product.supplierId, product.supplierRef)?.let { inDb ->
+        val saved: Product = if (product.createdBy == HMDB) {
+            productRepository.findByIdentifier(product.identifier)?.let { inDb ->
+                productRepository.update(product.copy(id = inDb.id, created = inDb.created,
+                    createdBy = inDb.createdBy))
+            } ?: productRepository.save(product)
+        } else productRepository.findBySupplierIdAndSupplierRef(product.supplierId, product.supplierRef)?.let { inDb ->
             productRepository.update(product.copy(id = inDb.id, created = inDb.created,
                 createdBy = inDb.createdBy))
         } ?: productRepository.save(product)
         val productDTO = saved.toDTO()
-        LOG.info("saved: ${productDTO.id} ${productDTO.hmsArtNr}")
+        LOG.info("saved: ${productDTO.id} ${productDTO.hmsArtNr} ${product.identifier}")
         gdbRapidPushService.pushDTOToKafka(productDTO, eventName)
         return productDTO
     }
