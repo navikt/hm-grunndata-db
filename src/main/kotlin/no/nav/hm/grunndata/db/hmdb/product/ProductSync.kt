@@ -159,7 +159,7 @@ open class ProductSync(
                     productService.saveAndPushTokafka(it, EventName.hmdbproductsyncV1)
                 }
                 catch (e: Exception) {
-                    LOG.error("Got exception", e)
+                    LOG.error("Got exception for ${it.identifier} ${it.supplierRef} supplier: ${it.supplierId}", e)
                 }
             }
         } ?: LOG.error("Could not find any from $artIdStart and $artIdEnd")
