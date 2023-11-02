@@ -141,9 +141,13 @@ class HmDBProductMapper(private val supplierService: SupplierService,
     fun mapBlob(blobDTO: BlobDTO): Media {
         val blobFile = blobDTO.blobfile.trim()
         val blobType = blobDTO.blobtype.trim().lowercase()
+        val blobUse = blobDTO.blobuse.trim()
         val mediaType = when (blobType) {
             "billede" -> MediaType.IMAGE
-            "brosjyre", "produktbl", "bruksanvisning", "brugsanvisning", "quickguide", "målskjema", "batterioversikt", "seil" -> MediaType.PDF
+            "brosjyre","produktbl", "bruksanvisning","understell", "monteringsanvis",
+            "produktsammenli","tekniske tegnin","opplæringsmater","feilkodeoversik",
+            "prøvelisens","lisensinformasj","brugsanvisning", "quickguide",
+            "målskjema", "batterioversikt", "seil" -> MediaType.PDF
             "video" -> MediaType.VIDEO
             else -> {
                 LOG.error("Unrecognized media type with file: $blobFile and type: $blobType")
@@ -155,11 +159,7 @@ class HmDBProductMapper(private val supplierService: SupplierService,
             when (blobType) {
                 "bruksanvisning", "brugsanvisning" -> "brugsvejl"
                 "brosjyre", "produktbl" -> "produktblade"
-                "quickguide" -> "seriedok/8606"
-                "målskjema" -> "seriedok/1468"
-                "seil" -> "seriedok/8680"
-                "batterioversikt" -> "seriedok/8694"
-                else -> "unknown"
+                else -> "seriedok/$blobUse"
             }
         }
 
