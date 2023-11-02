@@ -34,6 +34,7 @@ class HmDBProductMapper(private val supplierService: SupplierService,
 
     fun mapProduct(prod: HmDbProductDTO, batch: HmDbProductBatchDTO): Product {
         val supplier = supplierService.findByIdentifier(prod.supplier!!.HmDbIdentifier())
+        if (prod.artno.isNullOrBlank()) LOG.error("This product does not have levArtNR ${prod.artid}")
         return Product(
             id = UUID.randomUUID(),
             supplierId = supplier!!.id,
