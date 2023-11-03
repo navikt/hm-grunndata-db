@@ -127,9 +127,11 @@ class HmDBProductMapper(private val supplierService: SupplierService,
         TechData(key = it.techlabeldk!!, value = it.datavalue!!, unit = it.techdataunit!!)
     }
 
-    private fun mapStatus(prod: HmDbProductDTO): ProductStatus =
-        if (prod.aisapproved && prod.isactive) ProductStatus.ACTIVE else
+    private fun mapStatus(prod: HmDbProductDTO): ProductStatus {
+        val expired = prod.aoutdate?.isBefore(LocalDateTime.now()) ?: false
+        return if (prod.aisapproved && prod.isactive && !expired) ProductStatus.ACTIVE else
             ProductStatus.INACTIVE
+    }
 
     fun mapBlobs(blobs: List<BlobDTO>): Set<Media> =
         blobs.map { mapBlob(it) }
