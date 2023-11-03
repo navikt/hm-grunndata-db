@@ -65,9 +65,9 @@ class LegacyService(
         artname = articleName,
         artno = supplierRef,
         artpostid = null, //mapper ikke dette
-        blobfileURL = if (media.isNotEmpty()) media[0].uri else null,
+        blobfileURL = if (media.isNotEmpty()) media.first().uri else null,
         blobfileURL_snet = null,
-        blobtype = if (media.isNotEmpty()) media[0].type.toString() else null,
+        blobtype = if (media.isNotEmpty()) media.first().type.toString() else null,
         blobuse = "1",
         hasanbud = attributes.hasTender,
         isactive = true,

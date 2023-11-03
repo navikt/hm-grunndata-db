@@ -70,7 +70,7 @@ open class ProductService(
         id = id, supplier = runBlocking{supplierService.findById(supplierId)!!.toDTO()},
         title = title, articleName = articleName,  attributes=attributes,
         status = status, hmsArtNr = hmsArtNr, identifier = identifier, supplierRef=supplierRef, isoCategory=isoCategory,
-        accessory=accessory, sparePart=sparePart, seriesId=seriesId, seriesIdentifier = seriesIdentifier, techData=techData, media= media.map { it.toMediaInfo()}, created=created,
+        accessory=accessory, sparePart=sparePart, seriesId=seriesId, seriesIdentifier = seriesIdentifier, techData=techData, media= media.map { it.toMediaInfo()}.toSet(), created=created,
         updated=updated, published=published, expired=expired, agreementInfo = agreementInfo, hasAgreement = (agreementInfo!=null),
         createdBy=createdBy, updatedBy=updatedBy, agreements = agreements?.map {agree ->
             val agreement = agreementService.findByIdentifier(agree.identifier!!)
