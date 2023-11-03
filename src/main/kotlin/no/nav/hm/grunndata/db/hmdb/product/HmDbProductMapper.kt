@@ -131,11 +131,11 @@ class HmDBProductMapper(private val supplierService: SupplierService,
         if (prod.aisapproved && prod.isactive) ProductStatus.ACTIVE else
             ProductStatus.INACTIVE
 
-    fun mapBlobs(blobs: List<BlobDTO>): List<Media> =
+    fun mapBlobs(blobs: List<BlobDTO>): Set<Media> =
         blobs.map { mapBlob(it) }
             .filter { it.type != MediaType.OTHER && it.type != MediaType.VIDEO }
             .sortedBy { "${it.type}-${it.uri}" }
-            .mapIndexed { index, media -> media.copy(priority = index + 1) }
+            .mapIndexed { index, media -> media.copy(priority = index + 1) }.toSet()
 
 
     fun mapBlob(blobDTO: BlobDTO): Media {

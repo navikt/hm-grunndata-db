@@ -13,7 +13,18 @@ data class Media (
     val text:   String?=null,
     val source: MediaSourceType = MediaSourceType.HMDB,
     val updated: LocalDateTime = LocalDateTime.now(),
-)
+) {
+    override fun hashCode(): Int {
+        return uri.hashCode()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Media) return false
+        return uri == other.uri
+    }
+
+}
 
 fun MediaInfo.toEntity(): Media = Media (
     sourceUri = sourceUri, uri = uri, priority = priority,

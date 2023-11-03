@@ -8,6 +8,7 @@ import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import io.mockk.mockk
 import no.nav.hm.grunndata.db.HMDB
+import no.nav.hm.grunndata.db.media.Media
 import no.nav.hm.grunndata.db.supplier.Supplier
 import no.nav.hm.grunndata.db.supplier.SupplierService
 import no.nav.hm.grunndata.rapid.dto.*
@@ -38,13 +39,21 @@ class ProductRepositoryTest(private val productRepository: ProductRepository,
             rank=1, postNr = 2, postIdentifier = "HMDB-3123"
         )
 
+        val mediaSet = setOf(
+            Media( text = "media 1", uri = "http://media1", type = MediaType.IMAGE, source = MediaSourceType.HMDB,
+                sourceUri = "http://media1", priority = 1),
+            Media( text = "media 2", uri = "http://media2", type = MediaType.IMAGE, source = MediaSourceType.HMDB,
+                sourceUri = "http://media2", priority = 2),
+            Media( text = "media 2", uri = "http://media2", type = MediaType.IMAGE, source = MediaSourceType.HMDB,
+                sourceUri = "http://media2", priority = 3)
+            )
         runBlocking {
             val supplier = supplierService.save(Supplier(name = "supplier 1", identifier = "unik-identifier",
                 status = SupplierStatus.ACTIVE, info = SupplierInfo(email = "test@test")))
             val product = productRepository.save(Product(
                 supplierId = supplier.id, identifier = "123", title = "Dette er et produkt", articleName = "Produkt 1",
                 supplierRef = "123", isoCategory = "123456", seriesId = seriesId, seriesIdentifier = seriesId,
-                agreements = setOf(productAgreement, productAgreement2),
+                agreements = setOf(productAgreement, productAgreement2), media = mediaSet,
                 attributes = Attributes (
                     manufacturer =  "Samsung",  compatibleWidth = CompatibleWith(seriesIds = setOf(UUID.randomUUID())))
             ))
@@ -68,10 +77,12 @@ class ProductRepositoryTest(private val productRepository: ProductRepository,
             val updated = productRepository.update(db.copy(title = "Dette er et nytt produkt"))
             updated.shouldNotBeNull()
             updated.title shouldBe "Dette er et nytt produkt"
+            updated.media.size shouldBe 2
             println(objectMapper.writeValueAsString(updated))
             val ids = productRepository.findIdsByStatusAndCreatedBy(status=ProductStatus.ACTIVE, HMDB)
             ids.size shouldBe 2
             productRepository.findByAgreementsJson("""[{"id": "$agreementId2"}]""").size shouldBe 1
+
         }
     }
 }
