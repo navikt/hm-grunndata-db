@@ -17,6 +17,7 @@ class SeriesRepositoryTest(private val seriesRepository: SeriesRepository) {
         val series = Series (
             identifier = "HMDB-12345",
             title = "en test series 1",
+            text = "en test series 1 beskrivelse",
             supplierId = supplierId,
             createdBy = HMDB,
             updatedBy = HMDB )

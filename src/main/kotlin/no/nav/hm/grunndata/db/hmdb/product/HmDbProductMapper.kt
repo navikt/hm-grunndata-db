@@ -81,7 +81,8 @@ class HmDBProductMapper(private val supplierService: SupplierService,
         } ?: run {
             LOG.info("Saving new series $hmDbIdentifier")
             seriesService.save(Series ( status = mapSeriesStatus(prod),
-                supplierId = supplier.id, title = prod.prodname, identifier = hmDbIdentifier, createdBy = HMDB, updatedBy = HMDB,
+                supplierId = supplier.id, title = prod.prodname, text = prod.pshortdesc,
+                identifier = hmDbIdentifier, createdBy = HMDB, updatedBy = HMDB,
                 expired = prod.poutdate ?: LocalDateTime.now().plusYears(20)
             ))
         }

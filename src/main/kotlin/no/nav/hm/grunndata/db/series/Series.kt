@@ -15,6 +15,7 @@ data class Series(
     val supplierId: UUID,
     val status: SeriesStatus = SeriesStatus.ACTIVE,
     val title: String,
+    val text: String,
     val identifier: String,
     val createdBy: String,
     val updatedBy: String,
@@ -24,8 +25,11 @@ data class Series(
 )
 
 
-fun Series.toRapidDTO() = SeriesRapidDTO (id = id, status = status, title = title, supplierId = supplierId, expired = expired,
-    identifier = identifier, createdBy = createdBy, updatedBy = updatedBy, created = created, updated = updated)
+fun Series.toRapidDTO() = SeriesRapidDTO (id = id, status = status, title = title,
+    text = text,
+    supplierId = supplierId, expired = expired,
+    identifier = identifier, createdBy = createdBy,
+    updatedBy = updatedBy, created = created, updated = updated)
 
 fun SeriesRegistrationRapidDTO.toEntity() = Series(
     id = id,
@@ -37,5 +41,6 @@ fun SeriesRegistrationRapidDTO.toEntity() = Series(
     updatedBy = updatedBy,
     created = created,
     updated = updated,
-    expired = expired
+    expired = expired,
+    text = text,
 )
