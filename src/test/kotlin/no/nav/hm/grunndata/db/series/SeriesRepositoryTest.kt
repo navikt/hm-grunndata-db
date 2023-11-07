@@ -18,6 +18,7 @@ class SeriesRepositoryTest(private val seriesRepository: SeriesRepository) {
             identifier = "HMDB-12345",
             title = "en test series 1",
             text = "en test series 1 beskrivelse",
+            isoCategory = "12001314",
             supplierId = supplierId,
             createdBy = HMDB,
             updatedBy = HMDB )
@@ -29,6 +30,7 @@ class SeriesRepositoryTest(private val seriesRepository: SeriesRepository) {
             identifier.shouldNotBeNull()
             identifier.title shouldBe series.title
             val updated = seriesRepository.update(identifier.copy(title = "en test series 2"))
+            updated.isoCategory shouldBe "12001314"
         }
     }
 }

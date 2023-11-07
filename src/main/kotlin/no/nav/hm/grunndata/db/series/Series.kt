@@ -14,6 +14,7 @@ data class Series(
     val id: UUID = UUID.randomUUID(),
     val supplierId: UUID,
     val status: SeriesStatus = SeriesStatus.ACTIVE,
+    val isoCategory: String,
     val title: String,
     val text: String,
     val identifier: String,
@@ -26,7 +27,7 @@ data class Series(
 
 
 fun Series.toRapidDTO() = SeriesRapidDTO (id = id, status = status, title = title,
-    text = text,
+    text = text, isoCategory = isoCategory,
     supplierId = supplierId, expired = expired,
     identifier = identifier, createdBy = createdBy,
     updatedBy = updatedBy, created = created, updated = updated)
@@ -34,6 +35,7 @@ fun Series.toRapidDTO() = SeriesRapidDTO (id = id, status = status, title = titl
 fun SeriesRegistrationRapidDTO.toEntity() = Series(
     id = id,
     supplierId = supplierId,
+    isoCategory = isoCategory,
     status = status,
     title = title,
     identifier = identifier,
