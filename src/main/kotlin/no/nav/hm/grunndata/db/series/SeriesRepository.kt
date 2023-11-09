@@ -14,7 +14,7 @@ interface SeriesRepository: CoroutinePageableCrudRepository<Series, UUID>, Corou
 
     suspend fun findBySupplierId(supplierId: UUID): List<Series>
 
-    @Query("SELECT seriesIdentifier FROM product_v1 WHERE status='DELETED' AND NOT EXISTS (SELECT FROM series_v1 WHERE seriesIdentifier = identifier)")
+    @Query("SELECT series_identifier FROM product_v1 WHERE status='DELETED' AND NOT EXISTS (SELECT FROM series_v1 WHERE series_identifier = identifier)")
     suspend fun findDeletedSeriesThatDoesNotExist(): List<String>
 
 }
