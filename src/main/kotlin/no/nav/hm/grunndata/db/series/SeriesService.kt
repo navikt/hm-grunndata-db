@@ -79,4 +79,5 @@ open class SeriesService(private val seriesRepository: SeriesRepository,
         }
     }
 
+    suspend fun findDeletedSeriesThatDoesNotExist() = seriesRepository.findDeletedSeriesThatDoesNotExist()
 }

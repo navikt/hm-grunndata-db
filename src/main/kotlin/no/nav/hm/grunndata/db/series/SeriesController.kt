@@ -29,5 +29,7 @@ class SeriesController(private val seriesSeries: SeriesService) {
     @Get("/supplier/{supplierId}")
     suspend fun findBySupplierId(supplierId: UUID) = seriesSeries.findBySupplierId(supplierId)
 
+    @Get("/find/deletedSeriesThatDoesNotExist")
+    suspend fun findDeletedSeriesThatDoesNotExist() = seriesSeries.findDeletedSeriesThatDoesNotExist()
 
 }
