@@ -88,7 +88,8 @@ class HmDBProductMapper(private val supplierService: SupplierService,
                 expired = prod.poutdate ?: LocalDateTime.now().plusYears(20)
             ))
         }
-        if (updated) rapidPushService.pushDTOToKafka(series.toRapidDTO(), EventName.hmdbseriessyncV1)
+        // temporally disabled
+        //if (updated) rapidPushService.pushDTOToKafka(series.toRapidDTO(), EventName.hmdbseriessyncV1)
         return series.id
     }
 
