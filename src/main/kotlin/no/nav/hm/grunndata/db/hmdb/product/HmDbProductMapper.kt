@@ -35,9 +35,10 @@ class HmDBProductMapper(private val supplierService: SupplierService,
     fun mapProduct(prod: HmDbProductDTO, batch: HmDbProductBatchDTO): Product {
         val supplier = supplierService.findByIdentifier(prod.supplier!!.HmDbIdentifier())
         if (prod.artno.isNullOrBlank()) LOG.error("This product does not have levArtNR ${prod.artid}")
+        val seriesUUID = mapSeries(prod,supplier!!)
         return Product(
             id = UUID.randomUUID(),
-            supplierId = supplier!!.id,
+            supplierId = supplier.id,
             title = prod.prodname,
             articleName = prod.artname,
             attributes = mapAttributes(prod),
@@ -46,7 +47,8 @@ class HmDBProductMapper(private val supplierService: SupplierService,
             identifier = "${prod.artid}".HmDbIdentifier(),
             supplierRef = if (!prod.artno.isNullOrBlank()) prod.artno else prod.artid.toString().HmDbIdentifier(),
             isoCategory = isoCategoryService.lookUpCode(prod.isocode)?.isoCode ?: prod.isocode,
-            seriesId = mapSeries(prod, supplier),
+            seriesUUID = seriesUUID,
+            seriesId = seriesUUID.toString(),
             seriesIdentifier = "${prod.prodid}".HmDbIdentifier(),
             techData = mapTechData(batch.techdata[prod.artid] ?: emptyList()),
             media = mapBlobs(batch.blobs[prod.prodid] ?: emptyList()),
@@ -66,7 +68,7 @@ class HmDBProductMapper(private val supplierService: SupplierService,
         else SeriesStatus.ACTIVE
     }
 
-    private fun mapSeries(prod: HmDbProductDTO, supplier: Supplier): String {
+    private fun mapSeries(prod: HmDbProductDTO, supplier: Supplier): UUID {
         val hmDbIdentifier = "${prod.prodid}".HmDbIdentifier()
         var updated = true
         val series = seriesService.findByIdentifier(hmDbIdentifier)?.let {
@@ -87,7 +89,7 @@ class HmDBProductMapper(private val supplierService: SupplierService,
             ))
         }
         if (updated) rapidPushService.pushDTOToKafka(series.toRapidDTO(), EventName.hmdbseriessyncV1)
-        return series.id.toString()
+        return series.id
     }
 
     private fun mapAgreements(posts: List<ArticlePostDTO>): Set<ProductAgreement> = posts.map { apost ->

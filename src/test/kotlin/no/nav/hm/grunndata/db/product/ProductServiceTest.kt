@@ -79,6 +79,7 @@ class ProductServiceTest(private val productService: ProductService,
                     isoCategory = "123456",
                     agreements = setOf(productAgreement,productAgreement2),
                     pastAgreements = setOf(pastProductAgreement),
+                    seriesUUID = UUID.randomUUID(),
                     attributes = Attributes(
                         manufacturer = "Samsung", compatibleWidth = CompatibleWith(seriesIds = setOf(UUID.randomUUID()))
                     )

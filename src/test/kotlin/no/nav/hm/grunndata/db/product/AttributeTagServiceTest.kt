@@ -17,7 +17,7 @@ class AttributeTagServiceTest(private val attributeTagService: AttributeTagServi
             createdBy = GDB, updatedBy = GDB, updated = LocalDateTime.now(), created = LocalDateTime.now())
         val product = Product (id = UUID.randomUUID(),
             supplierId = supplier.id , hmsArtNr = "267914", identifier = "123", title = "Dette er et produkt",
-            articleName = "Product 1", supplierRef = "123", isoCategory = "123456",
+            articleName = "Product 1", supplierRef = "123", isoCategory = "123456", seriesUUID = UUID.randomUUID(),
             attributes = Attributes (
                 manufacturer =  "Samsung",
                 compatibleWidth = CompatibleWith(seriesIds = setOf(UUID.randomUUID()))
@@ -34,7 +34,8 @@ class AttributeTagServiceTest(private val attributeTagService: AttributeTagServi
                 bestillingsordning= true
             ),
             createdBy = GDB,
-            updatedBy = GDB
+            updatedBy = GDB,
+            seriesUUID = UUID.randomUUID()
         )
         val withBestillingsordning = attributeTagService.addBestillingsordningAttribute(product)
         val withNoBestillingsordning = attributeTagService.addBestillingsordningAttribute(product2)

@@ -46,7 +46,7 @@ class SyncProductTest(private val productSync: ProductSync,
             productRepository.save(
                 Product(
                 supplierId = supplier.id, identifier = "HMDB-123", title = "Dette er et produkt", articleName = "Produkt 1",
-                supplierRef = "123", isoCategory = "123456",
+                supplierRef = "123", isoCategory = "123456", seriesUUID = UUID.randomUUID(),
                 attributes = Attributes (
                     manufacturer =  "Samsung",  compatibleWidth = CompatibleWith(seriesIds = setOf(UUID.randomUUID())
                 )))
@@ -54,14 +54,14 @@ class SyncProductTest(private val productSync: ProductSync,
             productRepository.save(
                 Product(
                 supplierId = supplier.id, identifier = "HMDB-124", title = "Dette er et produkt2", articleName = "Produkt 2",
-                supplierRef = "124", isoCategory = "123456",
+                supplierRef = "124", isoCategory = "123456", seriesUUID = UUID.randomUUID(),
                 attributes = Attributes (
                     manufacturer =  "Samsung",  compatibleWidth = CompatibleWith(seriesIds = setOf(UUID.randomUUID()))))
             )
             val product3 = productRepository.save(
                 Product(
                     supplierId = supplier.id, identifier = "HMDB-125", title = "Dette er et produkt2", articleName = "Produkt 2",
-                    supplierRef = "125", isoCategory = "123456",
+                    supplierRef = "125", isoCategory = "123456", seriesUUID = UUID.randomUUID(),
                     attributes = Attributes (
                         manufacturer =  "Samsung",  compatibleWidth = CompatibleWith(seriesIds = setOf(UUID.randomUUID()))))
             )
