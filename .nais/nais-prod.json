@@ -5,7 +5,7 @@
   "rapidsandrivers_enabled": true,
   "min_replicas": 2,
   "max_replicas": 2,
-  "java_opts": "-Xms256m -Xmx512m -XX:+UseG1GC",
+  "java_opts": "-Xms256m -Xmx1024m -XX:+UseG1GC",
   "schedulers_enabled": true,
   "media_storage_cdnurl": "https://cdn.nav.no/teamdigihot/grunndata/media/v1"
 }
