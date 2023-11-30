@@ -28,7 +28,7 @@ micronaut:
       charset: 'UTF-8'
   data:
     pageable:
-      max-page-size: 2000
+      max-page-size: 10000
   metrics:
     enabled: true
     binders:
