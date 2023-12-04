@@ -16,11 +16,7 @@ class TechLabelSync(private val hmDbClient: HmDbClient,
 
     suspend fun syncAllTechLabels() {
         val labels = hmDbClient.fetchAllTechlabels().map { it.toTechLabel() }
-        labels.forEach { label ->
-            val saved = techLabelRepository.findByIdentifier(label.identifier)?.let { inDb ->
-                techLabelRepository.update(label.copy(id = inDb.id, updated = LocalDateTime.now(),
-                    createdBy = inDb.createdBy))
-            } ?: techLabelRepository.save(label)
+        labels.forEach { label -> val saved = techLabelRepository.save(label)
             LOG.info("Saved techlabel ${saved.id} - ${saved.label} - ${saved.identifier}")
         }
     }
