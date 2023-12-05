@@ -70,14 +70,12 @@ class HmDBProductMapper(private val supplierService: SupplierService,
 
     private fun mapSeries(prod: HmDbProductDTO, supplier: Supplier): UUID {
         val hmDbIdentifier = "${prod.prodid}".HmDbIdentifier()
-        var updated = true
         val series = seriesService.findByIdentifier(hmDbIdentifier)?.let {
             // if changed title, then we update series
             if (it.title != prod.prodname || (prod.poutdate!= null && it.expired != prod.poutdate)) seriesService.update(it.copy(
                 title = prod.prodname, updated = LocalDateTime.now(), updatedBy = HMDB, expired = prod.poutdate ?: it.expired,
                 status = mapSeriesStatus(prod)
             )) else {
-                updated = false
                 it
             }
         } ?: run {
@@ -88,8 +86,6 @@ class HmDBProductMapper(private val supplierService: SupplierService,
                 expired = prod.poutdate ?: LocalDateTime.now().plusYears(20)
             ))
         }
-        // temporally disabled
-        //if (updated) rapidPushService.pushDTOToKafka(series.toRapidDTO(), EventName.hmdbseriessyncV1)
         return series.id
     }
 
@@ -170,8 +166,9 @@ class HmDBProductMapper(private val supplierService: SupplierService,
         }
 
         return Media (
-            type = mediaType, text = blobType, sourceUri = "$hmdbMediaUrl/$typePath/$blobFile",
-            uri = "$typePath/${blobFile}", source = MediaSourceType.HMDB
+            type = mediaType, text = blobType, filename = "$typePath/${blobFile}",
+            sourceUri = "$hmdbMediaUrl/$typePath/$blobFile", uri = "$typePath/${blobFile}",
+            source = MediaSourceType.HMDB
         )
     }
 

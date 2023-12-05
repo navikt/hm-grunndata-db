@@ -7,6 +7,7 @@ import java.time.LocalDateTime
 
 data class Media (
     val sourceUri: String,
+    val filename: String?=null,
     val uri:    String,
     val priority: Int = -1,
     val type: MediaType = MediaType.IMAGE,
@@ -27,13 +28,14 @@ data class Media (
 }
 
 fun MediaInfo.toEntity(): Media = Media (
-    sourceUri = sourceUri, uri = uri, priority = priority,
+    sourceUri = sourceUri, filename = filename, uri = uri, priority = priority,
     type=type, text = text, source = source, updated = updated
 )
 
 fun Media.toMediaInfo(): MediaInfo = MediaInfo (
     sourceUri = sourceUri,
     uri = uri,
+    filename = filename,
     priority = priority,
     type = type,
     text = text,
