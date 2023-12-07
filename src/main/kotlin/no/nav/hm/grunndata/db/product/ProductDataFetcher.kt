@@ -1,16 +1,19 @@
 package no.nav.hm.grunndata.db.product
 
 import graphql.schema.DataFetcher
-import graphql.schema.DataFetchingEnvironment
 import jakarta.inject.Singleton
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.runBlocking
 
 @Singleton
-class ProductDataFetcher : DataFetcher<String> {
-    override fun get(env: DataFetchingEnvironment): String {
-        var name = env.getArgument<String>("name")
-        if (name == null || name.trim().isEmpty()) {
-            name = "World"
+class ProductDataFetchers(private val productRepository: ProductRepository) {
+    fun productsFetcher(): DataFetcher<List<Product>> {
+        return DataFetcher { /*dataFetchingEnvironment: DataFetchingEnvironment*/ _ ->
+            runBlocking {
+                productRepository
+                    .findAll()
+                    .toList()
+            }
         }
-        return "Hello $name!"
     }
 }

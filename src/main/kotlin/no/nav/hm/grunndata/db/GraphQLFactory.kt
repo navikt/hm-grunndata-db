@@ -9,7 +9,7 @@ import io.micronaut.context.annotation.Bean
 import io.micronaut.context.annotation.Factory
 import io.micronaut.core.io.ResourceResolver
 import jakarta.inject.Singleton
-import no.nav.hm.grunndata.db.product.ProductDataFetcher
+import no.nav.hm.grunndata.db.product.ProductDataFetchers
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
@@ -17,7 +17,7 @@ import java.io.InputStreamReader
 class GraphQLFactory {
     @Bean
     @Singleton
-    fun graphQL(resourceResolver: ResourceResolver, productDataFetcher: ProductDataFetcher): GraphQL {
+    fun graphQL(resourceResolver: ResourceResolver, productDataFetchers: ProductDataFetchers): GraphQL {
         val schemaParser = SchemaParser()
         val schemaGenerator = SchemaGenerator()
 
@@ -29,7 +29,7 @@ class GraphQLFactory {
         // Create the runtime wiring.
         val runtimeWiring = RuntimeWiring.newRuntimeWiring()
             .type("Query") { typeWiring -> typeWiring
-                .dataFetcher("hello", productDataFetcher) }
+                .dataFetcher("products", productDataFetchers.productsFetcher()) }
             .build()
 
         // Create the executable schema.
