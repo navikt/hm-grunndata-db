@@ -35,7 +35,7 @@ class ProductDataFetchers(private val productRepository: ProductRepository) {
 
     private fun productsFetcher(): DataFetcher<ProductPage> {
         return DataFetcher { args: DataFetchingEnvironment ->
-            val pagination = Pagination.from(args)
+            val pagination = Pagination.from(args).isSetOrDefaults()
             runBlocking {
                 val page = productRepository.findAll(Pageable.from(pagination.offset!!/pagination.limit!!, pagination.limit))
                 ProductPage(page.totalSize.toInt(), page.toList())
@@ -49,7 +49,7 @@ data class Pagination (
     val offset: Int?,
     val limit: Int?,
 ) {
-    fun defaults() = copy(
+    fun isSetOrDefaults() = copy(
         offset = offset ?: 0,
         limit = limit ?: 10,
     )
@@ -57,6 +57,6 @@ data class Pagination (
     companion object {
         fun from(dataFetchingEnvironment: DataFetchingEnvironment) = objectMapper.readValue<Pagination?>(
             objectMapper.writeValueAsString(dataFetchingEnvironment.arguments["pagination"])
-        ) ?: Pagination(null, null).defaults()
+        ) ?: Pagination(null, null)
     }
 }
