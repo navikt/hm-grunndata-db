@@ -54,6 +54,12 @@ data class Product (
     val updatedBy: String = HMDB
 )
 
+@Introspected
+data class ProductPage (
+    val total: Int,
+    val products: List<Product>,
+)
+
 data class ProductAgreement(
     val id: UUID,
     val title: String?=null,

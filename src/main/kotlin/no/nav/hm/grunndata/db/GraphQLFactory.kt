@@ -29,7 +29,7 @@ class GraphQLFactory {
         // Create the runtime wiring.
         val runtimeWiring = RuntimeWiring.newRuntimeWiring()
             .type("Query") { typeWiring -> typeWiring
-                .dataFetcher("products", productDataFetchers.productsFetcher()) }
+                .dataFetchers(productDataFetchers.fetchers()) }
             .build()
 
         // Create the executable schema.

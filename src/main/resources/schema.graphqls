@@ -1,4 +1,14 @@
 type Query {
+    products(pagination: Pagination): ProductPage
+}
+
+input Pagination {
+    offset: Int
+    limit: Int
+}
+
+type ProductPage {
+    total: Int!
     products: [Product]
 }
 
