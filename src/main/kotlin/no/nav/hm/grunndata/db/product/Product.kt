@@ -39,6 +39,7 @@ data class Product (
     val media: Set<Media> = emptySet(),
     @field:TypeDef(type = DataType.JSON)
     @field:Column(name="agreement")
+    @Deprecated("Use agreements instead")
     val agreementInfo: AgreementInfo?=null,
     @field:TypeDef(type = DataType.JSON)
     val agreements: Set<ProductAgreement>? = emptySet(),
