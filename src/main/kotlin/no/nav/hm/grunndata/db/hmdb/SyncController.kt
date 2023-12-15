@@ -26,7 +26,7 @@ class SyncController(private val productSync: ProductSync,
 
 
     @Get("/suppliers/all")
-    fun syncAllSuppliers() {
+    suspend fun syncAllSuppliers() {
         LOG.info("call sync all suppliers")
         supplierSync.syncAllSuppliers()
     }
