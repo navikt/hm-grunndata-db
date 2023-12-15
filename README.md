@@ -7,6 +7,7 @@ docker-compose up -d
 export DB_DRIVER=org.postgresql.Driver
 export DB_JDBC_URL=jdbc:postgresql://localhost:5432/gdb
 export RAPIDSANDRIVERS_ENABLED=true
+export HMDB_URL=http://localhost:8081
 ./gradlew build run
 
 ```
@@ -20,5 +21,3 @@ curl http://localhost:8888/internal/sync/suppliers
 curl http://localhost:8888/internal/sync/products
 
 ````
-
-
