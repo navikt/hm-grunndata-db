@@ -71,7 +71,7 @@ open class ProductService(
         title = title, articleName = articleName,  attributes=attributes,
         status = status, hmsArtNr = hmsArtNr, identifier = identifier, supplierRef=supplierRef, isoCategory=isoCategory,
         accessory=accessory, sparePart=sparePart, seriesId=seriesId, seriesIdentifier = seriesIdentifier, techData=techData, media= media.map { it.toMediaInfo()}.toSet(), created=created,
-        updated=updated, published=published, expired=expired, agreementInfo = agreementInfo, hasAgreement = (agreementInfo!=null),
+        updated=updated, published=published, expired=expired, agreementInfo = agreementInfo,
         createdBy=createdBy, updatedBy=updatedBy, agreements = agreements?.map {agree ->
             val agreement = agreementService.findByIdentifier(agree.identifier!!)
             val post = agreement!!.posts.find { it.identifier == agree.postIdentifier }
@@ -83,6 +83,7 @@ open class ProductService(
                 rank = agree.rank,
                 postNr = agree.postNr,
                 postIdentifier = agree.postIdentifier,
+                published = agreement.published,
                 expired = agreement.expired,
                 reference = agreement.reference,
                 postTitle = post.title
