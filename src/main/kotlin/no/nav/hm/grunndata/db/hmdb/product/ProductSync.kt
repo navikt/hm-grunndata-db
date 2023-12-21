@@ -113,6 +113,11 @@ open class ProductSync(
             lastSeriesSize = hmdbProducts.size
             lastSeriesChanged = last.pchange
             hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = last.pchange))
+        } else {
+            LOG.info("Empty list")
+            if (to.isBefore(LocalDateTime.now())) {
+                hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = to))
+            }
         }
     }
 
