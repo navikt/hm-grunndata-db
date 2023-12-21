@@ -46,7 +46,7 @@ open class ProductSyncScheduler(private val productSync: ProductSync,
             runBlocking {
                 try {
                     productSync.syncProducts()
-                    if (now.minute==0 || now.minute == 30) {
+                    if (now.minute==0 || now.minute == 15 || now.minute == 30 || now.minute == 45) {
                         productSync.syncSeries()
                     }
                 } catch (e: Exception) {
