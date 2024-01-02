@@ -67,7 +67,7 @@ class SupplierSync(
         }
     }
 
-    fun syncAllSuppliers() {
+    suspend fun syncAllSuppliers() {
         LOG.info("Sync all suppliers")
         hmDbClient.fetchAllSuppliers()?.let { persistAndPushToRapid(it) }
     }

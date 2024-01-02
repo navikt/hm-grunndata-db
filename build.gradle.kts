@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 
 val jvmTarget = "17"
-val micronautVersion="4.1.4"
+val micronautVersion="4.2.1"
 val micrometerRegistryPrometheusVersion = "1.9.1"
 val junitJupiterVersion = "5.9.0"
 val jacksonVersion = "2.13.4"
@@ -14,7 +14,7 @@ val tcVersion= "1.17.6"
 val mockkVersion = "1.13.4"
 val kotestVersion = "5.5.5"
 val rapidsRiversVersion = "202311021234"
-val grunndataDtoVersion = "202312051130"
+val grunndataDtoVersion = "202312141645"
 
 group = "no.nav.hm"
 version = properties["version"] ?: "local-build"
@@ -24,7 +24,7 @@ plugins {
     kotlin("kapt") version "1.8.22"
     id("java")
     id("com.github.johnrengelman.shadow") version "7.1.0"
-    id("io.micronaut.application") version "4.1.1"
+    id("io.micronaut.application") version "4.2.1"
 }
 
 configurations.all {

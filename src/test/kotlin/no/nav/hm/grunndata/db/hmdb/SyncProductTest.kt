@@ -66,7 +66,7 @@ class SyncProductTest(private val productSync: ProductSync,
                         manufacturer =  "Samsung",  compatibleWidth = CompatibleWith(seriesIds = setOf(UUID.randomUUID()))))
             )
             every {
-                hmDbClient.fetchProductsIdActive()
+                runBlocking { hmDbClient.fetchProductsIdActive() }
             } answers {
                 listOf(
                     123, 124, 126, 127

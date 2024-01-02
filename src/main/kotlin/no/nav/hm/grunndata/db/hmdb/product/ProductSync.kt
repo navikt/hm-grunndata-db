@@ -85,7 +85,7 @@ open class ProductSync(
             )
         )
         val from = syncBatchJob.syncfrom
-        val to = from.plusDays(1)
+        val to = from.plusDays(5)
         LOG.info("Calling product series sync from ${from} to $to")
         val hmdbProductsBatch = hmDbClient.fetchSeries(from, to)
         LOG.info("Got total of ${hmdbProductsBatch!!.products.size} products")
@@ -113,6 +113,11 @@ open class ProductSync(
             lastSeriesSize = hmdbProducts.size
             lastSeriesChanged = last.pchange
             hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = last.pchange))
+        } else {
+            LOG.info("Empty list")
+            if (to.isBefore(LocalDateTime.now())) {
+                hmdbBatchRepository.update(syncBatchJob.copy(syncfrom = to))
+            }
         }
     }
 

@@ -13,17 +13,17 @@ class AgreementExpirationScheduler(
     private val leaderElection: LeaderElection
 ) {
 
-    companion object {
-        private val LOG = LoggerFactory.getLogger(AgreementExpirationScheduler::class.java)
-    }
-
-    //@Scheduled(cron = "0 30 1 * * *") // disabled until hmdb sync is deactivated
-    fun handleExpiredAgreements() {
-        if (leaderElection.isLeader()) {
-            LOG.info("Running expiration agreement scheduler")
-            runBlocking {
-                agreementExpiration.expiredAgreements()
-            }
-        }
-    }
+//    companion object {
+//        private val LOG = LoggerFactory.getLogger(AgreementExpirationScheduler::class.java)
+//    }
+//
+//    //@Scheduled(cron = "0 30 1 * * *") // disabled until hmdb sync is deactivated
+//    fun handleExpiredAgreements() {
+//        if (leaderElection.isLeader()) {
+//            LOG.info("Running expiration agreement scheduler")
+//            runBlocking {
+//                agreementExpiration.expiredAgreements()
+//            }
+//        }
+//    }
 }

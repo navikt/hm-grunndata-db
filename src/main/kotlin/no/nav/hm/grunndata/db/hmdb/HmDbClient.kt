@@ -23,41 +23,41 @@ import java.time.LocalDateTime
 interface HmDbClient {
 
     @Get("/api/v1/sync/suppliers")
-    fun fetchSuppliers(@QueryValue @Format("yyyy-MM-dd'T'HH:mm:ss") lastupdated: LocalDateTime): List<HmdbSupplierDTO>?
+    suspend fun fetchSuppliers(@QueryValue @Format("yyyy-MM-dd'T'HH:mm:ss") lastupdated: LocalDateTime): List<HmdbSupplierDTO>?
 
     @Get("/api/v1/sync/suppliers/all")
-    fun fetchAllSuppliers(): List<HmdbSupplierDTO>?
+    suspend fun fetchAllSuppliers(): List<HmdbSupplierDTO>?
 
     @Get("/api/v1/sync/products")
-    fun fetchProducts(@QueryValue @Format("yyyy-MM-dd'T'HH:mm:ss") changeFrom: LocalDateTime,
+    suspend fun fetchProducts(@QueryValue @Format("yyyy-MM-dd'T'HH:mm:ss") changeFrom: LocalDateTime,
                       @QueryValue @Format("yyyy-MM-dd'T'HH:mm:ss") changeTo: LocalDateTime): HmDbProductBatchDTO?
 
     @Get("/api/v1/sync/products/series/change")
-    fun fetchSeries(@QueryValue @Format("yyyy-MM-dd'T'HH:mm:ss") changeFrom: LocalDateTime,
+    suspend fun fetchSeries(@QueryValue @Format("yyyy-MM-dd'T'HH:mm:ss") changeFrom: LocalDateTime,
                     @QueryValue @Format("yyyy-MM-dd'T'HH:mm:ss") changeTo: LocalDateTime): HmDbProductBatchDTO?
 
     @Get("/api/v1/sync/agreements")
-    fun fetchAgreements(): List<HmDbAgreementDTO>?
+    suspend fun fetchAgreements(): List<HmDbAgreementDTO>?
 
     @Get("/api/v1/sync/agreements/active/ids")
-    fun fetchAgreementsIdActive(): List<Long>?
+    suspend fun fetchAgreementsIdActive(): List<Long>?
 
     @Get("/api/v1/sync/products/{productId}")
-    fun fetchProductsById(productId: Long): HmDbProductBatchDTO?
+    suspend fun fetchProductsById(productId: Long): HmDbProductBatchDTO?
 
     @Get("/api/v1/sync/products/range/{artIdStart}/{artIdEnd}")
-    fun fetchProductsByArtIdStartEnd(artIdStart: Long, artIdEnd: Long): HmDbProductBatchDTO?
+    suspend fun fetchProductsByArtIdStartEnd(artIdStart: Long, artIdEnd: Long): HmDbProductBatchDTO?
 
     @Get("/api/v1/sync/products/articleId/{articleId}")
-    fun fetchProductByArticleId(articleId: Long): HmDbProductBatchDTO?
+    suspend fun fetchProductByArticleId(articleId: Long): HmDbProductBatchDTO?
 
     @Get("/api/v1/sync/iso")
-    fun fetchIso(): List<IsoDTO>
+    suspend fun fetchIso(): List<IsoDTO>
 
     @Get("/api/v1/sync/products/active/ids")
-    fun fetchProductsIdActive(): List<Long>?
+    suspend fun fetchProductsIdActive(): List<Long>?
 
     @Get("/api/v1/sync/techlabels")
-    fun fetchAllTechlabels(): List<HmdbTechLabelDTO>
+    suspend fun fetchAllTechlabels(): List<HmdbTechLabelDTO>
 
 }

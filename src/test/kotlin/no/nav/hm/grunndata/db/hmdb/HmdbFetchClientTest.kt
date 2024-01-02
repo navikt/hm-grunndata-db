@@ -1,6 +1,7 @@
 package no.nav.hm.grunndata.db.hmdb
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.kotest.common.runBlocking
 import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import io.mockk.every
@@ -34,7 +35,7 @@ class HmdbFetchClientTest(private val fetchClient: HmDbClient,
 
     // integration test
     //@Test
-    fun testHmdbFetchClient() {
+    fun testHmdbFetchClient() = runBlocking {
         every {
             supplierService().findByIdentifier(any())
         } answers {
