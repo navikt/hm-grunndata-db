@@ -12,12 +12,29 @@ type ProductPage {
     products: [Product]
 }
 
+type CompatibleWith {
+    seriesIds: [String]
+}
+
+type Attributes {
+    manufacturer: String
+    compatibleWidth: CompatibleWith
+    keywords: [String]
+    series: String
+    shortdescription: String
+    text: String
+    url: String
+    bestillingsordning: Boolean
+    tenderId: String
+    hasTender: Boolean
+}
+
 type Product {
     id: String
     supplierId: String
     title: String
     articleName: String
-    # attributes: Attributes
+    attributes: Attributes
     # status: ProductStatus
     hmsArtNr: String
     identifier: String
@@ -26,11 +43,11 @@ type Product {
     accessory: Boolean
     sparePart: Boolean
     seriesUUID: String
-    seriesId: String
+    # seriesId: String # Deprecated
     seriesIdentifier: String
     # techData: [TechData]
     # media: [Media]
-    # agreementInfo: AgreementInfo
+    # agreementInfo: AgreementInfo # Deprecated
     # agreements: [ProductAgreement]
     # pastAgreements: [ProductAgreement]
     created: String
