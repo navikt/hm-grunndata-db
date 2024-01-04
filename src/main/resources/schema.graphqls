@@ -29,31 +29,80 @@ type Attributes {
     hasTender: Boolean
 }
 
-type Product {
-    id: String
-    supplierId: String
+enum ProductStatus {
+    ACTIVE,
+    INACTIVE,
+    DELETED
+}
+
+type TechData {
+    key: String!
+    value: String!
+    unit: String!
+}
+
+enum MediaSourceType {
+    HMDB,
+    REGISTER,
+    EXTERNALURL,
+    IMPORT,
+    UNKNOWN
+}
+
+enum MediaType {
+    PDF,
+    IMAGE,
+    VIDEO,
+    XLS,
+    OTHER
+}
+
+type Media {
+    sourceUri: String!
+    filename: String
+    uri: String!
+    priority: Int!
+    type: MediaType!
+    text:   String
+    source: MediaSourceType!
+    updated: String!
+}
+
+type ProductAgreement {
+    id: String!
     title: String
-    articleName: String
-    attributes: Attributes
-    # status: ProductStatus
-    hmsArtNr: String
     identifier: String
-    supplierRef: String
-    isoCategory: String
-    accessory: Boolean
-    sparePart: Boolean
+    reference: String!
+    rank: Int!
+    postNr: Int!
+    postIdentifier: String
+}
+
+type Product {
+    id: String!
+    supplierId: String!
+    title: String!
+    articleName: String!
+    attributes: Attributes!
+    status: ProductStatus!
+    hmsArtNr: String
+    identifier: String!
+    supplierRef: String!
+    isoCategory: String!
+    accessory: Boolean!
+    sparePart: Boolean!
     seriesUUID: String
     # seriesId: String # Deprecated
     seriesIdentifier: String
-    # techData: [TechData]
-    # media: [Media]
+    techData: [TechData]!
+    media: [Media]!
     # agreementInfo: AgreementInfo # Deprecated
-    # agreements: [ProductAgreement]
-    # pastAgreements: [ProductAgreement]
-    created: String
-    updated: String
-    published: String
-    expired: String
-    createdBy: String
-    updatedBy: String
+    agreements: [ProductAgreement]
+    pastAgreements: [ProductAgreement]!
+    created: String!
+    updated: String!
+    published: String!
+    expired: String!
+    createdBy: String!
+    updatedBy: String!
 }
