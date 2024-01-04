@@ -12,7 +12,10 @@ import org.slf4j.LoggerFactory
 private val LOG = LoggerFactory.getLogger(ProductSync::class.java)
 
 @Singleton
-class ProductGraphQLFetchers(private val productRepository: ProductRepository) {
+class ProductGraphQLFetchers(
+    private val productRepository: ProductRepository,
+    private val bestillingsordning: Bestillingsordning,
+) {
     fun fetchers(): Map<String, DataFetcher<*>> {
         return mapOf(
             "products" to fetcher { productsFetcher(it) },
@@ -22,6 +25,14 @@ class ProductGraphQLFetchers(private val productRepository: ProductRepository) {
     private suspend fun productsFetcher(args: DataFetchingEnvironment): ProductPage {
         val pagination = Pagination.from(args)
         val page = productRepository.findAll(Pageable.from(pagination.offset!!/pagination.limit!!, pagination.limit))
-        return ProductPage(page.totalSize.toInt(), page.toList())
+        val list = page.toList().map { product ->
+            val bestillingsordning = product.hmsArtNr?.let { hmsnr -> bestillingsordning.isBestillingsordning(hmsnr) }
+            product.copy(
+                attributes = product.attributes.copy(
+                    bestillingsordning = bestillingsordning,
+                )
+            )
+        }
+        return ProductPage(page.totalSize.toInt(), list)
     }
 }
