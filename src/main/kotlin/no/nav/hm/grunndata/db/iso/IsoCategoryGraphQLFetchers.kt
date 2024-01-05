@@ -12,8 +12,13 @@ class IsoCategoryGraphQLFetchers(
 ) {
     fun fetchers(): Map<String, DataFetcher<*>> {
         return mapOf(
+            "isoCategories" to fetcher { isoCategoriesFetcher(it) },
             "isoCategory" to fetcher { isoCategoryFetcher(it) },
         )
+    }
+
+    private fun isoCategoriesFetcher(args: DataFetchingEnvironment): List<IsoCategoryDTO> {
+        return isoCategoryService.retrieveAllCategories()
     }
 
     private fun isoCategoryFetcher(args: DataFetchingEnvironment): IsoCategoryDTO? {

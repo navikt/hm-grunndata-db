@@ -1,4 +1,5 @@
 type Query {
+    isoCategories: [IsoCategory]
     isoCategory(isoCategory: String): IsoCategory
     products(pagination: Pagination): ProductPage
 }
