@@ -1,5 +1,25 @@
 type Query {
+    isoCategory(isoCategory: String): IsoCategory
     products(pagination: Pagination): ProductPage
+}
+
+
+type IsoTranslations {
+    titleEn: String
+    textEn: String
+}
+
+type IsoCategory {
+    isoCode: String!
+    isoTitle: String!
+    isoText: String!
+    isoTranslations: IsoTranslations
+    isoLevel: Int!
+    isActive: Boolean!
+    showTech: Boolean!
+    allowMulti: Boolean!
+    created: String!
+    updated: String!
 }
 
 input Pagination {

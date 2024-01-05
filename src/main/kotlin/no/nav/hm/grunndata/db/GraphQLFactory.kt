@@ -19,6 +19,7 @@ import io.micronaut.core.io.ResourceResolver
 import jakarta.inject.Singleton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import no.nav.hm.grunndata.db.iso.IsoCategoryGraphQLFetchers
 import no.nav.hm.grunndata.db.product.ProductGraphQLFetchers
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -27,7 +28,11 @@ import java.io.InputStreamReader
 class GraphQLFactory {
     @Bean
     @Singleton
-    fun graphQL(resourceResolver: ResourceResolver, productGraphQLFetchers: ProductGraphQLFetchers): GraphQL {
+    fun graphQL(
+        resourceResolver: ResourceResolver,
+        isoCategoryGraphQLFetchers: IsoCategoryGraphQLFetchers,
+        productGraphQLFetchers: ProductGraphQLFetchers,
+    ): GraphQL {
         val schemaParser = SchemaParser()
         val schemaGenerator = SchemaGenerator()
 
@@ -39,7 +44,9 @@ class GraphQLFactory {
         // Create the runtime wiring.
         val runtimeWiring = RuntimeWiring.newRuntimeWiring()
             .type("Query") { typeWiring -> typeWiring
-                .dataFetchers(productGraphQLFetchers.fetchers()) }
+                .dataFetchers(isoCategoryGraphQLFetchers.fetchers())
+                .dataFetchers(productGraphQLFetchers.fetchers())
+            }
             .build()
 
         // Create the executable schema.
