@@ -16,7 +16,6 @@ private val LOG = LoggerFactory.getLogger(ProductSync::class.java)
 class ProductGraphQLFetchers(
     private val productRepository: ProductRepository,
     private val bestillingsordning: Bestillingsordning,
-    private val isoCategoryService: IsoCategoryService,
 ) {
     fun fetchers(): Map<String, DataFetcher<*>> {
         return mapOf(
