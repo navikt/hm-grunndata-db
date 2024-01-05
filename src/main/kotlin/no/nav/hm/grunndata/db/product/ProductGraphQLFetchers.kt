@@ -29,8 +29,6 @@ class ProductGraphQLFetchers(
         val page = productRepository.findAll(Pageable.from(pagination.offset!!/pagination.limit!!, pagination.limit))
         val list = page.toList().map { product ->
             val bestillingsordning = product.hmsArtNr?.let { hmsnr -> bestillingsordning.isBestillingsordning(hmsnr) }
-            val cat = isoCategoryService.lookUpCode(product.isoCategory)
-            LOG.info("Product: ${product.id}: $cat")
             product.copy(
                 attributes = product.attributes.copy(
                     bestillingsordning = bestillingsordning,
