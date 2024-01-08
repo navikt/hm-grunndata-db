@@ -15,6 +15,7 @@ class IsoCategoryController(private val isoCategoryService: IsoCategoryService) 
             isoCode = it.isoCode,
             isoTitle = it.isoTitle,
             isoText = it.isoText,
+            // TODO: isoTextShort = it.isoTextShort, // missing in hm-grunndata-rapid-dto
             isoLevel = it.isoLevel,
             isActive = it.isActive,
             showTech = it.showTech,

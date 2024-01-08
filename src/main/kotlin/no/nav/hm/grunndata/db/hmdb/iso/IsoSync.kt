@@ -36,9 +36,11 @@ class IsoSync(private val hmDbClient: HmDbClient,
         allowMulti = allowmulti!!,
         isoLevel = isolevel!!,
         isoText = isotext!!,
+        isoTextShort = isotextshort ?: "", // TODO: currently not set, so lets not crash here
         isoTranslations = IsoTranslations (
             titleEn = engisotitle,
-            textEn = engisotext
+            textEn = engisotext,
+            textShortEn = engisotextshort,
         )
     )
 }
