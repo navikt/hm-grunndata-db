@@ -30,14 +30,13 @@ data class IsoCategory(
 data class IsoTranslations(
     val titleEn: String?=null,
     val textEn: String?=null,
-    val textShortEn: String?=null,
 )
 
 fun IsoCategory.toDTO(): IsoCategoryDTO = IsoCategoryDTO(
     isoCode = isoCode,
     isoTitle = isoTitle,
     isoText = isoText,
-    // TODO: isoTextShort = isoTextShort, // missing in hm-grunndata-rapid-dto
+    isoTextShort = isoTextShort,
     isoTranslations = IsoTranslationsDTO(titleEn = isoTranslations.titleEn, textEn = isoTranslations.textEn),
     isoLevel = isoLevel,
     isActive = isActive,

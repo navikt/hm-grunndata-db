@@ -7,6 +7,7 @@ import jakarta.inject.Singleton
 import no.nav.hm.grunndata.db.Pagination
 import no.nav.hm.grunndata.db.hmdb.product.ProductSync
 import no.nav.hm.grunndata.db.fetcher
+import no.nav.hm.grunndata.db.getArgumentAs
 import no.nav.hm.grunndata.db.iso.IsoCategoryService
 import org.slf4j.LoggerFactory
 
@@ -20,6 +21,7 @@ class ProductGraphQLFetchers(
     fun fetchers(): Map<String, DataFetcher<*>> {
         return mapOf(
             "products" to fetcher { productsFetcher(it) },
+            // "product" to fetcher { productFetcher(it) },
         )
     }
 
@@ -36,4 +38,15 @@ class ProductGraphQLFetchers(
         }
         return ProductPage(page.totalSize.toInt(), list)
     }
+
+    /* private suspend fun productFetcher(args: DataFetchingEnvironment): Product {
+        val hmsnr: String = args.getArgumentAs("hmsnr")
+        val product = productRepository.findOne()
+        val bestillingsordning = product.hmsArtNr?.let { hmsnr -> bestillingsordning.isBestillingsordning(hmsnr) }
+        return product.copy(
+            attributes = product.attributes.copy(
+                bestillingsordning = bestillingsordning,
+            )
+        )
+    } */
 }

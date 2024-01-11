@@ -9,7 +9,6 @@ data class IsoDTO(
     val isotitle: String?=null,
     val engisotitle: String?=null,
     val engisotext: String?=null,
-    val engisotextshort: String?=null,
     val isotext: String?=null,
     val isotextshort: String?=null,
     val statusdate: LocalDateTime,
