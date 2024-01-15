@@ -16,7 +16,7 @@ data class IsoCategory(
     val isoCode: String,
     val isoTitle: String,
     val isoText: String,
-    val isoTextShort: String,
+    val isoTextShort: String?,
     @field:TypeDef(type = DataType.JSON)
     val isoTranslations: IsoTranslations = IsoTranslations(),
     val isoLevel: Int,
