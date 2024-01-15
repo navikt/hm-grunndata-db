@@ -1,6 +1,5 @@
 package no.nav.hm.grunndata.db.product
 
-import io.micronaut.core.annotation.Introspected
 import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.MappedEntity
 import io.micronaut.data.annotation.TypeDef
@@ -14,7 +13,6 @@ import java.time.LocalDateTime
 import java.util.UUID
 
 @MappedEntity("product_v1")
-@Introspected
 data class Product (
     @field:Id
     val id: UUID = UUID.randomUUID(),
@@ -53,12 +51,6 @@ data class Product (
     val expired: LocalDateTime = updated.plusYears(20),
     val createdBy: String = HMDB,
     val updatedBy: String = HMDB
-)
-
-@Introspected
-data class ProductPage (
-    val total: Int,
-    val products: List<Product>,
 )
 
 data class ProductAgreement(

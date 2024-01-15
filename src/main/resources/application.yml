@@ -81,11 +81,6 @@ flyway:
     default:
       locations: classpath:db
 
-graphql:
-  enabled: true
-  graphiql: # enables the /graphiql endpoint to test calls against your graph.
-    enabled: true # TODO: remove again!? Dev-only?
-
 hmdb:
   url: ${HMDB_URL:`http://localhost:8080`}
 
