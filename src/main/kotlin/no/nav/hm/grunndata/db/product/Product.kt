@@ -69,6 +69,3 @@ fun ProductRapidDTO.toEntity(): Product = Product (
     seriesId = seriesId, techData=techData, media= media.map { it.toEntity() }.toSet(), created=created, updated=updated, published=published, expired=expired,
     agreementInfo = agreementInfo, createdBy=createdBy, updatedBy=updatedBy
 )
-
-
-
