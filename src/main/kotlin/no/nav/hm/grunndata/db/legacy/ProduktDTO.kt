@@ -25,7 +25,7 @@ data class ProduktDTO(
     val hasanbud: Boolean?,
     val isactive: Boolean?,
     val isocode: String,
-    val isotextshort: String,
+    val isotextshort: String?,
     val isotitle: String,
     val ldbid: String?,
     val newsexpire: LocalDate?,

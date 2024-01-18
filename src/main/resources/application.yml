@@ -51,6 +51,7 @@ micronaut:
         enabled: true
         step: PT1M
         descriptions: false
+
 endpoints:
   metrics:
     enabled: true
@@ -64,6 +65,7 @@ jackson:
   bean-introspection-module: true
   serialization:
     indentOutput: true
+
 datasources:
   default:
     url: ${DB_JDBC_URL:`jdbc:tc:postgresql:14:///gdb?TC_TMPFS=/testtmpfs:rw&TC_INITSCRIPT=file:src/test/resources/postgres/postgres-init.sql&TC_REUSABLE=true`}
@@ -85,6 +87,7 @@ hmdb:
 # Rapids and rivers config
 rapidsandrivers:
   enabled: ${RAPIDSANDRIVERS_ENABLED:false}
+
 kafka:
   topic: teamdigihot.hm-grunndata-v1
   consumerGroupId: hm-grunndata-db-g1
@@ -95,8 +98,12 @@ kafka:
   health:
     enabled: false
 
-bestillingsordning:
-  url: ${BESTILLINGSORDNING_URL:`https://navikt.github.io/digihot-sortiment/bestillingsordning_sortiment.json`}
+digihotSortiment:
+  bestillingsordning: ${BESTILLINGSORDNING_URL:`https://navikt.github.io/digihot-sortiment/bestillingsordning_sortiment.json`}
+  digitalSoknad: ${DIGITAL_SOKNAD_URL:`https://navikt.github.io/digihot-sortiment/sortiment_av_apostid_per_kategori.json`}
+  ikkeTilInstitusjon: ${IKKE_TIL_INSTITUSJON_URL:`https://navikt.github.io/digihot-sortiment/sortiment_ikke_til_institusjon.json`}
+  pakrevdGodkjenningskurs: ${PAKREVD_GODKJENNINGSKURS_URL:`https://navikt.github.io/digihot-sortiment/paakrevde_godkjenningskurs.json`}
+  produkttype: ${PRODUKTTYPE_URL:`https://navikt.github.io/digihot-sortiment/produkttype.json`}
 
 schedulers:
   enabled: ${SCHEDULERS_ENABLED:false}

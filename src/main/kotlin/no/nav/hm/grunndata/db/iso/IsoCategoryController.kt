@@ -15,6 +15,7 @@ class IsoCategoryController(private val isoCategoryService: IsoCategoryService) 
             isoCode = it.isoCode,
             isoTitle = it.isoTitle,
             isoText = it.isoText,
+            isoTextShort = it.isoTextShort,
             isoLevel = it.isoLevel,
             isActive = it.isActive,
             showTech = it.showTech,

@@ -72,7 +72,7 @@ class LegacyService(
         hasanbud = attributes.hasTender,
         isactive = true,
         isocode = isoCategory,
-        isotextshort = isoCategoryService.lookUpCode(isoCategory)!!.isoText,
+        isotextshort = isoCategoryService.lookUpCode(isoCategory)?.isoTextShort,
         isotitle = isoCategoryService.lookUpCode(isoCategory)!!.isoTitle,
         ldbid = "2",
         newsexpire = agreementInfo?.expired?.toLocalDate(),

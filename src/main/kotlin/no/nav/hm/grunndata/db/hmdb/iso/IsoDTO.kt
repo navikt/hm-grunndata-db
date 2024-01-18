@@ -10,6 +10,7 @@ data class IsoDTO(
     val engisotitle: String?=null,
     val engisotext: String?=null,
     val isotext: String?=null,
+    val isotextshort: String?=null,
     val statusdate: LocalDateTime,
     val isactive: Boolean?=false,
     val showtech: Boolean?=false,
