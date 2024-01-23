@@ -27,15 +27,6 @@ class AttributeTagService(
             } else product.copy(attributes = product.attributes.copy(digitalSoknad = false))
         } ?: product
 
-    fun addIkkeTilInstitusjonAttribute(product: Product): Product =
-        product.isoCategory.let { isoCode ->
-            if (digihotSortiment.getIkkeTilInstitusjon(isoCode)) {
-                LOG.debug("Got product which is ikkeTilInstitusjon $isoCode")
-                product.copy(attributes = product.attributes.copy(ikkeTilInstitusjon=true))
-            }
-            else product.copy(attributes = product.attributes.copy(ikkeTilInstitusjon=false))
-        }
-
     fun addPakrevdGodkjenningskursAttribute(product: Product): Product =
         product.isoCategory.let { isoCode ->
             digihotSortiment.getPakrevdGodkjenningskurs(isoCode)?.let {

@@ -40,7 +40,6 @@ open class ProductService(
         val product = prod
             .let { attributeTagService.addBestillingsordningAttribute(it) }
             .let { attributeTagService.addDigitalSoknadAttribute(it) }
-            .let { attributeTagService.addIkkeTilInstitusjonAttribute(it) }
             .let { attributeTagService.addPakrevdGodkjenningskursAttribute(it) }
             .let { attributeTagService.addProdukttypeAttribute(it) }
         val saved: Product = if (product.createdBy == HMDB) {

@@ -17,8 +17,6 @@ class DigihotSortiment(
     private val bestillingsordningUrl : String,
     @Value("\${digihotSortiment.digitalSoknad}")
     private val digitalSoknadUrl : String,
-    @Value("\${digihotSortiment.ikkeTilInstitusjon}")
-    private val ikkeTilInstitusjonUrl : String,
     @Value("\${digihotSortiment.pakrevdGodkjenningskurs}")
     private val pakrevdGodkjenningskursUrl: String,
     @Value("\${digihotSortiment.produkttype}")
@@ -45,9 +43,6 @@ class DigihotSortiment(
             res
         }
 
-    private val ikkeTilInstitusjonMap: Map<String, IkkeTilInstitusjonDTO> =
-        objectMapper.readValue(URI(ikkeTilInstitusjonUrl).toURL(), object : TypeReference<List<IkkeTilInstitusjonDTO>>(){}).associateBy { it.isokode }
-
     private val pakrevdGodkjenningskursMap: Map<String, PakrevdGodkjenningskurs> =
         objectMapper.readValue(URI(pakrevdGodkjenningskursUrl).toURL(), object : TypeReference<List<PakrevdGodkjenningskurs>>(){}).associateBy { it.isokode }
 
@@ -60,11 +55,6 @@ class DigihotSortiment(
 
     fun getApostIdInDigitalCatalog(apostid: Int): Boolean {
         return digitalSoknadMap.containsKey(apostid)
-    }
-
-    fun getIkkeTilInstitusjon(isocode: String): Boolean {
-        val relevantIsoCodePrefix = isocode.take(6)
-        return ikkeTilInstitusjonMap.containsKey(relevantIsoCodePrefix)
     }
 
     fun getPakrevdGodkjenningskurs(isocode: String): PakrevdGodkjenningskurs? {
@@ -81,10 +71,6 @@ class DigihotSortiment(
 data class BestillingsordningDTO(
     val hmsnr: String,
     val navn: String,
-)
-
-data class IkkeTilInstitusjonDTO(
-    val isokode: String,
 )
 
 data class ProdukttypeDTO (
