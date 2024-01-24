@@ -36,9 +36,9 @@ open class ProductService(
     }
 
     @Transactional
-    open suspend fun saveAndPushTokafka(prod: Product, eventName: String): ProductRapidDTO {
+    open suspend fun saveAndPushTokafka(prod: Product, eventName: String, skipBestillingsorning: Boolean = false): ProductRapidDTO {
         val product = prod
-            .let { attributeTagService.addBestillingsordningAttribute(it) }
+            .let { if (!skipBestillingsorning) attributeTagService.addBestillingsordningAttribute(it) else it }  // make it work with bestillingsordning event
             .let { attributeTagService.addDigitalSoknadAttribute(it) }
             .let { attributeTagService.addIkkeTilInstitusjonAttribute(it) }
             .let { attributeTagService.addPakrevdGodkjenningskursAttribute(it) }
@@ -57,6 +57,8 @@ open class ProductService(
         gdbRapidPushService.pushDTOToKafka(productDTO, eventName)
         return productDTO
     }
+
+
 
     @Transactional
     open suspend fun findById(id: UUID): Product? = productRepository.findById(id)
@@ -115,5 +117,6 @@ open class ProductService(
 
     suspend fun findByStatusAndExpiredBefore(status: ProductStatus, expired: LocalDateTime? = LocalDateTime.now()): List<Product> = productRepository.findByStatusAndExpiredBefore(status, expired)
 
+    suspend fun findByHmsArtNr(hmsArtNr: String): ProductRapidDTO? = productRepository.findByHmsArtNr(hmsArtNr)?.toDTO()
 }
 
