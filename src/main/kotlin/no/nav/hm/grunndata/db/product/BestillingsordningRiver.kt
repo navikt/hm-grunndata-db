@@ -14,14 +14,14 @@ import org.slf4j.LoggerFactory
 
 @Context
 @Requires(bean = KafkaRapid::class)
-class BestillingsordningRive(
+class BestillingsordningRiver(
     river: RiverHead,
     private val objectMapper: ObjectMapper,
     private val productService: ProductService
 ) : River.PacketListener {
 
     companion object {
-        private val LOG = LoggerFactory.getLogger(BestillingsordningRive::class.java)
+        private val LOG = LoggerFactory.getLogger(BestillingsordningRiver::class.java)
     }
 
     init {
