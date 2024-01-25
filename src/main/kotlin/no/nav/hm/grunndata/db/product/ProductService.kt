@@ -42,8 +42,9 @@ open class ProductService(
             .let { attributeTagService.addDigitalSoknadAttribute(it) }
             .let { attributeTagService.addPakrevdGodkjenningskursAttribute(it) }
             .let { attributeTagService.addProdukttypeAttribute(it) }
-        val saved: Product = if (product.createdBy == HMDB) {
-            productRepository.findBySupplierIdAndSupplierRef(product.supplierId, product.supplierRef)?.let { inDb ->
+        val saved: Product = if (product.updatedBy == HMDB) {
+            LOG.info("Got product from HMDB ${product.identifier} ${product.hmsArtNr}")
+            productRepository.findByIdentifier(product.identifier)?.let { inDb ->
                 productRepository.update(product.copy(id = inDb.id, created = inDb.created,
                     identifier = inDb.identifier, createdBy = inDb.createdBy))
             } ?: productRepository.save(product)
