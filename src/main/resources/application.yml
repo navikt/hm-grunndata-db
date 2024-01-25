@@ -101,7 +101,6 @@ kafka:
 digihotSortiment:
   bestillingsordning: ${BESTILLINGSORDNING_URL:`https://navikt.github.io/digihot-sortiment/bestillingsordning_sortiment.json`}
   digitalSoknad: ${DIGITAL_SOKNAD_URL:`https://navikt.github.io/digihot-sortiment/sortiment_av_apostid_per_kategori.json`}
-  ikkeTilInstitusjon: ${IKKE_TIL_INSTITUSJON_URL:`https://navikt.github.io/digihot-sortiment/sortiment_ikke_til_institusjon.json`}
   pakrevdGodkjenningskurs: ${PAKREVD_GODKJENNINGSKURS_URL:`https://navikt.github.io/digihot-sortiment/paakrevde_godkjenningskurs.json`}
   produkttype: ${PRODUKTTYPE_URL:`https://navikt.github.io/digihot-sortiment/produkttype.json`}
 
