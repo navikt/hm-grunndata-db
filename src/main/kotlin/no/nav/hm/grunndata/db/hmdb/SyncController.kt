@@ -47,7 +47,7 @@ class SyncController(private val productSync: ProductSync,
     @Get("/iso")
     suspend fun syncIso() {
         LOG.info("call sync iso from HMDB")
-        isoSync.syncIso()
+        isoSync.syncIsoWithSearchWords()
     }
 
     @Get("/products/{productId}")

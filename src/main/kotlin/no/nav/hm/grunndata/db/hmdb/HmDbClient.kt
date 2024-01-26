@@ -10,6 +10,7 @@ import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.QueryValue
 import no.nav.hm.grunndata.db.hmdb.agreement.HmDbAgreementDTO
 import no.nav.hm.grunndata.db.hmdb.iso.IsoDTO
+import no.nav.hm.grunndata.db.hmdb.iso.IsoSearchWord
 import no.nav.hm.grunndata.db.hmdb.product.HmDbProductBatchDTO
 import no.nav.hm.grunndata.db.hmdb.supplier.HmdbSupplierDTO
 import no.nav.hm.grunndata.db.hmdb.techlabel.HmdbTechLabelDTO
@@ -59,5 +60,8 @@ interface HmDbClient {
 
     @Get("/api/v1/sync/techlabels")
     suspend fun fetchAllTechlabels(): List<HmdbTechLabelDTO>
+
+    @Get("/api/v1/sync/iso/searchwords")
+    fun fetchIsoSearchwords(): IsoSearchWord
 
 }
