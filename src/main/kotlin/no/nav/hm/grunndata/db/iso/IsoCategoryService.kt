@@ -4,7 +4,6 @@ import jakarta.inject.Singleton
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
-import no.nav.hm.grunndata.rapid.dto.IsoCategoryDTO
 import org.slf4j.LoggerFactory
 
 @Singleton
@@ -29,6 +28,12 @@ open class IsoCategoryService(private val isoCategoryRepository: IsoCategoryRepo
         val cat = isoCategories[isoCode]
         if (cat==null) LOG.error("IsoCode: $isoCode not found!")
         return cat
+    }
+
+    fun getHigherLevelsInBranch(isoCode: String): List<IsoCategoryDTO> {
+        val cat = isoCategories[isoCode]
+        if (cat==null) LOG.error("IsoCode: $isoCode not found!")
+        return isoCategories.values.filter { isoCode.startsWith(it.isoCode) }
     }
 
     fun retrieveAllCategories(): List<IsoCategoryDTO> = isoCategories.values.toList()

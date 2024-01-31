@@ -25,7 +25,7 @@ class IsoCategoryRepositoryTest(private val isoCategoryRepository: IsoCategoryRe
         runBlocking {
             val saved = isoCategoryRepository.save(testCategory)
             saved.shouldNotBeNull()
-            val read = isoCategoryRepository.findById("30300001")
+            val read = isoCategoryRepository.findByIsoCode("30300001")
             read.shouldNotBeNull()
             read.isoLevel shouldBe testCategory.isoLevel
             read.isoTitle shouldBe testCategory.isoTitle
