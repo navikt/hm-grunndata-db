@@ -62,6 +62,6 @@ interface HmDbClient {
     suspend fun fetchAllTechlabels(): List<HmdbTechLabelDTO>
 
     @Get("/api/v1/sync/iso/searchwords")
-    fun fetchIsoSearchwords(): IsoSearchWord
+    suspend fun fetchIsoSearchwords(): IsoSearchWord
 
 }

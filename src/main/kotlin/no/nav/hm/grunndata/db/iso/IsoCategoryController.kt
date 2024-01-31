@@ -14,4 +14,7 @@ class IsoCategoryController(private val isoCategoryService: IsoCategoryService) 
     @Get("/{isoCode}")
     fun lookupIsoCode(isoCode: String): IsoCategoryDTO? = isoCategoryService.lookUpCode(isoCode)
 
+    @Get("/{isoCode}/branch")
+    fun getHigherLevelsInBranch(isoCode: String): List<IsoCategoryDTO> = isoCategoryService.getHigherLevelsInBranch(isoCode)
+
 }

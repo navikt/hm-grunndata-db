@@ -30,6 +30,12 @@ open class IsoCategoryService(private val isoCategoryRepository: IsoCategoryRepo
         return cat
     }
 
+    fun getHigherLevelsInBranch(isoCode: String): List<IsoCategoryDTO> {
+        val cat = isoCategories[isoCode]
+        if (cat==null) LOG.error("IsoCode: $isoCode not found!")
+        return isoCategories.values.filter { isoCode.startsWith(it.isoCode) }
+    }
+
     fun retrieveAllCategories(): List<IsoCategoryDTO> = isoCategories.values.toList()
 
 }

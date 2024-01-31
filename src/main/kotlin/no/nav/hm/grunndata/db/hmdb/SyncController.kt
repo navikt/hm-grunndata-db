@@ -3,6 +3,8 @@ package no.nav.hm.grunndata.db.hmdb
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Put
+import io.micronaut.scheduling.TaskExecutors
+import io.micronaut.scheduling.annotation.ExecuteOn
 import no.nav.hm.grunndata.db.hmdb.agreement.AgreementSync
 import no.nav.hm.grunndata.db.hmdb.iso.IsoSync
 import no.nav.hm.grunndata.db.hmdb.product.ProductSync
