@@ -4,7 +4,6 @@ import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.MappedEntity
 import io.micronaut.data.annotation.TypeDef
 import io.micronaut.data.model.DataType
-import no.nav.hm.grunndata.rapid.dto.IsoTranslationsDTO
 import java.time.LocalDateTime
 import java.util.*
 
@@ -62,4 +61,9 @@ data class IsoCategoryDTO(
     val created: LocalDateTime = LocalDateTime.now(),
     val updated: LocalDateTime = LocalDateTime.now(),
     val searchWords: List<String> = emptyList()
+)
+
+data class IsoTranslationsDTO(
+    val titleEn: String?=null,
+    val textEn: String?=null,
 )
