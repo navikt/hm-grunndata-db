@@ -16,16 +16,17 @@ class IsoSync(private val hmDbClient: HmDbClient,
         private val LOG = LoggerFactory.getLogger(IsoSync::class.java)
     }
 
-//    suspend fun syncIso() {
-//        val isos = hmDbClient.fetchIso().filter { it.isotext != null }
-//        val categories = isos.map { it.toIsoCategory() }
-//        LOG.info("Got ${categories.size} for updating")
-//        categories.forEach {
-//            isoCategoryRepository.findById(it.isoCode)?.let {
-//                inDb -> isoCategoryRepository.update(it.copy(created = inDb.created))
-//            } ?: isoCategoryRepository.save(it)
-//        }
-//    }
+    private val additionalIsoSearchWord : Map<String,List<String>> = mapOf(
+        "1222" to listOf("MRS"),
+        "180915" to listOf("Løftestol, Stol med oppreistfunksjon"),
+        "1223" to listOf("ERS"),
+        "0912" to listOf("Dusjstol", "Toalettstol", "Dostol"),
+        "1236" to listOf("Personheis, Heis"),
+        "1810" to listOf("Trykkavlastende pute", "Antidecubituspute", "Pute med trykkavlastende effekt"),
+        "1809" to listOf("Arbeidsstol", "Husmorstol"),
+        "123103" to listOf("Slidelaken", "Silkelaken", "Sklilaken", "Glidelaken"),
+        "120606" to listOf("Gåbord", "Gåstativ", "Gåramme")
+    )
 
     suspend fun syncIsoWithSearchWords() {
         val isoSearchWords = hmDbClient.fetchIsoSearchwords()
@@ -35,19 +36,24 @@ class IsoSync(private val hmDbClient: HmDbClient,
             ?.let { inDb -> isoCategoryRepository.update(it.copy(id = inDb.id, created = inDb.created)) } ?: isoCategoryRepository.save(it) }
     }
 
-    private fun IsoDTO.toIsoCategory(isoSearchWord: IsoSearchWord): IsoCategory = IsoCategory(
-        isoCode = isocode!!,
-        isoTitle = isotitle!!,
-        isActive = isactive!!,
-        showTech = showtech!!,
-        allowMulti = allowmulti!!,
-        isoLevel = isolevel!!,
-        isoText = isotext!!,
-        isoTextShort = isotextshort,
-        isoTranslations = IsoTranslations (
-            titleEn = engisotitle,
-            textEn = engisotext,
-        ),
-        searchWords = isoSearchWord.searchWords[isocode]?.map { it.searchword.trim() }?: emptyList()
-    )
+    private fun IsoDTO.toIsoCategory(isoSearchWord: IsoSearchWord): IsoCategory {
+        val additionWords = additionalIsoSearchWord[isocode] ?: emptyList()
+        val inDbWords = isoSearchWord.searchWords[isocode]?.map { it.searchword.trim() } ?: emptyList()
+        val searchWords = (inDbWords + additionWords).distinct()
+        return IsoCategory(
+            isoCode = isocode!!,
+            isoTitle = isotitle!!,
+            isActive = isactive!!,
+            showTech = showtech!!,
+            allowMulti = allowmulti!!,
+            isoLevel = isolevel!!,
+            isoText = isotext!!,
+            isoTextShort = isotextshort,
+            isoTranslations = IsoTranslations(
+                titleEn = engisotitle,
+                textEn = engisotext,
+            ),
+            searchWords = searchWords
+        )
+    }
 }
