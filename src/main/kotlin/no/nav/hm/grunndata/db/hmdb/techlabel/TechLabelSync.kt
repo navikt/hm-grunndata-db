@@ -16,8 +16,8 @@ class TechLabelSync(private val hmDbClient: HmDbClient,
 
     suspend fun syncAllTechLabels() {
         val labels = hmDbClient.fetchAllTechlabels().map { it.toTechLabel() }
+        LOG.info("Got labels from HMDB ${labels.size}")
         if (labels.size > 1000) {
-            LOG.info("Got labels ${labels.size}")
             val deleted = techLabelRepository.deleteAll()
             LOG.info("Cleaning up ${deleted} labels")
             labels.forEach { label ->
