@@ -10,15 +10,23 @@ import no.nav.hm.grunndata.db.agreement.Agreement
 import no.nav.hm.grunndata.db.agreement.AgreementIdDTO
 import no.nav.hm.grunndata.db.agreement.AgreementService
 import no.nav.hm.grunndata.db.agreement.toDTO
-import no.nav.hm.grunndata.db.hmdb.*
+import no.nav.hm.grunndata.db.hmdb.HmDbBatch
+import no.nav.hm.grunndata.db.hmdb.HmDbBatchRepository
+import no.nav.hm.grunndata.db.hmdb.HmDbClient
+import no.nav.hm.grunndata.db.hmdb.SYNC_AGREEMENTS
 import no.nav.hm.grunndata.db.hmdb.product.HmDbIdentifier
 import no.nav.hm.grunndata.db.hmdbMediaUrl
 import no.nav.hm.grunndata.db.supplier.SupplierService
-import no.nav.hm.grunndata.rapid.dto.*
+import no.nav.hm.grunndata.rapid.dto.AgreementAttachment
+import no.nav.hm.grunndata.rapid.dto.AgreementPost
+import no.nav.hm.grunndata.rapid.dto.AgreementStatus
+import no.nav.hm.grunndata.rapid.dto.MediaInfo
+import no.nav.hm.grunndata.rapid.dto.MediaType
 import no.nav.hm.grunndata.rapid.event.EventName
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
+import java.util.UUID
 
 @Singleton
 @Requires(bean = KafkaRapid::class)
@@ -28,7 +36,8 @@ class AgreementSync(
     private val hmdbBatchRepository: HmDbBatchRepository,
     private val gdbRapidPushService: GdbRapidPushService,
     private val supplierService: SupplierService,
-    @Value("\${media.storage.cdnurl}") private val cdnUrl: String) {
+    @Value("\${media.storage.cdnurl}") private val cdnUrl: String
+) {
 
     companion object {
         private val LOG = LoggerFactory.getLogger(AgreementSync::class.java)
@@ -69,7 +78,7 @@ class AgreementSync(
         title = newsDTO.newstitle.trim(),
         resume = newsDTO.newsresume,
         status = if (newsDTO.newsexpire.isBefore(LocalDateTime.now()) || newsDTO.newspublish.isAfter(LocalDateTime.now())) AgreementStatus.INACTIVE else AgreementStatus.ACTIVE,
-        text = if (newsDTO.newstext!=null) cleanUpText(newsDTO.newstext) else null,
+        text = if (newsDTO.newstext != null) cleanUpText(newsDTO.newstext) else null,
         published = newsDTO.newspublish,
         expired = newsDTO.newsexpire,
         reference = newsDTO.externid.trim(),
@@ -84,6 +93,7 @@ class AgreementSync(
 
     private fun mapNewsDocHolder(newsdocHolder: List<NewsDocHolder>): List<AgreementAttachment> = newsdocHolder.map {
         AgreementAttachment(
+            id = UUID.randomUUID(),
             title = it.newsDoc.hmidoctitle,
             description = it.newsDoc.hmidocdesc,
             media = mapMedia(it.newsDoc, it.newsDocAdr)
@@ -94,15 +104,24 @@ class AgreementSync(
     private fun mapMedia(newsDoc: NewsDocDTO, newsDocAdr: List<NewsDocAdr>): List<MediaInfo> {
         val mediaList = if (!newsDoc.hmidocfile.isNullOrBlank())
             listOf(
-                MediaInfo(uri = "hmidocfiles/${newsDoc.hmidocfile}",
-                sourceUri = "$hmdbMediaUrl/hmidocfiles/${newsDoc.hmidocfile}", type = getFileType(newsDoc.hmidocfile),
-                text = newsDoc.hmidoctitle, updated = newsDoc.hmidocindate)
+                MediaInfo(
+                    uri = "hmidocfiles/${newsDoc.hmidocfile}",
+                    sourceUri = "$hmdbMediaUrl/hmidocfiles/${newsDoc.hmidocfile}",
+                    type = getFileType(newsDoc.hmidocfile),
+                    text = newsDoc.hmidoctitle,
+                    updated = newsDoc.hmidocindate
+                )
             )
         else emptyList()
         return mediaList.plus(newsDocAdr.map {
             val supplier = supplierService.findByIdentifier("${it.adressid}".HmDbIdentifier())
-            MediaInfo(uri = "doclevfiles/${it.docadrfile}", sourceUri = "$hmdbMediaUrl/doclevfiles/${it.docadrfile}",
-                type = getFileType(it.docadrfile), text = supplier?.name ?: newsDoc.hmidoctitle, updated = it.docadrupdate)
+            MediaInfo(
+                uri = "doclevfiles/${it.docadrfile}",
+                sourceUri = "$hmdbMediaUrl/doclevfiles/${it.docadrfile}",
+                type = getFileType(it.docadrfile),
+                text = supplier?.name ?: newsDoc.hmidoctitle,
+                updated = it.docadrupdate
+            )
         }.filter { it.type != MediaType.OTHER })
     }
 
@@ -121,7 +140,12 @@ class AgreementSync(
         val toBeDeleted = findToBeDeletedAgreementIds()
         toBeDeleted.forEach {
             agreementService.findById(it.id)?.let { inDb ->
-                agreementService.saveAndPushTokafka(inDb.copy(status = AgreementStatus.INACTIVE, updated = LocalDateTime.now()), EventName.hmdbagreementsyncV1)
+                agreementService.saveAndPushTokafka(
+                    inDb.copy(
+                        status = AgreementStatus.INACTIVE,
+                        updated = LocalDateTime.now()
+                    ), EventName.hmdbagreementsyncV1
+                )
             }
         }
         return toBeDeleted
