@@ -9,8 +9,9 @@ data class HmdbTechLabelDTO(
     val techdatatype: String,
     val techdataguide: String,
     val techdataunit: String?,
-    val techlabeldk: String
+    val techlabeldk: String,
+    val techdatasort: Int
 )
 
 fun HmdbTechLabelDTO.toTechLabel(): TechLabel = TechLabel (identifier = "$id".HmDbIdentifier(), label = techlabeldk,
-    guide = techdataguide, type = techdatatype, unit = techdataunit, isocode = isocode )
+    guide = techdataguide, type = techdatatype, unit = techdataunit, isocode = isocode, sort = techdatasort )

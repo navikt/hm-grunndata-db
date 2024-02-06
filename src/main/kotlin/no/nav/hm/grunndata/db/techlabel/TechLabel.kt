@@ -16,6 +16,7 @@ data class TechLabel(
     val isocode: String,
     val type: String,
     val unit: String?,
+    val sort: Int = 1,
     val createdBy: String = HMDB,
     val updatedBy: String = HMDB,
     val created: LocalDateTime = LocalDateTime.now(),
@@ -30,6 +31,7 @@ data class TechLabelDTO(
     val isocode: String,
     val type: String,
     val unit: String?,
+    val sort: Int,
     val createdBy: String = HMDB,
     val updatedBy: String = HMDB,
     val created: LocalDateTime = LocalDateTime.now(),
@@ -37,7 +39,7 @@ data class TechLabelDTO(
 )
 
 fun TechLabel.toDTO(): TechLabelDTO = TechLabelDTO(id = id, identifier = identifier, label = label, guide = guide,
-    isocode = isocode, type = type, unit = unit, createdBy = createdBy, updatedBy = updatedBy,
+    isocode = isocode, type = type, unit = unit, sort = sort, createdBy = createdBy, updatedBy = updatedBy,
     created = created, updated = updated
 )
 
