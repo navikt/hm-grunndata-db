@@ -6,12 +6,15 @@ import no.nav.hm.grunndata.db.hmdb.HmDbClient
 import no.nav.hm.grunndata.db.iso.IsoCategory
 import no.nav.hm.grunndata.db.iso.IsoCategoryRepository
 import no.nav.hm.grunndata.db.iso.IsoTranslations
+import no.nav.hm.grunndata.db.product.DigihotSortiment
 import org.slf4j.LoggerFactory
 
 @Singleton
-class IsoSync(private val hmDbClient: HmDbClient,
-              private val isoCategoryRepository: IsoCategoryRepository) {
-
+class IsoSync(
+    private val hmDbClient: HmDbClient,
+    private val isoCategoryRepository: IsoCategoryRepository,
+    private val digihotSortiment: DigihotSortiment,
+) {
     companion object {
         private val LOG = LoggerFactory.getLogger(IsoSync::class.java)
     }
@@ -31,7 +34,9 @@ class IsoSync(private val hmDbClient: HmDbClient,
     suspend fun syncIsoWithSearchWords() {
         val isoSearchWords = hmDbClient.fetchIsoSearchwords()
         val isos = isoSearchWords.isos.filter { it.isotext != null }
-        val categories = isos.map { it.toIsoCategory(isoSearchWords) }
+        val categories = isos.map { it.toIsoCategory(isoSearchWords).let { isoCat ->
+            isoCat.copy(isoTitleShort = digihotSortiment.getIsoMetadata(isoCat.isoCode)?.kortnavn)
+        }}
         categories.forEach { isoCategoryRepository.findByIsoCode(it.isoCode)
             ?.let { inDb -> isoCategoryRepository.update(it.copy(id = inDb.id, created = inDb.created)) } ?: isoCategoryRepository.save(it) }
     }
@@ -43,6 +48,7 @@ class IsoSync(private val hmDbClient: HmDbClient,
         return IsoCategory(
             isoCode = isocode!!,
             isoTitle = isotitle!!,
+            isoTitleShort = null,
             isActive = isactive!!,
             showTech = showtech!!,
             allowMulti = allowmulti!!,

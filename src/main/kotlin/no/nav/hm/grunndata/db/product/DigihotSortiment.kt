@@ -21,6 +21,8 @@ class DigihotSortiment(
     private val pakrevdGodkjenningskursUrl: String,
     @Value("\${digihotSortiment.produkttype}")
     private val produkttypeUrl: String,
+    @Value("\${digihotSortiment.isoMetadata}")
+    private val isoMetadataUrl: String,
     private val objectMapper: ObjectMapper,
 ) {
     companion object {
@@ -49,6 +51,9 @@ class DigihotSortiment(
     private val produkttypeMap: Map<String, ProdukttypeDTO> =
         objectMapper.readValue(URI(produkttypeUrl).toURL(), object : TypeReference<List<ProdukttypeDTO>>(){}).associateBy { it.isokode }
 
+    private val isoMetadataMap: Map<String, IsoMetadataDTO> =
+        objectMapper.readValue(URI(isoMetadataUrl).toURL(), object : TypeReference<List<IsoMetadataDTO>>(){}).associateBy { it.isokode }
+
     fun isBestillingsordning(hmsnr: String): Boolean = bestillingsordningMap.containsKey(hmsnr)
 
     fun getBestillingsorning(hmsnr: String): BestillingsordningDTO? = bestillingsordningMap[hmsnr]
@@ -66,6 +71,11 @@ class DigihotSortiment(
         val relevantIsoCodePrefix = isocode.take(6)
         return produkttypeMap[relevantIsoCodePrefix]?.produkttype?.let { Produkttype.valueOf(it) }
     }
+
+    fun getIsoMetadata(isocode: String): IsoMetadataDTO? {
+        val relevantIsoCodePrefix = isocode.take(8)
+        return isoMetadataMap[relevantIsoCodePrefix]
+    }
 }
 
 data class BestillingsordningDTO(
@@ -76,4 +86,10 @@ data class BestillingsordningDTO(
 data class ProdukttypeDTO (
     val isokode: String,
     val produkttype: String,
+)
+
+data class IsoMetadataDTO (
+    val isokode: String,
+    val isotittel: String,
+    val kortnavn: String,
 )

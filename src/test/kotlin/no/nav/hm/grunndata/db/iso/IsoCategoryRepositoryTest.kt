@@ -15,8 +15,9 @@ class IsoCategoryRepositoryTest(private val isoCategoryRepository: IsoCategoryRe
             isoCode ="30300001",
             isoLevel = 4,
             isoTitle = "Hjelpemidler for røyking",
+            isoTitleShort = "Røykehjelpemiddel",
             isoText = "Hjelpemidler som gjør det mulig for en person å røyke. Omfatter f.eks tilpassede askebegre, lightere og sigarettholdere. Smekker og forklær, se 09 03 39",
-            isoTextShort = "Røykehjelpemiddel",
+            isoTextShort = "Hjelpemidler som gjør det mulig for en person å røyke. Omfatter f.eks tilpassede askebegre, lightere og sigarettholdere. Smekker og forklær, se 09 03 39",
             isoTranslations = IsoTranslations(titleEn = "English title", textEn = "English text"),
             isActive = true,
             showTech = true,
@@ -29,6 +30,7 @@ class IsoCategoryRepositoryTest(private val isoCategoryRepository: IsoCategoryRe
             read.shouldNotBeNull()
             read.isoLevel shouldBe testCategory.isoLevel
             read.isoTitle shouldBe testCategory.isoTitle
+            read.isoTitleShort shouldBe testCategory.isoTitleShort
             read.isoText shouldBe  testCategory.isoText
             read.isoTextShort shouldBe testCategory.isoTextShort
             read.isActive shouldBe testCategory.isActive

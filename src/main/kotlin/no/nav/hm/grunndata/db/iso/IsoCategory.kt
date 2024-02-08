@@ -14,6 +14,7 @@ data class IsoCategory(
     val id: UUID = UUID.randomUUID(),
     val isoCode: String,
     val isoTitle: String,
+    val isoTitleShort: String?,
     val isoText: String,
     val isoTextShort: String?,
     @field:TypeDef(type = DataType.JSON)
@@ -37,6 +38,7 @@ fun IsoCategory.toDTO(): IsoCategoryDTO = IsoCategoryDTO(
     id = id,
     isoCode = isoCode,
     isoTitle = isoTitle,
+    isoTitleShort = isoTitleShort,
     isoText = isoText,
     isoTextShort = isoTextShort,
     isoTranslations = IsoTranslationsDTO(titleEn = isoTranslations.titleEn, textEn = isoTranslations.textEn),
@@ -51,6 +53,7 @@ data class IsoCategoryDTO(
     val id: UUID,
     val isoCode: String,
     val isoTitle: String,
+    val isoTitleShort: String?=null,
     val isoText: String,
     val isoTextShort: String?=null,
     val isoTranslations: IsoTranslationsDTO?=null,
