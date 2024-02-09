@@ -42,6 +42,10 @@ spec:
       value: "{{ java_opts }}"
     - name: MEDIA_STORAGE_CDNURL
       value: "{{ media_storage_cdnurl }}"
+    {{#each env}}
+    - name: {{ @key }}
+      value: "{{ this }}"
+    {{/each}}
   gcp:
     sqlInstances:
       - name: hm-grunndata-db
