@@ -135,7 +135,7 @@ class HmDBProductMapper(private val supplierService: SupplierService,
 
     fun mapBlobs(blobs: List<BlobDTO>): Set<Media> =
         blobs.map { mapBlob(it) }
-            .filter { it.type != MediaType.OTHER && it.type != MediaType.VIDEO }
+            .filter { it.type != MediaType.OTHER }
             .sortedBy { "${it.type}-${it.uri}" }
             .mapIndexed { index, media -> media.copy(priority = index + 1) }.toSet()
 
