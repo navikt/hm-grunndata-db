@@ -157,11 +157,15 @@ class HmDBProductMapper(private val supplierService: SupplierService,
             }
         }
 
-        val typePath = if (mediaType == MediaType.IMAGE) "orig" else if (mediaType == MediaType.VIDEO) "video" else
-            when (blobType) {
-                "bruksanvisning", "brugsanvisning" -> "brugsvejl"
-                "brosjyre", "produktbl" -> "produktblade"
-                else -> "seriedok/$blobUse"
+        val typePath = when (mediaType) {
+            MediaType.IMAGE -> "orig"
+            MediaType.VIDEO -> "video"
+            else -> {
+                when (blobType) {
+                    "bruksanvisning", "brugsanvisning" -> "brugsvejl"
+                    "brosjyre", "produktbl" -> "produktblade"
+                    else -> "seriedok/$blobUse"
+                }
             }
         }
 
