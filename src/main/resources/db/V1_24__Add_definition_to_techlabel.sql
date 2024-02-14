@@ -1,0 +1,1 @@
+ALTER TABLE techlabel_v1 ADD COLUMN definition VARCHAR(512);

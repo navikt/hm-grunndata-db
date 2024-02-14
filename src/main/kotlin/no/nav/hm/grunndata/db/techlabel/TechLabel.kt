@@ -13,6 +13,7 @@ data class TechLabel(
     val identifier: String = UUID.randomUUID().toString(),
     val label: String,
     val guide: String,
+    val definition: String? = null,
     val isocode: String,
     val type: String,
     val unit: String?,
@@ -28,6 +29,7 @@ data class TechLabelDTO(
     val identifier: String,
     val label: String,
     val guide: String,
+    val definition: String? = null,
     val isocode: String,
     val type: String,
     val unit: String?,
@@ -38,7 +40,7 @@ data class TechLabelDTO(
     val updated: LocalDateTime = LocalDateTime.now()
 )
 
-fun TechLabel.toDTO(): TechLabelDTO = TechLabelDTO(id = id, identifier = identifier, label = label, guide = guide,
+fun TechLabel.toDTO(): TechLabelDTO = TechLabelDTO(id = id, identifier = identifier, label = label, guide = guide, definition = definition,
     isocode = isocode, type = type, unit = unit, sort = sort, createdBy = createdBy, updatedBy = updatedBy,
     created = created, updated = updated
 )

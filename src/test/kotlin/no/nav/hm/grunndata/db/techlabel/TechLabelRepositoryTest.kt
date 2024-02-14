@@ -15,7 +15,7 @@ class TechLabelRepositoryTest(private val techLabelRepository: TechLabelReposito
 
     @Test
     fun techLabelTest() {
-        val techLabel = TechLabel(id = UUID.randomUUID(), identifier = "HMDB-20815", label = "Høyde", guide="Høyde",
+        val techLabel = TechLabel(id = UUID.randomUUID(), identifier = "HMDB-20815", label = "Høyde", guide="Høyde", definition = "definisjon",
             isocode = "09070601", type = "N", unit = "cm", sort = 5)
         runBlocking {
             val saved = techLabelRepository.save(techLabel)
@@ -28,6 +28,7 @@ class TechLabelRepositoryTest(private val techLabelRepository: TechLabelReposito
             found.type shouldBe "N"
             found.unit shouldBe "cm"
             found.sort shouldBe 5
+            found.definition shouldBe "definisjon"
             val updated = techLabelRepository.update(found.copy(guide = "Høyde eller noe", updated = LocalDateTime.now()))
             updated.shouldNotBeNull()
             updated.updated shouldBeAfter saved.updated
