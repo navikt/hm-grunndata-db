@@ -81,7 +81,7 @@ class AgreementSync(
         text = if (newsDTO.newstext != null) cleanUpText(newsDTO.newstext) else null,
         published = newsDTO.newspublish,
         expired = newsDTO.newsexpire?:LocalDateTime.now().plusYears(3),
-        reference = newsDTO.externid.trim(),
+        reference = newsDTO.externid!!.trim(),
         attachments = mapNewsDocHolder(newsDocHolder),
         posts = poster.map { it.toAgreementPost() },
         isoCategory = isonumber
