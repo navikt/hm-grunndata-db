@@ -77,7 +77,7 @@ class AgreementSync(
         identifier = "${newsDTO.newsid}".HmDbIdentifier(),
         title = newsDTO.newstitle.trim(),
         resume = newsDTO.newsresume,
-        status = if (newsDTO.newsexpire.isBefore(LocalDateTime.now()) || newsDTO.newspublish.isAfter(LocalDateTime.now())) AgreementStatus.INACTIVE else AgreementStatus.ACTIVE,
+        status = if (newsDTO.newsexpire!!.isBefore(LocalDateTime.now()) || newsDTO.newspublish.isAfter(LocalDateTime.now())) AgreementStatus.INACTIVE else AgreementStatus.ACTIVE,
         text = if (newsDTO.newstext != null) cleanUpText(newsDTO.newstext) else null,
         published = newsDTO.newspublish,
         expired = newsDTO.newsexpire?:LocalDateTime.now().plusYears(3),
