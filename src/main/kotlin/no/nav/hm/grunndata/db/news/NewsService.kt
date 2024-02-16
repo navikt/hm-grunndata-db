@@ -1,7 +1,9 @@
 package no.nav.hm.grunndata.db.news
 
+import jakarta.inject.Singleton
 import no.nav.hm.grunndata.rapid.dto.NewsDTO
 
+@Singleton
 class NewsService(private val newsRepository: NewsRepository) {
 
     suspend fun findByIdentifier(identifier: String): NewsDTO? = newsRepository.findByIdentifier(identifier)?.toDTO()
