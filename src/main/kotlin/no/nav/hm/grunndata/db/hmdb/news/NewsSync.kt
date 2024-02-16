@@ -49,18 +49,21 @@ class NewsSync(private val newsService: NewsService,
         }
     }
 
-    private fun HMDNewsDTO.toNews(): NewsDTO = NewsDTO(
-        id = UUID.randomUUID(),
-        identifier = "$newsid".HmDbIdentifier(),
-        title = this.newstitle,
-        text = this.newsresume + "<br/>" + this.newstext,
-        status = if (this.newsexpire.isAfter(LocalDateTime.now())) NewsStatus.ACTIVE else NewsStatus.INACTIVE,
-        published = this.newspublish,
-        expired = this.newsexpire,
-        createdBy = "HMDB",
-        updatedBy = "HMDB",
-        created = LocalDateTime.now(),
-        updated = LocalDateTime.now(),
-        author = "Admin"
-    )
+    private fun HMDNewsDTO.toNews(): NewsDTO {
+        val expired = this.newsexpire ?: this.newspublish.plusMonths(3)
+        return NewsDTO(
+            id = UUID.randomUUID(),
+            identifier = "$newsid".HmDbIdentifier(),
+            title = this.newstitle,
+            text = this.newsresume + "<br/>" + this.newstext,
+            status = if (expired.isAfter(LocalDateTime.now())) NewsStatus.ACTIVE else NewsStatus.INACTIVE,
+            published = this.newspublish,
+            expired = expired,
+            createdBy = "HMDB",
+            updatedBy = "HMDB",
+            created = LocalDateTime.now(),
+            updated = LocalDateTime.now(),
+            author = "Admin"
+        )
+    }
 }

@@ -80,7 +80,7 @@ class AgreementSync(
         status = if (newsDTO.newsexpire.isBefore(LocalDateTime.now()) || newsDTO.newspublish.isAfter(LocalDateTime.now())) AgreementStatus.INACTIVE else AgreementStatus.ACTIVE,
         text = if (newsDTO.newstext != null) cleanUpText(newsDTO.newstext) else null,
         published = newsDTO.newspublish,
-        expired = newsDTO.newsexpire,
+        expired = newsDTO.newsexpire?:LocalDateTime.now().plusYears(3),
         reference = newsDTO.externid.trim(),
         attachments = mapNewsDocHolder(newsDocHolder),
         posts = poster.map { it.toAgreementPost() },
