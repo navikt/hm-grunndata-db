@@ -9,6 +9,7 @@ import io.micronaut.http.HttpHeaders.USER_AGENT
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.QueryValue
 import no.nav.hm.grunndata.db.hmdb.agreement.HmDbAgreementDTO
+import no.nav.hm.grunndata.db.hmdb.news.HMDNewsDTO
 import no.nav.hm.grunndata.db.hmdb.iso.IsoDTO
 import no.nav.hm.grunndata.db.hmdb.iso.IsoSearchWord
 import no.nav.hm.grunndata.db.hmdb.product.HmDbProductBatchDTO
@@ -63,5 +64,7 @@ interface HmDbClient {
 
     @Get("/api/v1/sync/iso/searchwords")
     suspend fun fetchIsoSearchwords(): IsoSearchWord
+    @Get("/api/v1/sync/news")
+    suspend fun fetchNews(): List<HMDNewsDTO>
 
 }

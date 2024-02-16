@@ -1,8 +1,8 @@
-package no.nav.hm.grunndata.db.hmdb.agreement
+package no.nav.hm.grunndata.db.hmdb.news
 
 import java.time.LocalDateTime
 
-data class NewsDTO (
+data class HMDNewsDTO (
     val newsid: Long,
     val newstitle: String,
     val newsresume: String?,

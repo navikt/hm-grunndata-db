@@ -7,6 +7,7 @@ import io.micronaut.scheduling.TaskExecutors
 import io.micronaut.scheduling.annotation.ExecuteOn
 import no.nav.hm.grunndata.db.hmdb.agreement.AgreementSync
 import no.nav.hm.grunndata.db.hmdb.iso.IsoSync
+import no.nav.hm.grunndata.db.hmdb.news.NewsSync
 import no.nav.hm.grunndata.db.hmdb.product.ProductSync
 import no.nav.hm.grunndata.db.hmdb.supplier.SupplierSync
 import no.nav.hm.grunndata.db.hmdb.techlabel.TechLabelSync
@@ -18,6 +19,7 @@ class SyncController(private val productSync: ProductSync,
                      private val hmDbBatchRepository: HmDbBatchRepository,
                      private val agreementSync: AgreementSync,
                      private val supplierSync: SupplierSync,
+                     private val newsSync: NewsSync,
                      private val isoSync: IsoSync,
                      private val techLabelSync: TechLabelSync
 ) {
@@ -37,6 +39,12 @@ class SyncController(private val productSync: ProductSync,
     suspend fun syncAgreements() {
         LOG.info("call sync agreements from HMDB")
         agreementSync.syncAgreements()
+    }
+
+    @Get("/news")
+    suspend fun syncNews() {
+        LOG.info("call sync news from HMDB")
+        newsSync.syncNews()
     }
 
     @Get("/products")
