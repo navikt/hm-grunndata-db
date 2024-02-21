@@ -3,18 +3,18 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 
 val jvmTarget = "17"
-val micronautVersion = "4.2.3"
+val micronautVersion = "4.3.2"
 val micrometerRegistryPrometheusVersion = "1.9.1"
 val junitJupiterVersion = "5.9.0"
 val jacksonVersion = "2.13.4"
 val logbackClassicVersion = "1.4.12"
 val logbackEncoderVersion = "7.3"
-val postgresqlVersion = "42.5.4"
+val postgresqlVersion = "42.7.2"
 val tcVersion = "1.17.6"
 val mockkVersion = "1.13.4"
 val kotestVersion = "5.5.5"
 val rapidsRiversVersion = "202401101532"
-val grunndataDtoVersion = "202402160957"
+val grunndataDtoVersion = "202402161309"
 
 group = "no.nav.hm"
 version = properties["version"] ?: "local-build"
@@ -67,6 +67,9 @@ dependencies {
     implementation("com.github.navikt:hm-rapids-and-rivers-v2-micronaut:$rapidsRiversVersion")
 
     implementation("no.nav.hm.grunndata:hm-grunndata-rapid-dto:$grunndataDtoVersion")
+
+    // flyway postgresql
+    implementation("org.flywaydb:flyway-database-postgresql:10.6.0")
 
     testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("io.micronaut.test:micronaut-test-kotest5")
