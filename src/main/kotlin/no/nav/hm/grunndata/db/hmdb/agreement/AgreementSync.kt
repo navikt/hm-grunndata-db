@@ -68,9 +68,11 @@ class AgreementSync(
     private fun AvtalePostDTO.toAgreementPost(): AgreementPost = AgreementPost(
         identifier = "$apostid".HmDbIdentifier(),
         nr = apostnr,
-        title = aposttitle,
+        title = cleanPostTitle(aposttitle),
         description = apostdesc
     )
+
+
 
 
     private fun HmDbAgreementDTO.toAgreement(): Agreement = Agreement(
@@ -164,3 +166,7 @@ class AgreementSync(
     }
 }
 
+fun cleanPostTitle(aposttitle: String): String {
+    val postDelkontraktRegex = "(?i)(Post|Delkontrakt)\\s".toRegex()
+    return aposttitle.replace(postDelkontraktRegex, "")
+}
