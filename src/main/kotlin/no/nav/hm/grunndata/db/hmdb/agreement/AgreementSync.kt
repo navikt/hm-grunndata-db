@@ -178,6 +178,7 @@ class AgreementSync(
         // hack save back agreements
         LOG.info("Found agreements ${agreements.size} to be updated")
         agreements.forEach {
+            LOG.info("updating ${it.id}")
             agreementService.update(it)
         }
     }
