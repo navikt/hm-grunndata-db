@@ -55,8 +55,13 @@ class AgreementSync(
             LOG.info("Calling agreement sync, got total of ${hmdbagreements.size} agreements")
             val agreements = hmdbagreements.map { it.toAgreement() }
             agreements.forEach { agreement ->
-                val dto = agreementService.findByIdentifier(agreement.identifier)?.let {
-                    agreementService.update(agreement.copy(id = it.id, created = it.created)).toDTO()
+                val dto = agreementService.findByIdentifier(agreement.identifier)?.let { inDb ->
+                    agreementService.update(
+                        agreement.copy(
+                            id = inDb.id, created = inDb.created,
+                            posts = mergePosts(inDb.posts, agreement.posts)
+                        )
+                    ).toDTO()
                 } ?: agreementService.save(agreement).toDTO()
                 gdbRapidPushService.pushDTOToKafka(dto, EventName.hmdbagreementsyncV1)
             }
@@ -65,14 +70,16 @@ class AgreementSync(
 
     }
 
+
+
     private fun AvtalePostDTO.toAgreementPost(): AgreementPost = AgreementPost(
         identifier = "$apostid".HmDbIdentifier(),
+        id = UUID.randomUUID(),
+        refNr = extractDelkontraktNrFromTitle(aposttitle),
         nr = apostnr,
         title = cleanPostTitle(aposttitle),
         description = apostdesc
     )
-
-
 
 
     private fun HmDbAgreementDTO.toAgreement(): Agreement = Agreement(
@@ -82,7 +89,7 @@ class AgreementSync(
         status = if (newsDTO.newsexpire!!.isBefore(LocalDateTime.now()) || newsDTO.newspublish.isAfter(LocalDateTime.now())) AgreementStatus.INACTIVE else AgreementStatus.ACTIVE,
         text = if (newsDTO.newstext != null) cleanUpText(newsDTO.newstext) else null,
         published = newsDTO.newspublish,
-        expired = newsDTO.newsexpire?:LocalDateTime.now().plusYears(3),
+        expired = newsDTO.newsexpire ?: LocalDateTime.now().plusYears(3),
         reference = newsDTO.externid!!.trim(),
         attachments = mapNewsDocHolder(newsDocHolder),
         posts = poster.map { it.toAgreementPost() },
@@ -166,7 +173,30 @@ class AgreementSync(
     }
 }
 
+fun mergePosts(inDbPosts: List<AgreementPost>, newPosts: List<AgreementPost>): List<AgreementPost> {
+    val notInDbPosts = newPosts.filter { newPost -> inDbPosts.none { it.identifier == newPost.identifier } }
+    val toBeDeletedPosts = inDbPosts.filter { inDbPost -> newPosts.none { it.identifier == inDbPost.identifier } }
+    val inDbPostsToKeep = inDbPosts.filter { inDbPost -> newPosts.any { it.identifier == inDbPost.identifier } }
+    val mergedPosts = inDbPostsToKeep.map { inDbPost ->
+        newPosts.find { it.identifier == inDbPost.identifier }
+            ?.let { newPost ->
+                inDbPost.copy(
+                    title = newPost.title,
+                    description = newPost.description,
+                    nr = newPost.nr,
+                    refNr = newPost.refNr
+                )
+            } ?: inDbPost
+    }
+    return mergedPosts.plus(notInDbPosts).minus(toBeDeletedPosts)
+}
+
 fun cleanPostTitle(aposttitle: String): String {
     val postDelkontraktRegex = "(?i)(Post|Delkontrakt)\\s".toRegex()
     return aposttitle.replace(postDelkontraktRegex, "")
+}
+
+fun extractDelkontraktNrFromTitle(title: String): String? {
+    val regex = """(\d+)([A-Z]*)([.|:])""".toRegex()
+    return regex.find(title)?.groupValues?.get(0)?.dropLast(1)
 }
