@@ -41,6 +41,12 @@ class SyncController(private val productSync: ProductSync,
         agreementSync.syncAgreements()
     }
 
+    @Get("/agreements/fixDb")
+    suspend fun fixAgreementsInDb(){
+        LOG.info("call fix agreements in db")
+        agreementSync.fixAgreementsInDb()
+    }
+
     @Get("/news")
     suspend fun syncNews() {
         LOG.info("call sync news from HMDB")

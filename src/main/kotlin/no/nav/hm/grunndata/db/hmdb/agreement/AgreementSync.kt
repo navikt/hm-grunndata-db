@@ -2,6 +2,7 @@ package no.nav.hm.grunndata.db.hmdb.agreement
 
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.annotation.Value
+import io.micronaut.data.model.Pageable
 import jakarta.inject.Singleton
 import no.nav.helse.rapids_rivers.KafkaRapid
 import no.nav.hm.grunndata.db.GdbRapidPushService
@@ -170,6 +171,15 @@ class AgreementSync(
             return toBeDeleted
         }
         return emptyList()
+    }
+
+    suspend fun fixAgreementsInDb() {
+        val agreements = agreementService.findAll(spec = null, pageable = Pageable.from(0, 1000))
+        // hack save back agreements
+        LOG.info("Found agreements ${agreements.size} to be updated")
+        agreements.forEach {
+            agreementService.update(it)
+        }
     }
 }
 
