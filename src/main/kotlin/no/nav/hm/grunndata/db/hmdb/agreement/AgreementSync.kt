@@ -176,10 +176,11 @@ class AgreementSync(
     suspend fun fixAgreementsInDb() {
         val agreements = agreementService.findAll(spec = null, pageable = Pageable.from(0, 1000))
         // hack save back agreements
-        LOG.info("Found agreements ${agreements.size} to be updated")
+        LOG.info("got ${agreements.content.size} agreements to fix")
         agreements.forEach {
             LOG.info("updating ${it.id}")
-            agreementService.update(it)
+            val dto = agreementService.update(it).toDTO()
+            gdbRapidPushService.pushDTOToKafka(dto, EventName.hmdbagreementsyncV1)
         }
     }
 }
