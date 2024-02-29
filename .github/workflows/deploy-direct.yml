@@ -15,12 +15,12 @@ on:
         required: true
         type: string
 env:
-  VERSION_TAG = ${{ inputs.version }}
-  CLUSTER = ${{ inputs.cluster }}
+  VERSION_TAG: ${{ inputs.version }}
+  CLUSTER: ${{ inputs.cluster }}
+
 jobs:
   deploy-direct:
     runs-on: ubuntu-latest
-    environment: ${{ inputs.CLUSTER }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -29,4 +29,9 @@ jobs:
       - run: |
           echo "Cluster: $CLUSTER"
           echo "Version: $VERSION_TAG"
-        
+#      - uses: nais/deploy/actions/deploy@v2
+#        name: deploy to ${{ inputs.cluster }}
+#        env:
+#          CLUSTER: ${{ inputs.CLUSTER }}
+#          RESOURCE: .nais/nais.yml
+#          VARS: .nais/nais-${{ inputs.cluster }}.json
