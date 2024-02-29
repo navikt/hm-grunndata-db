@@ -1,0 +1,27 @@
+on:
+  workflow_dispatch:
+    inputs:
+      cluster:
+        description: 'What cluster?'
+        required: true
+        default: 'dev-gcp'
+        type: choice
+        options:
+          - dev-gcp
+          - prod-gcp
+      version:
+        description: 'What version?'
+        required: true
+        type: string
+
+jobs:
+  log-the-inputs:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "Cluster: $CLUSTER"
+          echo "Version: $VERSION"
+          echo "Environment: $ENVIRONMENT"
+        env:
+          CLUSTER: ${{ inputs.cluster }}
+          VERSION: ${{ inputs.version }}
