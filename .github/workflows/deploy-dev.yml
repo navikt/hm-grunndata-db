@@ -9,7 +9,7 @@ on:
       - "docker-compose.yml"
     branches:
       - main
-      - fjern-institusjon
+      - fix_release
 
 jobs:
   call-workflow:
