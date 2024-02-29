@@ -9,7 +9,7 @@ on:
       - "docker-compose.yml"
     branches:
       - main
-      - fjern-institusjon
+      - fix_24.050.155836
 
 jobs:
   call-workflow:
@@ -19,14 +19,15 @@ jobs:
       id-token: write
       security-events: write
       actions: read
-    uses: navikt/pam-deploy/.github/workflows/deploy-dev.yml@v6
+    uses: navikt/pam-deploy/.github/workflows/deploy-dev.yml@v7
     with:
       NAIS_RESOURCE: ".nais/nais.yml"
-      NAIS_VARS: ".nais/nais-dev.json"
+      NAIS_VARS: ".nais/nais_dev-gcp.json"
       JAVA_VERSION: 17
       TEAM: "teamdigihot"
       CODEQL_ENABLED: true
       SKIP_DRAFT_RELEASE: ${{ github.ref_name != 'main' }}
+      DRAFTS_MAX: 50
     secrets:
       NAIS_WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
 
