@@ -1,3 +1,4 @@
+name: deploy-direct
 on:
   workflow_dispatch:
     inputs:
@@ -13,15 +14,19 @@ on:
         description: 'What version?'
         required: true
         type: string
-
+env:
+  VERSION_TAG = ${{ inputs.version }}
+  CLUSTER = ${{ inputs.cluster }}
 jobs:
-  log-the-inputs:
+  deploy-direct:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.CLUSTER }}
     steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ env.VERSION_TAG }}
       - run: |
           echo "Cluster: $CLUSTER"
-          echo "Version: $VERSION"
-          echo "Environment: $ENVIRONMENT"
-        env:
-          CLUSTER: ${{ inputs.cluster }}
-          VERSION: ${{ inputs.version }}
+          echo "Version: $VERSION_TAG"
+        
