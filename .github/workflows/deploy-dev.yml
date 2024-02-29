@@ -7,10 +7,12 @@ on:
       - "LICENCE"
       - "CODEOWNERS"
       - "docker-compose.yml"
+      - ".github/workflows/deploy-direct.yml"
+      - ".github/workflows/deploy-prod.yml"
+      - ".github/workflows/deploy-dev.yml"
     branches:
       - main
       - fix_release
-
 jobs:
   call-workflow:
     concurrency: deploy-dev
@@ -27,6 +29,7 @@ jobs:
       TEAM: "teamdigihot"
       CODEQL_ENABLED: true
       SKIP_DRAFT_RELEASE: ${{ github.ref_name != 'main' }}
+      DRAFTS_MAX: 50
     secrets:
       NAIS_WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
 

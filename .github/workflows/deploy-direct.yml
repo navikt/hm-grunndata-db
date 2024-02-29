@@ -17,21 +17,23 @@ on:
 env:
   VERSION_TAG: ${{ inputs.version }}
   CLUSTER: ${{ inputs.cluster }}
-
+  IMAGE: europe-north1-docker.pkg.dev/${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}/teamdigihot/${{ github.event.repository.name }}:${{ inputs.version }}
 jobs:
   deploy-direct:
+    permissions:
+      contents: write
+      id-token: write
+      security-events: write
+      actions: read
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           ref: ${{ env.VERSION_TAG }}
-      - run: |
-          echo "Cluster: $CLUSTER"
-          echo "Version: $VERSION_TAG"
-#      - uses: nais/deploy/actions/deploy@v2
-#        name: deploy to ${{ inputs.cluster }}
-#        env:
-#          CLUSTER: ${{ inputs.CLUSTER }}
-#          RESOURCE: .nais/nais.yml
-#          VARS: .nais/nais-${{ inputs.cluster }}.json
+      - uses: nais/deploy/actions/deploy@v2
+        name: deploy to ${{ inputs.cluster }}
+        env:
+          CLUSTER: ${{ inputs.cluster }}
+          RESOURCE: .nais/nais.yml
+          VARS: .nais/nais_${{ inputs.cluster }}.json
