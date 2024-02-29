@@ -89,6 +89,7 @@ open class ProductService(
                 rank = agree.rank,
                 postNr = agree.postNr,
                 postIdentifier = agree.postIdentifier,
+                postId = post.id,
                 published = agreement.published,
                 expired = agreement.expired,
                 reference = agreement.reference,
