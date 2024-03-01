@@ -1,4 +1,4 @@
-name: deploy-direct
+name: deploy-rollback
 on:
   workflow_dispatch:
     inputs:
