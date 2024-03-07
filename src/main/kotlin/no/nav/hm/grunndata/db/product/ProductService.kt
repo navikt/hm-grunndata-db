@@ -40,6 +40,7 @@ open class ProductService(
         val product = prod
             .let { if (!skipBestillingsorning) attributeTagService.addBestillingsordningAttribute(it) else it }  // make it work with bestillingsordning event
             .let { attributeTagService.addDigitalSoknadAttribute(it) }
+            .let { attributeTagService.addSortimentKategoriAttribute(it) }
             .let { attributeTagService.addPakrevdGodkjenningskursAttribute(it) }
             .let { attributeTagService.addProdukttypeAttribute(it) }
         val saved: Product = if (product.updatedBy == HMDB) {

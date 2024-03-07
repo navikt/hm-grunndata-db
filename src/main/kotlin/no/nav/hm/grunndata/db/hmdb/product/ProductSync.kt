@@ -207,7 +207,12 @@ open class ProductSync(
     private fun extractProductBatch(batch: HmDbProductBatchDTO): List<Product> {
         return batch.products.map { prod ->
             LOG.info("Mapping product prodid: ${prod.prodid} artid: ${prod.artid} artno: ${prod.artno} from supplier ${prod.supplier}")
-            hmDBProductMapper.mapProduct(prod, batch)
+            runCatching {
+                hmDBProductMapper.mapProduct(prod, batch)
+            }.getOrElse { e ->
+                LOG.error("Mapping product failed with exception", e)
+                throw e
+            }
         }.sortedBy { it.updated }
     }
 

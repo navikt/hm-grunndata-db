@@ -8,8 +8,7 @@ import no.nav.hm.grunndata.rapid.dto.PakrevdGodkjenningskurs
 import no.nav.hm.grunndata.rapid.dto.Produkttype
 import org.slf4j.LoggerFactory
 import java.net.URI
-import java.net.URL
-import java.nio.charset.Charset
+import java.util.UUID
 
 @Singleton
 class DigihotSortiment(
@@ -32,15 +31,18 @@ class DigihotSortiment(
     private val bestillingsordningMap: Map<String, BestillingsordningDTO> =
         objectMapper.readValue(URI(bestillingsordningUrl).toURL(), object : TypeReference<List<BestillingsordningDTO>>(){}).associateBy { it.hmsnr }
 
-    private val digitalSoknadMap: Map<Int, String> =
+    private val digitalSoknadMap: List<SortimentDTO> =
         objectMapper.readTree(URI(digitalSoknadUrl).toURL()).let { node ->
             require(node.isObject) { "unexpected non-object reply from digihot-sortiment" }
-            val res = mutableMapOf<Int, String>()
+            val res = mutableListOf<SortimentDTO>()
             node.fields().forEachRemaining { (key, value) ->
                 require(value.isArray) { "unexpected non-array reply from digihot-sortiment" }
-                value!!.forEach { apostid ->
-                    res[apostid.intValue()] = key!!
-                }
+                res.add(
+                    SortimentDTO(
+                        sortimentKategori = key!!,
+                        postIds = value!!.mapNotNull { it.at("/postId").textValue() }.map { UUID.fromString(it) },
+                    )
+                )
             }
             res
         }
@@ -58,8 +60,12 @@ class DigihotSortiment(
 
     fun getBestillingsorning(hmsnr: String): BestillingsordningDTO? = bestillingsordningMap[hmsnr]
 
-    fun getApostIdInDigitalCatalog(apostid: Int): Boolean {
-        return digitalSoknadMap.containsKey(apostid)
+    fun getPostIdInDigitalCatalog(postId: UUID): Boolean {
+        return digitalSoknadMap.any { it.postIds.contains(postId) }
+    }
+
+    fun getSortimentKategoriByPostIdInDigitalCatalog(postId: UUID): String? {
+        return digitalSoknadMap.find { it.postIds.contains(postId) }?.sortimentKategori
     }
 
     fun getPakrevdGodkjenningskurs(isocode: String): PakrevdGodkjenningskurs? {
@@ -81,6 +87,11 @@ class DigihotSortiment(
 data class BestillingsordningDTO(
     val hmsnr: String,
     val navn: String,
+)
+
+data class SortimentDTO(
+    val sortimentKategori: String,
+    val postIds: List<UUID>,
 )
 
 data class ProdukttypeDTO (

@@ -35,7 +35,7 @@ class HmDBProductMapper(private val supplierService: SupplierService,
     fun mapProduct(prod: HmDbProductDTO, batch: HmDbProductBatchDTO): Product {
         val supplier = supplierService.findByIdentifier(prod.supplier!!.HmDbIdentifier())
         if (prod.artno.isNullOrBlank()) LOG.error("This product does not have levArtNR ${prod.artid}")
-        val seriesUUID = mapSeries(prod,supplier!!)
+        val seriesUUID = mapSeries(prod, supplier!!)
         return Product(
             id = UUID.randomUUID(),
             supplierId = supplier.id,
@@ -94,6 +94,7 @@ class HmDBProductMapper(private val supplierService: SupplierService,
         val agreement = agreementService.findByIdentifier("${apost.newsid}".HmDbIdentifier())
         val post = agreement!!.posts.find { it.identifier == "${apost.apostid}".HmDbIdentifier() }
             ?: throw RuntimeException("Wrong agreement state!, should never happen")
+
         ProductAgreement(
             id = agreement.id,
             title = agreement.title,

@@ -20,11 +20,19 @@ class AttributeTagService(
         } ?: product
 
     fun addDigitalSoknadAttribute(product: Product): Product =
-        product.agreements?.mapNotNull { it.postIdentifier?.removePrefix("HMDB-")?.toIntOrNull() }?.let { apostids ->
-            if (apostids.any { digihotSortiment.getApostIdInDigitalCatalog(it) }) {
+        product.agreements?.mapNotNull { it.postId }?.let { postIds ->
+            if (postIds.any { digihotSortiment.getPostIdInDigitalCatalog(it) }) {
                 LOG.debug("Got product which is digitalSoknad ${product.hmsArtNr}")
                 product.copy(attributes = product.attributes.copy(digitalSoknad=true))
             } else product.copy(attributes = product.attributes.copy(digitalSoknad = false))
+        } ?: product
+
+    fun addSortimentKategoriAttribute(product: Product): Product =
+        product.agreements?.firstNotNullOfOrNull { it.postId?.let { postId ->
+            digihotSortiment.getSortimentKategoriByPostIdInDigitalCatalog(postId)
+        } }?.let { sortimentKategori ->
+            LOG.debug("Got product (hmsnr=${product.hmsArtNr}) with sortimentKategori=${sortimentKategori}")
+            product.copy(attributes = product.attributes.copy(sortimentKategori))
         } ?: product
 
     fun addPakrevdGodkjenningskursAttribute(product: Product): Product =
