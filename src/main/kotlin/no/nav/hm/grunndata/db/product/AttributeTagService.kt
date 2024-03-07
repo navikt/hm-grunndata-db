@@ -32,7 +32,7 @@ class AttributeTagService(
             digihotSortiment.getSortimentKategoriByPostIdInDigitalCatalog(postId)
         } }?.let { sortimentKategori ->
             LOG.debug("Got product (hmsnr=${product.hmsArtNr}) with sortimentKategori=${sortimentKategori}")
-            product.copy(attributes = product.attributes.copy(sortimentKategori))
+            product.copy(attributes = product.attributes.copy(sortimentKategori = sortimentKategori))
         } ?: product
 
     fun addPakrevdGodkjenningskursAttribute(product: Product): Product =
