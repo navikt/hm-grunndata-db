@@ -101,10 +101,10 @@ class HmDBProductMapper(private val supplierService: SupplierService,
             reference = agreement.reference,
             rank = apost.postrank,
             postNr = post.nr,
-            postIdentifier = post.identifier
+            postIdentifier = post.identifier,
+            postId = post.id,
         )
     }.toSet()
-
 
     private fun mapAgreementInfo(prod: HmDbProductDTO): AgreementInfo {
         val agreement = agreementService.findByIdentifier("${prod.newsid}".HmDbIdentifier())

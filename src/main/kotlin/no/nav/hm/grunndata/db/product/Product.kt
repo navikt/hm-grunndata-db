@@ -61,6 +61,7 @@ data class ProductAgreement(
     val rank: Int,
     val postNr: Int,
     val postIdentifier: String?=null,
+    val postId: UUID?=null,
 )
 
 fun ProductRapidDTO.toEntity(): Product = Product (
