@@ -9,6 +9,6 @@
   "schedulers_enabled": true,
   "media_storage_cdnurl": "https://cdn.dev.nav.no/teamdigihot/grunndata/media/v1",
   "env": {
-    "DIGITAL_SOKNAD_URL": "https://navikt.github.io/digihot-sortiment/sortiment_av_apostid_per_kategori_dev_grunndata_search.json"
+    "DIGITAL_SOKNAD_URL": "https://navikt.github.io/digihot-sortiment/sortiment_av_apostid_per_kategori_dev2.json"
   }
 }
