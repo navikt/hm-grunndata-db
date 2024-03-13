@@ -44,15 +44,14 @@ class SupplierSync(
         val entities = suppliers.map { it.toSupplier() }.sortedBy { it.updated }
         entities.forEach {
             val saved = supplierService.findByIdentifier(it.identifier)?.let { inDb ->
-                if (it.updated.isAfter(inDb.updated)) { // hack to fix duplicate errors
-                    supplierService.update(
+                supplierService.update(
                         it.copy(
                             id = inDb.id,
+                            identifier = inDb.identifier,
                             created = inDb.created,
                             createdBy = inDb.createdBy
                         )
                     )
-                } else inDb
 
             } ?: run {
                 try {
