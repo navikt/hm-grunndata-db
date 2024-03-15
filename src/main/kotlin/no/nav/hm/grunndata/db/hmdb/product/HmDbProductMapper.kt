@@ -175,7 +175,7 @@ class HmDBProductMapper(private val supplierService: SupplierService,
         return Media (
             type = mediaType, text = blobType, filename = "$typePath/${blobFile}",
             sourceUri = "$hmdbMediaUrl/$typePath/$blobFile", uri = "$typePath/${blobFile}",
-            source = MediaSourceType.HMDB
+            source = MediaSourceType.HMDB, updated = blobDTO.statusdate?: LocalDateTime.now().minusYears(5)
         )
     }
 
