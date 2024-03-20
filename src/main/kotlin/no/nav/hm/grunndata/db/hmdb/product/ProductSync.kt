@@ -171,35 +171,38 @@ open class ProductSync(
     }
 
     suspend fun syncHMDBProductStates() {
-        val activeProductIds = productService.findIdsByStatusAndCreatedBy(ProductStatus.ACTIVE, HMDB)
-            .associateBy { it.identifier.substringAfter("-").toLong()}
+        val activeList = productService.findIdsByStatusAndCreatedBy(ProductStatus.ACTIVE, HMDB)
+        LOG.info("Found ${activeList.size} active products in db")
+        val activeProductIds = activeList.associateBy { it.identifier.substringAfter("-").toLong()}
+        LOG.info("Found ${activeProductIds.size} active products in map")
         val hmdbIds = hmDbClient.fetchProductsIdActive()?.toSet() ?: emptySet()
         if (hmdbIds.isNotEmpty()) {
             LOG.info("Found ${hmdbIds.size} active products in HMDB")
             val toBeDeleted = activeProductIds.filterNot { hmdbIds.contains(it.key) }
-            LOG.info("Found $toBeDeleted to be deleted")
+            LOG.info("Found ${toBeDeleted.size} to be deleted")
             val notInDb = hmdbIds.filterNot { activeProductIds.containsKey(it)}
-            LOG.info("Found $notInDb active products not in db")
-            toBeDeleted.forEach {
-                productService.findById(it.value.id)?.let { inDb ->
-                    productService.saveAndPushTokafka(inDb.copy(status = ProductStatus.DELETED, updatedBy = "HMDB-DELETE",
-                        updated = LocalDateTime.now()), EventName.hmdbproductsyncV1)
-                }
-            }
-            notInDb.forEach { artid ->
-                LOG.info("fetching $artid")
-                hmDbClient.fetchProductByArticleId(artid)?.let {
-                    batch -> extractProductBatch(batch).forEach {
-                        try {
-                            LOG.info("saving to db: ${it.identifier} with hmsnr ${it.hmsArtNr}")
-                            productService.saveAndPushTokafka(it, EventName.hmdbproductsyncV1)
-                        }
-                        catch (e: Exception) {
-                            LOG.error("Got exception", e)
-                        }
-                    }
-                }
-            }
+            LOG.info("Found ${notInDb.size} active products not in db")
+            LOG.info("Dry run skipping")
+//            toBeDeleted.forEach {
+//                productService.findById(it.value.id)?.let { inDb ->
+//                    productService.saveAndPushTokafka(inDb.copy(status = ProductStatus.DELETED, updatedBy = "HMDB-DELETE",
+//                        updated = LocalDateTime.now()), EventName.hmdbproductsyncV1)
+//                }
+//            }
+//            notInDb.forEach { artid ->
+//                LOG.info("fetching $artid")
+//                hmDbClient.fetchProductByArticleId(artid)?.let {
+//                    batch -> extractProductBatch(batch).forEach {
+//                        try {
+//                            LOG.info("saving to db: ${it.identifier} with hmsnr ${it.hmsArtNr}")
+//                            productService.saveAndPushTokafka(it, EventName.hmdbproductsyncV1)
+//                        }
+//                        catch (e: Exception) {
+//                            LOG.error("Got exception", e)
+//                        }
+//                    }
+//                }
+//            }
         }
     }
 
