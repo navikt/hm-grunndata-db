@@ -182,7 +182,6 @@ open class ProductSync(
             LOG.info("Found ${toBeDeleted.size} to be deleted")
             val notInDb = hmdbIds.filterNot { activeProductIds.containsKey(it)}
             LOG.info("Found ${notInDb.size} active products not in db")
-            LOG.info("Dry run skipping")
             toBeDeleted.forEach {
                 productService.findById(it.value.id)?.let { inDb ->
                     productService.saveAndPushTokafka(inDb.copy(status = ProductStatus.DELETED, updatedBy = "HMDB-DELETE",
