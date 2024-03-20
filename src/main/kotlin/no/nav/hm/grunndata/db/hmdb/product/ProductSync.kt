@@ -171,13 +171,13 @@ open class ProductSync(
     }
 
     suspend fun syncHMDBProductStates() {
-        val activeList = productService.findIdsByStatusAndCreatedBy(ProductStatus.ACTIVE, HMDB)
+        val activeList = productService.findIdsByCreatedBy(HMDB)
         LOG.info("Found ${activeList.size} active products in db")
         val activeProductIds = activeList.associateBy { it.identifier.substringAfter("-").toLong()}
         LOG.info("Found ${activeProductIds.size} active products in map")
         val hmdbIds = hmDbClient.fetchProductsIdActive()?.toSet() ?: emptySet()
         if (hmdbIds.isNotEmpty()) {
-            LOG.info("Found ${hmdbIds.size} active products in HMDB")
+            LOG.info("Found ${hmdbIds.size} products in HMDB")
             val toBeDeleted = activeProductIds.filterNot { hmdbIds.contains(it.key) }
             LOG.info("Found ${toBeDeleted.size} to be deleted")
             val notInDb = hmdbIds.filterNot { activeProductIds.containsKey(it)}
