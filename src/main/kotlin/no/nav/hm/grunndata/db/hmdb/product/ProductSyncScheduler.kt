@@ -10,7 +10,6 @@ import no.nav.helse.rapids_rivers.KafkaRapid
 import no.nav.hm.grunndata.db.LeaderElection
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
-import java.time.temporal.ChronoUnit
 
 
 @Singleton
@@ -58,7 +57,7 @@ open class ProductSyncScheduler(private val productSync: ProductSync,
     }
 
     @Scheduled(cron = "0 30 22 * * *")
-    fun syncActiveIds() {
+    fun syncDeletedIds() {
         if (leaderElection.isLeader()) {
             if (stopped) {
                 LOG.warn("scheduler is stopped, maybe because of uncaught errors!")
@@ -66,7 +65,7 @@ open class ProductSyncScheduler(private val productSync: ProductSync,
             }
             runBlocking {
                 try {
-                    productSync.syncHMDBProductStates()
+                    productSync.syncHMDBDeletedProductStates()
                 } catch (e: Exception) {
                     LOG.error("Got uncaught exception while run product deleted sync, stop scheduler", e)
                     stopped = true

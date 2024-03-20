@@ -72,7 +72,7 @@ class SyncProductTest(private val productSync: ProductSync,
                     123, 124, 126, 127
                 )
             }
-            productSync.syncHMDBProductStates()
+            productSync.syncHMDBDeletedProductStates()
         }
     }
 }

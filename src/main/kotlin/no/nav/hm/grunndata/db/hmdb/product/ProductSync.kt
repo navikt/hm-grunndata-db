@@ -170,7 +170,7 @@ open class ProductSync(
         } ?: LOG.error("Could not find any from $artIdStart and $artIdEnd")
     }
 
-    suspend fun syncHMDBProductStates() {
+    suspend fun syncHMDBDeletedProductStates() {
         val activeList = productService.findIdsByCreatedBy(HMDB)
         LOG.info("Found ${activeList.size} active products in db")
         val activeProductIds = activeList.associateBy { it.identifier.substringAfter("-").toLong()}
@@ -183,12 +183,13 @@ open class ProductSync(
             val notInDb = hmdbIds.filterNot { activeProductIds.containsKey(it)}
             LOG.info("Found ${notInDb.size} active products not in db")
             LOG.info("Dry run skipping")
-//            toBeDeleted.forEach {
-//                productService.findById(it.value.id)?.let { inDb ->
-//                    productService.saveAndPushTokafka(inDb.copy(status = ProductStatus.DELETED, updatedBy = "HMDB-DELETE",
-//                        updated = LocalDateTime.now()), EventName.hmdbproductsyncV1)
-//                }
-//            }
+            toBeDeleted.forEach {
+                productService.findById(it.value.id)?.let { inDb ->
+                    productService.saveAndPushTokafka(inDb.copy(status = ProductStatus.DELETED, updatedBy = "HMDB-DELETE",
+                        updated = LocalDateTime.now()), EventName.hmdbproductsyncV1)
+                }
+            }
+            // no need to do this, since we are fetching the products in the other sync
 //            notInDb.forEach { artid ->
 //                LOG.info("fetching $artid")
 //                hmDbClient.fetchProductByArticleId(artid)?.let {
