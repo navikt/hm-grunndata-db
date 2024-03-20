@@ -18,8 +18,8 @@ interface ProductRepository: CoroutinePageableCrudRepository<Product, UUID>, Cor
     @Query("""SELECT id, identifier FROM product_v1 WHERE status = :status AND created_by = :createdBy""")
     suspend fun findIdsByStatusAndCreatedBy(status: ProductStatus, createdBy: String): List<ProductIdDTO>
 
-    @Query("""SELECT id, identifier FROM product_v1 WHERE created_by = :createdBy""")
-    suspend fun findIdsByCreatedBy(createdBy: String): List<ProductIdDTO>
+    @Query("""SELECT id, identifier FROM product_v1 WHERE status != 'DELETED' AND created_by = :createdBy""")
+    suspend fun findIdsByCreatedByAndNotDeleted(createdBy: String): List<ProductIdDTO>
 
     @Query("""SELECT * FROM "product_v1" WHERE agreements @> CAST(:jsonQuery AS jsonb) """, nativeQuery = true)
     suspend fun findByAgreementsJson(jsonQuery: String): List<Product>
