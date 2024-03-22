@@ -24,4 +24,15 @@ class SupplierSyncScheduler(private val supplierSync: SupplierSync,
             }
         }
     }
+
+    @Scheduled(cron="0 15 2 * * * ")
+    fun syncAllSuppliers() {
+        if (leaderElection.isLeader()) {
+            runBlocking {
+                supplierSync.syncAllSuppliers()
+            }
+        }
+    }
+
+
 }
