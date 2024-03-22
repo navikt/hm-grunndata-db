@@ -2,19 +2,21 @@ package no.nav.hm.grunndata.db.hmdb.supplier
 
 import io.micronaut.context.annotation.Requires
 import io.micronaut.data.exceptions.DataAccessException
+import io.micronaut.data.model.Pageable
 import jakarta.inject.Singleton
 import no.nav.helse.rapids_rivers.KafkaRapid
 import no.nav.hm.grunndata.db.GdbRapidPushService
+import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.db.hmdb.*
 import no.nav.hm.grunndata.db.supplier.SupplierService
 import no.nav.hm.grunndata.db.supplier.toDTO
+import no.nav.hm.grunndata.rapid.dto.SupplierStatus
 import no.nav.hm.grunndata.rapid.event.EventName
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
 @Singleton
-@Requires(bean = KafkaRapid::class)
 class SupplierSync(
     private val supplierService: SupplierService,
     private val hmdbBatchRepository: HmDbBatchRepository,
@@ -68,7 +70,23 @@ class SupplierSync(
 
     suspend fun syncAllSuppliers() {
         LOG.info("Sync all suppliers")
-        hmDbClient.fetchAllSuppliers()?.let { persistAndPushToRapid(it) }
+        val hmdbList = hmDbClient.fetchAllSuppliers()
+        if (hmdbList.isNotEmpty()) {
+            LOG.info("Got total of ${hmdbList.size} suppliers from HMD")
+            val hmdbMap = hmdbList.map { it.toSupplier() }.associateBy { it.identifier }
+            val activeMap = supplierService.findSuppliers(mapOf("status" to "ACTIVE", "createdBy" to HMDB), Pageable.from(0, 1000))
+                .content
+                .associateBy { it.identifier }
+            LOG.info("Got active suppliers ${activeMap.size} inDB that was created by HMDB")
+            val toBedeactivated = activeMap.filterNot { hmdbMap.containsKey(it.key) }
+            LOG.info("Got ${toBedeactivated.size} suppliers to be deactivated")
+            toBedeactivated.forEach {
+                val supplier = supplierService.findByIdentifier(it.key)
+                supplierService.update(supplier!!.copy(status = SupplierStatus.INACTIVE))
+                gdbRapidPushService.pushDTOToKafka(supplier.toDTO(), EventName.hmdbsuppliersyncV1)
+            }
+            persistAndPushToRapid(hmdbList)
+        }
     }
 
 }

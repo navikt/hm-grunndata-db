@@ -28,7 +28,7 @@ interface HmDbClient {
     suspend fun fetchSuppliers(@QueryValue @Format("yyyy-MM-dd'T'HH:mm:ss") lastupdated: LocalDateTime): List<HmdbSupplierDTO>?
 
     @Get("/api/v1/sync/suppliers/all")
-    suspend fun fetchAllSuppliers(): List<HmdbSupplierDTO>?
+    suspend fun fetchAllSuppliers(): List<HmdbSupplierDTO>
 
     @Get("/api/v1/sync/products")
     suspend fun fetchProducts(@QueryValue @Format("yyyy-MM-dd'T'HH:mm:ss") changeFrom: LocalDateTime,

@@ -15,6 +15,7 @@ import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.db.GdbRapidPushService
 import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.rapid.dto.SupplierDTO
+import no.nav.hm.grunndata.rapid.dto.SupplierStatus
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.util.*
@@ -57,6 +58,8 @@ open class SupplierService(private val supplierRepository: SupplierRepository,
             = params?.let {
         where {
             if (params.contains("updated")) root[Supplier::updated] greaterThanOrEqualTo LocalDateTime.parse(params["updated"])
+            if (params.contains("status")) root[Supplier::status] eq SupplierStatus.valueOf(params["status"]!!)
+            if (params.contains("createdBy")) root[Supplier::createdBy] eq params["createdBy"]
         }
     }
 
