@@ -7,7 +7,7 @@
   "max_replicas": 2,
   "java_opts": "-Xms256m -Xmx1024m -XX:+UseG1GC",
   "schedulers_enabled": true,
-  "media_storage_cdnurl": "https://finnhelpemiddel.nav.no/imageproxy/file",
+  "media_storage_cdnurl": "https://finnhjelpemiddel.nav.no/imageproxy/file",
   "env": {
     "DIGITAL_SOKNAD_URL": "https://navikt.github.io/digihot-sortiment/sortiment_av_apostid_per_kategori2.json"
   }
