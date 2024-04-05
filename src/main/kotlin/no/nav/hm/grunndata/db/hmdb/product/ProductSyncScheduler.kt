@@ -93,4 +93,6 @@ open class ProductSyncScheduler(private val productSync: ProductSync,
         }
     }
 
+    fun isStopped () = stopped
+
 }
