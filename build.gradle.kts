@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 
 val jvmTarget = "17"
-val micronautVersion = "4.3.6"
+val micronautVersion = "4.3.7"
 val micrometerRegistryPrometheusVersion = "1.9.1"
 val junitJupiterVersion = "5.9.0"
 val jacksonVersion = "2.13.4"
@@ -14,7 +14,7 @@ val tcVersion = "1.17.6"
 val mockkVersion = "1.13.4"
 val kotestVersion = "5.5.5"
 val rapidsRiversVersion = "202401101532"
-val grunndataDtoVersion = "202403110951"
+val grunndataDtoVersion = "202404050944"
 
 group = "no.nav.hm"
 version = properties["version"] ?: "local-build"
