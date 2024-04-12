@@ -44,6 +44,8 @@ class SupplierSync(
 
     private fun persistAndPushToRapid(suppliers: List<HmdbSupplierDTO>) {
         val entities = suppliers.map { it.toSupplier() }.sortedBy { it.updated }
+        LOG.info("Going to update ${entities.size} suppliers")
+        var count = 0
         entities.forEach {
             val saved = supplierService.findByIdentifier(it.identifier)?.let { inDb ->
                 supplierService.update(
@@ -63,7 +65,8 @@ class SupplierSync(
                     supplierService.save(it.copy(name = it.name + " DUPLICATE"))
                 }
             }
-            LOG.info("saved supplier ${saved.id} with identifier ${saved.identifier} and info ${saved.info} ")
+            count++
+            LOG.info("$count: supplier ${saved.id} with identifier ${saved.identifier} and info ${saved.info} ")
             gdbRapidPushService.pushDTOToKafka(saved.toDTO(), EventName.hmdbsuppliersyncV1)
         }
     }
