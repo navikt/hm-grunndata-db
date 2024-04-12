@@ -63,7 +63,7 @@ class SupplierSync(
                     supplierService.save(it.copy(name = it.name + " DUPLICATE"))
                 }
             }
-            LOG.info("saved supplier ${saved.id} with identifier ${saved.identifier} and lastupdated ${saved.updated}")
+            LOG.info("saved supplier ${saved.id} with identifier ${saved.identifier} and info ${saved.info} ")
             gdbRapidPushService.pushDTOToKafka(saved.toDTO(), EventName.hmdbsuppliersyncV1)
         }
     }
