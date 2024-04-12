@@ -22,5 +22,5 @@ data class HmdbSupplierDTO (
 
 fun HmdbSupplierDTO.toSupplier() = Supplier(identifier = "$adressid".HmDbIdentifier(), name = adressnamn1!!,
     created = adrinsertdate ?: LocalDateTime.now(), updated = lastupdated, status = SupplierStatus.ACTIVE,info = SupplierInfo(
-        address = postadress1, email = epost, phone = telefon, homepage = www, postNr = postnr, postLocation = postort, countryCode = landkod)
+        address = postadress1, email = epost, phone = telefon, homepage = www, postNr = postnr, postLocation = postort, countryCode = landkod?.trim())
 )

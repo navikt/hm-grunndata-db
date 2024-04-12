@@ -21,7 +21,8 @@ class SupplierSync(
     private val supplierService: SupplierService,
     private val hmdbBatchRepository: HmDbBatchRepository,
     private val hmDbClient: HmDbClient,
-    private val gdbRapidPushService: GdbRapidPushService) {
+    private val gdbRapidPushService: GdbRapidPushService
+) {
 
     companion object {
         private val LOG = LoggerFactory.getLogger(SupplierSync::class.java)
@@ -47,8 +48,9 @@ class SupplierSync(
         LOG.info("Going to update ${entities.size} suppliers")
         var count = 0
         entities.forEach {
-            val saved = supplierService.findByIdentifier(it.identifier)?.let { inDb ->
-                supplierService.update(
+            try {
+                val saved = supplierService.findByIdentifier(it.identifier)?.let { inDb ->
+                    supplierService.update(
                         it.copy(
                             id = inDb.id,
                             identifier = inDb.identifier,
@@ -57,19 +59,19 @@ class SupplierSync(
                         )
                     )
 
-            } ?: run {
-                try {
+                } ?: run {
                     supplierService.save(it)
-                } catch (e: DataAccessException) {
-                    LOG.error("Got exception ${e.message}")
-                    supplierService.save(it.copy(name = it.name + " DUPLICATE"))
                 }
+                count++
+                LOG.info("$count: supplier ${saved.id} with identifier ${saved.identifier} and info ${saved.info} ")
+                gdbRapidPushService.pushDTOToKafka(saved.toDTO(), EventName.hmdbsuppliersyncV1)
+            } catch (e: Exception) {
+                LOG.error("note we are skipping the supplier that has Exception!", e)
             }
-            count++
-            LOG.info("$count: supplier ${saved.id} with identifier ${saved.identifier} and info ${saved.info} ")
-            gdbRapidPushService.pushDTOToKafka(saved.toDTO(), EventName.hmdbsuppliersyncV1)
         }
+
     }
+
 
     suspend fun syncAllSuppliers() {
         LOG.info("Sync all suppliers")
@@ -77,9 +79,10 @@ class SupplierSync(
         if (hmdbList.isNotEmpty()) {
             LOG.info("Got total of ${hmdbList.size} suppliers from HMD")
             val hmdbMap = hmdbList.map { it.toSupplier() }.associateBy { it.identifier }
-            val activeMap = supplierService.findSuppliers(mapOf("status" to "ACTIVE", "createdBy" to HMDB), Pageable.from(0, 1000))
-                .content
-                .associateBy { it.identifier }
+            val activeMap =
+                supplierService.findSuppliers(mapOf("status" to "ACTIVE", "createdBy" to HMDB), Pageable.from(0, 1000))
+                    .content
+                    .associateBy { it.identifier }
             LOG.info("Got active suppliers ${activeMap.size} inDB that was created by HMDB")
             val toBedeactivated = activeMap.filterNot { hmdbMap.containsKey(it.key) }
             LOG.info("Got ${toBedeactivated.size} suppliers to be deactivated")
@@ -100,13 +103,13 @@ class SupplierSync(
             LOG.info("Saving supplier ${supplier.identifier} with info ${supplier.info}")
             val saved = supplierService.findByIdentifier(supplier.identifier)?.let { inDb ->
                 supplierService.update(
-                        supplier.copy(
-                            id = inDb.id,
-                            identifier = inDb.identifier,
-                            created = inDb.created,
-                            createdBy = inDb.createdBy
-                        )
+                    supplier.copy(
+                        id = inDb.id,
+                        identifier = inDb.identifier,
+                        created = inDb.created,
+                        createdBy = inDb.createdBy
                     )
+                )
             } ?: supplierService.save(supplier)
             LOG.info("saved supplier ${saved.id} with identifier ${saved.identifier} and info ${saved.info}")
         }
