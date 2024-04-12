@@ -33,6 +33,12 @@ class SyncController(private val productSync: ProductSync,
         supplierSync.syncAllSuppliers()
     }
 
+    @Get("/suppliers/{id}")
+    suspend fun syncSupplierById(id: Long) {
+        LOG.info("call sync suppliers for $id")
+        supplierSync.syncSupplierById(id)
+    }
+
     @Get("/agreements")
     suspend fun syncAgreements() {
         LOG.info("call sync agreements from HMDB")

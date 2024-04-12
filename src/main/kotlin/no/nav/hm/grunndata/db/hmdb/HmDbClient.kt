@@ -30,6 +30,9 @@ interface HmDbClient {
     @Get("/api/v1/sync/suppliers/all")
     suspend fun fetchAllSuppliers(): List<HmdbSupplierDTO>
 
+    @Get("/api/v1/sync/suppliers/{id}")
+    suspend fun fetchSupplierById(id:Long): HmdbSupplierDTO?
+
     @Get("/api/v1/sync/products")
     suspend fun fetchProducts(@QueryValue @Format("yyyy-MM-dd'T'HH:mm:ss") changeFrom: LocalDateTime,
                       @QueryValue @Format("yyyy-MM-dd'T'HH:mm:ss") changeTo: LocalDateTime): HmDbProductBatchDTO?

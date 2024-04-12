@@ -89,4 +89,24 @@ class SupplierSync(
         }
     }
 
+    suspend fun syncSupplierById(id: Long) {
+        val hmdbSupplier = hmDbClient.fetchSupplierById(id)
+        hmdbSupplier?.let {
+            LOG.info("Got supplier ${it.adressid} from HMD")
+            val supplier = it.toSupplier()
+            LOG.info("Saving supplier ${supplier.identifier} with info ${supplier.info}")
+            val saved = supplierService.findByIdentifier(supplier.identifier)?.let { inDb ->
+                supplierService.update(
+                        supplier.copy(
+                            id = inDb.id,
+                            identifier = inDb.identifier,
+                            created = inDb.created,
+                            createdBy = inDb.createdBy
+                        )
+                    )
+            } ?: supplierService.save(supplier)
+            LOG.info("saved supplier ${saved.id} with identifier ${saved.identifier} and info ${saved.info}")
+        }
+    }
+
 }
