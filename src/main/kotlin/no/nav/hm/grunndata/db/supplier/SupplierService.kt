@@ -1,8 +1,5 @@
 package no.nav.hm.grunndata.db.supplier
 
-import io.micronaut.cache.annotation.CacheConfig
-import io.micronaut.cache.annotation.CacheInvalidate
-import io.micronaut.cache.annotation.Cacheable
 import io.micronaut.data.model.Page
 import io.micronaut.data.model.Pageable
 import io.micronaut.data.repository.jpa.criteria.PredicateSpecification
@@ -21,7 +18,6 @@ import java.time.LocalDateTime
 import java.util.*
 
 @Singleton
-@CacheConfig("suppliers")
 open class SupplierService(private val supplierRepository: SupplierRepository,
                            private val gdbRapidPushService: GdbRapidPushService) {
 
@@ -29,24 +25,24 @@ open class SupplierService(private val supplierRepository: SupplierRepository,
         private val LOG = LoggerFactory.getLogger(SupplierService::class.java)
 
     }
-    @Cacheable(parameters = ["identifier"])
+
     open fun findByIdentifier(identifier: String) = runBlocking {
         supplierRepository.findByIdentifier(identifier)
     }
 
-    @Cacheable(parameters = ["id"])
+
     open fun findById(id: UUID) = runBlocking {
         supplierRepository.findById(id)
     }
 
     suspend fun findByIdDTO(supplierId: UUID) = supplierRepository.findById(supplierId)?.toDTO()
 
-    @CacheInvalidate(parameters = ["id"])
+
     open fun save(supplier: Supplier, id: UUID = supplier.id) = runBlocking {
         supplierRepository.save(supplier)
     }
 
-    @CacheInvalidate(parameters = ["id"])
+
     open fun update(supplier:Supplier, id: UUID = supplier.id) = runBlocking {
         supplierRepository.update(supplier)
     }
