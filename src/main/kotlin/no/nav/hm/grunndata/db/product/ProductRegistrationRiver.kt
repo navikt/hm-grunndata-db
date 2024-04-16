@@ -40,8 +40,13 @@ class ProductRegistrationRiver(river: RiverHead,
         LOG.info("got product registration id: ${dto.id} supplierId: ${dto.productDTO.supplier.id} supplierRef: ${dto.productDTO.supplierRef} " +
                 "eventId $eventId eventTime: $createdTime adminStatus: ${dto.adminStatus} createdBy: ${dto.createdBy} identifier: ${dto.productDTO.identifier}")
         runBlocking {
-            if (dto.adminStatus == AdminStatus.APPROVED && dto.draftStatus == DraftStatus.DONE)
-                productService.saveAndPushTokafka(dto.productDTO.toEntity(), EventName.syncedRegisterProductV1)
+            try {
+                if (dto.adminStatus == AdminStatus.APPROVED && dto.draftStatus == DraftStatus.DONE)
+                    productService.saveAndPushTokafka(dto.productDTO.toEntity(), EventName.syncedRegisterProductV1)
+            }
+            catch (e: Exception) {
+                LOG.error("Failed to save product", e)
+            }
         }
     }
 

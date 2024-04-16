@@ -46,8 +46,13 @@ class ProductAgreementRegistrationRiver(
         )
         runBlocking {
             productService.findBySupplierIdAndSupplierRef(dto.supplierId, dto.supplierRef)?.let { inDb ->
-                val product = mergeAgreementInProduct(inDb, dto)
-                productService.saveAndPushTokafka(product.toEntity(), EventName.syncedRegisterProductV1)
+                try {
+                    val product = mergeAgreementInProduct(inDb, dto)
+                    productService.saveAndPushTokafka(product.toEntity(), EventName.syncedRegisterProductV1)
+                }
+                catch (e: Exception) {
+                    LOG.error("Failed to merge agreement in product", e)
+                }
             }
         }
 
@@ -68,7 +73,7 @@ class ProductAgreementRegistrationRiver(
 
         val updated = agreementService.findById(agreement.agreementId)?.let { agreementInDb ->
             val foundPost = agreementInDb.posts.find { post -> post.id == agreement.postId }
-                ?: throw IllegalStateException("Post ${agreement.postId} not found in agreement ${agreement.agreementId}")
+                ?: throw IllegalStateException("Post ${agreement.postId} not found in agreement ${agreement.agreementId}, check if agreements are in sync")
             AgreementInfo(
                 id = agreementInDb.id,
                 identifier = agreementInDb.identifier,
