@@ -17,5 +17,5 @@ data class HmdbTechLabelDTO(
 
 fun HmdbTechLabelDTO.toTechLabel(): TechLabel = TechLabel (identifier = "$id".HmDbIdentifier(), label = techlabeldk,
     definition = techdatadef, guide = techdataguide, type = techdatatype, unit = techdataunit, isocode = isocode,
-    sort = techdatasort, options =  characteroptions?.split(";")?.map { it.trim() } ?: emptyList()
+    sort = techdatasort, options =  characteroptions?.split(";")?.map { it.trim() }?.filter { it.isNotEmpty() } ?: emptyList()
 )
