@@ -15,6 +15,7 @@ class MergePostsTest(private val objectMapper: ObjectMapper) {
     fun testMergePosts() {
         val oldId = UUID.randomUUID()
         val oldId2 = UUID.randomUUID()
+        val oldId3 = UUID.randomUUID()
         val newId1 = UUID.randomUUID()
         val newId2 = UUID.randomUUID()
         val newPost = AgreementPost(
@@ -53,7 +54,7 @@ class MergePostsTest(private val objectMapper: ObjectMapper) {
 
         val oldPost3 = AgreementPost(
             identifier = "HMDB-3",
-            id = oldId2,
+            id = oldId3,
             nr = 3,
             refNr = "3A",
             title = "Title 3",

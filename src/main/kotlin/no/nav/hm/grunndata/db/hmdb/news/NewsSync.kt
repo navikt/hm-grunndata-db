@@ -51,13 +51,14 @@ class NewsSync(private val newsService: NewsService,
 
     private fun HMDNewsDTO.toNews(): NewsDTO {
         val expired = this.newsexpire ?: this.newspublish.plusMonths(3)
+        val published = this.newspublish
         return NewsDTO(
             id = UUID.randomUUID(),
             identifier = "$newsid".HmDbIdentifier(),
             title = this.newstitle,
             text = this.newsresume + "<br/>" + this.newstext,
-            status = if (expired.isAfter(LocalDateTime.now())) NewsStatus.ACTIVE else NewsStatus.INACTIVE,
             published = this.newspublish,
+            status = if (published.isBefore(LocalDateTime.now()) && expired.isAfter(LocalDateTime.now())) NewsStatus.ACTIVE else NewsStatus.INACTIVE,
             expired = expired,
             createdBy = "HMDB",
             updatedBy = "HMDB",
