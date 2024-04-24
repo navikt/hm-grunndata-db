@@ -7,16 +7,21 @@ import no.nav.hm.grunndata.db.agreement.AgreementService
 import no.nav.hm.grunndata.db.hmdbMediaUrl
 import no.nav.hm.grunndata.db.iso.IsoCategoryService
 import no.nav.hm.grunndata.db.media.Media
+import no.nav.hm.grunndata.db.media.toMediaInfo
 import no.nav.hm.grunndata.db.product.Product
 import no.nav.hm.grunndata.db.product.ProductAgreement
 import no.nav.hm.grunndata.db.series.Series
 import no.nav.hm.grunndata.db.series.SeriesService
-import no.nav.hm.grunndata.db.series.toRapidDTO
 import no.nav.hm.grunndata.db.supplier.Supplier
 import no.nav.hm.grunndata.db.supplier.SupplierService
-import no.nav.hm.grunndata.rapid.dto.*
-import no.nav.hm.grunndata.rapid.event.EventName
-
+import no.nav.hm.grunndata.rapid.dto.AgreementInfo
+import no.nav.hm.grunndata.rapid.dto.Attributes
+import no.nav.hm.grunndata.rapid.dto.MediaSourceType
+import no.nav.hm.grunndata.rapid.dto.MediaType
+import no.nav.hm.grunndata.rapid.dto.ProductStatus
+import no.nav.hm.grunndata.rapid.dto.SeriesData
+import no.nav.hm.grunndata.rapid.dto.SeriesStatus
+import no.nav.hm.grunndata.rapid.dto.TechData
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.util.*
@@ -35,7 +40,8 @@ class HmDBProductMapper(private val supplierService: SupplierService,
     fun mapProduct(prod: HmDbProductDTO, batch: HmDbProductBatchDTO): Product {
         val supplier = supplierService.findByIdentifier(prod.supplier!!.HmDbIdentifier())
         if (prod.artno.isNullOrBlank()) LOG.error("This product does not have levArtNR ${prod.artid}")
-        val seriesUUID = mapSeries(prod, supplier!!)
+        val media = mapBlobs(batch.blobs[prod.prodid] ?: emptyList())
+        val seriesUUID = mapSeries(media, prod, supplier!!)
         return Product(
             id = UUID.randomUUID(),
             supplierId = supplier.id,
@@ -51,7 +57,7 @@ class HmDBProductMapper(private val supplierService: SupplierService,
             seriesId = seriesUUID.toString(),
             seriesIdentifier = "${prod.prodid}".HmDbIdentifier(),
             techData = mapTechData(batch.techdata[prod.artid] ?: emptyList()),
-            media = mapBlobs(batch.blobs[prod.prodid] ?: emptyList()),
+            media = media,
             agreementInfo = if (prod.newsid != null) mapAgreementInfo(prod) else null,
             agreements = mapAgreements(batch.articlePosts[prod.artid] ?: emptyList()),
             created = prod.aindate,
@@ -68,13 +74,14 @@ class HmDBProductMapper(private val supplierService: SupplierService,
         else SeriesStatus.ACTIVE
     }
 
-    private fun mapSeries(prod: HmDbProductDTO, supplier: Supplier): UUID {
+    private fun mapSeries(media: Set<Media>, prod: HmDbProductDTO, supplier: Supplier): UUID {
         val hmDbIdentifier = "${prod.prodid}".HmDbIdentifier()
         val series = seriesService.findByIdentifier(hmDbIdentifier)?.let {
             // if changed title, then we update series
-            if (it.title != prod.prodname || (prod.poutdate!= null && it.expired != prod.poutdate)) seriesService.update(it.copy(
-                title = prod.prodname, updated = LocalDateTime.now(), updatedBy = HMDB, expired = prod.poutdate ?: it.expired,
-                status = mapSeriesStatus(prod)
+            if (it.title != prod.prodname || (prod.poutdate!= null && it.expired != prod.poutdate))
+                seriesService.update(it.copy(title = prod.prodname,
+                    updated = LocalDateTime.now(), updatedBy = HMDB, expired = prod.poutdate ?: it.expired,
+                    status = mapSeriesStatus(prod)
             )) else {
                 it
             }
@@ -82,6 +89,7 @@ class HmDBProductMapper(private val supplierService: SupplierService,
             LOG.info("Saving new series $hmDbIdentifier")
             seriesService.save(Series ( status = mapSeriesStatus(prod),
                 supplierId = supplier.id, title = prod.prodname, text = prod.pshortdesc, isoCategory = prod.isocode,
+                seriesData = SeriesData(media = media.map {it.toMediaInfo()}.toSet()),
                 identifier = hmDbIdentifier, createdBy = HMDB, updatedBy = HMDB,
                 expired = prod.poutdate ?: LocalDateTime.now().plusYears(20)
             ))

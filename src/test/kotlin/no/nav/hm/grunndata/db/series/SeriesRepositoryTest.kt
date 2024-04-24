@@ -5,6 +5,8 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import no.nav.hm.grunndata.db.HMDB
+import no.nav.hm.grunndata.rapid.dto.MediaInfo
+import no.nav.hm.grunndata.rapid.dto.SeriesData
 import org.junit.jupiter.api.Test
 import java.util.*
 
@@ -19,6 +21,7 @@ class SeriesRepositoryTest(private val seriesRepository: SeriesRepository) {
             title = "en test series 1",
             text = "en test series 1 beskrivelse",
             isoCategory = "12001314",
+            seriesData = SeriesData(media = setOf(MediaInfo(sourceUri = "http://example.com", uri = "http://example.com"))),
             supplierId = supplierId,
             createdBy = HMDB,
             updatedBy = HMDB )
@@ -31,6 +34,8 @@ class SeriesRepositoryTest(private val seriesRepository: SeriesRepository) {
             identifier.title shouldBe series.title
             val updated = seriesRepository.update(identifier.copy(title = "en test series 2"))
             updated.isoCategory shouldBe "12001314"
+            updated.seriesData.shouldNotBeNull()
+            updated.seriesData!!.media.size shouldBe 1
         }
     }
 }

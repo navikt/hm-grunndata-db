@@ -2,6 +2,9 @@ package no.nav.hm.grunndata.db.series
 
 import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.MappedEntity
+import io.micronaut.data.annotation.TypeDef
+import io.micronaut.data.model.DataType
+import no.nav.hm.grunndata.rapid.dto.SeriesData
 import no.nav.hm.grunndata.rapid.dto.SeriesRapidDTO
 import no.nav.hm.grunndata.rapid.dto.SeriesRegistrationRapidDTO
 import no.nav.hm.grunndata.rapid.dto.SeriesStatus
@@ -18,6 +21,8 @@ data class Series(
     val title: String,
     val text: String,
     val identifier: String,
+    @field:TypeDef(type = DataType.JSON)
+    val seriesData: SeriesData? = null,
     val createdBy: String,
     val updatedBy: String,
     val created: LocalDateTime = LocalDateTime.now(),
@@ -27,7 +32,7 @@ data class Series(
 
 
 fun Series.toRapidDTO() = SeriesRapidDTO (id = id, status = status, title = title,
-    text = text, isoCategory = isoCategory,
+    text = text, isoCategory = isoCategory, seriesData = seriesData,
     supplierId = supplierId, expired = expired,
     identifier = identifier, createdBy = createdBy,
     updatedBy = updatedBy, created = created, updated = updated)
@@ -38,6 +43,7 @@ fun SeriesRegistrationRapidDTO.toEntity() = Series(
     isoCategory = isoCategory,
     status = status,
     title = title,
+    seriesData = seriesData,
     identifier = identifier,
     createdBy = createdBy,
     updatedBy = updatedBy,

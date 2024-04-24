@@ -39,8 +39,9 @@ class SeriesRegistrationRiver(river: RiverHead,
         val dto = objectMapper.treeToValue(packet["payload"], SeriesRegistrationRapidDTO::class.java)
         LOG.info("got series registration id: ${dto.id} eventId $eventId eventTime: $createdTime")
         runBlocking {
-            if (dto.draftStatus == DraftStatus.DONE)
+            if (dto.draftStatus == DraftStatus.DONE && dto.adminStatus == AdminStatus.APPROVED) {
                 seriesService.saveAndPushTokafka(dto.toEntity(), EventName.syncedRegisterSeriesV1)
+            }
         }
     }
 
