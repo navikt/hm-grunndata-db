@@ -9,7 +9,6 @@ import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import io.mockk.mockk
 import no.nav.helse.rapids_rivers.toUUID
 import no.nav.hm.grunndata.db.HMDB
-import no.nav.hm.grunndata.db.media.Media
 import no.nav.hm.grunndata.db.supplier.Supplier
 import no.nav.hm.grunndata.db.supplier.SupplierService
 import no.nav.hm.grunndata.rapid.dto.*
@@ -41,11 +40,11 @@ class ProductRepositoryTest(private val productRepository: ProductRepository,
         )
 
         val mediaSet = setOf(
-            Media( text = "media 1", uri = "http://media1", type = MediaType.IMAGE, source = MediaSourceType.HMDB,
+            MediaInfo( text = "media 1", uri = "http://media1", type = MediaType.IMAGE, source = MediaSourceType.HMDB,
                 sourceUri = "http://media1", priority = 1),
-            Media( text = "media 2", uri = "http://media2", type = MediaType.IMAGE, source = MediaSourceType.HMDB,
+            MediaInfo( text = "media 2", uri = "http://media2", type = MediaType.IMAGE, source = MediaSourceType.HMDB,
                 sourceUri = "http://media2", priority = 2),
-            Media( text = "media 2", uri = "http://media2", type = MediaType.IMAGE, source = MediaSourceType.HMDB,
+            MediaInfo( text = "media 2", uri = "http://media2", type = MediaType.IMAGE, source = MediaSourceType.HMDB,
                 sourceUri = "http://media2", priority = 3)
             )
         runBlocking {

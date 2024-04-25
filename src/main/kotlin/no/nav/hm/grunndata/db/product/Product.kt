@@ -6,8 +6,6 @@ import io.micronaut.data.annotation.TypeDef
 import io.micronaut.data.model.DataType
 import jakarta.persistence.Column
 import no.nav.hm.grunndata.db.HMDB
-import no.nav.hm.grunndata.db.media.Media
-import no.nav.hm.grunndata.db.media.toEntity
 import no.nav.hm.grunndata.rapid.dto.*
 import java.time.LocalDateTime
 import java.util.UUID
@@ -36,7 +34,7 @@ data class Product (
     @field:TypeDef(type = DataType.JSON)
     val techData: List<TechData> = emptyList(),
     @field:TypeDef(type = DataType.JSON)
-    val media: Set<Media> = emptySet(),
+    val media: Set<MediaInfo> = emptySet(),
     @field:TypeDef(type = DataType.JSON)
     @field:Column(name="agreement")
     @Deprecated("Use agreements instead")
@@ -67,6 +65,6 @@ data class ProductAgreement(
 fun ProductRapidDTO.toEntity(): Product = Product (
     id = id, supplierId = supplier.id, title = title, articleName = articleName, attributes=attributes, status = status, hmsArtNr = hmsArtNr,
     identifier = identifier, supplierRef=supplierRef, isoCategory=isoCategory, accessory=accessory, sparePart=sparePart, seriesUUID = seriesUUID,
-    seriesId = seriesId, techData=techData, media= media.map { it.toEntity() }.toSet(), created=created, updated=updated, published=published, expired=expired,
+    seriesId = seriesId, techData=techData, media = media, created=created, updated=updated, published=published, expired=expired,
     agreementInfo = agreementInfo, createdBy=createdBy, updatedBy=updatedBy
 )

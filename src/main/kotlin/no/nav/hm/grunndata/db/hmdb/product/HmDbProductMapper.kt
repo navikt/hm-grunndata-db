@@ -6,8 +6,6 @@ import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.db.agreement.AgreementService
 import no.nav.hm.grunndata.db.hmdbMediaUrl
 import no.nav.hm.grunndata.db.iso.IsoCategoryService
-import no.nav.hm.grunndata.db.media.Media
-import no.nav.hm.grunndata.db.media.toMediaInfo
 import no.nav.hm.grunndata.db.product.Product
 import no.nav.hm.grunndata.db.product.ProductAgreement
 import no.nav.hm.grunndata.db.series.Series
@@ -16,6 +14,7 @@ import no.nav.hm.grunndata.db.supplier.Supplier
 import no.nav.hm.grunndata.db.supplier.SupplierService
 import no.nav.hm.grunndata.rapid.dto.AgreementInfo
 import no.nav.hm.grunndata.rapid.dto.Attributes
+import no.nav.hm.grunndata.rapid.dto.MediaInfo
 import no.nav.hm.grunndata.rapid.dto.MediaSourceType
 import no.nav.hm.grunndata.rapid.dto.MediaType
 import no.nav.hm.grunndata.rapid.dto.ProductStatus
@@ -74,7 +73,7 @@ class HmDBProductMapper(private val supplierService: SupplierService,
         else SeriesStatus.ACTIVE
     }
 
-    private fun mapSeries(media: Set<Media>, prod: HmDbProductDTO, supplier: Supplier): UUID {
+    private fun mapSeries(media: Set<MediaInfo>, prod: HmDbProductDTO, supplier: Supplier): UUID {
         val hmDbIdentifier = "${prod.prodid}".HmDbIdentifier()
         val series = seriesService.findByIdentifier(hmDbIdentifier)?.let {
             // if changed title, then we update series
@@ -89,7 +88,7 @@ class HmDBProductMapper(private val supplierService: SupplierService,
             LOG.info("Saving new series $hmDbIdentifier")
             seriesService.save(Series ( status = mapSeriesStatus(prod),
                 supplierId = supplier.id, title = prod.prodname, text = prod.pshortdesc, isoCategory = prod.isocode,
-                seriesData = SeriesData(media = media.map {it.toMediaInfo()}.toSet()),
+                seriesData = SeriesData(media = media),
                 identifier = hmDbIdentifier, createdBy = HMDB, updatedBy = HMDB,
                 expired = prod.poutdate ?: LocalDateTime.now().plusYears(20)
             ))
@@ -144,14 +143,14 @@ class HmDBProductMapper(private val supplierService: SupplierService,
             ProductStatus.INACTIVE
     }
 
-    fun mapBlobs(blobs: List<BlobDTO>): Set<Media> =
+    fun mapBlobs(blobs: List<BlobDTO>): Set<MediaInfo> =
         blobs.map { mapBlob(it) }
             .filter { it.type != MediaType.OTHER }
             .sortedBy { "${it.type}-${it.uri}" }
             .mapIndexed { index, media -> media.copy(priority = index + 1) }.toSet()
 
 
-    fun mapBlob(blobDTO: BlobDTO): Media {
+    fun mapBlob(blobDTO: BlobDTO): MediaInfo {
         val blobFile = blobDTO.blobfile.trim()
         val blobType = blobDTO.blobtype.trim().lowercase()
         val blobUse = blobDTO.blobuse.trim()
@@ -180,7 +179,7 @@ class HmDBProductMapper(private val supplierService: SupplierService,
             }
         }
 
-        return Media (
+        return MediaInfo (
             type = mediaType, text = blobType, filename = "$typePath/${blobFile}",
             sourceUri = "$hmdbMediaUrl/$typePath/$blobFile", uri = "$typePath/${blobFile}",
             source = MediaSourceType.HMDB, updated = blobDTO.statusdate?: LocalDateTime.now().minusYears(5)
