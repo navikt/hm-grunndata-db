@@ -75,14 +75,16 @@ class HmDBProductMapper(private val supplierService: SupplierService,
 
     private fun mapSeries(media: Set<MediaInfo>, prod: HmDbProductDTO, supplier: Supplier): UUID {
         val hmDbIdentifier = "${prod.prodid}".HmDbIdentifier()
-        val series = seriesService.findByIdentifier(hmDbIdentifier)?.let {
+        val series = seriesService.findByIdentifier(hmDbIdentifier)?.let {inDb->
             // if changed title, then we update series
-            if (it.title != prod.prodname || (prod.poutdate!= null && it.expired != prod.poutdate))
-                seriesService.update(it.copy(title = prod.prodname,
-                    updated = LocalDateTime.now(), updatedBy = HMDB, expired = prod.poutdate ?: it.expired,
+            if (inDb.title != prod.prodname || inDb.text!= prod.pshortdesc
+                || inDb.isoCategory != prod.isocode || (prod.poutdate!= null && inDb.expired != prod.poutdate))
+                seriesService.update(inDb.copy(title = prod.prodname, text = prod.pshortdesc,
+                    isoCategory = prod.isocode, seriesData = SeriesData(media = media),
+                    updated = LocalDateTime.now(), updatedBy = HMDB, expired = prod.poutdate ?: inDb.expired,
                     status = mapSeriesStatus(prod)
             )) else {
-                it
+                inDb
             }
         } ?: run {
             LOG.info("Saving new series $hmDbIdentifier")
