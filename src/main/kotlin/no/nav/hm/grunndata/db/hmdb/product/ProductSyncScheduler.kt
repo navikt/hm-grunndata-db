@@ -74,7 +74,7 @@ open class ProductSyncScheduler(private val productSync: ProductSync,
         }
     }
 
-    @Scheduled(cron="0 45 1 * * 5")
+    @Scheduled(cron="0 45 1 * * *")
     fun syncAllProducts() {
         if (leaderElection.isLeader()) {
             if (stopped) {
