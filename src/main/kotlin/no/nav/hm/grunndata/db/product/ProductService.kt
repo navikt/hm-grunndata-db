@@ -121,5 +121,7 @@ open class ProductService(
     suspend fun findByStatusAndExpiredBefore(status: ProductStatus, expired: LocalDateTime? = LocalDateTime.now()): List<Product> = productRepository.findByStatusAndExpiredBefore(status, expired)
 
     suspend fun findByHmsArtNr(hmsArtNr: String): ProductRapidDTO? = productRepository.findByHmsArtNr(hmsArtNr)?.toDTO()
+
+    suspend fun findBySeriesUUID(seriesUUID: UUID): List<Product> = productRepository.findBySeriesUUID(seriesUUID)
 }
 

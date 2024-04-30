@@ -5,6 +5,7 @@ import io.micronaut.context.annotation.Context
 import io.micronaut.context.annotation.Requires
 import kotlinx.coroutines.runBlocking
 import no.nav.helse.rapids_rivers.*
+import no.nav.hm.grunndata.db.product.ProductService
 import no.nav.hm.grunndata.rapid.dto.*
 import no.nav.hm.grunndata.rapid.event.EventName
 import no.nav.hm.rapids_rivers.micronaut.RiverHead
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory
 @Requires(bean = KafkaRapid::class)
 class SeriesRegistrationRiver(river: RiverHead,
                               private val objectMapper: ObjectMapper,
+                              private val productService: ProductService,
                               private val seriesService: SeriesService): River.PacketListener {
 
     companion object {
@@ -40,6 +42,15 @@ class SeriesRegistrationRiver(river: RiverHead,
         LOG.info("got series registration id: ${dto.id} eventId $eventId eventTime: $createdTime")
         runBlocking {
             if (dto.draftStatus == DraftStatus.DONE && dto.adminStatus == AdminStatus.APPROVED) {
+                val productsInSeries = productService.findBySeriesUUID(dto.id)
+                productsInSeries.forEach { product ->
+                    LOG.info("Merging product ${product.id} with series ${dto.id}")
+                    productService.saveAndPushTokafka(product.copy(seriesUUID = dto.id, title = dto.title,
+                        attributes = product.attributes.copy(text = dto.text),
+                        isoCategory = dto.isoCategory,
+                        media = dto.seriesData.media
+                    ), EventName.syncedRegisterProductV1)
+                }
                 seriesService.saveAndPushTokafka(dto.toEntity(), EventName.syncedRegisterSeriesV1)
             }
         }
