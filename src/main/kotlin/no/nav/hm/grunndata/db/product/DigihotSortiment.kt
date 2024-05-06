@@ -2,8 +2,6 @@ package no.nav.hm.grunndata.db.product
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.micronaut.cache.annotation.CacheConfig
-import io.micronaut.cache.annotation.Cacheable
 import io.micronaut.context.annotation.Value
 import jakarta.inject.Singleton
 import no.nav.hm.grunndata.rapid.dto.PakrevdGodkjenningskurs
@@ -13,8 +11,7 @@ import java.net.URI
 import java.util.UUID
 
 @Singleton
-@CacheConfig("digihot-sortiment")
-open class DigihotSortiment(
+class DigihotSortiment(
     @Value("\${digihotSortiment.bestillingsordning}")
     private val bestillingsordningUrl : String,
     @Value("\${digihotSortiment.digitalSoknad}")
@@ -31,38 +28,10 @@ open class DigihotSortiment(
         private val LOG = LoggerFactory.getLogger(AttributeTagService::class.java)
     }
 
-    fun isBestillingsordning(hmsnr: String): Boolean = cachedBestillingsordning().containsKey(hmsnr)
+    private val bestillingsordningMap: Map<String, BestillingsordningDTO> =
+        objectMapper.readValue(URI(bestillingsordningUrl).toURL(), object : TypeReference<List<BestillingsordningDTO>>(){}).associateBy { it.hmsnr }
 
-    fun getPostIdInDigitalCatalog(postId: UUID): Boolean {
-        return cachedDigitalSoknad().any { it.postIds.contains(postId) }
-    }
-
-    fun getSortimentKategoriByPostIdInDigitalCatalog(postId: UUID): String? {
-        return cachedDigitalSoknad().find { it.postIds.contains(postId) }?.sortimentKategori
-    }
-
-    fun getPakrevdGodkjenningskurs(isocode: String): PakrevdGodkjenningskurs? {
-        val relevantIsoCodePrefix = isocode.take(6)
-        return cachedPakrevdGodkjenningskurs()[relevantIsoCodePrefix]
-    }
-
-    fun getProdukttype(isocode: String): Produkttype? {
-        val relevantIsoCodePrefix = isocode.take(6)
-        return cachedProdukttype()[relevantIsoCodePrefix]?.produkttype?.let { Produkttype.valueOf(it) }
-    }
-
-    fun getIsoMetadata(isocode: String): IsoMetadataDTO? {
-        val relevantIsoCodePrefix = isocode.take(8)
-        return cachedIsoMetadata()[relevantIsoCodePrefix]
-    }
-
-    @Cacheable
-    open fun cachedBestillingsordning(): Map<String, BestillingsordningDTO> = objectMapper
-        .readValue(URI(bestillingsordningUrl).toURL(), object : TypeReference<List<BestillingsordningDTO>>(){})
-        .associateBy { it.hmsnr }
-
-    @Cacheable
-    open fun cachedDigitalSoknad(): List<SortimentDTO> =
+    private val digitalSoknadMap: List<SortimentDTO> =
         objectMapper.readTree(URI(digitalSoknadUrl).toURL()).let { node ->
             require(node.isObject) { "unexpected non-object reply from digihot-sortiment" }
             val res = mutableListOf<SortimentDTO>()
@@ -78,17 +47,41 @@ open class DigihotSortiment(
             res
         }
 
-    @Cacheable
-    open fun cachedPakrevdGodkjenningskurs(): Map<String, PakrevdGodkjenningskurs> =
+    private val pakrevdGodkjenningskursMap: Map<String, PakrevdGodkjenningskurs> =
         objectMapper.readValue(URI(pakrevdGodkjenningskursUrl).toURL(), object : TypeReference<List<PakrevdGodkjenningskurs>>(){}).associateBy { it.isokode }
 
-    @Cacheable
-    open fun cachedProdukttype(): Map<String, ProdukttypeDTO> =
+    private val produkttypeMap: Map<String, ProdukttypeDTO> =
         objectMapper.readValue(URI(produkttypeUrl).toURL(), object : TypeReference<List<ProdukttypeDTO>>(){}).associateBy { it.isokode }
 
-    @Cacheable
-    open fun cachedIsoMetadata(): Map<String, IsoMetadataDTO> =
+    private val isoMetadataMap: Map<String, IsoMetadataDTO> =
         objectMapper.readValue(URI(isoMetadataUrl).toURL(), object : TypeReference<List<IsoMetadataDTO>>(){}).associateBy { it.isokode }
+
+    fun isBestillingsordning(hmsnr: String): Boolean = bestillingsordningMap.containsKey(hmsnr)
+
+    fun getBestillingsorning(hmsnr: String): BestillingsordningDTO? = bestillingsordningMap[hmsnr]
+
+    fun getPostIdInDigitalCatalog(postId: UUID): Boolean {
+        return digitalSoknadMap.any { it.postIds.contains(postId) }
+    }
+
+    fun getSortimentKategoriByPostIdInDigitalCatalog(postId: UUID): String? {
+        return digitalSoknadMap.find { it.postIds.contains(postId) }?.sortimentKategori
+    }
+
+    fun getPakrevdGodkjenningskurs(isocode: String): PakrevdGodkjenningskurs? {
+        val relevantIsoCodePrefix = isocode.take(6)
+        return pakrevdGodkjenningskursMap[relevantIsoCodePrefix]
+    }
+
+    fun getProdukttype(isocode: String): Produkttype? {
+        val relevantIsoCodePrefix = isocode.take(6)
+        return produkttypeMap[relevantIsoCodePrefix]?.produkttype?.let { Produkttype.valueOf(it) }
+    }
+
+    fun getIsoMetadata(isocode: String): IsoMetadataDTO? {
+        val relevantIsoCodePrefix = isocode.take(8)
+        return isoMetadataMap[relevantIsoCodePrefix]
+    }
 }
 
 data class BestillingsordningDTO(
