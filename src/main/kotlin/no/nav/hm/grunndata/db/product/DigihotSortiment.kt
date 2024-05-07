@@ -13,7 +13,6 @@ import java.net.URI
 import java.util.UUID
 
 @Singleton
-@CacheConfig("digihot-sortiment")
 open class DigihotSortiment(
     @Value("\${digihotSortiment.bestillingsordning}")
     private val bestillingsordningUrl : String,
@@ -56,12 +55,12 @@ open class DigihotSortiment(
         return cachedIsoMetadata()[relevantIsoCodePrefix]
     }
 
-    @Cacheable
+    @Cacheable("digihot-sortiment-bestillingsordning")
     open fun cachedBestillingsordning(): Map<String, BestillingsordningDTO> = objectMapper
         .readValue(URI(bestillingsordningUrl).toURL(), object : TypeReference<List<BestillingsordningDTO>>(){})
         .associateBy { it.hmsnr }
 
-    @Cacheable
+    @Cacheable("digihot-sortiment-digitalsoknad")
     open fun cachedDigitalSoknad(): List<SortimentDTO> =
         objectMapper.readTree(URI(digitalSoknadUrl).toURL()).let { node ->
             require(node.isObject) { "unexpected non-object reply from digihot-sortiment" }
@@ -78,15 +77,15 @@ open class DigihotSortiment(
             res
         }
 
-    @Cacheable
+    @Cacheable("digihot-sortiment-paakrevdgodkjenningskurs")
     open fun cachedPakrevdGodkjenningskurs(): Map<String, PakrevdGodkjenningskurs> =
         objectMapper.readValue(URI(pakrevdGodkjenningskursUrl).toURL(), object : TypeReference<List<PakrevdGodkjenningskurs>>(){}).associateBy { it.isokode }
 
-    @Cacheable
+    @Cacheable("digihot-sortiment-produkttype")
     open fun cachedProdukttype(): Map<String, ProdukttypeDTO> =
         objectMapper.readValue(URI(produkttypeUrl).toURL(), object : TypeReference<List<ProdukttypeDTO>>(){}).associateBy { it.isokode }
 
-    @Cacheable
+    @Cacheable("digihot-sortiment-isometadata")
     open fun cachedIsoMetadata(): Map<String, IsoMetadataDTO> =
         objectMapper.readValue(URI(isoMetadataUrl).toURL(), object : TypeReference<List<IsoMetadataDTO>>(){}).associateBy { it.isokode }
 }
