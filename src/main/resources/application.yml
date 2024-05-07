@@ -26,6 +26,21 @@ micronaut:
       charset: 'UTF-8'
     series:
       charset: 'UTF-8'
+    digihot-sortiment-bestillingsordning:
+      charset: 'UTF-8'
+      expire-after-write: 1h
+    digihot-sortiment-digitalsoknad:
+      charset: 'UTF-8'
+      expire-after-write: 1h
+    digihot-sortiment-paakrevdgodkjenningskurs:
+      charset: 'UTF-8'
+      expire-after-write: 1h
+    digihot-sortiment-produkttype:
+      charset: 'UTF-8'
+      expire-after-write: 1h
+    digihot-sortiment-isometadata:
+      charset: 'UTF-8'
+      expire-after-write: 1h
   data:
     pageable:
       max-page-size: 10000
