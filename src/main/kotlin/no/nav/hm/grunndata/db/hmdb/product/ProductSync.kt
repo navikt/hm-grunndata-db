@@ -143,8 +143,8 @@ open class ProductSync(
             val end = sortedIds.elementAt(endIndex)
             LOG.info("from index: $startIndex to endIndex $endIndex, with $start - $end")
             syncProductsByArtIdStartEnd(start, end)
-            LOG.info("Delay for 60s")
-            delay(60000)
+            LOG.info("Delay for 5s")
+            delay(5000)
             startIndex = endIndex+1
             endIndex = startIndex + 999;
         }
