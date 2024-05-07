@@ -56,13 +56,17 @@ open class DigihotSortiment(
     }
 
     @Cacheable("digihot-sortiment-bestillingsordning")
-    open fun cachedBestillingsordning(): Map<String, BestillingsordningDTO> = objectMapper
-        .readValue(URI(bestillingsordningUrl).toURL(), object : TypeReference<List<BestillingsordningDTO>>(){})
-        .associateBy { it.hmsnr }
+    open fun cachedBestillingsordning(): Map<String, BestillingsordningDTO> {
+        LOG.info("Cache revalidate bestillingsordning")
+        return objectMapper
+            .readValue(URI(bestillingsordningUrl).toURL(), object : TypeReference<List<BestillingsordningDTO>>(){})
+            .associateBy { it.hmsnr }
+    }
 
     @Cacheable("digihot-sortiment-digitalsoknad")
-    open fun cachedDigitalSoknad(): List<SortimentDTO> =
-        objectMapper.readTree(URI(digitalSoknadUrl).toURL()).let { node ->
+    open fun cachedDigitalSoknad(): List<SortimentDTO> {
+        LOG.info("Cache revalidate digitalsoknad")
+        return objectMapper.readTree(URI(digitalSoknadUrl).toURL()).let { node ->
             require(node.isObject) { "unexpected non-object reply from digihot-sortiment" }
             val res = mutableListOf<SortimentDTO>()
             node.fields().forEachRemaining { (key, value) ->
@@ -76,18 +80,29 @@ open class DigihotSortiment(
             }
             res
         }
+    }
 
     @Cacheable("digihot-sortiment-paakrevdgodkjenningskurs")
-    open fun cachedPakrevdGodkjenningskurs(): Map<String, PakrevdGodkjenningskurs> =
-        objectMapper.readValue(URI(pakrevdGodkjenningskursUrl).toURL(), object : TypeReference<List<PakrevdGodkjenningskurs>>(){}).associateBy { it.isokode }
+    open fun cachedPakrevdGodkjenningskurs(): Map<String, PakrevdGodkjenningskurs> {
+        LOG.info("Cache revalidate paakrevdgodkjenningskurs")
+        return objectMapper.readValue(
+            URI(pakrevdGodkjenningskursUrl).toURL(),
+            object : TypeReference<List<PakrevdGodkjenningskurs>>() {}).associateBy { it.isokode }
+    }
 
     @Cacheable("digihot-sortiment-produkttype")
-    open fun cachedProdukttype(): Map<String, ProdukttypeDTO> =
-        objectMapper.readValue(URI(produkttypeUrl).toURL(), object : TypeReference<List<ProdukttypeDTO>>(){}).associateBy { it.isokode }
+    open fun cachedProdukttype(): Map<String, ProdukttypeDTO> {
+        LOG.info("Cache revalidate produkttype")
+        return objectMapper.readValue(URI(produkttypeUrl).toURL(), object : TypeReference<List<ProdukttypeDTO>>() {})
+            .associateBy { it.isokode }
+    }
 
     @Cacheable("digihot-sortiment-isometadata")
-    open fun cachedIsoMetadata(): Map<String, IsoMetadataDTO> =
-        objectMapper.readValue(URI(isoMetadataUrl).toURL(), object : TypeReference<List<IsoMetadataDTO>>(){}).associateBy { it.isokode }
+    open fun cachedIsoMetadata(): Map<String, IsoMetadataDTO> {
+        LOG.info("Cache revalidate isometadata")
+        return objectMapper.readValue(URI(isoMetadataUrl).toURL(), object : TypeReference<List<IsoMetadataDTO>>() {})
+            .associateBy { it.isokode }
+    }
 }
 
 data class BestillingsordningDTO(
