@@ -54,7 +54,9 @@ class AgreementSync(
         )
         hmDbClient.fetchAgreements()?.let { hmdbagreements ->
             LOG.info("Calling agreement sync, got total of ${hmdbagreements.size} agreements")
-            val agreements = hmdbagreements.map { it.toAgreement() }
+            val agreements = hmdbagreements.map { it.toAgreement() }.filterNot {
+                it.reference.trim() == "21-6260" // Stop syncing this agreement.
+            }
             agreements.forEach { agreement ->
                 val dto = agreementService.findByIdentifier(agreement.identifier)?.let { inDb ->
                     agreementService.update(
