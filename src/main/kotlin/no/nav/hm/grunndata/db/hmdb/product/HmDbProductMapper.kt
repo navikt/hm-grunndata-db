@@ -3,6 +3,7 @@ package no.nav.hm.grunndata.db.hmdb.product
 import jakarta.inject.Singleton
 import no.nav.hm.grunndata.db.GdbRapidPushService
 import no.nav.hm.grunndata.db.HMDB
+import no.nav.hm.grunndata.db.REGISTER
 import no.nav.hm.grunndata.db.agreement.AgreementService
 import no.nav.hm.grunndata.db.hmdbMediaUrl
 import no.nav.hm.grunndata.db.iso.IsoCategoryService
@@ -76,6 +77,10 @@ class HmDBProductMapper(private val supplierService: SupplierService,
     private fun mapSeries(media: Set<MediaInfo>, prod: HmDbProductDTO, supplier: Supplier): UUID {
         val hmDbIdentifier = "${prod.prodid}".HmDbIdentifier()
         val series = seriesService.findByIdentifier(hmDbIdentifier)?.let {inDb->
+            if (inDb.updatedBy == REGISTER) {
+                LOG.info("Skipping updating series for ${hmDbIdentifier} id: ${inDb.id} because updated from register")
+                return inDb.id
+            }
             // if changed title, then we update series
             if (inDb.title != prod.prodname || inDb.text!= prod.pshortdesc
                 || inDb.isoCategory != prod.isocode || (prod.poutdate!= null && inDb.expired != prod.poutdate))

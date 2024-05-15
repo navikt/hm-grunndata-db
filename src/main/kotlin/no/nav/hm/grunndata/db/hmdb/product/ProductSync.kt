@@ -188,21 +188,6 @@ open class ProductSync(
                         updated = LocalDateTime.now()), EventName.hmdbproductsyncV1)
                 }
             }
-            // no need to do this, since we are fetching the products in the other sync
-//            notInDb.forEach { artid ->
-//                LOG.info("fetching $artid")
-//                hmDbClient.fetchProductByArticleId(artid)?.let {
-//                    batch -> extractProductBatch(batch).forEach {
-//                        try {
-//                            LOG.info("saving to db: ${it.identifier} with hmsnr ${it.hmsArtNr}")
-//                            productService.saveAndPushTokafka(it, EventName.hmdbproductsyncV1)
-//                        }
-//                        catch (e: Exception) {
-//                            LOG.error("Got exception", e)
-//                        }
-//                    }
-//                }
-//            }
         }
     }
 
