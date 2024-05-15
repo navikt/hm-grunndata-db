@@ -24,7 +24,7 @@ plugins {
     kotlin("kapt") version "1.9.21"
     id("java")
     id("com.github.johnrengelman.shadow") version "7.1.0"
-    id("io.micronaut.application") version "4.3.5"
+    id("io.micronaut.application") version "4.3.8"
 }
 
 configurations.all {
@@ -70,6 +70,8 @@ dependencies {
 
     // flyway postgresql
     implementation("org.flywaydb:flyway-database-postgresql:10.6.0")
+
+    implementation("com.github.navikt:hm-micronaut-leaderelection:202405151234")
 
     testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("io.micronaut.test:micronaut-test-kotest5")
@@ -120,7 +122,7 @@ tasks.withType<Test> {
 }
 
 tasks.withType<Wrapper> {
-    gradleVersion = "8.0.1"
+    gradleVersion = "8.5"
 }
 
 repositories {
