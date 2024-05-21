@@ -66,5 +66,9 @@ fun ProductRapidDTO.toEntity(): Product = Product (
     id = id, supplierId = supplier.id, title = title, articleName = articleName, attributes=attributes, status = status, hmsArtNr = hmsArtNr,
     identifier = identifier, supplierRef=supplierRef, isoCategory=isoCategory, accessory=accessory, sparePart=sparePart, seriesUUID = seriesUUID,
     seriesId = seriesId, techData=techData, media = media, created=created, updated=updated, published=published, expired=expired,
-    agreementInfo = agreementInfo, createdBy=createdBy, updatedBy=updatedBy
+    agreements = agreements.map { it.toProductAgreement() }.toSet(), agreementInfo = agreementInfo, createdBy=createdBy, updatedBy=updatedBy
+)
+
+private fun AgreementInfo.toProductAgreement(): ProductAgreement = ProductAgreement(
+    id = id, title = title, identifier = identifier, reference = reference, rank = rank, postNr = postNr, postIdentifier = postIdentifier, postId = postId
 )

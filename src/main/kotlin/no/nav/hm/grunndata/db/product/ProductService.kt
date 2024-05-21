@@ -98,7 +98,8 @@ open class ProductService(
                 published = agreement.published,
                 expired = agreement.expired,
                 reference = agreement.reference,
-                postTitle = post.title
+                postTitle = post.title,
+                refNr = post.refNr
             )
         } ?: emptyList()
     )
