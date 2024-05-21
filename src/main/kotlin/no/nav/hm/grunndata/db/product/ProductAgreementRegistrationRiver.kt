@@ -3,9 +3,11 @@ package no.nav.hm.grunndata.db.product
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.micronaut.context.annotation.Context
 import io.micronaut.context.annotation.Requires
+import jakarta.inject.Singleton
 import kotlinx.coroutines.runBlocking
 import no.nav.helse.rapids_rivers.*
 import no.nav.hm.grunndata.db.agreement.AgreementService
+import no.nav.hm.grunndata.db.product.ProductAgreementRegistrationRiver.Companion.LOG
 import no.nav.hm.grunndata.rapid.dto.*
 import no.nav.hm.grunndata.rapid.event.EventName
 import no.nav.hm.rapids_rivers.micronaut.RiverHead
@@ -16,7 +18,7 @@ import org.slf4j.LoggerFactory
 class ProductAgreementRegistrationRiver(
     river: RiverHead,
     private val objectMapper: ObjectMapper,
-    private val agreementService: AgreementService,
+    private val support: ProductAgreementRegistrationRiverSupport,
     private val productService: ProductService
 ) : River.PacketListener {
     companion object {
@@ -47,7 +49,7 @@ class ProductAgreementRegistrationRiver(
         runBlocking {
             productService.findBySupplierIdAndSupplierRef(dto.supplierId, dto.supplierRef)?.let { inDb ->
                 try {
-                    val product = mergeAgreementInProduct(inDb, dto)
+                    val product = support.mergeAgreementInProduct(inDb, dto)
                     productService.saveAndPushTokafka(product.toEntity(), EventName.syncedRegisterProductV1)
                 }
                 catch (e: Exception) {
@@ -58,7 +60,17 @@ class ProductAgreementRegistrationRiver(
 
     }
 
-    private suspend fun mergeAgreementInProduct(
+
+}
+
+@Singleton
+class ProductAgreementRegistrationRiverSupport(private val agreementService: AgreementService) {
+
+    companion object {
+        private val LOG = LoggerFactory.getLogger(ProductAgreementRegistrationRiverSupport::class.java)
+    }
+
+    suspend fun mergeAgreementInProduct(
         product: ProductRapidDTO,
         agreement: ProductAgreementRegistrationRapidDTO
     ): ProductRapidDTO {
@@ -89,6 +101,7 @@ class ProductAgreementRegistrationRiver(
                 published = agreementInDb.published
             )
         } ?: throw IllegalStateException("Agreement ${agreement.agreementId} not found, that can not be possible check if agreements are in sync")
+        LOG.info("agreements for product ${product.id} updated with agreement ${updated.id} and post ${updated.postId}")
         return product.copy(
             hmsArtNr = hmsNr,
             agreements = filteredAgreements + updated
