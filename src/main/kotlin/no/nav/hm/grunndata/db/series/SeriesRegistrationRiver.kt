@@ -47,7 +47,8 @@ class SeriesRegistrationRiver(river: RiverHead,
                 productsInSeries.forEach { product ->
                     LOG.info("Merging product ${product.id} with series ${dto.id}")
                     productService.saveAndPushTokafka(product.copy(seriesUUID = dto.id, title = dto.title,
-                        attributes = product.attributes.copy(text = dto.text),
+                        attributes = product.attributes.copy(text = dto.text,
+                            keywords = dto.seriesData.attributes.keywords),
                         isoCategory = dto.isoCategory,
                         media = dto.seriesData.media
                     ), EventName.syncedRegisterProductV1)
