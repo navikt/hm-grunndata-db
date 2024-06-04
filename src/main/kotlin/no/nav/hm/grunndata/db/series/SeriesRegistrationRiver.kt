@@ -3,8 +3,10 @@ package no.nav.hm.grunndata.db.series
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.micronaut.context.annotation.Context
 import io.micronaut.context.annotation.Requires
+import java.time.LocalDateTime
 import kotlinx.coroutines.runBlocking
 import no.nav.helse.rapids_rivers.*
+import no.nav.hm.grunndata.db.REGISTER
 import no.nav.hm.grunndata.db.product.ProductService
 import no.nav.hm.grunndata.rapid.dto.*
 import no.nav.hm.grunndata.rapid.event.EventName
@@ -46,11 +48,14 @@ class SeriesRegistrationRiver(river: RiverHead,
                 val productsInSeries = productService.findBySeriesUUID(dto.id)
                 productsInSeries.forEach { product ->
                     LOG.info("Merging product ${product.id} with series ${dto.id}")
-                    productService.saveAndPushTokafka(product.copy(seriesUUID = dto.id, title = dto.title,
+                    productService.saveAndPushTokafka(product.copy(seriesUUID = dto.id,
+                        title = dto.title,
                         attributes = product.attributes.copy(text = dto.text,
                             keywords = dto.seriesData.attributes.keywords),
                         isoCategory = dto.isoCategory,
-                        media = dto.seriesData.media
+                        media = dto.seriesData.media,
+                        updatedBy = REGISTER,
+                        updated = LocalDateTime.now()
                     ), EventName.syncedRegisterProductV1)
                 }
             }
