@@ -3,22 +3,31 @@ package no.nav.hm.grunndata.db.series
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.micronaut.context.annotation.Context
 import io.micronaut.context.annotation.Requires
-import java.time.LocalDateTime
 import kotlinx.coroutines.runBlocking
-import no.nav.helse.rapids_rivers.*
+import no.nav.helse.rapids_rivers.JsonMessage
+import no.nav.helse.rapids_rivers.KafkaRapid
+import no.nav.helse.rapids_rivers.MessageContext
+import no.nav.helse.rapids_rivers.River
+import no.nav.helse.rapids_rivers.asLocalDateTime
 import no.nav.hm.grunndata.db.REGISTER
 import no.nav.hm.grunndata.db.product.ProductService
-import no.nav.hm.grunndata.rapid.dto.*
+import no.nav.hm.grunndata.rapid.dto.AdminStatus
+import no.nav.hm.grunndata.rapid.dto.DraftStatus
+import no.nav.hm.grunndata.rapid.dto.SeriesRegistrationRapidDTO
+import no.nav.hm.grunndata.rapid.dto.rapidDTOVersion
 import no.nav.hm.grunndata.rapid.event.EventName
 import no.nav.hm.rapids_rivers.micronaut.RiverHead
 import org.slf4j.LoggerFactory
+import java.time.LocalDateTime
 
 @Context
 @Requires(bean = KafkaRapid::class)
-class SeriesRegistrationRiver(river: RiverHead,
-                              private val objectMapper: ObjectMapper,
-                              private val productService: ProductService,
-                              private val seriesService: SeriesService): River.PacketListener {
+class SeriesRegistrationRiver(
+    river: RiverHead,
+    private val objectMapper: ObjectMapper,
+    private val productService: ProductService,
+    private val seriesService: SeriesService
+) : River.PacketListener {
 
     companion object {
         private val LOG = LoggerFactory.getLogger(SeriesRegistrationRiver::class.java)
@@ -27,11 +36,11 @@ class SeriesRegistrationRiver(river: RiverHead,
     init {
         LOG.info("Using rapid dto version: $rapidDTOVersion")
         river
-            .validate { it.demandValue("eventName", EventName.registeredSeriesV1)}
-            .validate { it.demandKey("payload")}
-            .validate { it.demandKey("eventId")}
-            .validate { it.demandKey("dtoVersion")}
-            .validate { it.demandKey( "createdTime")}
+            .validate { it.demandValue("eventName", EventName.registeredSeriesV1) }
+            .validate { it.demandKey("payload") }
+            .validate { it.demandKey("eventId") }
+            .validate { it.demandKey("dtoVersion") }
+            .validate { it.demandKey("createdTime") }
             .register(this)
     }
 
@@ -48,15 +57,21 @@ class SeriesRegistrationRiver(river: RiverHead,
                 val productsInSeries = productService.findBySeriesUUID(dto.id)
                 productsInSeries.forEach { product ->
                     LOG.info("Merging product ${product.id} with series ${dto.id}")
-                    productService.saveAndPushTokafka(product.copy(seriesUUID = dto.id,
-                        title = dto.title,
-                        attributes = product.attributes.copy(text = dto.text,
-                            keywords = dto.seriesData.attributes.keywords),
-                        isoCategory = dto.isoCategory,
-                        media = dto.seriesData.media,
-                        updatedBy = REGISTER,
-                        updated = LocalDateTime.now()
-                    ), EventName.syncedRegisterProductV1)
+                    productService.saveAndPushTokafka(
+                        product.copy(
+                            seriesUUID = dto.id,
+                            title = dto.title,
+                            attributes = product.attributes.copy(
+                                text = dto.text,
+                                keywords = dto.seriesData.attributes.keywords?.toList(),
+                                url = dto.seriesData.attributes.url
+                            ),
+                            isoCategory = dto.isoCategory,
+                            media = dto.seriesData.media,
+                            updatedBy = REGISTER,
+                            updated = LocalDateTime.now()
+                        ), EventName.syncedRegisterProductV1
+                    )
                 }
             }
         }
