@@ -84,12 +84,13 @@ class HmDBProductMapper(private val supplierService: SupplierService,
             }
             // if changed title, then we update series
             if (inDb.title != prod.prodname || inDb.text!= prod.pshortdesc
-                || inDb.isoCategory != prod.isocode || (prod.poutdate!= null && inDb.expired != prod.poutdate))
+                || inDb.isoCategory != prod.isocode || (prod.poutdate!= null && inDb.expired != prod.poutdate)) {
                 seriesService.update(inDb.copy(title = prod.prodname, text = prod.pshortdesc,
                     isoCategory = prod.isocode, seriesData = SeriesData(media = media),
                     updated = LocalDateTime.now(), updatedBy = HMDB, expired = prod.poutdate ?: inDb.expired,
-                    status = mapSeriesStatus(prod)
-            )) else {
+                    status = mapSeriesStatus(prod)))
+            }
+            else {
                 inDb
             }
         } ?: run {
