@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 import java.util.UUID
+import no.nav.hm.grunndata.db.REGISTER
 
 @Singleton
 @Requires(bean = KafkaRapid::class)
@@ -59,6 +60,11 @@ class AgreementSync(
             }
             agreements.forEach { agreement ->
                 val dto = agreementService.findByIdentifier(agreement.identifier)?.let { inDb ->
+                    if (inDb.updatedBy == REGISTER) {
+                        LOG.info("Skipping updating for ${agreement.identifier} id: ${inDb.id} " +
+                                "because agreements has been updated by register")
+                        return@forEach
+                    }
                     agreementService.update(
                         agreement.copy(
                             id = inDb.id, created = inDb.created,

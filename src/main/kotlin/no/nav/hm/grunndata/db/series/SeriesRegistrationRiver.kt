@@ -53,7 +53,7 @@ class SeriesRegistrationRiver(
         LOG.info("got series registration id: ${dto.id} eventId $eventId eventTime: $createdTime")
         runBlocking {
             if (dto.draftStatus == DraftStatus.DONE && dto.adminStatus == AdminStatus.APPROVED) {
-                seriesService.saveAndPushTokafka(dto.toEntity().copy(updatedBy = REGISTER), EventName.syncedRegisterSeriesV1)
+                seriesService.saveAndPushTokafka(dto.toEntity(), EventName.syncedRegisterSeriesV1)
                 val productsInSeries = productService.findBySeriesUUID(dto.id)
                 productsInSeries.forEach { product ->
                     LOG.info("Merging product ${product.id} with series ${dto.id}")
@@ -68,7 +68,6 @@ class SeriesRegistrationRiver(
                             ),
                             isoCategory = dto.isoCategory,
                             media = dto.seriesData.media,
-                            updatedBy = REGISTER,
                             updated = LocalDateTime.now()
                         ), EventName.syncedRegisterProductV1
                     )
