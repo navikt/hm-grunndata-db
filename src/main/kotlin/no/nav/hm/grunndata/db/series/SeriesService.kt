@@ -56,7 +56,7 @@ open class SeriesService(private val seriesRepository: SeriesRepository,
         val saved =
             (if (series.createdBy == HMDB) findByIdentifier(series.identifier)
             else findById(series.id))?.let { inDb ->
-                update(series.copy(id = inDb.id, created = inDb.created,
+                update(series.copy(id = inDb.id, created = inDb.created, identifier = inDb.identifier,
                     createdBy = inDb.createdBy))
             } ?: save(series)
         val seriesDTO = saved.toRapidDTO()
