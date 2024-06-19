@@ -54,7 +54,11 @@ class ProductRegistrationRiver(
                 seriesService.findById(riverProduct.seriesUUID!!)?.let { series ->
                     val mergedProduct = riverProduct.copy(
                         title = series.title,
-                        attributes = riverProduct.attributes.copy(text = series.text),
+                        attributes = riverProduct.attributes.copy(
+                            text = series.text,
+                            url = series.seriesData?.attributes?.url,
+                            keywords = series.seriesData?.attributes?.keywords?.toList()
+                        ),
                         isoCategory = series.isoCategory,
                         seriesIdentifier = series.identifier,
                         media = series.seriesData?.media ?: riverProduct.media,
