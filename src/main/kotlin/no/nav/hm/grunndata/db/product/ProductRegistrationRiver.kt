@@ -56,6 +56,7 @@ class ProductRegistrationRiver(
                         title = series.title,
                         attributes = riverProduct.attributes.copy(text = series.text),
                         isoCategory = series.isoCategory,
+                        seriesIdentifier = series.identifier,
                         media = series.seriesData?.media ?: riverProduct.media,
                     )
                     productService.saveAndPushTokafka(mergedProduct, EventName.syncedRegisterProductV1)
