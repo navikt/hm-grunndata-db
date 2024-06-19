@@ -115,7 +115,7 @@ open class ProductService(
             if (params.contains("supplierId"))  root[Product::supplierId] eq UUID.fromString(params["supplierId"]!!)
             if (params.contains("updated")) root[Product::updated] greaterThanOrEqualTo LocalDateTime.parse(params["updated"])
             if (params.contains("status")) root[Product::status] eq params["status"]
-            if (params.contains("series_uuid")) root[Product::seriesUUID] eq UUID.fromString(params["series_uuid"]!!)
+            if (params.contains("seriesUUUID")) root[Product::seriesUUID] eq UUID.fromString(params["seriesUUUID"]!!)
         }
     }
 
