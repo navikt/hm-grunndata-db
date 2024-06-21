@@ -19,6 +19,7 @@ import no.nav.hm.grunndata.rapid.dto.rapidDTOVersion
 import no.nav.hm.grunndata.rapid.event.EventName
 import no.nav.hm.rapids_rivers.micronaut.RiverHead
 import org.slf4j.LoggerFactory
+import java.util.UUID
 
 @Context
 @Requires(bean = KafkaRapid::class)
@@ -56,6 +57,10 @@ class ProductRegistrationRiver(
                     "createdBy: ${dto.createdBy} identifier: ${dto.productDTO.identifier}"
         )
         runBlocking {
+
+            if(dto.id == UUID.fromString("6fdbbf7a-e8d5-483b-adf1-45991be90286")){
+                return@runBlocking
+            }
 
             if (dto.adminStatus == AdminStatus.APPROVED && dto.draftStatus == DraftStatus.DONE) {
                 // series and products need to be merged before sending down the river
