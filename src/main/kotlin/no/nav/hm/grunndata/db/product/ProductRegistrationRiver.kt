@@ -56,48 +56,44 @@ class ProductRegistrationRiver(
                     "createdBy: ${dto.createdBy} identifier: ${dto.productDTO.identifier}"
         )
         runBlocking {
-            try {
 
-
-                if (dto.adminStatus == AdminStatus.APPROVED && dto.draftStatus == DraftStatus.DONE) {
-                    // series and products need to be merged before sending down the river
-                    val riverProduct = dto.productDTO.toEntity()
-                    seriesService.findById(riverProduct.seriesUUID!!)?.let { series ->
-                        val mergedProduct = riverProduct.copy(
-                            title = series.title,
-                            attributes = riverProduct.attributes.copy(
-                                text = series.text,
-                                url = series.seriesData?.attributes?.url,
-                                keywords = series.seriesData?.attributes?.keywords?.toList()
-                            ),
-                            isoCategory = series.isoCategory,
-                            seriesIdentifier = series.identifier,
-                            media = series.seriesData?.media ?: riverProduct.media,
-                        )
-                        productService.saveAndPushTokafka(mergedProduct, EventName.syncedRegisterProductV1)
-                    } ?: run {
-                        LOG.warn("Series not found ${riverProduct.seriesUUID}, saving series for product ${riverProduct.id}")
-                        seriesService.saveAndPushTokafka(
-                            Series(
-                                id = riverProduct.seriesUUID,
-                                supplierId = riverProduct.supplierId,
-                                identifier = riverProduct.seriesIdentifier ?: riverProduct.seriesUUID.toString(),
-                                title = riverProduct.title,
-                                text = riverProduct.attributes.text ?: "",
-                                isoCategory = riverProduct.isoCategory,
-                                seriesData = SeriesData(media = riverProduct.media),
-                                createdBy = riverProduct.createdBy,
-                                updatedBy = riverProduct.updatedBy,
-                                created = riverProduct.created,
-                                updated = riverProduct.updated
-                            ), eventName = EventName.syncedRegisterSeriesV1
-                        )
-                        productService.saveAndPushTokafka(riverProduct, EventName.syncedRegisterProductV1)
-                    }
+            if (dto.adminStatus == AdminStatus.APPROVED && dto.draftStatus == DraftStatus.DONE) {
+                // series and products need to be merged before sending down the river
+                val riverProduct = dto.productDTO.toEntity()
+                seriesService.findById(riverProduct.seriesUUID!!)?.let { series ->
+                    val mergedProduct = riverProduct.copy(
+                        title = series.title,
+                        attributes = riverProduct.attributes.copy(
+                            text = series.text,
+                            url = series.seriesData?.attributes?.url,
+                            keywords = series.seriesData?.attributes?.keywords?.toList()
+                        ),
+                        isoCategory = series.isoCategory,
+                        seriesIdentifier = series.identifier,
+                        media = series.seriesData?.media ?: riverProduct.media,
+                    )
+                    productService.saveAndPushTokafka(mergedProduct, EventName.syncedRegisterProductV1)
+                } ?: run {
+                    LOG.warn("Series not found ${riverProduct.seriesUUID}, saving series for product ${riverProduct.id}")
+                    seriesService.saveAndPushTokafka(
+                        Series(
+                            id = riverProduct.seriesUUID,
+                            supplierId = riverProduct.supplierId,
+                            identifier = riverProduct.seriesIdentifier ?: riverProduct.seriesUUID.toString(),
+                            title = riverProduct.title,
+                            text = riverProduct.attributes.text ?: "",
+                            isoCategory = riverProduct.isoCategory,
+                            seriesData = SeriesData(media = riverProduct.media),
+                            createdBy = riverProduct.createdBy,
+                            updatedBy = riverProduct.updatedBy,
+                            created = riverProduct.created,
+                            updated = riverProduct.updated
+                        ), eventName = EventName.syncedRegisterSeriesV1
+                    )
+                    productService.saveAndPushTokafka(riverProduct, EventName.syncedRegisterProductV1)
                 }
-            } catch (e: Exception) {
-                LOG.error("Skipping erroneous event", e)
             }
+
         }
     }
 }
