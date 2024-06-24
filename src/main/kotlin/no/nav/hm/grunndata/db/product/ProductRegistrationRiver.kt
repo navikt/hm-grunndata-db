@@ -16,6 +16,8 @@ import no.nav.hm.grunndata.rapid.dto.DraftStatus
 import no.nav.hm.grunndata.rapid.dto.ProductRegistrationRapidDTO
 import no.nav.hm.grunndata.rapid.dto.SeriesData
 import no.nav.hm.grunndata.rapid.dto.rapidDTOVersion
+import no.nav.hm.grunndata.db.series.mergeCompatibleWidth
+import no.nav.hm.grunndata.rapid.dto.*
 import no.nav.hm.grunndata.rapid.event.EventName
 import no.nav.hm.rapids_rivers.micronaut.RiverHead
 import org.slf4j.LoggerFactory
@@ -71,7 +73,10 @@ class ProductRegistrationRiver(
                         attributes = riverProduct.attributes.copy(
                             text = series.text,
                             url = series.seriesData?.attributes?.url,
-                            keywords = series.seriesData?.attributes?.keywords?.toList()
+                            keywords = series.seriesData?.attributes?.keywords?.toList(),
+                            compatibleWidth = mergeCompatibleWidth(
+                                riverProduct.attributes.compatibleWidth,
+                                series.seriesData?.attributes?.compatibleWith)
                         ),
                         isoCategory = series.isoCategory,
                         seriesIdentifier = series.identifier,

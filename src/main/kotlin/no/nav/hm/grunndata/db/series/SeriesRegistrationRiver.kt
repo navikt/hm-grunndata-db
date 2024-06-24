@@ -9,7 +9,6 @@ import no.nav.helse.rapids_rivers.KafkaRapid
 import no.nav.helse.rapids_rivers.MessageContext
 import no.nav.helse.rapids_rivers.River
 import no.nav.helse.rapids_rivers.asLocalDateTime
-import no.nav.hm.grunndata.db.REGISTER
 import no.nav.hm.grunndata.db.product.ProductService
 import no.nav.hm.grunndata.rapid.dto.AdminStatus
 import no.nav.hm.grunndata.rapid.dto.DraftStatus
@@ -19,6 +18,7 @@ import no.nav.hm.grunndata.rapid.event.EventName
 import no.nav.hm.rapids_rivers.micronaut.RiverHead
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
+import no.nav.hm.grunndata.rapid.dto.CompatibleWith
 
 @Context
 @Requires(bean = KafkaRapid::class)
@@ -63,6 +63,7 @@ class SeriesRegistrationRiver(
                             seriesUUID = dto.id,
                             title = dto.title,
                             attributes = product.attributes.copy(
+                                compatibleWidth = mergeCompatibleWidth(product.attributes.compatibleWidth, dto.seriesData.attributes.compatibleWith),
                                 text = dto.text,
                                 keywords = dto.seriesData.attributes.keywords?.toList(),
                                 url = dto.seriesData.attributes.url
@@ -77,4 +78,11 @@ class SeriesRegistrationRiver(
         }
     }
 
+}
+
+fun mergeCompatibleWidth(productCompatibleWith: CompatibleWith?, seriesCompatibleWith: CompatibleWith?): CompatibleWith? {
+    if (productCompatibleWith == null && seriesCompatibleWith == null) return null
+    val seriesIds = (productCompatibleWith?.seriesIds ?: emptySet()) + (seriesCompatibleWith?.seriesIds ?: emptySet())
+    val productIds = (productCompatibleWith?.productIds ?: emptySet()) + (seriesCompatibleWith?.productIds ?: emptySet())
+    return CompatibleWith(seriesIds, productIds)
 }
