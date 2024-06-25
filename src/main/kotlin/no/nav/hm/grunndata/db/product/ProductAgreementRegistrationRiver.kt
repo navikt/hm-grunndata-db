@@ -43,7 +43,7 @@ class ProductAgreementRegistrationRiver(
         if (dtoVersion > rapidDTOVersion) LOG.warn("dto version $dtoVersion is newer than $rapidDTOVersion")
         val dto = objectMapper.treeToValue(packet["payload"], ProductAgreementRegistrationRapidDTO::class.java)
         LOG.info(
-            "got product agreement registration with supplierId: ${dto.supplierId} and supplierRef: ${dto.supplierRef}" +
+            "got product agreement registration for productId: ${dto.productId} with supplierId: ${dto.supplierId} and supplierRef: ${dto.supplierRef}" +
                     "eventId $eventId eventTime: $createdTime"
         )
         runBlocking {
@@ -53,7 +53,7 @@ class ProductAgreementRegistrationRiver(
                     productService.saveAndPushTokafka(product.toEntity(), EventName.syncedRegisterProductV1)
                 }
                 catch (e: Exception) {
-                    LOG.error("Failed to merge agreement in product", e)
+                    LOG.error("Failed to merge agreement in product ${dto.productId} ", e)
                 }
             }
         }
@@ -104,7 +104,9 @@ class ProductAgreementRegistrationRiverSupport(private val agreementService: Agr
         LOG.info("agreements for product ${product.id} updated with agreement ${updated.id} and post ${updated.postId}")
         return product.copy(
             hmsArtNr = hmsNr,
-            agreements = filteredAgreements + updated
+            agreements = filteredAgreements + updated,
+            updated = agreement.updated,
+            updatedBy = agreement.updatedBy
         )
     }
 }
