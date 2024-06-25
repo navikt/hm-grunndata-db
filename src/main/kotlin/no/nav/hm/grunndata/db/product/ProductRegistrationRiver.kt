@@ -60,9 +60,9 @@ class ProductRegistrationRiver(
         )
         runBlocking {
 
-            if(dto.id == UUID.fromString("87cc40e4-9819-495b-b9a7-5bc42da49696")){
+          /*  if(dto.id == UUID.fromString("87cc40e4-9819-495b-b9a7-5bc42da49696")){
                 return@runBlocking
-            }
+            }*/
 
             if (dto.adminStatus == AdminStatus.APPROVED && dto.draftStatus == DraftStatus.DONE) {
                 // series and products need to be merged before sending down the river
