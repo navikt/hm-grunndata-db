@@ -33,6 +33,8 @@ open class ProductService(
 
     companion object {
         private val LOG = LoggerFactory.getLogger(ProductService::class.java)
+        // HMDB-5205 = Cognita
+        private val suppliersInRegister: Set<String> = setOf("HMDB-5205")
     }
 
     @Transactional
@@ -46,8 +48,8 @@ open class ProductService(
         val saved: Product = if (product.updatedBy == HMDB) {
             LOG.info("Got product from HMDB ${product.identifier} hmsnr: ${product.hmsArtNr} supplierId: ${product.supplierId} supplierRef: ${product.supplierRef}")
             productRepository.findByIdentifier(product.identifier)?.let { inDb ->
-                if (inDb.updatedBy == REGISTER) { // skip updating from HMDB if product has been modified by register
-                    LOG.info("Skipping updating for ${product.identifier} id: ${product.id} because updated from register")
+                if (suppliersInRegister.contains(inDb.identifier) || inDb.updatedBy == REGISTER) { // skip updating from HMDB if product has been modified by register
+                    LOG.info("Skipping updating for product identifier: ${product.identifier} id: ${product.id} for supplier: ${inDb.identifier} because updated from register")
                     return inDb.toDTO()
                 }
                 productRepository.update(product.copy(id = inDb.id, created = inDb.created, createdBy = inDb.createdBy))
