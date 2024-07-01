@@ -13,7 +13,7 @@ val postgresqlVersion = "42.7.2"
 val tcVersion = "1.17.6"
 val mockkVersion = "1.13.4"
 val kotestVersion = "5.5.5"
-val rapidsRiversVersion = "202401101532"
+val rapidsRiversVersion = "202407010855"
 val grunndataDtoVersion = "202406251104"
 
 group = "no.nav.hm"
@@ -22,6 +22,7 @@ version = properties["version"] ?: "local-build"
 plugins {
     kotlin("jvm") version "1.9.21"
     kotlin("kapt") version "1.9.21"
+    kotlin("plugin.allopen") version "1.9.21"
     id("java")
     id("com.github.johnrengelman.shadow") version "7.1.0"
     id("io.micronaut.application") version "4.4.0"
@@ -29,7 +30,7 @@ plugins {
 
 configurations.all {
     resolutionStrategy {
-        failOnChangingVersions()
+       failOnChangingVersions()
     }
 }
 
@@ -65,6 +66,7 @@ dependencies {
 
     implementation("com.github.navikt:hm-rapids-and-rivers-v2-core:$rapidsRiversVersion")
     implementation("com.github.navikt:hm-rapids-and-rivers-v2-micronaut:$rapidsRiversVersion")
+    implementation("com.github.navikt:hm-rapids-and-rivers-v2-micronaut-deadletter:$rapidsRiversVersion")
 
     implementation("no.nav.hm.grunndata:hm-grunndata-rapid-dto:$grunndataDtoVersion")
 
@@ -80,6 +82,11 @@ dependencies {
 
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.2")
     testImplementation("org.testcontainers:postgresql:${tcVersion}")
+}
+
+allOpen {
+    annotation("javax.inject.Singleton")
+    annotation("io.micronaut.context.annotation.Context")
 }
 
 micronaut {
