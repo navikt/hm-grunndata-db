@@ -7,7 +7,6 @@ import no.nav.hm.grunndata.db.hmdb.agreement.AgreementSync
 import no.nav.hm.grunndata.db.hmdb.iso.IsoSync
 import no.nav.hm.grunndata.db.hmdb.news.NewsSync
 import no.nav.hm.grunndata.db.hmdb.product.ProductSync
-import no.nav.hm.grunndata.db.hmdb.supplier.SupplierSync
 import no.nav.hm.grunndata.db.hmdb.techlabel.TechLabelSync
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
@@ -16,7 +15,6 @@ import java.time.LocalDateTime
 class SyncController(private val productSync: ProductSync,
                      private val hmDbBatchRepository: HmDbBatchRepository,
                      private val agreementSync: AgreementSync,
-                     private val supplierSync: SupplierSync,
                      private val newsSync: NewsSync,
                      private val isoSync: IsoSync,
                      private val techLabelSync: TechLabelSync
@@ -24,19 +22,6 @@ class SyncController(private val productSync: ProductSync,
 
     companion object {
         private val LOG = LoggerFactory.getLogger(SyncController::class.java)
-    }
-
-
-    @Get("/suppliers/all")
-    suspend fun syncAllSuppliers() {
-        LOG.info("call sync all suppliers")
-        supplierSync.syncAllSuppliers()
-    }
-
-    @Get("/suppliers/{id}")
-    suspend fun syncSupplierById(id: Long) {
-        LOG.info("call sync suppliers for $id")
-        supplierSync.syncSupplierById(id)
     }
 
     @Get("/agreements")
