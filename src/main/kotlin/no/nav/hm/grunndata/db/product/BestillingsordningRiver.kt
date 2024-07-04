@@ -46,7 +46,6 @@ class BestillingsordningRiver(
         runBlocking {
             val product = productService.findByHmsArtNr(dto.hmsArtNr)
             if (product != null) {
-
                 if (dto.status == BestillingsordningStatus.ACTIVE) {
                     productService.saveAndPushTokafka(
                         product.copy(

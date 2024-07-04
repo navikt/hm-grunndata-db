@@ -27,7 +27,7 @@ class ProdukttypeRiver(
 
     init {
         river
-            .validate { it.demandValue("eventName", EventName.registeredPaakrevdGodkjenningskursV1) }
+            .validate { it.demandValue("eventName", EventName.registeredProdukttypeV1) }
             .validate { it.demandKey("payload") }
             .validate { it.demandKey("eventId") }
             .validate { it.demandKey("dtoVersion") }
