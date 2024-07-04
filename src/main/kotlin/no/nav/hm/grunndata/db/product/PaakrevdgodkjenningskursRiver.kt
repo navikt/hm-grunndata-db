@@ -50,9 +50,6 @@ class PaakrevdgodkjenningskursRiver(
             val products = productService.findByIsoCategory(isokode)
             products.forEach { product ->
                 if (dto.status == PaakrevdGodkjenningskursStatus.ACTIVE) {
-                    // TODO: Check with Tuan that there isnt a reason to go ".toDTO()", and back again with ".toEntity()" here,
-                    //  like what was done in BestillingsordningRiver.kt. Probably just reuse of an existing ProductService
-                    //  function.
                     productService.saveAndPushTokafka(
                         product.copy(
                             attributes = product.attributes.copy(
