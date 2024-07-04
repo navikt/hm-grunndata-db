@@ -38,13 +38,13 @@ open class ProductService(
     }
 
     @Transactional
-    open suspend fun saveAndPushTokafka(prod: Product, eventName: String, skipBestillingsorning: Boolean = false): ProductRapidDTO {
+    open suspend fun saveAndPushTokafka(prod: Product, eventName: String, skipUpdateProductAttribute: Boolean = false): ProductRapidDTO {
         val product = prod
-            .let { if (!skipBestillingsorning) attributeTagService.addBestillingsordningAttribute(it) else it }  // make it work with bestillingsordning event
-            .let { attributeTagService.addDigitalSoknadAttribute(it) }
-            .let { attributeTagService.addSortimentKategoriAttribute(it) }
-            .let { attributeTagService.addPakrevdGodkjenningskursAttribute(it) }
-            .let { attributeTagService.addProdukttypeAttribute(it) }
+            .let { if (!skipUpdateProductAttribute) attributeTagService.addBestillingsordningAttribute(it) else it }         // make it work with bestillingsordning event
+            .let { if (!skipUpdateProductAttribute) attributeTagService.addDigitalSoknadAttribute(it) else it }              // make it work with digitalsoknadsortiment event
+            .let { if (!skipUpdateProductAttribute) attributeTagService.addSortimentKategoriAttribute(it) else it }          // make it work with digitalsoknadsortiment event
+            .let { if (!skipUpdateProductAttribute) attributeTagService.addPakrevdGodkjenningskursAttribute(it) else it }    // make it work with paakrevdgodkjenningskurs event
+            .let { if (!skipUpdateProductAttribute) attributeTagService.addProdukttypeAttribute(it) else it }                // make it work with produkttype event
         val saved: Product = if (product.updatedBy == HMDB) {
             LOG.info("Got product from HMDB ${product.identifier} hmsnr: ${product.hmsArtNr} supplierId: ${product.supplierId} supplierRef: ${product.supplierRef}")
             productRepository.findByIdentifier(product.identifier)?.let { inDb ->
@@ -74,6 +74,9 @@ open class ProductService(
     suspend fun findByIdDTO(id:UUID): ProductRapidDTO? = productRepository.findById(id)?.toDTO()
 
     suspend fun findBySupplierIdAndSupplierRef(supplierId: UUID, supplierRef: String) = productRepository.findBySupplierIdAndSupplierRef(supplierId, supplierRef)?.toDTO()
+
+    suspend fun findByAgreementPostId(agreementPostId: UUID): List<Product> =
+        productRepository.findByAgreementsJson("""[{"postId": "$agreementPostId"}]""")
 
     @Transactional
     open suspend fun findByAgreementId(agreementId: UUID): List<Product> =

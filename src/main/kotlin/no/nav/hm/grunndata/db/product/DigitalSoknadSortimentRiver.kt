@@ -5,8 +5,8 @@ import io.micronaut.context.annotation.Context
 import io.micronaut.context.annotation.Requires
 import kotlinx.coroutines.runBlocking
 import no.nav.helse.rapids_rivers.*
-import no.nav.hm.grunndata.rapid.dto.BestillingsordningRegistrationRapidDTO
-import no.nav.hm.grunndata.rapid.dto.BestillingsordningStatus
+import no.nav.hm.grunndata.rapid.dto.DigitalSoknadSortimentRegistrationRapidDTO
+import no.nav.hm.grunndata.rapid.dto.DigitalSoknadSortimentStatus
 import no.nav.hm.grunndata.rapid.dto.rapidDTOVersion
 import no.nav.hm.grunndata.rapid.event.EventName
 import no.nav.hm.rapids_rivers.micronaut.RiverHead
@@ -15,19 +15,18 @@ import org.slf4j.LoggerFactory
 
 @Context
 @Requires(bean = KafkaRapid::class)
-class BestillingsordningRiver(
+class DigitalSoknadSortimentRiver(
     river: RiverHead,
     private val objectMapper: ObjectMapper,
     private val productService: ProductService
 ) : River.PacketListener {
-
     companion object {
-        private val LOG = LoggerFactory.getLogger(BestillingsordningRiver::class.java)
+        private val LOG = LoggerFactory.getLogger(DigitalSoknadSortimentRiver::class.java)
     }
 
     init {
         river
-            .validate { it.demandValue("eventName", EventName.registeredBestillingsordningV1) }
+            .validate { it.demandValue("eventName", EventName.registeredDigitalSoknadSortimentV1) }
             .validate { it.demandKey("payload") }
             .validate { it.demandKey("eventId") }
             .validate { it.demandKey("dtoVersion") }
@@ -41,27 +40,33 @@ class BestillingsordningRiver(
         val createdTime = packet["createdTime"].asLocalDateTime()
         val dtoVersion = packet["dtoVersion"].asLong()
         if (dtoVersion > rapidDTOVersion) LOG.warn("dto version $dtoVersion is newer than $rapidDTOVersion")
-        val dto = objectMapper.treeToValue(packet["payload"], BestillingsordningRegistrationRapidDTO::class.java)
-        LOG.info("Got Bestillingsordning event for: ${dto.hmsArtNr} with status: ${dto.status} eventId $eventId eventTime: $createdTime")
+        val dto = objectMapper.treeToValue(packet["payload"], DigitalSoknadSortimentRegistrationRapidDTO::class.java)
+        LOG.info("Got digital soknad sortiment event for sortimentKategori: ${dto.sortimentKategori}, postId: ${dto.postId}, with status: ${dto.status} eventId $eventId eventTime: $createdTime")
         runBlocking {
-            val product = productService.findByHmsArtNr(dto.hmsArtNr)
-            if (product != null) {
-
-                if (dto.status == BestillingsordningStatus.ACTIVE) {
+            val sortimentKategori = dto.sortimentKategori
+            val postId = dto.postId
+            val products = productService.findByAgreementPostId(postId)
+            products.forEach { product ->
+                if (dto.status == DigitalSoknadSortimentStatus.ACTIVE) {
+                    // TODO: Check with Tuan that there isnt a reason to go ".toDTO()", and back again with ".toEntity()" here,
+                    //  like what was done in BestillingsordningRiver.kt. Probably just reuse of an existing ProductService
+                    //  function.
                     productService.saveAndPushTokafka(
                         product.copy(
                             attributes = product.attributes.copy(
-                                bestillingsordning = true
+                                digitalSoknad = true,
+                                sortimentKategori = sortimentKategori,
                             )
-                        ).toEntity(), EventName.syncedRegisterProductV1, skipUpdateProductAttribute = true
+                        ), EventName.syncedRegisterProductV1, skipUpdateProductAttribute = true
                     )
                 } else {
                     productService.saveAndPushTokafka(
                         product.copy(
                             attributes = product.attributes.copy(
-                                bestillingsordning = false
+                                digitalSoknad = false,
+                                sortimentKategori = null,
                             )
-                        ).toEntity(), EventName.syncedRegisterProductV1, skipUpdateProductAttribute = true
+                        ), EventName.syncedRegisterProductV1, skipUpdateProductAttribute = true
                     )
                 }
             }
