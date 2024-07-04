@@ -75,6 +75,9 @@ open class ProductService(
 
     suspend fun findBySupplierIdAndSupplierRef(supplierId: UUID, supplierRef: String) = productRepository.findBySupplierIdAndSupplierRef(supplierId, supplierRef)?.toDTO()
 
+    suspend fun findByIsoCategory(isoCategory: String): List<Product> =
+        productRepository.findByIsoCategory(isoCategory)
+
     suspend fun findByAgreementPostId(agreementPostId: UUID): List<Product> =
         productRepository.findByAgreementsJson("""[{"postId": "$agreementPostId"}]""")
 
