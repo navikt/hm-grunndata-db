@@ -39,12 +39,19 @@ open class ProductService(
 
     @Transactional
     open suspend fun saveAndPushTokafka(prod: Product, eventName: String, skipUpdateProductAttribute: Boolean = false): ProductRapidDTO {
-        val product = prod
-            .let { if (!skipUpdateProductAttribute) attributeTagService.addBestillingsordningAttribute(it) else it }         // make it work with bestillingsordning event
-            .let { if (!skipUpdateProductAttribute) attributeTagService.addDigitalSoknadAttribute(it) else it }              // make it work with digitalsoknadsortiment event
-            .let { if (!skipUpdateProductAttribute) attributeTagService.addSortimentKategoriAttribute(it) else it }          // make it work with digitalsoknadsortiment event
-            .let { if (!skipUpdateProductAttribute) attributeTagService.addPakrevdGodkjenningskursAttribute(it) else it }    // make it work with paakrevdgodkjenningskurs event
-            .let { if (!skipUpdateProductAttribute) attributeTagService.addProdukttypeAttribute(it) else it }                // make it work with produkttype event
+        val product = if (skipUpdateProductAttribute) {
+            // Skip the attribute enrichment below if we are being updated by hm-grunndata-register
+            prod
+        } else {
+            // When our update comes from hmdb we need to set product attributes here!
+            listOf(
+                attributeTagService::addBestillingsordningAttribute,
+                attributeTagService::addDigitalSoknadAttribute,
+                attributeTagService::addSortimentKategoriAttribute,
+                attributeTagService::addPakrevdGodkjenningskursAttribute,
+                attributeTagService::addProdukttypeAttribute,
+            ).fold(prod) { it, enricher -> enricher.call(it) }
+        }
         val saved: Product = if (product.updatedBy == HMDB) {
             LOG.info("Got product from HMDB ${product.identifier} hmsnr: ${product.hmsArtNr} supplierId: ${product.supplierId} supplierRef: ${product.supplierRef}")
             productRepository.findByIdentifier(product.identifier)?.let { inDb ->
