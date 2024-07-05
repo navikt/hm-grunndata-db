@@ -2,7 +2,6 @@ package no.nav.hm.grunndata.db.product
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.micronaut.cache.annotation.CacheConfig
 import io.micronaut.cache.annotation.Cacheable
 import io.micronaut.context.annotation.Value
 import jakarta.inject.Singleton
