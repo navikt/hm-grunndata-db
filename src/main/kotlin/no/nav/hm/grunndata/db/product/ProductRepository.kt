@@ -28,7 +28,7 @@ interface ProductRepository: CoroutinePageableCrudRepository<Product, UUID>, Cor
 
     suspend fun findByHmsArtNr(hmsArtNr: String): Product?
     suspend fun findBySeriesUUID(seriesUUID: UUID): List<Product>
-    suspend fun findByIsoCategory(isoCategory: String): List<Product>
+    suspend fun findByIsoCategoryStartsWith(isoCategory: String): List<Product>
 
 }
 

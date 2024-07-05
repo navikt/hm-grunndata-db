@@ -46,7 +46,11 @@ class ProdukttypeRiver(
         runBlocking {
             val isokode = dto.isokode
             val produkttype = dto.produkttype
-            val products = productService.findByIsoCategory(isokode)
+            if (isokode.count() < 4) {
+                LOG.error("Unexpectedly short isoCategory prefix in produkttype event, ignoring it, for iskode: ${dto.isokode}, produkttype: ${dto.produkttype}, with status: ${dto.status} eventId $eventId eventTime: $createdTime")
+                return@runBlocking
+            }
+            val products = productService.findByIsoCategoryStartsWith(isokode)
             products.forEach { product ->
                 if (dto.status == ProdukttypeStatus.ACTIVE) {
                     productService.saveAndPushTokafka(

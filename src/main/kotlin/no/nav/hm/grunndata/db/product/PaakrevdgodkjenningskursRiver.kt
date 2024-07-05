@@ -47,7 +47,11 @@ class PaakrevdgodkjenningskursRiver(
             val isokode = dto.isokode
             val tittel = dto.tittel
             val kursId = dto.kursId
-            val products = productService.findByIsoCategory(isokode)
+            if (isokode.count() < 4) {
+                LOG.error("Unexpectedly short isoCategory prefix in paakrevd godkjenningskurs event, ignoring it, for iskode: ${dto.isokode}, tittel: ${dto.tittel}, kursId: ${dto.kursId}, with status: ${dto.status} eventId $eventId eventTime: $createdTime")
+                return@runBlocking
+            }
+            val products = productService.findByIsoCategoryStartsWith(isokode)
             products.forEach { product ->
                 if (dto.status == PaakrevdGodkjenningskursStatus.ACTIVE) {
                     productService.saveAndPushTokafka(
