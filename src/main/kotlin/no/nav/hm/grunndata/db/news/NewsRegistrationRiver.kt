@@ -37,8 +37,6 @@ class NewsRegistrationRiver(river: RiverHead, private val objectMapper: ObjectMa
 
     override fun onPacket(packet: JsonMessage, context: MessageContext) {
         val dtoVersion = packet["dtoVersion"].asLong()
-        val eventId = packet["eventId"].asText()
-        val createdTime = packet["createdTime"].asLocalDateTime()
         if (dtoVersion > rapidDTOVersion) LOG.warn("dto version $dtoVersion is newer than $rapidDTOVersion")
         val dto = objectMapper.treeToValue(packet["payload"], NewsRegistrationRapidDTO::class.java)
         LOG.info("Got news registration id: ${dto.id} title: ${dto.title}")
