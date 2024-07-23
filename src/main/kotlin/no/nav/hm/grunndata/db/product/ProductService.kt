@@ -33,8 +33,8 @@ open class ProductService(
 
     companion object {
         private val LOG = LoggerFactory.getLogger(ProductService::class.java)
-        // HMDB-5205 = Cognita
-        private val suppliersInRegister: Set<String> = setOf("HMDB-5205")
+        // HMDB-5205 = "Cognita", HMDB-5001= "Invacare"
+        private val suppliersInRegister: Set<String> = setOf("HMDB-5205", "HMDB-5001")
     }
 
     @Transactional
