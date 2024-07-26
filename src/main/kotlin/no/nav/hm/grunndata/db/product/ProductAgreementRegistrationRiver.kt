@@ -47,7 +47,7 @@ class ProductAgreementRegistrationRiver(
                     "eventId $eventId eventTime: $createdTime"
         )
         runBlocking {
-            productService.findBySupplierIdAndSupplierRef(dto.supplierId, dto.supplierRef)?.let { inDb ->
+            productService.findByIdDTO(dto.productId!!)?.let { inDb ->
                 try {
                     val product = support.mergeAgreementInProduct(inDb, dto)
                     productService.saveAndPushTokafka(product.toEntity(), EventName.syncedRegisterProductV1)
@@ -55,7 +55,10 @@ class ProductAgreementRegistrationRiver(
                 catch (e: Exception) {
                     LOG.error("Failed to merge agreement in product ${dto.productId} ", e)
                 }
+            } ?: run {
+                LOG.warn("Product not found for agreement with productId ${dto.productId} supplierId: ${dto.supplierId} and supplierRef: ${dto.supplierRef} skipping")
             }
+
         }
 
     }
