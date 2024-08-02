@@ -103,8 +103,10 @@ open class ProductService(
             createdBy=createdBy, updatedBy=updatedBy, agreements = agreements?.map {agree ->
                 val agreement = agreementService.findById(agree.id)
                 LOG.info("Found agreement with ${agree.id}, looking up for post ${agree.postIdentifier}")
-                val post = if (agree.postId != null) agreement!!.posts.find { it.id == agree.postId } else
-                    null
+                val post = if (agree.postId != null) {
+                    agreement!!.posts.find { it.id == agree.postId }
+                        ?: throw IllegalStateException("Post not found for agreement ${agree.id} and post ${agree.postId}")
+                } else null
                 AgreementInfo(
                     id = agreement!!.id,
                     title = agreement.title,
