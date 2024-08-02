@@ -20,6 +20,7 @@ import no.nav.hm.grunndata.rapid.dto.ProductStatus
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.util.*
+import kotlinx.coroutines.coroutineScope
 
 
 @Singleton
@@ -92,38 +93,40 @@ open class ProductService(
     open suspend fun findByAgreementId(agreementId: UUID): List<Product> =
         productRepository.findByAgreementsJson("""[{"id": "$agreementId"}]""")
 
-    private fun Product.toDTO():ProductRapidDTO = ProductRapidDTO (
-        id = id, supplier = runBlocking{supplierService.findById(supplierId)!!.toDTO()},
-        title = title, articleName = articleName,  attributes=attributes,
-        status = status, hmsArtNr = hmsArtNr, identifier = identifier, supplierRef=supplierRef, isoCategory=isoCategory,
-        accessory=accessory, sparePart=sparePart, seriesId=seriesId, seriesUUID = seriesUUID, seriesIdentifier = seriesIdentifier, techData=techData, media= media, created=created,
-        updated=updated, published=published, expired=expired, agreementInfo = agreementInfo,
-        createdBy=createdBy, updatedBy=updatedBy, agreements = agreements?.map {agree ->
-            val agreement = agreementService.findByIdentifier(agree.identifier!!)
-            LOG.info("Found agreement with ${agree.identifier}, looking up for post ${agree.postIdentifier}")
+    suspend fun Product.toDTO():ProductRapidDTO =
+        ProductRapidDTO (
+            id = id, supplier = runBlocking{supplierService.findById(supplierId)!!.toDTO()},
+            title = title, articleName = articleName,  attributes=attributes,
+            status = status, hmsArtNr = hmsArtNr, identifier = identifier, supplierRef=supplierRef, isoCategory=isoCategory,
+            accessory=accessory, sparePart=sparePart, seriesId=seriesId, seriesUUID = seriesUUID, seriesIdentifier = seriesIdentifier, techData=techData, media= media, created=created,
+            updated=updated, published=published, expired=expired, agreementInfo = agreementInfo,
+            createdBy=createdBy, updatedBy=updatedBy, agreements = agreements?.map {agree ->
+                val agreement = agreementService.findById(agree.id)
+                LOG.info("Found agreement with ${agree.id}, looking up for post ${agree.postIdentifier}")
+                val post = if (agree.postId != null) agreement!!.posts.find { it.id == agree.postId } else
+                    null
+                AgreementInfo(
+                    id = agreement!!.id,
+                    title = agreement.title,
+                    identifier = agreement.identifier,
+                    rank = agree.rank,
+                    postNr = agree.postNr,
+                    postIdentifier = agree.postIdentifier,
+                    postId = post?.id,
+                    published = agreement.published,
+                    expired = agreement.expired,
+                    reference = agreement.reference,
+                    postTitle = post?.title,
+                    refNr = post?.refNr
+                )
+            } ?: emptyList()
+        )
 
-            val post = agreement!!.posts.find { it.identifier == agree.postIdentifier }
-                ?: throw RuntimeException("Wrong agreement state!, should never happen")
-            AgreementInfo(
-                id = agreement.id,
-                title = agreement.title,
-                identifier = agreement.identifier,
-                rank = agree.rank,
-                postNr = agree.postNr,
-                postIdentifier = agree.postIdentifier,
-                postId = post.id,
-                published = agreement.published,
-                expired = agreement.expired,
-                reference = agreement.reference,
-                postTitle = post.title,
-                refNr = post.refNr
-            )
-        } ?: emptyList()
-    )
+
 
     @Transactional
     open suspend fun findProducts(params: Map<String, String>?, pageable: Pageable) : Page<ProductRapidDTO> =
-        productRepository.findAll(buildCriteriaSpec(params), pageable).map {it.toDTO()}
+        productRepository.findAll(buildCriteriaSpec(params), pageable).map { runBlocking {  it.toDTO() }}
 
     private fun buildCriteriaSpec(params: Map<String, String>?): PredicateSpecification<Product>?
             = params?.let {
