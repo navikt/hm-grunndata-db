@@ -100,6 +100,8 @@ open class ProductService(
         updated=updated, published=published, expired=expired, agreementInfo = agreementInfo,
         createdBy=createdBy, updatedBy=updatedBy, agreements = agreements?.map {agree ->
             val agreement = agreementService.findByIdentifier(agree.identifier!!)
+            LOG.info("Found agreement with ${agree.identifier}, looking up for post ${agree.postIdentifier}")
+
             val post = agreement!!.posts.find { it.identifier == agree.postIdentifier }
                 ?: throw RuntimeException("Wrong agreement state!, should never happen")
             AgreementInfo(

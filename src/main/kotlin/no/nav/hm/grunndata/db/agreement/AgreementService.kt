@@ -17,7 +17,6 @@ import java.time.LocalDateTime
 import java.util.*
 
 @Singleton
-@CacheConfig("agreements")
 open class AgreementService(private val agreementRepository: AgreementRepository,
                             private val gdbRapidPushService: GdbRapidPushService
 ) {
@@ -25,17 +24,15 @@ open class AgreementService(private val agreementRepository: AgreementRepository
     companion object {
         private val LOG = LoggerFactory.getLogger(AgreementService::class.java)
     }
-    @Cacheable
+
     open fun findByIdentifier(identifier: String): Agreement? = runBlocking {
         agreementRepository.findByIdentifier(identifier)
     }
 
-    @CacheInvalidate(parameters = ["identifier"])
     open fun save(agreement: Agreement, identifier: String = agreement.identifier) = runBlocking {
         agreementRepository.save(agreement)
     }
 
-    @CacheInvalidate(parameters = ["identifier"])
     open fun update(agreement: Agreement, identifier: String = agreement.identifier) = runBlocking {
         agreementRepository.update(agreement)
     }
