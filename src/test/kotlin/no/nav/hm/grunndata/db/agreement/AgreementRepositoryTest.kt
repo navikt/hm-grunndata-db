@@ -17,8 +17,9 @@ class AgreementRepositoryTest(private val agreementRepository: AgreementReposito
     fun crudTest() {
         val agreementId = UUID.randomUUID()
         val agreementId2 = UUID.randomUUID()
+        val pastAgreementId = UUID.randomUUID()
         val agreement = Agreement(id = agreementId, identifier = "HMDB-123", title = "Rammeavtale Rullestoler", resume = "En kort beskrivelse", reference="23-10234",
-        text = "En lang beskrivelse 1", published = LocalDateTime.now(), expired = LocalDateTime.now().plusYears(3),
+        text = "En lang beskrivelse 1", published = LocalDateTime.now(), expired = LocalDateTime.now().plusYears(3), pastAgreement = pastAgreementId,
             posts = listOf(AgreementPost(title = "Post 1", identifier = "HMDB-321", nr = 1, description = "En beskrive av posten")), isoCategory = listOf("1", "2"))
         val agreement2 = Agreement(id = agreementId2, identifier = "HMDB-124", title = "Rammeavtale Rullestoler", resume = "En kort beskrivelse", reference="23-10235",
             text = "En lang beskrivelse 2", published = LocalDateTime.now(), expired = LocalDateTime.now().plusYears(3),
@@ -35,6 +36,8 @@ class AgreementRepositoryTest(private val agreementRepository: AgreementReposito
             read2.shouldNotBeNull()
             read.text shouldBe "En lang beskrivelse 1"
             read2.text shouldBe "En lang beskrivelse 2"
+            read.pastAgreement shouldBe pastAgreementId
+            read2.pastAgreement shouldBe null
             val updated = agreementRepository.update(read.copy(title = "Ny title"))
             updated.shouldNotBeNull()
             updated.title shouldBe "Ny title"

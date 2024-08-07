@@ -35,17 +35,18 @@ data class Agreement (
     val createdBy: String = HMDB,
     val updatedBy: String = HMDB,
     val created: LocalDateTime = LocalDateTime.now(),
-    val updated: LocalDateTime = LocalDateTime.now()
+    val updated: LocalDateTime = LocalDateTime.now(),
+    val pastAgreement: UUID? = null
 )
 
 fun Agreement.toDTO(): AgreementDTO = AgreementDTO(
     id = id, identifier = identifier, status = status, title = title, resume = resume, text = text, reference=reference,
     published = published, expired = expired, attachments = attachments, createdBy = createdBy, updatedBy = updatedBy, created = created,
-    updated = updated, posts = posts, isoCategory = isoCategory )
+    updated = updated, posts = posts, isoCategory = isoCategory, pastAgreement = pastAgreement)
 
 fun AgreementDTO.toEntity(): Agreement = Agreement(
     id = id, identifier = identifier, title = title, status = status, resume = resume, text = text, reference = reference,
     published = published, expired = expired, attachments = attachments, posts = posts, createdBy = createdBy,
-    updatedBy = updatedBy, created = created, isoCategory = isoCategory, updated = updated
+    updatedBy = updatedBy, created = created, isoCategory = isoCategory, updated = updated, pastAgreement = pastAgreement
 )
 
