@@ -2,7 +2,6 @@ package no.nav.hm.grunndata.db.agreement
 
 import io.kotest.common.runBlocking
 import io.kotest.matchers.nulls.shouldNotBeNull
-import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import no.nav.hm.grunndata.rapid.dto.AgreementPost
@@ -19,7 +18,7 @@ class AgreementRepositoryTest(private val agreementRepository: AgreementReposito
         val agreementId2 = UUID.randomUUID()
         val pastAgreementId = UUID.randomUUID()
         val agreement = Agreement(id = agreementId, identifier = "HMDB-123", title = "Rammeavtale Rullestoler", resume = "En kort beskrivelse", reference="23-10234",
-        text = "En lang beskrivelse 1", published = LocalDateTime.now(), expired = LocalDateTime.now().plusYears(3), pastAgreement = pastAgreementId,
+        text = "En lang beskrivelse 1", published = LocalDateTime.now(), expired = LocalDateTime.now().plusYears(3), previousAgreement = pastAgreementId,
             posts = listOf(AgreementPost(title = "Post 1", identifier = "HMDB-321", nr = 1, description = "En beskrive av posten")), isoCategory = listOf("1", "2"))
         val agreement2 = Agreement(id = agreementId2, identifier = "HMDB-124", title = "Rammeavtale Rullestoler", resume = "En kort beskrivelse", reference="23-10235",
             text = "En lang beskrivelse 2", published = LocalDateTime.now(), expired = LocalDateTime.now().plusYears(3),
@@ -36,8 +35,8 @@ class AgreementRepositoryTest(private val agreementRepository: AgreementReposito
             read2.shouldNotBeNull()
             read.text shouldBe "En lang beskrivelse 1"
             read2.text shouldBe "En lang beskrivelse 2"
-            read.pastAgreement shouldBe pastAgreementId
-            read2.pastAgreement shouldBe null
+            read.previousAgreement shouldBe pastAgreementId
+            read2.previousAgreement shouldBe null
             val updated = agreementRepository.update(read.copy(title = "Ny title"))
             updated.shouldNotBeNull()
             updated.title shouldBe "Ny title"

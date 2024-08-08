@@ -1,0 +1,1 @@
+ALTER TABLE agreement_v1 RENAME COLUMN past_agreement TO previous_agreement;
