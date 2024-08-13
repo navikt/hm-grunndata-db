@@ -16,22 +16,22 @@ open class AgreementSyncScheduler(
     companion object {
         private val LOG = LoggerFactory.getLogger(AgreementSyncScheduler::class.java)
     }
-
-    @LeaderOnly
-    @Scheduled(cron = "0 30 0 * * *")
-    open fun syncAgreements() {
-        runBlocking {
-            agreementSync.syncAgreements()
-        }
-
-    }
-
-    @LeaderOnly
-    @Scheduled(cron = "0 30 1 * * *")
-    open fun syncActiveIds() {
-        runBlocking {
-            agreementSync.syncDeletedAgreementIds()
-        }
-    }
+// AgreementSync is disabled, because all editing has been moved to adminregister.
+//    @LeaderOnly
+//    @Scheduled(cron = "0 30 0 * * *")
+//    open fun syncAgreements() {
+//        runBlocking {
+//            agreementSync.syncAgreements()
+//        }
+//
+//    }
+//
+//    @LeaderOnly
+//    @Scheduled(cron = "0 30 1 * * *")
+//    open fun syncActiveIds() {
+//        runBlocking {
+//            agreementSync.syncDeletedAgreementIds()
+//        }
+//    }
 
 }
