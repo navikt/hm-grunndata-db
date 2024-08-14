@@ -87,18 +87,23 @@ class ProductAgreementRegistrationRiverSupport(private val agreementService: Agr
         } else product.hmsArtNr
 
         val updated = agreementService.findById(agreement.agreementId)?.let { agreementInDb ->
-            val foundPost = agreementInDb.posts.find { post -> post.id == agreement.postId }
-                ?: throw IllegalStateException("Post ${agreement.postId} not found in agreement ${agreement.agreementId}, check if agreements are in sync")
+            val foundPost = if (agreement.postId!=null) {
+                agreementInDb.posts.find { post -> post.id == agreement.postId }
+                    ?: throw IllegalStateException("Post ${agreement.postId} not found in agreement ${agreement.agreementId}, check if agreements are in sync")
+            } else {
+                // some products are in agreement but do not belong to a post/delkontrakt
+                null
+            }
             AgreementInfo(
                 id = agreementInDb.id,
                 identifier = agreementInDb.identifier,
                 title = agreementInDb.title,
                 rank = agreement.rank,
                 postNr = agreement.post,
-                postIdentifier = foundPost.identifier,
-                postTitle =foundPost.title,
+                postIdentifier = foundPost?.identifier,
+                postTitle =foundPost?.title,
                 postId = agreement.postId,
-                refNr = foundPost.refNr,
+                refNr = foundPost?.refNr,
                 reference = agreement.reference,
                 expired = agreement.expired,
                 published = agreementInDb.published
