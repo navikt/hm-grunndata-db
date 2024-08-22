@@ -68,7 +68,10 @@ open class ProductService(
         } ?: productRepository.save(product)
         val productDTO = saved.toDTO()
         LOG.info("saved: ${productDTO.id} ${productDTO.supplierRef} ${productDTO.hmsArtNr} ${productDTO.identifier}")
-        gdbRapidPushService.pushDTOToKafka(productDTO, eventName)
+        if (productDTO.title == "Use series title" || productDTO.title.isBlank()) {
+            LOG.warn("Product ${productDTO.id} has no title, it means series is not synced yet")
+        }
+        else gdbRapidPushService.pushDTOToKafka(productDTO, eventName)
         return productDTO
     }
 
