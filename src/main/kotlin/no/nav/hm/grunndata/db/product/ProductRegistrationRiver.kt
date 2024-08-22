@@ -22,6 +22,7 @@ import no.nav.hm.grunndata.rapid.event.EventName
 import no.nav.hm.rapids_rivers.micronaut.RiverHead
 import org.slf4j.LoggerFactory
 import java.util.UUID
+import no.nav.hm.rapids_rivers.micronaut.deadletter.DeadLetterSupport
 
 @Context
 @Requires(bean = KafkaRapid::class)
@@ -47,6 +48,7 @@ class ProductRegistrationRiver(
             .register(this)
     }
 
+    @DeadLetterSupport
     override fun onPacket(packet: JsonMessage, context: MessageContext) {
         val eventId = packet["eventId"].asText()
         val dtoVersion = packet["dtoVersion"].asLong()
