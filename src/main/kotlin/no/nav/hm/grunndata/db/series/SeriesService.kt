@@ -1,8 +1,5 @@
 package no.nav.hm.grunndata.db.series
 
-import io.micronaut.cache.annotation.CacheConfig
-import io.micronaut.cache.annotation.CacheInvalidate
-import io.micronaut.cache.annotation.Cacheable
 import io.micronaut.data.model.Page
 import io.micronaut.data.model.Pageable
 import io.micronaut.data.repository.jpa.criteria.PredicateSpecification
@@ -19,7 +16,6 @@ import java.time.LocalDateTime
 import java.util.*
 
 @Singleton
-@CacheConfig("series")
 open class SeriesService(private val seriesRepository: SeriesRepository,
                          private val gdbRapidPushService: GdbRapidPushService) {
 
@@ -27,12 +23,11 @@ open class SeriesService(private val seriesRepository: SeriesRepository,
         private val LOG = LoggerFactory.getLogger(SeriesService::class.java)
 
     }
-    @Cacheable(parameters = ["identifier"])
+
     open fun findByIdentifier(identifier: String) = runBlocking {
         seriesRepository.findByIdentifier(identifier)
     }
 
-    @Cacheable(parameters = ["id"])
     open fun findById(id: UUID) = runBlocking {
         seriesRepository.findById(id)
     }
@@ -45,7 +40,6 @@ open class SeriesService(private val seriesRepository: SeriesRepository,
         seriesRepository.save(series)
     }
 
-    @CacheInvalidate(parameters = ["identifier"])
     open fun update(series:Series, identifier: String = series.identifier) = runBlocking {
         seriesRepository.update(series)
     }
