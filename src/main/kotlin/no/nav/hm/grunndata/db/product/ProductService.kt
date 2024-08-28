@@ -98,7 +98,7 @@ open class ProductService(
 
     suspend fun Product.toDTO():ProductRapidDTO =
         ProductRapidDTO (
-            id = id, supplier = runBlocking{supplierService.findById(supplierId)!!.toDTO()},
+            id = id, partitionKey = seriesUUID.toString(), supplier = runBlocking{supplierService.findById(supplierId)!!.toDTO()},
             title = title, articleName = articleName,  attributes=attributes,
             status = status, hmsArtNr = hmsArtNr, identifier = identifier, supplierRef=supplierRef, isoCategory=isoCategory,
             accessory=accessory, sparePart=sparePart, seriesId=seriesId, seriesUUID = seriesUUID, seriesIdentifier = seriesIdentifier, techData=techData, media= media, created=created,

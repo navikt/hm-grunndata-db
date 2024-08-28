@@ -12,7 +12,7 @@ class GdbRapidPushService(private val kafkaRapidService: RapidPushService) {
 
     fun pushDTOToKafka(dto: RapidDTO, eventName: String) {
         kafkaRapidService.pushToRapid(
-            key = "$eventName-${dto.id}",
+            key = dto.partitionKey,
             eventName = eventName, payload = dto, keyValues = mapOf("createdBy" to RapidApp.grunndata_db,
                 "dtoVersion" to rapidDTOVersion)
         )
