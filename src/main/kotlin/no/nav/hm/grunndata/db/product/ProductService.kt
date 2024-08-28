@@ -62,7 +62,7 @@ open class ProductService(
                 }
                 productRepository.update(product.copy(id = inDb.id, created = inDb.created, createdBy = inDb.createdBy))
             } ?: productRepository.save(product)
-        } else productRepository.findBySupplierIdAndSupplierRef(product.supplierId, product.supplierRef)?.let { inDb ->
+        } else productRepository.findById(product.id)?.let { inDb ->
             productRepository.update(product.copy(id = inDb.id, created = inDb.created,
                 createdBy = inDb.createdBy))
         } ?: productRepository.save(product)
@@ -74,8 +74,6 @@ open class ProductService(
         else gdbRapidPushService.pushDTOToKafka(productDTO, eventName)
         return productDTO
     }
-
-
 
     @Transactional
     open suspend fun findById(id: UUID): Product? = productRepository.findById(id)
