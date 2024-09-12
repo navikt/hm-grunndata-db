@@ -13,12 +13,12 @@ open class NewsSyncScheduler(
 ) {
 
 
-    @LeaderOnly
-    @Scheduled(cron = "0 45 0 * * *")
-    open fun syncNews() {
-
-        runBlocking {
-            newsSync.syncNews()
-        }
-    }
+//    @LeaderOnly
+//    @Scheduled(cron = "0 45 0 * * *")
+//    open fun syncNews() {
+//
+//        runBlocking {
+//            newsSync.syncNews()
+//        }
+//    }
 }

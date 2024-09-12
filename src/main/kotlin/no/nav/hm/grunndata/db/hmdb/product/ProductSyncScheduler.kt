@@ -75,23 +75,23 @@ open class ProductSyncScheduler(
 
     }
 
-    @LeaderOnly
-    @Scheduled(cron = "0 45 1 * * *")
-    open fun syncAllProducts() {
-        if (stopped) {
-            LOG.warn("scheduler is stopped, maybe because of uncaught errors!")
-            return
-        }
-        runBlocking {
-            try {
-                LOG.info("Running sync all products at ${LocalDateTime.now()}")
-                productSync.syncAllActiveProducts()
-            } catch (e: Exception) {
-                LOG.error("Got uncaught exception while run product sync, stop scheduler", e)
-                stopped = true
-            }
-        }
-    }
+//    @LeaderOnly
+//    @Scheduled(cron = "0 45 1 * * *")
+//    open fun syncAllProducts() {
+//        if (stopped) {
+//            LOG.warn("scheduler is stopped, maybe because of uncaught errors!")
+//            return
+//        }
+//        runBlocking {
+//            try {
+//                LOG.info("Running sync all products at ${LocalDateTime.now()}")
+//                productSync.syncAllActiveProducts()
+//            } catch (e: Exception) {
+//                LOG.error("Got uncaught exception while run product sync, stop scheduler", e)
+//                stopped = true
+//            }
+//        }
+//    }
 
     fun isStopped() = stopped
 
