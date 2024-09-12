@@ -53,7 +53,7 @@ open class ProductService(
                 attributeTagService::addProdukttypeAttribute,
             ).fold(prod) { it, enricher -> enricher.call(it) }
         }
-        val saved: Product = if (product.updatedBy == HMDB) {
+        val saved: Product = if (product.updatedBy == HMDB || product.updatedBy == "HMDB-DELETE") {
             LOG.info("Got product from HMDB ${product.identifier} hmsnr: ${product.hmsArtNr} supplierId: ${product.supplierId} supplierRef: ${product.supplierRef}")
             productRepository.findByIdentifier(product.identifier)?.let { inDb ->
                 if (suppliersInRegister.contains(inDb.identifier) || inDb.updatedBy == REGISTER) { // skip updating from HMDB if product has been modified by register
