@@ -34,12 +34,17 @@ open class ProductService(
 
     companion object {
         private val LOG = LoggerFactory.getLogger(ProductService::class.java)
+
         // HMDB-5205 = "Cognita", HMDB-5001= "Invacare"
         private val suppliersInRegister: Set<String> = setOf("HMDB-5205", "HMDB-5001")
     }
 
     @Transactional
-    open suspend fun saveAndPushTokafka(prod: Product, eventName: String, skipUpdateProductAttribute: Boolean = false): ProductRapidDTO {
+    open suspend fun saveAndPushTokafka(
+        prod: Product,
+        eventName: String,
+        skipUpdateProductAttribute: Boolean = false
+    ): ProductRapidDTO {
         val product = if (skipUpdateProductAttribute) {
             // Skip the attribute enrichment below if we are being updated by hm-grunndata-register
             prod
@@ -63,15 +68,18 @@ open class ProductService(
                 productRepository.update(product.copy(id = inDb.id, created = inDb.created, createdBy = inDb.createdBy))
             } ?: productRepository.save(product)
         } else productRepository.findById(product.id)?.let { inDb ->
-            productRepository.update(product.copy(id = inDb.id, created = inDb.created,
-                createdBy = inDb.createdBy))
+            productRepository.update(
+                product.copy(
+                    id = inDb.id, created = inDb.created,
+                    createdBy = inDb.createdBy
+                )
+            )
         } ?: productRepository.save(product)
         val productDTO = saved.toDTO()
         LOG.info("saved: ${productDTO.id} ${productDTO.supplierRef} ${productDTO.hmsArtNr} ${productDTO.identifier}")
         if (productDTO.title == "Use series title" || productDTO.title.isBlank()) {
             LOG.warn("Product ${productDTO.id} has no title, it means series is not synced yet")
-        }
-        else gdbRapidPushService.pushDTOToKafka(productDTO, eventName)
+        } else gdbRapidPushService.pushDTOToKafka(productDTO, eventName)
         return productDTO
     }
 
@@ -80,9 +88,10 @@ open class ProductService(
 
 
     // TODO, combine two functions when have time :)
-    suspend fun findByIdDTO(id:UUID): ProductRapidDTO? = productRepository.findById(id)?.toDTO()
+    suspend fun findByIdDTO(id: UUID): ProductRapidDTO? = productRepository.findById(id)?.toDTO()
 
-    suspend fun findBySupplierIdAndSupplierRef(supplierId: UUID, supplierRef: String) = productRepository.findBySupplierIdAndSupplierRef(supplierId, supplierRef)?.toDTO()
+    suspend fun findBySupplierIdAndSupplierRef(supplierId: UUID, supplierRef: String) =
+        productRepository.findBySupplierIdAndSupplierRef(supplierId, supplierRef)?.toDTO()
 
     suspend fun findByIsoCategoryStartsWith(isoCategory: String): List<Product> =
         productRepository.findByIsoCategoryStartsWith(isoCategory)
@@ -94,48 +103,71 @@ open class ProductService(
     open suspend fun findByAgreementId(agreementId: UUID): List<Product> =
         productRepository.findByAgreementsJson("""[{"id": "$agreementId"}]""")
 
-    suspend fun Product.toDTO():ProductRapidDTO =
-        ProductRapidDTO (
-            id = id, partitionKey = seriesUUID.toString(), supplier = runBlocking{supplierService.findById(supplierId)!!.toDTO()},
-            title = title, articleName = articleName,  attributes=attributes,
-            status = status, hmsArtNr = hmsArtNr, identifier = identifier, supplierRef=supplierRef, isoCategory=isoCategory,
-            accessory=accessory, sparePart=sparePart, seriesId=seriesId, seriesUUID = seriesUUID, seriesIdentifier = seriesIdentifier, techData=techData, media= media, created=created,
-            updated=updated, published=published, expired=expired, agreementInfo = agreementInfo,
-            createdBy=createdBy, updatedBy=updatedBy, agreements = agreements?.map {agree ->
+    suspend fun Product.toDTO(): ProductRapidDTO =
+        ProductRapidDTO(
+            id = id,
+            partitionKey = seriesUUID.toString(),
+            supplier = runBlocking { supplierService.findById(supplierId)!!.toDTO() },
+            title = title,
+            articleName = articleName,
+            attributes = attributes,
+            status = status,
+            hmsArtNr = hmsArtNr,
+            identifier = identifier,
+            supplierRef = supplierRef,
+            isoCategory = isoCategory,
+            accessory = accessory,
+            sparePart = sparePart,
+            seriesId = seriesId,
+            seriesUUID = seriesUUID,
+            seriesIdentifier = seriesIdentifier,
+            techData = techData,
+            media = media,
+            created = created,
+            updated = updated,
+            published = published,
+            expired = expired,
+            agreementInfo = agreementInfo,
+            createdBy = createdBy,
+            updatedBy = updatedBy,
+            agreements = agreements?.mapNotNull { agree ->
                 val agreement = agreementService.findById(agree.id)
-                LOG.info("Found agreement with ${agree.id}, looking up for post ${agree.postIdentifier}")
-                val post = if (agree.postId != null) {
-                    agreement!!.posts.find { it.id == agree.postId }
-                        ?: throw IllegalStateException("Post not found for agreement ${agree.id} and post ${agree.postId}")
-                } else null
-                AgreementInfo(
-                    id = agreement!!.id,
-                    title = agreement.title,
-                    identifier = agreement.identifier,
-                    rank = agree.rank,
-                    postNr = agree.postNr,
-                    postIdentifier = agree.postIdentifier,
-                    postId = post?.id,
-                    published = agreement.published,
-                    expired = agreement.expired,
-                    reference = agreement.reference,
-                    postTitle = post?.title,
-                    refNr = post?.refNr
-                )
+                if (agreement != null) {
+                    LOG.info("Found agreement with ${agreement.id}, looking up for post: ${agree.postId}")
+                    val post = if (agree.postId != null) {
+                        agreement.posts.find { it.id == agree.postId }
+                            ?: throw IllegalStateException("Post not found for agreement ${agree.id} and post ${agree.postId}")
+                    } else null
+                    AgreementInfo(
+                        id = agreement!!.id,
+                        title = agreement.title,
+                        identifier = agreement.identifier,
+                        rank = agree.rank,
+                        postNr = agree.postNr,
+                        postIdentifier = agree.postIdentifier,
+                        postId = post?.id,
+                        published = agreement.published,
+                        expired = agreement.expired,
+                        reference = agreement.reference,
+                        postTitle = post?.title,
+                        refNr = post?.refNr
+                    )
+                } else {
+                    LOG.warn("Agreement ${agree.id} not found for product ${id}")
+                    null
+                }
             } ?: emptyList()
         )
 
 
-
     @Transactional
-    open suspend fun findProducts(params: Map<String, String>?, pageable: Pageable) : Page<ProductRapidDTO> =
-        productRepository.findAll(buildCriteriaSpec(params), pageable).map { runBlocking {  it.toDTO() }}
+    open suspend fun findProducts(params: Map<String, String>?, pageable: Pageable): Page<ProductRapidDTO> =
+        productRepository.findAll(buildCriteriaSpec(params), pageable).map { runBlocking { it.toDTO() } }
 
-    private fun buildCriteriaSpec(params: Map<String, String>?): PredicateSpecification<Product>?
-            = params?.let {
+    private fun buildCriteriaSpec(params: Map<String, String>?): PredicateSpecification<Product>? = params?.let {
         where {
             if (params.contains("supplierRef")) root[Product::supplierRef] eq params["supplierRef"]
-            if (params.contains("supplierId"))  root[Product::supplierId] eq UUID.fromString(params["supplierId"]!!)
+            if (params.contains("supplierId")) root[Product::supplierId] eq UUID.fromString(params["supplierId"]!!)
             if (params.contains("updated")) root[Product::updated] greaterThanOrEqualTo LocalDateTime.parse(params["updated"])
             if (params.contains("status")) root[Product::status] eq params["status"]
             if (params.contains("seriesUUID")) root[Product::seriesUUID] eq UUID.fromString(params["seriesUUID"]!!)
@@ -148,7 +180,10 @@ open class ProductService(
     suspend fun findIdsByCreatedBy(createdBy: String): List<ProductIdDTO> =
         productRepository.findIdsByCreatedByAndNotDeleted(createdBy = createdBy)
 
-    suspend fun findByStatusAndExpiredBefore(status: ProductStatus, expired: LocalDateTime? = LocalDateTime.now()): List<Product> = productRepository.findByStatusAndExpiredBefore(status, expired)
+    suspend fun findByStatusAndExpiredBefore(
+        status: ProductStatus,
+        expired: LocalDateTime? = LocalDateTime.now()
+    ): List<Product> = productRepository.findByStatusAndExpiredBefore(status, expired)
 
     suspend fun findByHmsArtNr(hmsArtNr: String): ProductRapidDTO? = productRepository.findByHmsArtNr(hmsArtNr)?.toDTO()
 
