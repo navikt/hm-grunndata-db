@@ -171,6 +171,7 @@ open class ProductService(
             if (params.contains("updated")) root[Product::updated] greaterThanOrEqualTo LocalDateTime.parse(params["updated"])
             if (params.contains("status")) root[Product::status] eq params["status"]
             if (params.contains("seriesUUID")) root[Product::seriesUUID] eq UUID.fromString(params["seriesUUID"]!!)
+            if (params.contains("isoCategory")) root[Product::isoCategory] eq params["isoCategory"]
         }
     }
 
