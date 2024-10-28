@@ -1,20 +1,16 @@
 package no.nav.hm.grunndata.db.agreement
 
-import io.micronaut.cache.annotation.CacheConfig
-import io.micronaut.cache.annotation.CacheInvalidate
-import io.micronaut.cache.annotation.Cacheable
 import io.micronaut.data.model.Pageable
 import io.micronaut.data.repository.jpa.criteria.PredicateSpecification
 import jakarta.inject.Singleton
 import jakarta.transaction.Transactional
+import java.time.LocalDateTime
+import java.util.UUID
 import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.db.GdbRapidPushService
-import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.rapid.dto.AgreementDTO
 import no.nav.hm.grunndata.rapid.dto.AgreementStatus
 import org.slf4j.LoggerFactory
-import java.time.LocalDateTime
-import java.util.*
 
 @Singleton
 open class AgreementService(private val agreementRepository: AgreementRepository,
@@ -49,9 +45,7 @@ open class AgreementService(private val agreementRepository: AgreementRepository
 
     @Transactional
     open suspend fun saveAndPushTokafka(agreement: Agreement, eventName: String): AgreementDTO {
-        val saved =
-            (if (agreement.createdBy == HMDB) findByIdentifier(agreement.identifier)
-        else findById(agreement.id))?.let { inDb ->
+        val saved = findById(agreement.id)?.let { inDb ->
             update(agreement.copy(id = inDb.id, created = inDb.created,
                 createdBy = inDb.createdBy))
         } ?: save(agreement)

@@ -4,14 +4,13 @@ import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.MappedEntity
 import io.micronaut.data.annotation.TypeDef
 import io.micronaut.data.model.DataType
-import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.rapid.dto.AgreementAttachment
 import no.nav.hm.grunndata.rapid.dto.AgreementDTO
 import no.nav.hm.grunndata.rapid.dto.AgreementPost
 import no.nav.hm.grunndata.rapid.dto.AgreementStatus
 import java.time.LocalDateTime
 import java.util.*
-
+import no.nav.hm.grunndata.db.REGISTER
 
 
 @MappedEntity("agreement_v1")
@@ -32,8 +31,8 @@ data class Agreement (
     val posts: List<AgreementPost> = emptyList(),
     @field: TypeDef(type = DataType.JSON)
     val isoCategory: List<String> = emptyList(),
-    val createdBy: String = HMDB,
-    val updatedBy: String = HMDB,
+    val createdBy: String = REGISTER,
+    val updatedBy: String = REGISTER,
     val created: LocalDateTime = LocalDateTime.now(),
     val updated: LocalDateTime = LocalDateTime.now(),
     val previousAgreement: UUID? = null

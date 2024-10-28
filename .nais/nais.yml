@@ -32,8 +32,6 @@ spec:
       value: "org.postgresql.Driver"
     - name: DB_JDBC_URL
       value: "jdbc:postgresql://${DB_HOST}:5432/gdb"
-    - name: HMDB_URL
-      value: "http://hm-grunndata-hmdb2gdb"
     - name: RAPIDSANDRIVERS_ENABLED
       value: "{{ rapidsandrivers_enabled }}"
     - name: SCHEDULERS_ENABLED
@@ -65,8 +63,6 @@ spec:
   leaderElection: true
   accessPolicy:
     outbound:
-      rules:
-        - application: hm-grunndata-hmdb2gdb
       external:
         - host: navikt.github.io
     inbound:

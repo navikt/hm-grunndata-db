@@ -2,11 +2,11 @@ package no.nav.hm.grunndata.db.news
 
 import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.MappedEntity
-import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.rapid.dto.NewsStatus
 import no.nav.hm.grunndata.rapid.dto.NewsDTO
 import java.time.LocalDateTime
 import java.util.*
+import no.nav.hm.grunndata.db.REGISTER
 
 @MappedEntity("news_v1")
 data class News(
@@ -20,8 +20,8 @@ data class News(
     val expired: LocalDateTime = LocalDateTime.now().plusMonths(3),
     val created: LocalDateTime = LocalDateTime.now(),
     val updated: LocalDateTime = LocalDateTime.now(),
-    val createdBy: String = HMDB,
-    val updatedBy: String = HMDB,
+    val createdBy: String = REGISTER,
+    val updatedBy: String = REGISTER,
     val author: String = "Admin",
 )
 

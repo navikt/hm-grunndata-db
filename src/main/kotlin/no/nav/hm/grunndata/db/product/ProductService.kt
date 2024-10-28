@@ -9,7 +9,6 @@ import jakarta.inject.Singleton
 import jakarta.transaction.Transactional
 import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.db.GdbRapidPushService
-import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.db.REGISTER
 import no.nav.hm.grunndata.db.agreement.AgreementService
 import no.nav.hm.grunndata.db.supplier.SupplierService
@@ -58,16 +57,7 @@ open class ProductService(
                 attributeTagService::addProdukttypeAttribute,
             ).fold(prod) { it, enricher -> enricher.call(it) }
         }
-        val saved: Product = if (product.updatedBy == HMDB || product.updatedBy == "HMDB-DELETE") {
-            LOG.info("Got product from HMDB ${product.identifier} hmsnr: ${product.hmsArtNr} supplierId: ${product.supplierId} supplierRef: ${product.supplierRef}")
-            productRepository.findByIdentifier(product.identifier)?.let { inDb ->
-                if (suppliersInRegister.contains(inDb.identifier) || inDb.updatedBy == REGISTER) { // skip updating from HMDB if product has been modified by register
-                    LOG.info("Skipping updating for product identifier: ${product.identifier} id: ${product.id} for supplier: ${inDb.identifier} because updated from register")
-                    return inDb.toDTO()
-                }
-                productRepository.update(product.copy(id = inDb.id, created = inDb.created, createdBy = inDb.createdBy))
-            } ?: productRepository.save(product)
-        } else productRepository.findById(product.id)?.let { inDb ->
+        val saved: Product = productRepository.findById(product.id)?.let { inDb ->
             productRepository.update(
                 product.copy(
                     id = inDb.id, created = inDb.created,

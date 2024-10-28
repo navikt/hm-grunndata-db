@@ -10,7 +10,6 @@ import jakarta.inject.Singleton
 import jakarta.transaction.Transactional
 import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.db.GdbRapidPushService
-import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.rapid.dto.SupplierDTO
 import no.nav.hm.grunndata.rapid.dto.SupplierStatus
 import org.slf4j.LoggerFactory
@@ -61,9 +60,7 @@ open class SupplierService(private val supplierRepository: SupplierRepository,
 
     @Transactional
     open suspend fun saveAndPushTokafka(supplier: Supplier, eventName: String): SupplierDTO {
-        val saved =
-            (if (supplier.createdBy == HMDB) findByIdentifier(supplier.identifier)
-            else findById(supplier.id))?.let { inDb ->
+        val saved = findById(supplier.id)?.let { inDb ->
                 update(supplier.copy(id = inDb.id, created = inDb.created,
                     createdBy = inDb.createdBy))
             } ?: save(supplier)

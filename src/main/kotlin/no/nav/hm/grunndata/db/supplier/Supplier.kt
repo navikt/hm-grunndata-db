@@ -4,13 +4,14 @@ import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.MappedEntity
 import io.micronaut.data.annotation.TypeDef
 import io.micronaut.data.model.DataType
-import io.micronaut.data.runtime.criteria.update
-import no.nav.hm.grunndata.db.HMDB
+
+
 import no.nav.hm.grunndata.rapid.dto.SupplierDTO
 import no.nav.hm.grunndata.rapid.dto.SupplierInfo
 import no.nav.hm.grunndata.rapid.dto.SupplierStatus
 import java.time.LocalDateTime
 import java.util.*
+import no.nav.hm.grunndata.db.REGISTER
 
 @MappedEntity(SupplierTableName)
 data class Supplier(
@@ -21,8 +22,8 @@ data class Supplier(
     val status: SupplierStatus,
     @field:TypeDef(type=DataType.JSON)
     val info: SupplierInfo,
-    val createdBy: String = HMDB,
-    val updatedBy: String = HMDB,
+    val createdBy: String = REGISTER,
+    val updatedBy: String = REGISTER,
     val created:    LocalDateTime = LocalDateTime.now(),
     val updated:    LocalDateTime = LocalDateTime.now()
 )

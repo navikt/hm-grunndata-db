@@ -4,9 +4,9 @@ import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.MappedEntity
 import io.micronaut.data.annotation.TypeDef
 import io.micronaut.data.model.DataType
-import no.nav.hm.grunndata.db.HMDB
 import java.time.LocalDateTime
 import java.util.*
+import no.nav.hm.grunndata.db.REGISTER
 
 @MappedEntity("techlabel_v1")
 data class TechLabel(
@@ -22,8 +22,8 @@ data class TechLabel(
     val sort: Int = 1,
     @field:TypeDef(type = DataType.JSON)
     val options: List<String> = emptyList(),
-    val createdBy: String = HMDB,
-    val updatedBy: String = HMDB,
+    val createdBy: String = REGISTER,
+    val updatedBy: String = REGISTER,
     val created: LocalDateTime = LocalDateTime.now(),
     val updated: LocalDateTime = LocalDateTime.now()
 )
@@ -39,8 +39,8 @@ data class TechLabelDTO(
     val unit: String?,
     val sort: Int,
     val options: List<String> = emptyList(),
-    val createdBy: String = HMDB,
-    val updatedBy: String = HMDB,
+    val createdBy: String = REGISTER,
+    val updatedBy: String = REGISTER,
     val created: LocalDateTime = LocalDateTime.now(),
     val updated: LocalDateTime = LocalDateTime.now()
 )

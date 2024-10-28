@@ -5,10 +5,10 @@ import io.kotest.matchers.date.shouldBeAfter
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
-import no.nav.hm.grunndata.db.HMDB
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 import java.util.*
+import no.nav.hm.grunndata.db.REGISTER
 
 @MicronautTest
 class TechLabelRepositoryTest(private val techLabelRepository: TechLabelRepository) {
@@ -34,7 +34,7 @@ class TechLabelRepositoryTest(private val techLabelRepository: TechLabelReposito
             val updated = techLabelRepository.update(found.copy(guide = "Høyde eller noe", updated = LocalDateTime.now()))
             updated.shouldNotBeNull()
             updated.updated shouldBeAfter saved.updated
-            updated.updatedBy shouldBe HMDB
+            updated.updatedBy shouldBe REGISTER
         }
     }
 }

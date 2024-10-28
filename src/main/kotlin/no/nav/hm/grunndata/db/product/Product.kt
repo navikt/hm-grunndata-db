@@ -5,10 +5,10 @@ import io.micronaut.data.annotation.MappedEntity
 import io.micronaut.data.annotation.TypeDef
 import io.micronaut.data.model.DataType
 import jakarta.persistence.Column
-import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.rapid.dto.*
 import java.time.LocalDateTime
 import java.util.UUID
+import no.nav.hm.grunndata.db.REGISTER
 
 @MappedEntity("product_v1")
 data class Product (
@@ -47,8 +47,8 @@ data class Product (
     val updated: LocalDateTime = LocalDateTime.now(),
     val published: LocalDateTime = LocalDateTime.now(),
     val expired: LocalDateTime = updated.plusYears(20),
-    val createdBy: String = HMDB,
-    val updatedBy: String = HMDB
+    val createdBy: String = REGISTER,
+    val updatedBy: String = REGISTER
 )
 
 data class ProductAgreement(

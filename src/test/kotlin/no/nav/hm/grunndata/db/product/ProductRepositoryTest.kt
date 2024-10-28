@@ -8,13 +8,13 @@ import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import io.mockk.mockk
 import no.nav.helse.rapids_rivers.toUUID
-import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.db.supplier.Supplier
 import no.nav.hm.grunndata.db.supplier.SupplierService
 import no.nav.hm.grunndata.rapid.dto.*
 import no.nav.hm.rapids_rivers.micronaut.RapidPushService
 import org.junit.jupiter.api.Test
 import java.util.*
+import no.nav.hm.grunndata.db.REGISTER
 
 @MicronautTest
 class ProductRepositoryTest(private val productRepository: ProductRepository,
@@ -80,7 +80,7 @@ class ProductRepositoryTest(private val productRepository: ProductRepository,
             updated.title shouldBe "Dette er et nytt produkt"
             updated.media.size shouldBe 2
             println(objectMapper.writeValueAsString(updated))
-            val ids = productRepository.findIdsByStatusAndCreatedBy(status=ProductStatus.ACTIVE, HMDB)
+            val ids = productRepository.findIdsByStatusAndCreatedBy(status=ProductStatus.ACTIVE, REGISTER)
             ids.size shouldBe 2
             productRepository.findByAgreementsJson("""[{"id": "$agreementId2"}]""").size shouldBe 1
 

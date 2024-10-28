@@ -4,11 +4,11 @@ import io.kotest.common.runBlocking
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
-import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.rapid.dto.MediaInfo
 import no.nav.hm.grunndata.rapid.dto.SeriesData
 import org.junit.jupiter.api.Test
 import java.util.*
+import no.nav.hm.grunndata.db.REGISTER
 
 @MicronautTest
 class SeriesRepositoryTest(private val seriesRepository: SeriesRepository) {
@@ -23,8 +23,8 @@ class SeriesRepositoryTest(private val seriesRepository: SeriesRepository) {
             isoCategory = "12001314",
             seriesData = SeriesData(media = setOf(MediaInfo(sourceUri = "http://example.com", uri = "http://example.com"))),
             supplierId = supplierId,
-            createdBy = HMDB,
-            updatedBy = HMDB )
+            createdBy = REGISTER,
+            updatedBy = REGISTER )
         runBlocking {
             val saved = seriesRepository.save(series)
             val found = seriesRepository.findById(series.id)

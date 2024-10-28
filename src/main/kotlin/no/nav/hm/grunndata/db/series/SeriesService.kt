@@ -9,7 +9,6 @@ import jakarta.inject.Singleton
 import jakarta.transaction.Transactional
 import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.db.GdbRapidPushService
-import no.nav.hm.grunndata.db.HMDB
 import no.nav.hm.grunndata.rapid.dto.SeriesRapidDTO
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
@@ -47,9 +46,7 @@ open class SeriesService(private val seriesRepository: SeriesRepository,
 
     @Transactional
     open suspend fun saveAndPushTokafka(series: Series, eventName: String): SeriesRapidDTO {
-        val saved =
-            (if (series.createdBy == HMDB) findByIdentifier(series.identifier)
-            else findById(series.id))?.let { inDb ->
+        val saved = findById(series.id)?.let { inDb ->
                 update(series.copy(id = inDb.id, created = inDb.created, identifier = inDb.identifier,
                     createdBy = inDb.createdBy))
             } ?: save(series)
