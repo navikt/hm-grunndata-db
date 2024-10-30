@@ -151,19 +151,10 @@ open class ProductService(
 
 
     @Transactional
-    open suspend fun findProducts(params: Map<String, String>?, pageable: Pageable): Page<ProductRapidDTO> =
-        productRepository.findAll(buildCriteriaSpec(params), pageable).map { runBlocking { it.toDTO() } }
+    open suspend fun findProducts(spec: PredicateSpecification<Product>?, pageable: Pageable): Page<ProductRapidDTO> =
+        productRepository.findAll(spec, pageable).map { runBlocking { it.toDTO() } }
 
-    private fun buildCriteriaSpec(params: Map<String, String>?): PredicateSpecification<Product>? = params?.let {
-        where {
-            if (params.contains("supplierRef")) root[Product::supplierRef] eq params["supplierRef"]
-            if (params.contains("supplierId")) root[Product::supplierId] eq UUID.fromString(params["supplierId"]!!)
-            if (params.contains("updated")) root[Product::updated] greaterThanOrEqualTo LocalDateTime.parse(params["updated"])
-            if (params.contains("status")) root[Product::status] eq params["status"]
-            if (params.contains("seriesUUID")) root[Product::seriesUUID] eq UUID.fromString(params["seriesUUID"]!!)
-            if (params.contains("isoCategory")) root[Product::isoCategory] eq params["isoCategory"]
-        }
-    }
+
 
     suspend fun findIdsByStatusAndCreatedBy(status: ProductStatus, createdBy: String): List<ProductIdDTO> =
         productRepository.findIdsByStatusAndCreatedBy(status = status, createdBy = createdBy)

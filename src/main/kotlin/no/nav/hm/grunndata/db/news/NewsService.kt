@@ -21,16 +21,8 @@ class NewsService(private val newsRepository: NewsRepository) {
     suspend fun update(news: NewsDTO): NewsDTO = newsRepository.update(news.toEntity()).toDTO()
     suspend fun save(news: NewsDTO): NewsDTO = newsRepository.save(news.toEntity()).toDTO()
 
-    suspend fun findNews(params: Map<String, String>?, pageable: Pageable): Page<NewsDTO> =
-        newsRepository.findAll(buildCriteriaSpec(params), pageable).map { it.toDTO() }
-
-    private fun buildCriteriaSpec(params: Map<String, String>?): PredicateSpecification<News>? =
-        params?.let {
-            where {
-                if (params.contains("status")) root[News::status] eq NewsStatus.valueOf(params["status"]!!)
-                if (params.contains("updated")) root[News::updated] greaterThanOrEqualTo LocalDateTime.parse(params["updated"])
-            }
-        }
+    suspend fun findNews(buildCriteriaSpec: PredicateSpecification<News>?, pageable: Pageable) =
+        newsRepository.findAll(buildCriteriaSpec, pageable).map { it.toDTO() }
 
 
 }

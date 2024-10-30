@@ -57,18 +57,9 @@ open class SeriesService(private val seriesRepository: SeriesRepository,
     }
 
     @Transactional
-    open suspend fun findSeries(params: Map<String, String>?, pageable: Pageable): Page<SeriesRapidDTO> =
-        seriesRepository.findAll(buildCriteriaSpec(params), pageable).map {it.toRapidDTO()}
+    open suspend fun findSeries(spec: PredicateSpecification<Series>?, pageable: Pageable): Page<SeriesRapidDTO> =
+        seriesRepository.findAll(spec, pageable).map {it.toRapidDTO()}
 
-
-    private fun buildCriteriaSpec(params: Map<String, String>?): PredicateSpecification<Series>?
-            = params?.let {
-        where {
-            if (params.contains("supplierId"))  root[Series::supplierId] eq UUID.fromString(params["supplierId"]!!)
-            if (params.contains("updated")) root[Series::updated] greaterThanOrEqualTo LocalDateTime.parse(params["updated"])
-            if (params.contains("status")) root[Series::status] eq params["status"]
-        }
-    }
 
     suspend fun findDeletedSeriesThatDoesNotExist() = seriesRepository.findDeletedSeriesThatDoesNotExist()
 }

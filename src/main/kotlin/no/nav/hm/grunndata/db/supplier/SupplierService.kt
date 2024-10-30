@@ -46,17 +46,10 @@ open class SupplierService(private val supplierRepository: SupplierRepository,
         supplierRepository.update(supplier)
     }
 
-    suspend fun findSuppliers(@QueryValue params: Map<String, String>?, pageable: Pageable
-    ): Page<SupplierDTO> = supplierRepository.findAll(buildCriteriaSpec(params), pageable).map { it.toDTO() }
+    suspend fun findSuppliers(spec: PredicateSpecification<Supplier>?, pageable: Pageable
+    ): Page<SupplierDTO> = supplierRepository.findAll(spec, pageable).map { it.toDTO() }
 
-    private fun buildCriteriaSpec(params: Map<String, String>?): PredicateSpecification<Supplier>?
-            = params?.let {
-        where {
-            if (params.contains("updated")) root[Supplier::updated] greaterThanOrEqualTo LocalDateTime.parse(params["updated"])
-            if (params.contains("status")) root[Supplier::status] eq SupplierStatus.valueOf(params["status"]!!)
-            if (params.contains("createdBy")) root[Supplier::createdBy] eq params["createdBy"]
-        }
-    }
+
 
     @Transactional
     open suspend fun saveAndPushTokafka(supplier: Supplier, eventName: String): SupplierDTO {

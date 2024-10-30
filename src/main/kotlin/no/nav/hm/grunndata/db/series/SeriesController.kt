@@ -2,9 +2,14 @@ package no.nav.hm.grunndata.db.series
 
 import io.micronaut.data.model.Page
 import io.micronaut.data.model.Pageable
+import io.micronaut.data.repository.jpa.criteria.PredicateSpecification
+import io.micronaut.data.runtime.criteria.get
+import io.micronaut.data.runtime.criteria.where
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.QueryValue
+import io.micronaut.http.annotation.RequestBean
+import java.time.LocalDateTime
 import no.nav.hm.grunndata.rapid.dto.SeriesRapidDTO
 import org.slf4j.LoggerFactory
 import java.util.*
@@ -17,10 +22,19 @@ class SeriesController(private val seriesSeries: SeriesService) {
         private val LOG = LoggerFactory.getLogger(SeriesController::class.java)
     }
 
-    @Get("/{?params*}")
-    suspend fun findSeries(@QueryValue params: Map<String, String>?,
-                             pageable: Pageable
-    ): Page<SeriesRapidDTO> = seriesSeries.findSeries(params, pageable)
+    @Get("/")
+    suspend fun findSeries(
+        @RequestBean seriesCriteria: SeriesCriteria, pageable: Pageable
+    ): Page<SeriesRapidDTO> = seriesSeries.findSeries(buildCriteriaSpec(seriesCriteria), pageable)
+
+    private fun buildCriteriaSpec(crit: SeriesCriteria): PredicateSpecification<Series>? =
+        if (crit.isNotEmpty()) {
+            where {
+                crit.supplierId?.let { root[Series::supplierId] eq it }
+                crit.updated?.let { root[Series::updated] greaterThanOrEqualTo it }
+                crit.status?.let { root[Series::status] eq it }
+            }
+        } else null
 
 
     @Get("/{id}")
@@ -31,5 +45,13 @@ class SeriesController(private val seriesSeries: SeriesService) {
 
     @Get("/find/deletedSeriesThatDoesNotExist")
     suspend fun findDeletedSeriesThatDoesNotExist() = seriesSeries.findDeletedSeriesThatDoesNotExist()
+
+    data class SeriesCriteria(
+        val supplierId: UUID?,
+        val updated: LocalDateTime?,
+        val status: String?
+    ) {
+        fun isNotEmpty(): Boolean = supplierId != null || updated != null || status != null
+    }
 
 }
