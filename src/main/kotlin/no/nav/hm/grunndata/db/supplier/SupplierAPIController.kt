@@ -1,5 +1,6 @@
 package no.nav.hm.grunndata.db.supplier
 
+import io.micronaut.core.annotation.Introspected
 import io.micronaut.data.model.Page
 import io.micronaut.data.model.Pageable
 import io.micronaut.data.repository.jpa.criteria.PredicateSpecification
@@ -34,11 +35,13 @@ class SupplierAPIController(private val supplierService: SupplierService) {
             }
         } else null
 
-    data class SupplierCriteria(
-        val updated: LocalDateTime?,
-        val status: SupplierStatus?,
-        val createdBy: String?
-    ) {
-        fun isNotEmpty(): Boolean = updated != null || status != null || createdBy != null
-    }
+}
+
+@Introspected
+data class SupplierCriteria(
+    val updated: LocalDateTime?,
+    val status: SupplierStatus?,
+    val createdBy: String?
+) {
+    fun isNotEmpty(): Boolean = updated != null || status != null || createdBy != null
 }

@@ -1,5 +1,6 @@
 package no.nav.hm.grunndata.db.product
 
+import io.micronaut.core.annotation.Introspected
 import io.micronaut.data.model.Page
 import io.micronaut.data.model.Pageable
 import io.micronaut.data.repository.jpa.criteria.PredicateSpecification
@@ -39,15 +40,17 @@ class ProductAPIController(private val productService: ProductService) {
     suspend fun findBySupplierIdAndSupplierRef(supplierId: UUID, supplierRef: String) =
         productService.findBySupplierIdAndSupplierRef(supplierId, supplierRef)
 
-    data class ProductCriteria(
-        val supplierRef: String?,
-        val supplierId: UUID?,
-        val updated: LocalDateTime?,
-        val status: String?,
-        val seriesUUID: UUID?,
-        val isoCategory: String?
-    ) {
-        fun isNotEmpty(): Boolean =
-            supplierRef != null || supplierId != null || updated != null || status != null || seriesUUID != null || isoCategory != null
-    }
+}
+
+@Introspected
+data class ProductCriteria(
+    val supplierRef: String?,
+    val supplierId: UUID?,
+    val updated: LocalDateTime?,
+    val status: String?,
+    val seriesUUID: UUID?,
+    val isoCategory: String?
+) {
+    fun isNotEmpty(): Boolean =
+        supplierRef != null || supplierId != null || updated != null || status != null || seriesUUID != null || isoCategory != null
 }

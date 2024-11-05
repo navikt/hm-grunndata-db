@@ -1,5 +1,6 @@
 package no.nav.hm.grunndata.db.news
 
+import io.micronaut.core.annotation.Introspected
 import io.micronaut.data.model.Page
 import io.micronaut.data.model.Pageable
 import io.micronaut.data.repository.jpa.criteria.PredicateSpecification
@@ -28,10 +29,12 @@ class NewsController(private val newsService: NewsService) {
             }
         } else null
 
-    data class NewsCriteria(
-        val status: NewsStatus?,
-        val updated: LocalDateTime?
-    ) {
-        fun isNotEmpty(): Boolean = status != null || updated != null
-    }
+}
+
+@Introspected
+data class NewsCriteria(
+    val status: NewsStatus?,
+    val updated: LocalDateTime?
+) {
+    fun isNotEmpty(): Boolean = status != null || updated != null
 }

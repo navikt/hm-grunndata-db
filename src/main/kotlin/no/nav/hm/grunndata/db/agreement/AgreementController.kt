@@ -44,15 +44,13 @@ class AgreementDocumentController(private val agreementService: AgreementService
             }
         } else null
 
-
-    @Introspected
-    data class AgreementCriteria (
-        val reference: String?,
-        val updatedAfter: LocalDateTime?,
-        val status: String?,
-        val expiredAfter: LocalDateTime?
-    ) {
-        fun isNotEmpty(): Boolean = reference != null || updatedAfter != null || status != null || expiredAfter != null
-    }
-
+}
+@Introspected
+data class AgreementCriteria (
+    val reference: String?,
+    val updatedAfter: LocalDateTime?,
+    val status: String?,
+    val expiredAfter: LocalDateTime?
+) {
+    fun isNotEmpty(): Boolean = reference != null || updatedAfter != null || status != null || expiredAfter != null
 }

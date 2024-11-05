@@ -1,5 +1,6 @@
 package no.nav.hm.grunndata.db.series
 
+import io.micronaut.core.annotation.Introspected
 import io.micronaut.data.model.Page
 import io.micronaut.data.model.Pageable
 import io.micronaut.data.repository.jpa.criteria.PredicateSpecification
@@ -46,12 +47,13 @@ class SeriesController(private val seriesSeries: SeriesService) {
     @Get("/find/deletedSeriesThatDoesNotExist")
     suspend fun findDeletedSeriesThatDoesNotExist() = seriesSeries.findDeletedSeriesThatDoesNotExist()
 
-    data class SeriesCriteria(
-        val supplierId: UUID?,
-        val updated: LocalDateTime?,
-        val status: String?
-    ) {
-        fun isNotEmpty(): Boolean = supplierId != null || updated != null || status != null
-    }
+}
 
+@Introspected
+data class SeriesCriteria(
+    val supplierId: UUID?,
+    val updated: LocalDateTime?,
+    val status: String?
+) {
+    fun isNotEmpty(): Boolean = supplierId != null || updated != null || status != null
 }
