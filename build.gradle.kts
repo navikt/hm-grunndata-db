@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 
 val jvmTarget = "17"
-val micronautVersion = "4.6.3"
+val micronautVersion = "4.7.0"
 val junitJupiterVersion = "5.9.0"
 val jacksonVersion = "2.13.4"
 val logbackClassicVersion = "1.4.12"
@@ -14,17 +14,20 @@ val mockkVersion = "1.13.4"
 val kotestVersion = "5.5.5"
 val rapidsRiversVersion = "202410290928"
 val grunndataDtoVersion = "202409181446"
+val jupiterVersion ="5.9.2"
+val flywayVersion="10.6.0"
+val leaderElectionVersion = "202405151234"
 
 group = "no.nav.hm"
 version = properties["version"] ?: "local-build"
 
 plugins {
-    kotlin("jvm") version "1.9.21"
-    kotlin("kapt") version "1.9.21"
-    kotlin("plugin.allopen") version "1.9.21"
+    kotlin("jvm") version "1.9.25"
+    kotlin("kapt") version "1.9.25"
+    kotlin("plugin.allopen") version "1.9.25"
     id("java")
     id("com.github.johnrengelman.shadow") version "7.1.0"
-    id("io.micronaut.application") version "4.4.0"
+    id("io.micronaut.application") version "4.4.4"
 }
 
 configurations.all {
@@ -70,16 +73,16 @@ dependencies {
     implementation("no.nav.hm.grunndata:hm-grunndata-rapid-dto:$grunndataDtoVersion")
 
     // flyway postgresql
-    implementation("org.flywaydb:flyway-database-postgresql:10.6.0")
+    implementation("org.flywaydb:flyway-database-postgresql:$flywayVersion")
 
-    implementation("com.github.navikt:hm-micronaut-leaderelection:202405151234")
+    implementation("com.github.navikt:hm-micronaut-leaderelection:$leaderElectionVersion")
 
     testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("io.micronaut.test:micronaut-test-kotest5")
     testImplementation("io.kotest:kotest-runner-junit5-jvm:$kotestVersion")
     testImplementation("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
 
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:$jupiterVersion")
     testImplementation("org.testcontainers:postgresql:${tcVersion}")
 }
 
