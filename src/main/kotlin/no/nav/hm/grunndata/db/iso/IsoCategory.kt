@@ -46,7 +46,9 @@ fun IsoCategory.toDTO(): IsoCategoryDTO = IsoCategoryDTO(
     isActive = isActive,
     showTech = showTech,
     allowMulti = allowMulti,
-    searchWords = searchWords
+    searchWords = searchWords,
+    updated = updated,
+    created = created
 )
 
 data class IsoCategoryDTO(
