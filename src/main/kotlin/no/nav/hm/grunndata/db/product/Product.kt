@@ -60,6 +60,9 @@ data class ProductAgreement(
     val postNr: Int,
     val postIdentifier: String?=null,
     val postId: UUID?=null,
+    val published: LocalDateTime?=null,
+    val expired: LocalDateTime?=null,
+    val status: ProductAgreementStatus?= null
 )
 
 fun ProductRapidDTO.toEntity(): Product = Product (
@@ -70,5 +73,6 @@ fun ProductRapidDTO.toEntity(): Product = Product (
 )
 
 private fun AgreementInfo.toProductAgreement(): ProductAgreement = ProductAgreement(
-    id = id, title = title, identifier = identifier, reference = reference, rank = rank, postNr = postNr, postIdentifier = postIdentifier, postId = postId
+    id = id, title = title, identifier = identifier, reference = reference, rank = rank, postNr = postNr,
+    postIdentifier = postIdentifier, postId = postId, published = published, expired = expired, status = status
 )

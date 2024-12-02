@@ -21,6 +21,7 @@ import no.nav.hm.rapids_rivers.micronaut.RapidPushService
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 import java.util.*
+import no.nav.hm.grunndata.rapid.dto.ProductAgreementStatus
 
 @MicronautTest
 class ProductAgreementRegistrationRiverSupportTest(
@@ -57,17 +58,20 @@ class ProductAgreementRegistrationRiverSupportTest(
 
         val productAgreement1 = ProductAgreement(
             id = agreement.id, identifier = agreement.identifier, reference = agreement.reference,
-            rank = 1, postNr = 1, postIdentifier = agreement.posts[0].identifier
+            rank = 1, postNr = 1, postIdentifier = agreement.posts[0].identifier, status = ProductAgreementStatus.ACTIVE,
+            published = LocalDateTime.now(), expired = LocalDateTime.now().plusYears(3)
         )
 
         val productAgreement2 = ProductAgreement(
             id = agreement.id, identifier = agreement.identifier, reference = agreement.reference,
-            rank = 2, postNr = 2, postIdentifier = agreement.posts[1].identifier
+            rank = 2, postNr = 2, postIdentifier = agreement.posts[1].identifier, status =ProductAgreementStatus.ACTIVE,
+            published = LocalDateTime.now(), expired = LocalDateTime.now().plusYears(3)
         )
 
         val pastProductAgreement = ProductAgreement(
             id = pastAgreement.id, identifier = pastAgreement.identifier, reference = pastAgreement.reference,
-            rank = 2, postNr = 2, postIdentifier = pastAgreement.posts[1].identifier
+            rank = 2, postNr = 2, postIdentifier = pastAgreement.posts[1].identifier, status = ProductAgreementStatus.INACTIVE,
+            published = LocalDateTime.now(), expired = LocalDateTime.now().minusDays(1)
         )
 
         val supplier = supplierService.save(

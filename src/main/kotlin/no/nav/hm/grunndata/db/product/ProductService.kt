@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.util.*
 import kotlinx.coroutines.coroutineScope
+import no.nav.hm.grunndata.rapid.dto.ProductAgreementStatus
 
 
 @Singleton
@@ -129,18 +130,19 @@ open class ProductService(
                             ?: throw IllegalStateException("Post not found for agreement ${agree.id} and post ${agree.postId}")
                     } else null
                     AgreementInfo(
-                        id = agreement!!.id,
+                        id = agreement.id,
                         title = agreement.title,
                         identifier = agreement.identifier,
                         rank = agree.rank,
                         postNr = agree.postNr,
                         postIdentifier = agree.postIdentifier,
                         postId = post?.id,
-                        published = agreement.published,
-                        expired = agreement.expired,
+                        published = agree.published ?: agreement.published,
+                        expired = agree.expired ?: agreement.expired,
                         reference = agreement.reference,
                         postTitle = post?.title,
-                        refNr = post?.refNr
+                        refNr = post?.refNr,
+                        status = agree.status ?: mapProductAgreemenStatusFromExpired(agree.expired ?: agreement.expired)
                     )
                 } else {
                     LOG.warn("Agreement ${agree.id} not found for product ${id}")
@@ -149,6 +151,10 @@ open class ProductService(
             } ?: emptyList()
         )
 
+    private fun mapProductAgreemenStatusFromExpired(expired: LocalDateTime): ProductAgreementStatus {
+        return if (expired.isAfter(LocalDateTime.now())) ProductAgreementStatus.ACTIVE
+        else ProductAgreementStatus.INACTIVE
+    }
 
     @Transactional
     open suspend fun findProducts(spec: PredicateSpecification<Product>?, pageable: Pageable): Page<ProductRapidDTO> =

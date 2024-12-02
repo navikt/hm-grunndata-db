@@ -48,17 +48,20 @@ class ProductServiceTest(private val productService: ProductService,
 
         val productAgreement = ProductAgreement(
             id = agreement.id, identifier = agreement.identifier, reference = agreement.reference,
-            rank = 1, postNr = 1, postIdentifier = agreement.posts[0].identifier
+            rank = 1, postNr = 1, postIdentifier = agreement.posts[0].identifier, status = ProductAgreementStatus.ACTIVE,
+            expired = agreement.expired, published = agreement.published
         )
 
         val productAgreement2 = ProductAgreement(
             id = agreement.id, identifier = agreement.identifier, reference = agreement.reference,
-            rank = 2, postNr = 2, postIdentifier = agreement.posts[1].identifier
+            rank = 2, postNr = 2, postIdentifier = agreement.posts[1].identifier, status = ProductAgreementStatus.ACTIVE,
+            expired = agreement.expired, published = agreement.published
         )
 
         val pastProductAgreement = ProductAgreement(
             id = pastAgreement.id, identifier = pastAgreement.identifier, reference = pastAgreement.reference,
-            rank = 2, postNr = 2, postIdentifier = pastAgreement.posts[1].identifier
+            rank = 2, postNr = 2, postIdentifier = pastAgreement.posts[1].identifier, status = ProductAgreementStatus.ACTIVE,
+            expired = agreement.expired, published = agreement.published
         )
 
         val supplier = supplierService.save(

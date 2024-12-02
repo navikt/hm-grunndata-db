@@ -7,6 +7,7 @@ import io.kotest.matchers.shouldBe
 import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import io.mockk.mockk
+import java.time.LocalDateTime
 import no.nav.helse.rapids_rivers.toUUID
 import no.nav.hm.grunndata.db.supplier.Supplier
 import no.nav.hm.grunndata.db.supplier.SupplierService
@@ -31,12 +32,14 @@ class ProductRepositoryTest(private val productRepository: ProductRepository,
         val agreementId2 = UUID.randomUUID()
         val productAgreement = ProductAgreement(
             id = agreementId, identifier = "HMDB-1", reference = "19-123",
-            rank=1, postNr = 5, postIdentifier = "HMDB-4123"
+            rank=1, postNr = 5, postIdentifier = "HMDB-4123", status = ProductAgreementStatus.ACTIVE,
+            published = LocalDateTime.now(), expired = LocalDateTime.now().plusYears(1)
         )
 
         val productAgreement2 = ProductAgreement(
             id = agreementId2, identifier = "HMDB-2", reference = "19-124",
-            rank=1, postNr = 2, postIdentifier = "HMDB-3123"
+            rank=1, postNr = 2, postIdentifier = "HMDB-3123", status = ProductAgreementStatus.ACTIVE,
+            published = LocalDateTime.now(), expired = LocalDateTime.now().plusYears(1)
         )
 
         val mediaSet = setOf(
