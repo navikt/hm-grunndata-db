@@ -48,6 +48,7 @@ class ProductRegistrationRiver(
             .register(this)
     }
 
+    @DeadLetterSupport(exceptionsToCatch = 1)
     override fun onPacket(packet: JsonMessage, context: MessageContext) {
         val eventId = packet["eventId"].asText()
         val dtoVersion = packet["dtoVersion"].asLong()
