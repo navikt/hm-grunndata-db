@@ -40,6 +40,9 @@ class ProductAPIController(private val productService: ProductService) {
     suspend fun findBySupplierIdAndSupplierRef(supplierId: UUID, supplierRef: String) =
         productService.findBySupplierIdAndSupplierRef(supplierId, supplierRef)
 
+    @Get("/isoCategory/thatHasHmsnr")
+    suspend fun findDistinctIsoCategoryThatHasHmsnr(): Set<String> = productService.findDistinctIsoCategoryThatHasHmsnr()
+
 }
 
 @Introspected

@@ -30,6 +30,9 @@ interface ProductRepository: CoroutinePageableCrudRepository<Product, UUID>, Cor
     suspend fun findBySeriesUUID(seriesUUID: UUID): List<Product>
     suspend fun findByIsoCategoryStartsWith(isoCategory: String): List<Product>
 
+    @Query("""SELECT DISTINCT iso_category FROM product_v1 WHERE accessory = false AND spare_part = false AND hms_artnr is not null""")
+    suspend fun findDistinctIsoCategoryThatHasHmsnr(): Set<String>
+
 }
 
 @Introspected

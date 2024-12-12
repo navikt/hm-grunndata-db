@@ -90,6 +90,9 @@ open class ProductService(
     suspend fun findByAgreementPostId(agreementPostId: UUID): List<Product> =
         productRepository.findByAgreementsJson("""[{"postId": "$agreementPostId"}]""")
 
+    suspend fun findDistinctIsoCategoryThatHasHmsnr(): Set<String> =
+        productRepository.findDistinctIsoCategoryThatHasHmsnr()
+
     @Transactional
     open suspend fun findByAgreementId(agreementId: UUID): List<Product> =
         productRepository.findByAgreementsJson("""[{"id": "$agreementId"}]""")
