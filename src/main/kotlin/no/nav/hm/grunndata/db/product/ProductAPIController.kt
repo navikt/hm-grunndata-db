@@ -29,6 +29,8 @@ class ProductAPIController(private val productService: ProductService) {
                 criteria.status?.let { root[Product::status] eq it }
                 criteria.seriesUUID?.let { root[Product::seriesUUID] eq it }
                 criteria.isoCategory?.let { root[Product::isoCategory] eq it }
+                criteria.accessory?.let { root[Product::accessory] eq it }
+                criteria.sparePart?.let { root[Product::sparePart] eq it }
             }
         } else null
 
@@ -52,8 +54,12 @@ data class ProductCriteria(
     val updated: LocalDateTime?,
     val status: String?,
     val seriesUUID: UUID?,
-    val isoCategory: String?
+    val isoCategory: String?,
+    val accessory: Boolean?,
+    val sparePart: Boolean?,
 ) {
     fun isNotEmpty(): Boolean =
-        supplierRef != null || supplierId != null || updated != null || status != null || seriesUUID != null || isoCategory != null
+        supplierRef != null || supplierId != null || updated != null || status != null || seriesUUID != null
+                || isoCategory != null || accessory != null || sparePart != null
+
 }
