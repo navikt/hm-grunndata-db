@@ -21,7 +21,7 @@ class AttributeTagService(
     }
 
     fun addDigitalSoknadAttribute(product: Product): Product {
-        val postIds = product.agreements?.mapNotNull { it.postId } ?: emptyList()
+        val postIds = onlyActiveAgreements(product).mapNotNull { it.postId }
         if (postIds.any { digihotSortiment.getPostIdInDigitalCatalog(it) }) {
             LOG.debug("Got product which is digitalSoknad ${product.hmsArtNr}")
             return product.copy(attributes = product.attributes.copy(digitalSoknad = true))
@@ -31,8 +31,8 @@ class AttributeTagService(
     }
 
     fun addSortimentKategoriAttribute(product: Product): Product {
-        val postId = product.agreements?.mapNotNull { it.postId }
-            ?.find { postId -> digihotSortiment.getPostIdInDigitalCatalog(postId) }
+        val postId = onlyActiveAgreements(product).mapNotNull { it.postId }
+            .find { postId -> digihotSortiment.getPostIdInDigitalCatalog(postId) }
         if (postId != null) {
             val sortimentKategori = digihotSortiment.getSortimentKategoriByPostIdInDigitalCatalog(postId)!!
             LOG.debug("Got product (hmsnr=${product.hmsArtNr}) with sortimentKategori=$sortimentKategori")
@@ -52,4 +52,11 @@ class AttributeTagService(
         LOG.debug("Got product with produkttype=${type} for ${product.isoCategory}")
         return product.copy(attributes = product.attributes.copy(produkttype = type))
     }
+
+    private fun onlyActiveAgreements(product: Product) = (product.agreements ?: listOf())
+            .filter { it.published!!.isBefore(java.time.LocalDateTime.now()) }
+            .filter { it.expired == null || it.expired.isAfter(java.time.LocalDateTime.now()) }
+            .filter { it.status == no.nav.hm.grunndata.rapid.dto.ProductAgreementStatus.ACTIVE }
+            .filter { product.status == no.nav.hm.grunndata.rapid.dto.ProductStatus.ACTIVE
+        }
 }
