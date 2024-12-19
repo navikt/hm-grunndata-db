@@ -58,17 +58,12 @@ class ProductAgreementRegistrationRiver(
             } ?: run {
                 LOG.warn("Product not found for agreement with productId ${dto.productId} supplierId: ${dto.supplierId} and supplierRef: ${dto.supplierRef} skipping")
             }
-
         }
-
     }
-
-
 }
 
 @Singleton
 class ProductAgreementRegistrationRiverSupport(private val agreementService: AgreementService) {
-
     companion object {
         private val LOG = LoggerFactory.getLogger(ProductAgreementRegistrationRiverSupport::class.java)
     }
@@ -77,7 +72,6 @@ class ProductAgreementRegistrationRiverSupport(private val agreementService: Agr
         product: ProductRapidDTO,
         agreement: ProductAgreementRegistrationRapidDTO
     ): ProductRapidDTO {
-
         val filteredAgreements = product.agreements.filter { it.postId != agreement.postId }
         if (agreement.status == ProductAgreementStatus.DELETED) return product.copy(agreements = filteredAgreements)
 
@@ -96,7 +90,7 @@ class ProductAgreementRegistrationRiverSupport(private val agreementService: Agr
                 rank = agreement.rank,
                 postNr = agreement.post,
                 postIdentifier = foundPost.identifier,
-                postTitle =foundPost.title,
+                postTitle = foundPost.title,
                 postId = agreement.postId,
                 refNr = foundPost.refNr,
                 reference = agreement.reference,

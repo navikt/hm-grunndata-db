@@ -54,7 +54,9 @@ class DigitalSoknadSortimentRiver(
                                 digitalSoknad = true,
                                 sortimentKategori = sortimentKategori,
                             )
-                        ), EventName.syncedRegisterProductV1, skipUpdateProductAttribute = true
+                        ),
+                        EventName.syncedRegisterProductV1,
+                        skipUpdateProductAttribute = true,
                     )
                 } else {
                     productService.saveAndPushTokafka(
@@ -63,7 +65,9 @@ class DigitalSoknadSortimentRiver(
                                 digitalSoknad = false,
                                 sortimentKategori = null,
                             )
-                        ), EventName.syncedRegisterProductV1, skipUpdateProductAttribute = true
+                        ),
+                        EventName.syncedRegisterProductV1,
+                        skipUpdateProductAttribute = true,
                     )
                 }
             }

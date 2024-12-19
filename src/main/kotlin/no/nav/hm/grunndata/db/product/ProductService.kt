@@ -46,10 +46,10 @@ open class ProductService(
         skipUpdateProductAttribute: Boolean = false
     ): ProductRapidDTO {
         val product = if (skipUpdateProductAttribute) {
-            // Skip the attribute enrichment below if we are being updated by hm-grunndata-register
+            // Skip the attribute enrichment in certain cases
             prod
         } else {
-            // When our update comes from hmdb we need to set product attributes here!
+            // In other cases we need to enrich
             listOf(
                 attributeTagService::addBestillingsordningAttribute,
                 attributeTagService::addDigitalSoknadAttribute,
