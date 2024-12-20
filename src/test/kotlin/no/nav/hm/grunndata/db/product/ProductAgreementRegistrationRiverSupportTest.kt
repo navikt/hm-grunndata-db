@@ -40,36 +40,36 @@ class ProductAgreementRegistrationRiverSupportTest(
     fun testProductAgreementRegistrationRiver() {
         val agreementId = UUID.randomUUID()
         val agreementId2 = UUID.randomUUID()
+        val post1 = AgreementPost(title = "Post 1", identifier = "HMDB-321", nr = 1, description = "En beskrive av posten")
+        val post2 = AgreementPost(title = "Post 2", identifier = "HMDB-322", nr = 2, description = "En beskrive av posten")
         val agreement = Agreement(id = agreementId, identifier = "HMDB-123", title = "Rammeavtale Rullestoler", resume = "En kort beskrivelse", reference="23-10234",
             text = "En lang beskrivelse 1", published = LocalDateTime.now(), expired = LocalDateTime.now().plusYears(3),
             posts = listOf(
-                AgreementPost(title = "Post 1", identifier = "HMDB-321", nr = 1, description = "En beskrive av posten"),
-                AgreementPost(title = "Post 2", identifier = "HMDB-322", nr = 2, description = "En beskrive av posten")
+                post1, post2
             ))
-
         val pastAgreement = Agreement(id = agreementId2, identifier = "HMDB-124", title = "Rammeavtale Rullestoler",
             resume = "En kort beskrivelse", reference="23-10235", status = AgreementStatus.INACTIVE,
             expired = LocalDateTime.now().minusYears(1),
             text = "En lang beskrivelse 1", published = LocalDateTime.now(),
             posts = listOf(
-                AgreementPost(title = "Post 1", identifier = "HMDB-333", nr = 1, description = "En beskrive av posten"),
-                AgreementPost(title = "Post 2", identifier = "HMDB-444", nr = 2, description = "En beskrive av posten")
+                post1,
+                post2
             ))
 
         val productAgreement1 = ProductAgreement(
-            id = agreement.id, identifier = agreement.identifier, reference = agreement.reference,
+            id = agreement.id, identifier = agreement.identifier, reference = agreement.reference, postId = post1.id,
             rank = 1, postNr = 1, postIdentifier = agreement.posts[0].identifier, status = ProductAgreementStatus.ACTIVE,
             published = LocalDateTime.now(), expired = LocalDateTime.now().plusYears(3)
         )
 
         val productAgreement2 = ProductAgreement(
-            id = agreement.id, identifier = agreement.identifier, reference = agreement.reference,
+            id = agreement.id, identifier = agreement.identifier, reference = agreement.reference, postId =  post2.id,
             rank = 2, postNr = 2, postIdentifier = agreement.posts[1].identifier, status =ProductAgreementStatus.ACTIVE,
             published = LocalDateTime.now(), expired = LocalDateTime.now().plusYears(3)
         )
 
         val pastProductAgreement = ProductAgreement(
-            id = pastAgreement.id, identifier = pastAgreement.identifier, reference = pastAgreement.reference,
+            id = pastAgreement.id, identifier = pastAgreement.identifier, reference = pastAgreement.reference, postId = post2.id,
             rank = 2, postNr = 2, postIdentifier = pastAgreement.posts[1].identifier, status = ProductAgreementStatus.INACTIVE,
             published = LocalDateTime.now(), expired = LocalDateTime.now().minusDays(1)
         )

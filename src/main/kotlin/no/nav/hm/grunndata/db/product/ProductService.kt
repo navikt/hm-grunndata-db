@@ -128,10 +128,11 @@ open class ProductService(
                 val agreement = agreementService.findById(agree.id)
                 if (agreement != null) {
                     LOG.info("Found agreement with ${agreement.id}, looking up for post: ${agree.postId}")
-                    val post = if (agree.postId != null) {
-                        agreement.posts.find { it.id == agree.postId }
-                            ?: throw IllegalStateException("Post not found for agreement ${agree.id} and post ${agree.postId}")
-                    } else null
+                    val post = if (agree.postId != null) { agreement.posts.find { it.id == agree.postId } } else null
+                    if (post == null) {
+                        LOG.warn("Post ${agree.postId} not found for agreement ${agreement.id}, skipping")
+                        return@mapNotNull null
+                    }
                     AgreementInfo(
                         id = agreement.id,
                         title = agreement.title,
@@ -139,12 +140,12 @@ open class ProductService(
                         rank = agree.rank,
                         postNr = agree.postNr,
                         postIdentifier = agree.postIdentifier,
-                        postId = post?.id,
+                        postId = post.id,
                         published = agree.published ?: agreement.published,
                         expired = agree.expired ?: agreement.expired,
                         reference = agreement.reference,
-                        postTitle = post?.title,
-                        refNr = post?.refNr,
+                        postTitle = post.title,
+                        refNr = post.refNr,
                         status = agree.status ?: mapProductAgreemenStatusFromExpired(agree.expired ?: agreement.expired)
                     )
                 } else {
