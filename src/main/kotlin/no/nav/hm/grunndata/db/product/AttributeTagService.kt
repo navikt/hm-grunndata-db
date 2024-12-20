@@ -54,7 +54,7 @@ class AttributeTagService(
     }
 
     private fun onlyActiveAgreements(product: Product) = (product.agreements ?: listOf())
-            .filter { it.published!!.isBefore(java.time.LocalDateTime.now()) }
+            .filter { it.published == null || it.published.isBefore(java.time.LocalDateTime.now()) }
             .filter { it.expired == null || it.expired.isAfter(java.time.LocalDateTime.now()) }
             .filter { it.status == no.nav.hm.grunndata.rapid.dto.ProductAgreementStatus.ACTIVE }
             .filter { product.status == no.nav.hm.grunndata.rapid.dto.ProductStatus.ACTIVE
