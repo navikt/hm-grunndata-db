@@ -11,18 +11,15 @@ import no.nav.helse.rapids_rivers.River
 import no.nav.helse.rapids_rivers.asLocalDateTime
 import no.nav.hm.grunndata.db.series.Series
 import no.nav.hm.grunndata.db.series.SeriesService
+import no.nav.hm.grunndata.db.series.mergeCompatibleWith
 import no.nav.hm.grunndata.rapid.dto.AdminStatus
 import no.nav.hm.grunndata.rapid.dto.DraftStatus
 import no.nav.hm.grunndata.rapid.dto.ProductRegistrationRapidDTO
 import no.nav.hm.grunndata.rapid.dto.SeriesData
 import no.nav.hm.grunndata.rapid.dto.rapidDTOVersion
-import no.nav.hm.grunndata.db.series.mergeCompatibleWidth
-import no.nav.hm.grunndata.rapid.dto.*
 import no.nav.hm.grunndata.rapid.event.EventName
 import no.nav.hm.rapids_rivers.micronaut.RiverHead
 import org.slf4j.LoggerFactory
-import java.util.UUID
-import no.nav.hm.rapids_rivers.micronaut.deadletter.DeadLetterSupport
 
 @Context
 @Requires(bean = KafkaRapid::class)
@@ -71,8 +68,8 @@ class ProductRegistrationRiver(
                             text = series.text,
                             url = series.seriesData?.attributes?.url,
                             keywords = series.seriesData?.attributes?.keywords?.toList(),
-                            compatibleWidth = mergeCompatibleWidth(
-                                riverProduct.attributes.compatibleWidth,
+                            compatibleWith = mergeCompatibleWith(
+                                riverProduct.attributes.compatibleWith,
                                 series.seriesData?.attributes?.compatibleWith)
                         ),
                         isoCategory = series.isoCategory,

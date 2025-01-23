@@ -63,7 +63,7 @@ class SeriesRegistrationRiver(
                             seriesUUID = dto.id,
                             title = dto.title,
                             attributes = product.attributes.copy(
-                                compatibleWidth = mergeCompatibleWidth(product.attributes.compatibleWidth, dto.seriesData.attributes.compatibleWith),
+                                compatibleWith = mergeCompatibleWith(product.attributes.compatibleWith, dto.seriesData.attributes.compatibleWith),
                                 text = dto.text,
                                 keywords = dto.seriesData.attributes.keywords?.toList(),
                                 url = dto.seriesData.attributes.url
@@ -80,7 +80,7 @@ class SeriesRegistrationRiver(
 
 }
 
-fun mergeCompatibleWidth(productCompatibleWith: CompatibleWith?, seriesCompatibleWith: CompatibleWith?): CompatibleWith? {
+fun mergeCompatibleWith(productCompatibleWith: CompatibleWith?, seriesCompatibleWith: CompatibleWith?): CompatibleWith? {
     if (productCompatibleWith == null && seriesCompatibleWith == null) return null
     val seriesIds = (productCompatibleWith?.seriesIds ?: emptySet()) + (seriesCompatibleWith?.seriesIds ?: emptySet())
     val productIds = (productCompatibleWith?.productIds ?: emptySet()) + (seriesCompatibleWith?.productIds ?: emptySet())

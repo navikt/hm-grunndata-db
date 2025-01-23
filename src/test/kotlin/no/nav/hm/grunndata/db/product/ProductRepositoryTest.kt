@@ -58,14 +58,14 @@ class ProductRepositoryTest(private val productRepository: ProductRepository,
                 supplierRef = "123", isoCategory = "123456", seriesId = seriesId, seriesIdentifier = seriesId,
                 agreements = setOf(productAgreement, productAgreement2), media = mediaSet, seriesUUID = seriesId.toUUID(),
                 attributes = Attributes (
-                    manufacturer =  "Samsung",  compatibleWidth = CompatibleWith(seriesIds = setOf(UUID.randomUUID())))
+                    manufacturer =  "Samsung",  compatibleWith = CompatibleWith(seriesIds = setOf(UUID.randomUUID())))
             ))
            productRepository.save(Product(
                 supplierId = supplier.id, identifier = "124", title = "Dette er et produkt2", articleName = "Produkt 2",
                 supplierRef = "124", isoCategory = "123456", seriesUUID = UUID.randomUUID(),
                 agreements = setOf(productAgreement),
                 attributes = Attributes (
-                    manufacturer =  "Samsung",  compatibleWidth = CompatibleWith(seriesIds = setOf(UUID.randomUUID())))
+                    manufacturer =  "Samsung",  compatibleWith = CompatibleWith(seriesIds = setOf(UUID.randomUUID())))
             ))
             val db = productRepository.findById(product.id)
             db.shouldNotBeNull()
