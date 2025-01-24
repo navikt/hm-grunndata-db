@@ -1,22 +1,90 @@
 package no.nav.hm.grunndata.db.product
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import io.micronaut.data.model.Pageable
+import io.micronaut.http.annotation.Body
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Post
 import no.nav.hm.grunndata.rapid.dto.ProductRapidDTO
 import no.nav.hm.grunndata.rapid.event.EventName
+import org.slf4j.LoggerFactory
 import java.util.UUID
 
 @Controller("/internal/v1/products")
-class ProductAdminAPIController(private val productService: ProductService) {
+class ProductAdminAPIController(
+    private val productService: ProductService,
+    private val attributeTagService: AttributeTagService,
+    private val objectMapper: ObjectMapper,
+) {
+    companion object {
+        private val LOG = LoggerFactory.getLogger(ProductAdminAPIController::class.java)
+    }
+
     @Post("/{id}/fix-product-attributes")
-    suspend fun fixProductAttributesFor(id: UUID): Response {
-        val product = productService.findByIdDTO(id) ?: return Response(error = "product not found")
+    suspend fun fixProductAttributesFor(id: UUID): FixProductAttributesResponse {
+        val product = productService.findByIdDTO(id) ?: return FixProductAttributesResponse(error = "product not found")
         val dto = productService.saveAndPushTokafka(product.toEntity(), EventName.syncedRegisterProductV1)
-        return Response(dto)
+        return FixProductAttributesResponse(dto)
+    }
+
+    @Post("/look-for-invalid-product-attributes")
+    suspend fun lookForInvalidProductAttributes(@Body req: LookForInvalidProductAttributesRequest): LookForInvalidProductAttributesResponse {
+        return runCatching {
+            val page = productService.findProducts(null, Pageable.from(req.page ?: 0, req.size ?: 5))
+            val mismatches = mutableListOf<LookForInvalidProductAttributesItemResponse>()
+            page.forEach { prod ->
+                val prodEntity = prod.toEntity()
+                val orig = objectMapper.writeValueAsString(prodEntity)
+                val enrichedProdEntity = listOf(
+                    attributeTagService::addBestillingsordningAttribute,
+                    attributeTagService::addDigitalSoknadAttribute,
+                    attributeTagService::addSortimentKategoriAttribute,
+                    attributeTagService::addPakrevdGodkjenningskursAttribute,
+                    attributeTagService::addProdukttypeAttribute,
+                ).fold(prodEntity) { it, enricher -> enricher.call(it) }
+                val enriched = objectMapper.writeValueAsString(enrichedProdEntity)
+                if (enriched != orig) {
+                    mismatches.add(LookForInvalidProductAttributesItemResponse(
+                        id = prodEntity.id,
+                        hmsnr = prodEntity.hmsArtNr ?: "<unknown>",
+                    ))
+                    LOG.info("DEBUG: Mismatch found: orig=${orig}, enriched=${enriched}")
+                } else {
+                    LOG.info("DEBUG: Matched")
+                }
+            }
+            LookForInvalidProductAttributesResponse(
+                totalPages = page.totalPages,
+                totalSize = page.totalSize,
+                mismatches = mismatches,
+            )
+        }.getOrElse { e ->
+            LOG.error("Exception thrown", e)
+            LookForInvalidProductAttributesResponse(
+                error = "Exception: $e",
+            )
+        }
     }
 }
 
-data class Response(
+data class FixProductAttributesResponse(
     val dto: ProductRapidDTO? = null,
     val error: String? = null,
+)
+
+data class LookForInvalidProductAttributesRequest(
+    val page: Int? = 0,
+    val size: Int? = 0,
+)
+
+data class LookForInvalidProductAttributesResponse(
+    val totalPages: Int? = null,
+    val totalSize: Long? = null,
+    val mismatches: List<LookForInvalidProductAttributesItemResponse>? = null,
+    val error: String? = null,
+)
+
+data class LookForInvalidProductAttributesItemResponse(
+    val id: UUID,
+    val hmsnr: String,
 )
