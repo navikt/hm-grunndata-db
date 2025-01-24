@@ -32,25 +32,30 @@ class ProductAdminAPIController(
         return runCatching {
             val page = productService.findProducts(null, Pageable.from(req.page ?: 0, req.size ?: 5))
             val mismatches = mutableListOf<LookForInvalidProductAttributesItemResponse>()
-            page.forEach { prod ->
-                val prodEntity = prod.toEntity()
-                val orig = objectMapper.writeValueAsString(prodEntity)
+            page.forEach { prodDto ->
+                val prod = prodDto.toEntity()
+                val orig = objectMapper.writeValueAsString(prod)
                 val enrichedProdEntity = listOf(
                     attributeTagService::addBestillingsordningAttribute,
                     attributeTagService::addDigitalSoknadAttribute,
                     attributeTagService::addSortimentKategoriAttribute,
                     attributeTagService::addPakrevdGodkjenningskursAttribute,
                     attributeTagService::addProdukttypeAttribute,
-                ).fold(prodEntity) { it, enricher -> enricher.call(it) }
+                ).fold(prod) { it, enricher -> enricher.call(it) }
                 val enriched = objectMapper.writeValueAsString(enrichedProdEntity)
                 if (enriched != orig) {
                     mismatches.add(LookForInvalidProductAttributesItemResponse(
-                        id = prodEntity.id,
-                        hmsnr = prodEntity.hmsArtNr ?: "<unknown>",
+                        id = prod.id,
+                        hmsnr = prod.hmsArtNr ?: "<none>",
+                        url = "https://finnhjelpemiddel.nav.no/produkt/${prod.seriesUUID}",
                     ))
-                    LOG.info("DEBUG: Mismatch found: orig=${orig}, enriched=${enriched}")
+                    if (req.debugLog == true) LOG.info("DEBUG: Mismatch found: orig=${orig}, enriched=${enriched}")
+                    if (req.update == true) {
+                        LOG.info("Updating stale product attributes for id=${prod.id}")
+                        productService.saveAndPushTokafka(prod, EventName.syncedRegisterProductV1)
+                    }
                 } else {
-                    LOG.info("DEBUG: Matched")
+                    if (req.debugLog == true) LOG.info("DEBUG: id=${prod.id} matched")
                 }
             }
             LookForInvalidProductAttributesResponse(
@@ -73,8 +78,10 @@ data class FixProductAttributesResponse(
 )
 
 data class LookForInvalidProductAttributesRequest(
-    val page: Int? = 0,
-    val size: Int? = 0,
+    val page: Int? = null,
+    val size: Int? = null,
+    val update: Boolean? = null,
+    val debugLog: Boolean? = null,
 )
 
 data class LookForInvalidProductAttributesResponse(
@@ -87,4 +94,5 @@ data class LookForInvalidProductAttributesResponse(
 data class LookForInvalidProductAttributesItemResponse(
     val id: UUID,
     val hmsnr: String,
+    val url: String,
 )
