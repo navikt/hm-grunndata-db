@@ -2,6 +2,7 @@ package no.nav.hm.grunndata.db.product
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.micronaut.data.model.Pageable
+import io.micronaut.data.model.Sort
 import io.micronaut.http.annotation.Body
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Post
@@ -30,7 +31,7 @@ class ProductAdminAPIController(
     @Post("/look-for-invalid-product-attributes")
     suspend fun lookForInvalidProductAttributes(@Body req: LookForInvalidProductAttributesRequest): LookForInvalidProductAttributesResponse {
         return runCatching {
-            val page = productService.findProducts(null, Pageable.from(req.page ?: 0, req.size ?: 5))
+            val page = productService.findProducts(null, Pageable.from(req.page ?: 0, req.size ?: 5, Sort.of(Sort.Order.asc("id"))))
             val mismatches = mutableListOf<LookForInvalidProductAttributesItemResponse>()
             page.forEach { prodDto ->
                 val prod = prodDto.toEntity()
