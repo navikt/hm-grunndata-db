@@ -48,7 +48,8 @@ class ProductAdminAPIController(
                     mismatches.add(LookForInvalidProductAttributesItemResponse(
                         id = prod.id,
                         hmsnr = prod.hmsArtNr ?: "<none>",
-                        url = "https://finnhjelpemiddel.nav.no/produkt/${prod.seriesUUID}",
+                        urlDev = "https://finnhjelpemiddel.intern.dev.nav.no/produkt/${prod.seriesUUID}",
+                        urlProd = "https://finnhjelpemiddel.nav.no/produkt/${prod.seriesUUID}",
                     ))
                     if (req.debugLog == true) LOG.info("DEBUG: Mismatch found: orig=${orig}, enriched=${enriched}")
                     if (req.update == true) {
@@ -95,5 +96,6 @@ data class LookForInvalidProductAttributesResponse(
 data class LookForInvalidProductAttributesItemResponse(
     val id: UUID,
     val hmsnr: String,
-    val url: String,
+    val urlDev: String,
+    val urlProd: String,
 )
