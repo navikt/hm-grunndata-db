@@ -45,6 +45,9 @@ class ProductAPIController(private val productService: ProductService) {
     @Get("/isoCategory/thatHasHmsnr")
     suspend fun findDistinctIsoCategoryThatHasHmsnr(): Set<String> = productService.findDistinctIsoCategoryThatHasHmsnr()
 
+    @Get("/hmsArtNr/{hmsArtNr}")
+    suspend fun findByHmsArtNr(hmsArtNr: String): ProductRapidDTO? = productService.findByHmsArtNr(hmsArtNr)
+
 }
 
 @Introspected

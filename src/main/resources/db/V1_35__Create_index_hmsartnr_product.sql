@@ -1,0 +1,1 @@
+CREATE INDEX hmsartnr_product_index ON product_v1(hms_artnr);
