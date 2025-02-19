@@ -41,7 +41,7 @@ spec:
     - name: MEDIA_STORAGE_CDNURL
       value: "{{ media_storage_cdnurl }}"
     - name: GRUNNDATA_REGISTER_URL
-      value: "http://hm-grunndata-register"
+      value: "http://hm-grunndata-register/admreg"
     {{#each env}}
     - name: {{ @key }}
       value: "{{ this }}"
