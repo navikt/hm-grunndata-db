@@ -129,3 +129,7 @@ elector:
 media:
   storage:
     cdnurl: ${MEDIA_STORAGE_CDNURL:`http://localhost:8080/local`}
+
+grunndata:
+  register:
+    url: ${GRUNNDATA_REGISTER_URL:`http://localhost:8080`}

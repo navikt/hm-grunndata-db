@@ -7,7 +7,7 @@ import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 
 @Singleton
-open class IsoCategoryService(private val isoCategoryRepository: IsoCategoryRepository) {
+open class IsoCategoryService(private val registerClient: RegisterClient) {
 
     private var isoCategories: Map<String, IsoCategoryDTO>
 
@@ -17,7 +17,7 @@ open class IsoCategoryService(private val isoCategoryRepository: IsoCategoryRepo
 
     init {
         runBlocking {
-            isoCategories = isoCategoryRepository.findAll().map { it.toDTO() }.toList().associateBy {
+            isoCategories = registerClient.getAllIsoCategories().associateBy {
                 it.isoCode
             }
             LOG.info("Iso categories initialized with size: ${isoCategories.size}")
@@ -26,13 +26,13 @@ open class IsoCategoryService(private val isoCategoryRepository: IsoCategoryRepo
 
     fun lookUpCode(isoCode: String): IsoCategoryDTO? {
         val cat = isoCategories[isoCode]
-        if (cat==null) LOG.error("IsoCode: $isoCode not found!")
+        if (cat==null) LOG.warn("IsoCode: $isoCode not found!")
         return cat
     }
 
     fun getHigherLevelsInBranch(isoCode: String): List<IsoCategoryDTO> {
         val cat = isoCategories[isoCode]
-        if (cat==null) LOG.error("IsoCode: $isoCode not found!")
+        if (cat==null) LOG.warn("IsoCode: $isoCode not found!")
         return isoCategories.values.filter { isoCode.startsWith(it.isoCode) }
     }
 
