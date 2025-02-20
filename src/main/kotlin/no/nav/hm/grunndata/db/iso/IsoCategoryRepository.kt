@@ -6,8 +6,8 @@ import io.micronaut.data.repository.kotlin.CoroutineCrudRepository
 import java.util.*
 
 
-@JdbcRepository(dialect = Dialect.POSTGRES)
-interface IsoCategoryRepository: CoroutineCrudRepository<IsoCategory, UUID> {
-
-    suspend fun findByIsoCode(isoCode: String): IsoCategory?
-}
+//@JdbcRepository(dialect = Dialect.POSTGRES)
+//interface IsoCategoryRepository: CoroutineCrudRepository<IsoCategory, UUID> {
+//
+//    suspend fun findByIsoCode(isoCode: String): IsoCategory?
+//}
