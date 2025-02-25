@@ -96,7 +96,7 @@ class ProductAgreementRegistrationRiverSupport(private val agreementService: Agr
                 reference = agreement.reference,
                 expired = agreement.expired,
                 status = agreement.status,
-                published = agreementInDb.published
+                published = agreement.published
             )
         } ?: throw IllegalStateException("Agreement ${agreement.agreementId} not found, that can not be possible check if agreements are in sync")
         LOG.info("agreements for product ${product.id} updated with agreement ${updated.id} and post ${updated.postId}")
