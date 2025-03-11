@@ -1,12 +1,15 @@
 package no.nav.hm.grunndata.db.iso
 
+import io.micronaut.data.annotation.Repository
 import jakarta.inject.Singleton
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.rapid.dto.IsoCategoryDTO
 import org.slf4j.LoggerFactory
 
 @Singleton
-open class IsoCategoryService(private val registerClient: RegisterClient) {
+open class IsoCategoryService(private val registerClient: RegisterClient, private val isoCategoryRepository: IsoCategoryRepository) {
 
     private var isoCategories: Map<String, IsoCategoryDTO>
 
@@ -16,7 +19,7 @@ open class IsoCategoryService(private val registerClient: RegisterClient) {
 
     init {
         runBlocking {
-            isoCategories = registerClient.getAllIsoCategories().associateBy {
+            isoCategories = isoCategoryRepository.findAll().map { it.toDTO() }.toList().associateBy {
                 it.isoCode
             }
             LOG.info("Iso categories initialized with size: ${isoCategories.size}")
