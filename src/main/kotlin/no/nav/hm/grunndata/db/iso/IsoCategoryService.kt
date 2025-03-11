@@ -19,9 +19,7 @@ open class IsoCategoryService(private val registerClient: RegisterClient, privat
 
     init {
         runBlocking {
-            isoCategories = isoCategoryRepository.findAll().map { it.toDTO() }.toList().associateBy {
-                it.isoCode
-            }
+            isoCategories = registerClient.getAllIsoCategories().associateBy { it.isoCode }
             LOG.info("Iso categories initialized with size: ${isoCategories.size}")
         }
     }
