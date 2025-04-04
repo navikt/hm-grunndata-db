@@ -27,6 +27,7 @@ data class Product (
     val isoCategory: String,
     val accessory: Boolean = false,
     val sparePart: Boolean = false,
+    val mainProduct: Boolean = true,
     val seriesUUID: UUID?,
     @Deprecated("Use seriesUUID instead")
     val seriesId: String?=null,
