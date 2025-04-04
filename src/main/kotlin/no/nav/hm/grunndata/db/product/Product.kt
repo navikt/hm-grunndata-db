@@ -68,7 +68,7 @@ data class ProductAgreement(
 
 fun ProductRapidDTO.toEntity(): Product = Product (
     id = id, supplierId = supplier.id, title = title, articleName = articleName, attributes=attributes, status = status, hmsArtNr = hmsArtNr,
-    identifier = identifier, supplierRef=supplierRef, isoCategory=isoCategory, accessory=accessory, sparePart=sparePart, seriesUUID = seriesUUID,
+    identifier = identifier, supplierRef=supplierRef, isoCategory=isoCategory, accessory=accessory, sparePart=sparePart, mainProduct = mainProduct, seriesUUID = seriesUUID,
     seriesId = seriesId, techData=techData, media = media, created=created, updated=updated, published=published, expired=expired,
     agreements = agreements.map { it.toProductAgreement() }.toSet(), agreementInfo = agreementInfo, createdBy=createdBy, updatedBy=updatedBy
 )

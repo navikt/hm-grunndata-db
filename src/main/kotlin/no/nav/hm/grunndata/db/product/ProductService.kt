@@ -114,6 +114,7 @@ open class ProductService(
             isoCategory = isoCategory,
             accessory = accessory,
             sparePart = sparePart,
+            mainProduct = mainProduct,
             seriesId = seriesId,
             seriesUUID = seriesUUID,
             seriesIdentifier = seriesIdentifier,
