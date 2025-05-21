@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.toList
 class TechLabelController(private val techLabelService: TechLabelService) {
 
     @Get("/")
-    suspend fun getAllTechLabels(): Map<String, List<TechLabelDTO>> =
+    fun getAllTechLabels(): Map<String, List<TechLabelDTO>> =
         techLabelService.fetchAllLabels()
 
 }

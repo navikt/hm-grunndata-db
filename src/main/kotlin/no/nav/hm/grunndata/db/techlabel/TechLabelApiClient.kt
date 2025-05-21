@@ -8,6 +8,6 @@ import io.micronaut.http.client.annotation.Client
 interface TechLabelApiClient {
 
     @Get(uri = "/api/v1/techlabels", consumes = [APPLICATION_JSON])
-    fun fetchAllTechLabel(): Map<String, List<TechLabelDTO>>
+    suspend fun fetchAllTechLabel(): Map<String, List<TechLabelDTO>>
 
 }
