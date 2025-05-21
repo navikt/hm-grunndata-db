@@ -44,6 +44,30 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
     networks:
       - grunndata-net
-
+  opensearchgrunndatadb:
+    image: opensearchproject/opensearch:2.11.1
+    hostname: opensearchgrunndatadb
+    container_name: opensearchgrunndatadb
+    ports:
+      - 9200:9200
+    environment:
+      - cluster.name=gdb
+      - node.name=opensearchgrunndatadb
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+    networks:
+      - grunndata-net
+#  dashboardsgrunndatadb:
+#    depends_on:
+#      - opensearchgrunndatadb
+#    image: opensearchproject/opensearch-dashboards:2.11.1
+#    ports:
+#      - 5601:5601
+#    environment:
+#      LOGGING_SILENT: "false"
+#      OPENSEARCH_HOSTS: '["https://opensearchgrunndatadb:9200"]'
+#    networks:
+#      - opensearch-net
 networks:
   grunndata-net:
