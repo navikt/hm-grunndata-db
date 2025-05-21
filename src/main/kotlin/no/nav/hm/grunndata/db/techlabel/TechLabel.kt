@@ -28,26 +28,5 @@ data class TechLabel(
     val updated: LocalDateTime = LocalDateTime.now()
 )
 
-data class TechLabelDTO(
-    val id: UUID,
-    val identifier: String,
-    val label: String,
-    val guide: String,
-    val definition: String? = null,
-    val isocode: String,
-    val type: String,
-    val unit: String?,
-    val sort: Int,
-    val options: List<String> = emptyList(),
-    val createdBy: String = REGISTER,
-    val updatedBy: String = REGISTER,
-    val created: LocalDateTime = LocalDateTime.now(),
-    val updated: LocalDateTime = LocalDateTime.now()
-)
-
-fun TechLabel.toDTO(): TechLabelDTO = TechLabelDTO(id = id, identifier = identifier, label = label, guide = guide, definition = definition,
-    isocode = isocode, type = type, unit = unit, sort = sort, options = options, createdBy = createdBy, updatedBy = updatedBy,
-    created = created, updated = updated
-)
 
 

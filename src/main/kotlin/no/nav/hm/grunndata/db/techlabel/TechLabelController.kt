@@ -6,10 +6,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 
 @Controller("/api/v1/techlabels")
-class TechLabelController(private val techLabelRepository: TechLabelRepository) {
+class TechLabelController(private val techLabelService: TechLabelService) {
 
     @Get("/")
-    suspend fun getAllTechLabels(): List<TechLabelDTO> =
-        techLabelRepository.findAll().map { it.toDTO() }.toList()
+    suspend fun getAllTechLabels(): Map<String, List<TechLabelDTO>> =
+        techLabelService.fetchAllLabels()
 
 }
