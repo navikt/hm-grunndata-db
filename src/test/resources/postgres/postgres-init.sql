@@ -8,3 +8,5 @@ CREATE USER importapi with password 'importapi';
 CREATE DATABASE importapi owner importapi;
 CREATE USER mediaproxy WITH password 'mediaproxy';
 CREATE DATABASE mediaproxy owner mediaproxy;
+CREATE USER alternativprodukter with password 'alternativprodukter';
+CREATE DATABASE alternativprodukter owner alternativprodukter;
