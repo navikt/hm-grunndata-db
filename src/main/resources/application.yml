@@ -38,9 +38,6 @@ micronaut:
     digihot-sortiment-produkttype:
       charset: 'UTF-8'
       expire-after-write: 1h
-    digihot-sortiment-isometadata:
-      charset: 'UTF-8'
-      expire-after-write: 1h
   data:
     pageable:
       max-page-size: 10000
@@ -118,7 +115,6 @@ digihotSortiment:
   digitalSoknad: ${DIGITAL_SOKNAD_URL:`https://navikt.github.io/digihot-sortiment/sortiment_av_apostid_per_kategori_dev2.json`}
   pakrevdGodkjenningskurs: ${PAKREVD_GODKJENNINGSKURS_URL:`https://navikt.github.io/digihot-sortiment/paakrevde_godkjenningskurs.json`}
   produkttype: ${PRODUKTTYPE_URL:`https://navikt.github.io/digihot-sortiment/produkttype.json`}
-  isoMetadata: ${ISOTITLESHORT_URL:`https://navikt.github.io/digihot-sortiment/isokategorier.json`}
 
 schedulers:
   enabled: ${SCHEDULERS_ENABLED:false}
