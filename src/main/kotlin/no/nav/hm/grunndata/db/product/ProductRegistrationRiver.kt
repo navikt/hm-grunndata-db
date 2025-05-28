@@ -15,6 +15,7 @@ import no.nav.hm.grunndata.db.series.mergeCompatibleWith
 import no.nav.hm.grunndata.rapid.dto.AdminStatus
 import no.nav.hm.grunndata.rapid.dto.DraftStatus
 import no.nav.hm.grunndata.rapid.dto.ProductRegistrationRapidDTO
+import no.nav.hm.grunndata.rapid.dto.RegistrationStatus
 import no.nav.hm.grunndata.rapid.dto.SeriesData
 import no.nav.hm.grunndata.rapid.dto.rapidDTOVersion
 import no.nav.hm.grunndata.rapid.event.EventName
@@ -58,7 +59,7 @@ class ProductRegistrationRiver(
         )
         runBlocking {
 
-            if (dto.adminStatus == AdminStatus.APPROVED && dto.draftStatus == DraftStatus.DONE) {
+            if (dto.draftStatus == DraftStatus.DONE && (dto.adminStatus == AdminStatus.APPROVED || dto.registrationStatus == RegistrationStatus.DELETED)) {
                 // series and products need to be merged before sending down the river
                 val riverProduct = dto.productDTO.toEntity()
                 seriesService.findById(riverProduct.seriesUUID!!)?.let { series ->
