@@ -62,6 +62,7 @@ class SeriesRegistrationRiver(
                             seriesIdentifier = saved.identifier,
                             seriesUUID = dto.id,
                             title = dto.title,
+                            supplierId = dto.supplierId,
                             attributes = product.attributes.copy(
                                 compatibleWith = mergeCompatibleWith(product.attributes.compatibleWith, dto.seriesData.attributes.compatibleWith),
                                 text = dto.text,
