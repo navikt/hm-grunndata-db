@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 
 val jvmTarget = "17"
-val micronautVersion = "4.8.2"
+val micronautVersion = "4.8.3"
 val logbackClassicVersion = "1.4.12"
 val logbackEncoderVersion = "7.3"
 val postgresqlVersion = "42.7.2"
@@ -15,6 +15,7 @@ val grunndataDtoVersion = "202506171302"
 val jupiterVersion ="5.9.2"
 val flywayVersion="10.6.0"
 val leaderElectionVersion = "202405151234"
+val jakartaPersistenceVersion = "3.1.0"
 
 group = "no.nav.hm"
 version = properties["version"] ?: "local-build"
@@ -48,7 +49,7 @@ dependencies {
 
     // micronaut-data
     implementation("io.micronaut.data:micronaut-data-jdbc")
-    implementation("jakarta.persistence:jakarta.persistence-api:3.1.0")
+    implementation("jakarta.persistence:jakarta.persistence-api:$jakartaPersistenceVersion")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     runtimeOnly("io.micronaut.sql:micronaut-jdbc-hikari")
     kapt("io.micronaut.data:micronaut-data-processor")
