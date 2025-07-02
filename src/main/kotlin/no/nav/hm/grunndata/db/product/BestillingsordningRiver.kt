@@ -52,7 +52,7 @@ class BestillingsordningRiver(
                             attributes = product.attributes.copy(
                                 bestillingsordning = true
                             )
-                        ).toEntity(), EventName.syncedRegisterProductV1, skipUpdateProductAttribute = true
+                        ).toEntity(), EventName.syncedRegisterProductV1, skipUpdateProductAttribute = false
                     )
                 } else {
                     productService.saveAndPushTokafka(
@@ -60,7 +60,7 @@ class BestillingsordningRiver(
                             attributes = product.attributes.copy(
                                 bestillingsordning = false
                             )
-                        ).toEntity(), EventName.syncedRegisterProductV1, skipUpdateProductAttribute = true
+                        ).toEntity(), EventName.syncedRegisterProductV1, skipUpdateProductAttribute = false
                     )
                 }
             }

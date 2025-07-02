@@ -59,7 +59,7 @@ class PaakrevdgodkjenningskursRiver(
                             attributes = product.attributes.copy(
                                 pakrevdGodkjenningskurs = PakrevdGodkjenningskurs(tittel = tittel, isokode = isokode, kursId = kursId),
                             )
-                        ), EventName.syncedRegisterProductV1, skipUpdateProductAttribute = true
+                        ), EventName.syncedRegisterProductV1, skipUpdateProductAttribute = false
                     )
                 } else {
                     productService.saveAndPushTokafka(
@@ -67,7 +67,7 @@ class PaakrevdgodkjenningskursRiver(
                             attributes = product.attributes.copy(
                                 pakrevdGodkjenningskurs = null,
                             )
-                        ), EventName.syncedRegisterProductV1, skipUpdateProductAttribute = true
+                        ), EventName.syncedRegisterProductV1, skipUpdateProductAttribute = false
                     )
                 }
             }

@@ -58,7 +58,7 @@ class ProdukttypeRiver(
                             attributes = product.attributes.copy(
                                 produkttype = Produkttype.valueOf(produkttype),
                             )
-                        ), EventName.syncedRegisterProductV1, skipUpdateProductAttribute = true
+                        ), EventName.syncedRegisterProductV1, skipUpdateProductAttribute = false
                     )
                 } else {
                     productService.saveAndPushTokafka(
@@ -66,7 +66,7 @@ class ProdukttypeRiver(
                             attributes = product.attributes.copy(
                                 produkttype = null,
                             )
-                        ), EventName.syncedRegisterProductV1, skipUpdateProductAttribute = true
+                        ), EventName.syncedRegisterProductV1, skipUpdateProductAttribute = false
                     )
                 }
             }

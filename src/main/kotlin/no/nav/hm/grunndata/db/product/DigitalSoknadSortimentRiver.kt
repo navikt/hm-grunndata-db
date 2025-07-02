@@ -56,7 +56,7 @@ class DigitalSoknadSortimentRiver(
                             )
                         ),
                         EventName.syncedRegisterProductV1,
-                        skipUpdateProductAttribute = true,
+                        skipUpdateProductAttribute = false,
                     )
                 } else {
                     productService.saveAndPushTokafka(
@@ -67,7 +67,7 @@ class DigitalSoknadSortimentRiver(
                             )
                         ),
                         EventName.syncedRegisterProductV1,
-                        skipUpdateProductAttribute = true,
+                        skipUpdateProductAttribute = false,
                     )
                 }
             }
