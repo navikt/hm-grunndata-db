@@ -1,7 +1,7 @@
 services:
-  postgresgrunndatadb:
+  postgresdb:
     hostname: postgres
-    image: postgres:14
+    image: postgres:15.2
     ports:
       - "5432:5432"
     environment:
@@ -9,21 +9,21 @@ services:
     volumes:
       - ./src/test/resources/postgres:/docker-entrypoint-initdb.d
     command: ["postgres", "-c", "log_statement=none"]
-  kafkagrunndata:
-    hostname: kafkagrunndata
+  kafkadb:
+    hostname: kafka
     image: confluentinc/cp-kafka:7.3.1
     logging:
       driver: none
     depends_on:
-      - zookeepergrunndata
+      - zookeeperdb
     ports:
       - "29092:29092"
       - "9092:9092"
     environment:
       KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: 'zookeepergrunndata:2181'
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafkagrunndata:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
@@ -31,9 +31,9 @@ services:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: true
     networks:
       - grunndata-net
-  zookeepergrunndata:
+  zookeeperdb:
     image: confluentinc/cp-zookeeper:7.3.1
-    hostname: zookeepergrunndata
+    hostname: zookeeper
     logging:
       driver: none
     ports:
@@ -43,29 +43,28 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
     networks:
       - grunndata-net
-  opensearchgrunndatadb:
+  opensearchdb:
     image: opensearchproject/opensearch:2.11.1
-    hostname: opensearchgrunndatadb
-    container_name: opensearchgrunndatadb
+    hostname: opensearch
     ports:
       - 9200:9200
     environment:
       - cluster.name=gdb
-      - node.name=opensearchgrunndatadb
+      - node.name=opensearch
       - discovery.type=single-node
       - bootstrap.memory_lock=true
       - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
     networks:
       - grunndata-net
-  dashboardsgrunndatadb:
+  dashboardsdb:
     depends_on:
-      - opensearchgrunndatadb
+      - opensearchdb
     image: opensearchproject/opensearch-dashboards:2.11.1
     ports:
       - 5601:5601
     environment:
       LOGGING_SILENT: "false"
-      OPENSEARCH_HOSTS: '["https://opensearchgrunndatadb:9200"]'
+      OPENSEARCH_HOSTS: '["https://opensearch:9200"]'
     networks:
       - grunndata-net
 networks:
