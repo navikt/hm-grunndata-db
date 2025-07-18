@@ -8,6 +8,8 @@ import no.nav.helse.rapids_rivers.*
 import no.nav.hm.grunndata.db.agreement.AgreementRegistrationRiver
 import no.nav.hm.grunndata.db.agreement.AgreementService
 import no.nav.hm.grunndata.db.agreement.toEntity
+import no.nav.hm.grunndata.db.index.supplier.SupplierIndexer
+import no.nav.hm.grunndata.db.index.supplier.toDoc
 import no.nav.hm.grunndata.rapid.dto.AgreementRegistrationRapidDTO
 import no.nav.hm.grunndata.rapid.dto.DraftStatus
 import no.nav.hm.grunndata.rapid.dto.SupplierDTO
@@ -20,7 +22,7 @@ import org.slf4j.LoggerFactory
 @Requires(bean = KafkaRapid::class)
 class SupplierRegistrationRiver(river: RiverHead,
                                 private val objectMapper: ObjectMapper,
-                                private val supplierService: SupplierService
+                                private val supplierService: SupplierService, private val supplierIndexer: SupplierIndexer
 ): River.PacketListener  {
 
     companion object {
@@ -46,7 +48,9 @@ class SupplierRegistrationRiver(river: RiverHead,
         val dto = objectMapper.treeToValue(packet["payload"], SupplierDTO::class.java)
         LOG.info("got supplier registration id: ${dto.id} eventId $eventId eventTime: $createdTime supplierStatus: ${dto.status}")
         runBlocking {
-                supplierService.saveAndPushTokafka(dto.toEntity(), EventName.syncedRegisterSupplierV1)
+            LOG.info("indexing supplier id: ${dto.id} name: ${dto.name} with status ${dto.status}")
+            supplierIndexer.index(dto.toDoc())
+            supplierService.saveAndPushTokafka(dto.toEntity(), EventName.syncedRegisterSupplierV1)
         }
     }
 

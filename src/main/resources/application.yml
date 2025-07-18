@@ -129,3 +129,19 @@ media:
 grunndata:
   register:
     url: ${GRUNNDATA_REGISTER_URL:`http://localhost:1337/admreg`}
+
+opensearch:
+  password: ${OPEN_SEARCH_PASSWORD:admin}
+  user: ${OPEN_SEARCH_USERNAME:admin}
+  url: ${OPEN_SEARCH_URI:`https://localhost:9200`}
+
+agreements:
+  aliasName: ${AGREEMENTS_ALIASNAME:agreements}
+external_products:
+  aliasName: ${EXTERNAL_PRODUCTS_ALIASNAME:external_products}
+suppliers:
+  aliasName: ${SUPPLIERS_ALIASNAME:suppliers}
+products:
+  aliasName: ${PRODUCTS_ALIASNAME:products}
+news:
+  aliasName: ${NEWS_ALIASNAME:news}

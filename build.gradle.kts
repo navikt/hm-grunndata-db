@@ -16,6 +16,8 @@ val jupiterVersion ="5.9.2"
 val flywayVersion="10.6.0"
 val leaderElectionVersion = "202405151234"
 val jakartaPersistenceVersion = "3.1.0"
+val openSearchJavaClientVersion = "2.18.0"
+val opensearchTestContainerVersion = "2.1.1"
 
 group = "no.nav.hm"
 version = properties["version"] ?: "local-build"
@@ -76,6 +78,9 @@ dependencies {
 
     implementation("com.github.navikt:hm-micronaut-leaderelection:$leaderElectionVersion")
 
+    implementation("org.apache.httpcomponents.client5:httpclient5:5.4.1")
+    implementation("org.opensearch.client:opensearch-java:${openSearchJavaClientVersion}")
+
     testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("io.micronaut.test:micronaut-test-kotest5")
     testImplementation("io.kotest:kotest-runner-junit5-jvm:$kotestVersion")
@@ -83,6 +88,7 @@ dependencies {
 
     testImplementation("org.junit.jupiter:junit-jupiter-params:$jupiterVersion")
     testImplementation("org.testcontainers:postgresql:${tcVersion}")
+    testImplementation("org.opensearch:opensearch-testcontainers:${opensearchTestContainerVersion}")
 }
 
 allOpen {

@@ -19,10 +19,6 @@ import org.slf4j.LoggerFactory
 @Controller("/api/v1/agreements")
 class AgreementDocumentController(private val agreementService: AgreementService) {
 
-    companion object {
-        private val LOG = LoggerFactory.getLogger(AgreementDocumentController::class.java)
-    }
-
     @Get("/{id}")
     suspend fun getAgreementDocument(id:UUID): AgreementDTO? = agreementService.findById(id)?.let {
                 it.toDTO() }
@@ -31,26 +27,17 @@ class AgreementDocumentController(private val agreementService: AgreementService
     @Get("/")
     suspend fun findAgreements(@RequestBean criteria: AgreementCriteria, pageable: Pageable
     ): Page<AgreementDTO> {
-        return agreementService.findAll(buildCriteriaSpec(criteria), pageable).map { it.toDTO() }
+        return agreementService.findAll(criteria, pageable).map { it.toDTO() }
     }
 
-    private fun buildCriteriaSpec(crit: AgreementCriteria): PredicateSpecification<Agreement>? =
-      if (crit.isNotEmpty()) {
-             where {
-                crit.reference?.let { root[Agreement::reference] eq it }
-                crit.updatedAfter?.let { root[Agreement::updated] greaterThanOrEqualTo it }
-                crit.status?.let { root[Agreement::status] eq it }
-                crit.expiredAfter?.let { root[Agreement::expired] greaterThanOrEqualTo it }
-            }
-        } else null
-
 }
+
 @Introspected
 data class AgreementCriteria (
-    val reference: String?,
-    val updatedAfter: LocalDateTime?,
-    val status: String?,
-    val expiredAfter: LocalDateTime?
+    val reference: String? = null,
+    val updatedAfter: LocalDateTime? = null,
+    val status: String? = null,
+    val expiredAfter: LocalDateTime? = null
 ) {
     fun isNotEmpty(): Boolean = reference != null || updatedAfter != null || status != null || expiredAfter != null
 }

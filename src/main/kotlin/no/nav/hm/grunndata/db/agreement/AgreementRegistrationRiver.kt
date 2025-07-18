@@ -5,6 +5,8 @@ import io.micronaut.context.annotation.Context
 import io.micronaut.context.annotation.Requires
 import kotlinx.coroutines.runBlocking
 import no.nav.helse.rapids_rivers.*
+import no.nav.hm.grunndata.db.index.agreement.AgreementIndexer
+import no.nav.hm.grunndata.db.index.agreement.toDoc
 import no.nav.hm.grunndata.db.product.ProductRegistrationRiver
 import no.nav.hm.grunndata.db.product.ProductService
 import no.nav.hm.grunndata.db.product.toEntity
@@ -17,7 +19,7 @@ import org.slf4j.LoggerFactory
 @Requires(bean = KafkaRapid::class)
 class AgreementRegistrationRiver(river: RiverHead,
                                  private val objectMapper: ObjectMapper,
-                                 private val agreementService: AgreementService
+                                 private val agreementService: AgreementService, private val agreementIndexer: AgreementIndexer
 ): River.PacketListener  {
 
     companion object {
@@ -43,8 +45,12 @@ class AgreementRegistrationRiver(river: RiverHead,
         val dto = objectMapper.treeToValue(packet["payload"], AgreementRegistrationRapidDTO::class.java)
         LOG.info("got agreement registration id: ${dto.id} eventId $eventId eventTime: $createdTime agreementStatus: ${dto.agreementDTO.status}")
         runBlocking {
-            if (dto.draftStatus == DraftStatus.DONE)
-                agreementService.saveAndPushTokafka(dto.agreementDTO.toEntity(), EventName.syncedRegisterAgreementV1)
+            if (dto.draftStatus == DraftStatus.DONE) {
+                val agreementDTO = dto.agreementDTO
+                agreementService.saveAndPushTokafka(agreementDTO.toEntity(), EventName.syncedRegisterAgreementV1)
+                LOG.info("indexing agreement id: ${agreementDTO.id} reference: ${agreementDTO.reference}")
+                agreementIndexer.index(agreementDTO.toDoc())
+            }
         }
     }
 
