@@ -11,6 +11,7 @@ import no.nav.hm.grunndata.rapid.dto.AgreementStatus
 import java.time.LocalDateTime
 import java.util.*
 import no.nav.hm.grunndata.db.REGISTER
+import no.nav.hm.grunndata.rapid.dto.RapidDTO
 
 
 @MappedEntity("agreement_v1")
