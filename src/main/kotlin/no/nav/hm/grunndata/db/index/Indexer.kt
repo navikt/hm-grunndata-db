@@ -15,6 +15,7 @@ import org.opensearch.client.opensearch.core.CountRequest
 import org.opensearch.client.opensearch.core.DeleteRequest
 import org.opensearch.client.opensearch.core.DeleteResponse
 import org.opensearch.client.opensearch.core.bulk.BulkOperation
+import org.opensearch.client.opensearch.core.bulk.DeleteOperation
 import org.opensearch.client.opensearch.core.bulk.IndexOperation
 import org.opensearch.client.opensearch.indices.CreateIndexRequest
 import org.opensearch.client.opensearch.indices.ExistsAliasRequest
@@ -85,6 +86,31 @@ abstract class Indexer(private val client: OpenSearchClient,
         return ack
     }
 
+    fun indexDoc(docs: List<IndexDoc>): BulkResponse {
+        val operations = docs.map { document ->
+            if (document.delete) {
+                LOG.info("deleting document ${document.id} from index ${document.indexName}")
+                BulkOperation.Builder().delete(
+                    DeleteOperation.of { it.index(document.indexName).id(document.id.toString()) }
+                ).build()
+            }
+            else BulkOperation.Builder().index(
+                IndexOperation.of { it.index(document.indexName).id(document.id.toString()).document(document.doc) }
+            ).build()
+        }
+        val bulkRequest = BulkRequest.Builder()
+            .operations(operations)
+            .refresh(Refresh.WaitFor)
+            .build()
+        return try {
+            client.bulk(bulkRequest)
+        }
+        catch (e: Exception) {
+            LOG.error("Failed to bulk index ${docs.size}", e)
+            throw e
+        }
+    }
+
     fun index(doc: SearchDoc): BulkResponse {
         return index(doc, aliasName)
     }
@@ -146,8 +172,8 @@ abstract class Indexer(private val client: OpenSearchClient,
     }
 }
 
-fun createIndexName(type: IndexType): String = "${type.name}_${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))}"
+fun createIndexName(type: IndexName): String = "${type.name}_${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))}"
 
-enum class IndexType {
+enum class IndexName {
     products, alternative_products, external_products, suppliers, agreements, news
 }

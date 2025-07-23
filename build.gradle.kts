@@ -82,7 +82,6 @@ dependencies {
     implementation("org.opensearch.client:opensearch-java:${openSearchJavaClientVersion}")
 
     testImplementation("io.mockk:mockk:$mockkVersion")
-    testImplementation("io.micronaut.test:micronaut-test-kotest5")
     testImplementation("io.kotest:kotest-runner-junit5-jvm:$kotestVersion")
     testImplementation("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
 

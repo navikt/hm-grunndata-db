@@ -10,6 +10,9 @@ import jakarta.inject.Singleton
 import jakarta.transaction.Transactional
 import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.db.GdbRapidPushService
+import no.nav.hm.grunndata.db.index.item.IndexItemService
+import no.nav.hm.grunndata.db.index.item.IndexType
+import no.nav.hm.grunndata.db.index.supplier.toDoc
 import no.nav.hm.grunndata.rapid.dto.SupplierDTO
 import no.nav.hm.grunndata.rapid.dto.SupplierStatus
 import org.slf4j.LoggerFactory
@@ -18,6 +21,7 @@ import java.util.*
 
 @Singleton
 open class SupplierService(private val supplierRepository: SupplierRepository,
+                           private val indexItemService: IndexItemService,
                            private val gdbRapidPushService: GdbRapidPushService) {
 
     companion object {
@@ -52,14 +56,15 @@ open class SupplierService(private val supplierRepository: SupplierRepository,
 
 
     @Transactional
-    open suspend fun saveAndPushTokafka(supplier: Supplier, eventName: String): SupplierDTO {
+    open suspend fun saveAndPushTokafka(supplierDTO: SupplierDTO, eventName: String): SupplierDTO {
+        val supplier = supplierDTO.toEntity()
         val saved = findById(supplier.id)?.let { inDb ->
                 update(supplier.copy(id = inDb.id, created = inDb.created,
                     createdBy = inDb.createdBy))
             } ?: save(supplier)
-        val supplierDTO = saved.toDTO()
         LOG.info("saved: ${supplierDTO.id} ")
         gdbRapidPushService.pushDTOToKafka(supplierDTO, eventName)
+        indexItemService.saveIndexItem(supplierDTO.toDoc(), IndexType.SUPPLIER)
         return supplierDTO
     }
 }

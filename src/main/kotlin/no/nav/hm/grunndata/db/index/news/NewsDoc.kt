@@ -18,7 +18,9 @@ data class NewsDoc (
     val createdBy: String,
     val updatedBy: String,
     val author: String
-): SearchDoc
+): SearchDoc {
+    override fun isDelete(): Boolean = status == NewsStatus.DELETED
+}
 
 fun NewsDTO.toDoc(): NewsDoc = NewsDoc(
     id = id.toString(),

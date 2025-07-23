@@ -2,7 +2,7 @@ package no.nav.hm.grunndata.db.index.product
 
 import io.micronaut.context.annotation.Value
 import jakarta.inject.Singleton
-import no.nav.hm.grunndata.db.index.IndexType
+import no.nav.hm.grunndata.db.index.IndexName
 import no.nav.hm.grunndata.db.index.Indexer
 import no.nav.hm.grunndata.db.index.createIndexName
 import no.nav.hm.grunndata.rapid.dto.ProductStatus
@@ -33,7 +33,7 @@ class ProductIndexer(
     fun count() = docCount()
 
     fun reIndex(alias: Boolean) {
-        val indexName = createIndexName(IndexType.products)
+        val indexName = createIndexName(IndexName.products)
         if (!indexExists(indexName)) {
             createIndex(indexName, settings, mapping)
         }

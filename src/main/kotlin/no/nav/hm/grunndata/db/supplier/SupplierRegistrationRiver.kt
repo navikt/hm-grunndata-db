@@ -49,8 +49,7 @@ class SupplierRegistrationRiver(river: RiverHead,
         LOG.info("got supplier registration id: ${dto.id} eventId $eventId eventTime: $createdTime supplierStatus: ${dto.status}")
         runBlocking {
             LOG.info("indexing supplier id: ${dto.id} name: ${dto.name} with status ${dto.status}")
-            supplierIndexer.index(dto.toDoc())
-            supplierService.saveAndPushTokafka(dto.toEntity(), EventName.syncedRegisterSupplierV1)
+            supplierService.saveAndPushTokafka(dto, EventName.syncedRegisterSupplierV1)
         }
     }
 

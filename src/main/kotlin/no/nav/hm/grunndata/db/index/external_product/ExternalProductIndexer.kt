@@ -2,7 +2,7 @@ package no.nav.hm.grunndata.db.index.external_product
 
 import io.micronaut.context.annotation.Value
 import jakarta.inject.Singleton
-import no.nav.hm.grunndata.db.index.IndexType
+import no.nav.hm.grunndata.db.index.IndexName
 import no.nav.hm.grunndata.db.index.Indexer
 import no.nav.hm.grunndata.db.index.createIndexName
 import no.nav.hm.grunndata.db.index.product.GdbApiClient
@@ -30,7 +30,7 @@ class ExternalProductIndexer(
     }
 
     fun reIndex(alias: Boolean) {
-        val indexName = createIndexName(IndexType.external_products)
+        val indexName = createIndexName(IndexName.external_products)
         if (!indexExists(indexName)) {
             LOG.info("creating index $indexName")
             createIndex(indexName, settings, mapping)

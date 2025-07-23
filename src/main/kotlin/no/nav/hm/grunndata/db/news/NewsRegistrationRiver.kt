@@ -42,40 +42,25 @@ class NewsRegistrationRiver(river: RiverHead, private val objectMapper: ObjectMa
     override fun onPacket(packet: JsonMessage, context: MessageContext) {
         val dtoVersion = packet["dtoVersion"].asLong()
         if (dtoVersion > rapidDTOVersion) LOG.warn("dto version $dtoVersion is newer than $rapidDTOVersion")
-        val dto = objectMapper.treeToValue(packet["payload"], NewsRegistrationRapidDTO::class.java)
-        LOG.info("Got news registration id: ${dto.id} title: ${dto.title}")
+        val newsRegistrationDTO = objectMapper.treeToValue(packet["payload"], NewsRegistrationRapidDTO::class.java)
+        LOG.info("Got news registration id: ${newsRegistrationDTO.id} title: ${newsRegistrationDTO.title}")
         runBlocking {
-            val saved = newsService.findById(dto.id)?.let {inDb ->
-                newsService.update(inDb.copy(title = dto.title,
-                    text = dto.text,
-                    status = dto.status,
-                    published = dto.published,
-                    expired = dto.expired,
-                    author = dto.author))
-            } ?: newsService.save(
-                NewsDTO(
-                id = dto.id,
-                identifier = dto.id.toString(),
-                title = dto.title,
-                text = dto.text,
-                status = dto.status,
-                published = dto.published,
-                expired = dto.expired,
-                created = dto.created,
-                updated = dto.updated,
-                createdBy = "REGISTER",
-                updatedBy = "REGISTER",
-                author = dto.author
-            ))
-            rapidPushService.pushDTOToKafka(saved, EventName.hmdbnewsyncV1)
-            if (saved.status == NewsStatus.DELETED) {
-                LOG.info("deleting news id: ${saved.id} title: ${saved.title}")
-                newsIndexer.delete(dto.id)
-            }
-            else {
-                LOG.info("indexing news id: ${dto.id} title: ${dto.title}")
-                newsIndexer.index(saved.toDoc())
-            }
+            newsService.saveAndPushToKafka(newsRegistrationDTO.toDTO(), EventName.registeredNewsV1)
         }
     }
 }
+
+fun NewsRegistrationRapidDTO.toDTO() = NewsDTO(
+    id = id ,
+    title = title,
+    text = text,
+    status = status,
+    published = published,
+    expired = expired ,
+    created = created ,
+    updated = updated,
+    createdBy = createdBy,
+    updatedBy = updatedBy,
+    identifier = id.toString(),
+    author = author
+)

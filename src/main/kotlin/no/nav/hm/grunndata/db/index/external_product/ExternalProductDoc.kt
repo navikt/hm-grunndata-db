@@ -36,7 +36,10 @@ data class ExternalProductDoc(
     // FILTERED: val filters: ExternalTechDataFilters,
     val agreements: List<ExternalAgreementInfoDoc> = emptyList(),
     val hasAgreement: Boolean = false,
-) : SearchDoc
+) : SearchDoc {
+        override fun isDelete(): Boolean = status == ProductStatus.DELETED
+    }
+
 
 data class ExternalAgreementInfoDoc(
     val id: UUID,

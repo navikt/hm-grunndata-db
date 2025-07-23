@@ -4,7 +4,7 @@ import io.micronaut.context.annotation.Value
 import io.micronaut.data.model.Pageable
 import io.micronaut.data.model.Sort
 import jakarta.inject.Singleton
-import no.nav.hm.grunndata.db.index.IndexType
+import no.nav.hm.grunndata.db.index.IndexName
 import no.nav.hm.grunndata.db.index.Indexer
 import no.nav.hm.grunndata.db.index.createIndexName
 import no.nav.hm.grunndata.db.supplier.SupplierService
@@ -28,7 +28,7 @@ class SupplierIndexer(private val supplierService: SupplierService,
 
 
     suspend fun reIndex(alias: Boolean) {
-        val indexName = createIndexName(IndexType.suppliers)
+        val indexName = createIndexName(IndexName.suppliers)
         if (!indexExists(indexName)) {
             LOG.info("creating index $indexName")
             createIndex(indexName, settings, mapping)

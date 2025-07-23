@@ -6,17 +6,19 @@ import io.micronaut.data.runtime.criteria.get
 import io.micronaut.data.runtime.criteria.where
 import jakarta.inject.Singleton
 import jakarta.transaction.Transactional
-import java.time.LocalDateTime
 import java.util.UUID
 import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.db.GdbRapidPushService
+import no.nav.hm.grunndata.db.index.agreement.toDoc
+import no.nav.hm.grunndata.db.index.item.IndexItemService
+import no.nav.hm.grunndata.db.index.item.IndexType
 import no.nav.hm.grunndata.rapid.dto.AgreementDTO
-import no.nav.hm.grunndata.rapid.dto.AgreementStatus
 import org.slf4j.LoggerFactory
 
 @Singleton
 open class AgreementService(private val agreementRepository: AgreementRepository,
-                            private val gdbRapidPushService: GdbRapidPushService
+                            private val gdbRapidPushService: GdbRapidPushService,
+                            private val indexItemService: IndexItemService,
 ) {
 
     companion object {
@@ -44,14 +46,16 @@ open class AgreementService(private val agreementRepository: AgreementRepository
     suspend fun findAll(criteria: AgreementCriteria, pageable: Pageable) = agreementRepository.findAll(buildCriteriaSpec(criteria), pageable)
 
     @Transactional
-    open suspend fun saveAndPushTokafka(agreement: Agreement, eventName: String): AgreementDTO {
+    open suspend fun saveAndPushTokafka(agreementDTO: AgreementDTO, eventName: String): AgreementDTO {
+        val agreement = agreementDTO.toEntity()
         val saved = findById(agreement.id)?.let { inDb ->
             update(agreement.copy(id = inDb.id, created = inDb.created,
                 createdBy = inDb.createdBy))
         } ?: save(agreement)
-        val agreementDTO = saved.toDTO()
         LOG.info("saved: ${agreementDTO.id} ${agreementDTO.reference}")
+        indexItemService.saveIndexItem(agreementDTO.toDoc(), IndexType.AGREEMENT)
         gdbRapidPushService.pushDTOToKafka(agreementDTO, eventName)
+        LOG.info("indexing agreement id: ${agreementDTO.id} reference: ${agreementDTO.reference}")
         return agreementDTO
     }
 

@@ -47,9 +47,7 @@ class AgreementRegistrationRiver(river: RiverHead,
         runBlocking {
             if (dto.draftStatus == DraftStatus.DONE) {
                 val agreementDTO = dto.agreementDTO
-                agreementService.saveAndPushTokafka(agreementDTO.toEntity(), EventName.syncedRegisterAgreementV1)
-                LOG.info("indexing agreement id: ${agreementDTO.id} reference: ${agreementDTO.reference}")
-                agreementIndexer.index(agreementDTO.toDoc())
+                agreementService.saveAndPushTokafka(agreementDTO, EventName.syncedRegisterAgreementV1)
             }
         }
     }

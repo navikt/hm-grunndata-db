@@ -20,7 +20,9 @@ data class SupplierDoc(
     val createdBy: String,
     val updatedBy: String,
     val created: LocalDateTime,
-    val updated: LocalDateTime) : SearchDoc
+    val updated: LocalDateTime) : SearchDoc {
+        override fun isDelete(): Boolean = status == SupplierStatus.INACTIVE
+    }
 
 fun SupplierDTO.toDoc(): SupplierDoc = SupplierDoc(
     id = id.toString(), identifier = identifier, status = status, name = name, address = info.address, postNr = info.postNr,

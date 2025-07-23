@@ -51,7 +51,9 @@ data class ProductDoc(
     val previousAgreements: List<AgreementInfoDoc> = emptyList(),
     val hasAgreement: Boolean = false,
     val hasPreviousAgreement: Boolean = false
-) : SearchDoc
+) : SearchDoc {
+    override fun isDelete(): Boolean = status == ProductStatus.DELETED
+}
 
 
 data class AgreementInfoDoc(

@@ -7,7 +7,7 @@ import jakarta.inject.Singleton
 import no.nav.hm.grunndata.db.agreement.AgreementCriteria
 import no.nav.hm.grunndata.db.agreement.AgreementService
 import no.nav.hm.grunndata.db.agreement.toDTO
-import no.nav.hm.grunndata.db.index.IndexType
+import no.nav.hm.grunndata.db.index.IndexName
 import no.nav.hm.grunndata.db.index.Indexer
 import no.nav.hm.grunndata.db.index.createIndexName
 import org.slf4j.LoggerFactory
@@ -18,7 +18,7 @@ import org.opensearch.client.opensearch.OpenSearchClient
 @Singleton
 class AgreementIndexer(private val agreementService: AgreementService,
                        @Value("\${agreements.aliasName}") private val aliasName: String,
-                       private val client: OpenSearchClient): Indexer(client, settings, mapping, aliasName) {
+                       private val client: OpenSearchClient): Indexer(client, settings, mapping, aliasName,) {
 
     companion object {
         private val LOG = LoggerFactory.getLogger(AgreementIndexer::class.java)
@@ -29,7 +29,7 @@ class AgreementIndexer(private val agreementService: AgreementService,
     }
 
     suspend fun reIndex(alias: Boolean) {
-        val indexName = createIndexName(IndexType.agreements)
+        val indexName = createIndexName(IndexName.agreements)
         if (!indexExists(indexName)) {
             LOG.info("creating index $indexName")
             createIndex(indexName, settings, mapping)

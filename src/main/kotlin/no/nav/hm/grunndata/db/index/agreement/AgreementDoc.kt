@@ -27,7 +27,10 @@ data class AgreementDoc(
     val created: LocalDateTime,
     val updated: LocalDateTime,
     val previousAgreement: UUID? = null,
-) : SearchDoc
+) : SearchDoc {
+        override fun isDelete(): Boolean = status == AgreementStatus.DELETED
+    }
+
 
 fun AgreementDTO.toDoc() : AgreementDoc = AgreementDoc (
     id = id.toString(), identifier = identifier, status = status,
