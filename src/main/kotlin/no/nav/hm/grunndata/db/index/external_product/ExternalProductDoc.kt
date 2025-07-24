@@ -3,7 +3,7 @@ package no.nav.hm.grunndata.db.index.external_product
 import no.nav.hm.grunndata.rapid.dto.*
 import no.nav.hm.grunndata.db.index.SearchDoc
 import no.nav.hm.grunndata.db.index.agreement.AgreementLabels
-import no.nav.hm.grunndata.db.index.product.IsoCategoryService
+import no.nav.hm.grunndata.db.iso.IsoCategoryService
 import java.time.LocalDateTime
 import java.util.*
 
@@ -83,7 +83,7 @@ data class ExternalMediaDoc(
 
 data class ExternalProductSupplier(val id: String, val identifier: String, val name: String)
 
-fun ProductRapidDTO.toDoc(isoCategoryService: IsoCategoryService): ExternalProductDoc = try {
+fun ProductRapidDTO.toExternalDoc(isoCategoryService: IsoCategoryService): ExternalProductDoc = try {
     val onlyActiveAgreements =
         agreements.filter { it.published!!.isBefore(LocalDateTime.now())
                 && it.expired.isAfter(LocalDateTime.now()) && it.status == ProductAgreementStatus.ACTIVE}
@@ -94,7 +94,7 @@ fun ProductRapidDTO.toDoc(isoCategoryService: IsoCategoryService): ExternalProdu
         ),
         title = title,
         articleName = articleName,
-        attributes = attributes.toDoc(),
+        attributes = attributes.toExternalDoc(),
         status = status,
         hmsArtNr = hmsArtNr,
         identifier = identifier,
@@ -109,13 +109,13 @@ fun ProductRapidDTO.toDoc(isoCategoryService: IsoCategoryService): ExternalProdu
         // FILTERED: sparePart = sparePart,
         seriesId = seriesUUID?.toString(),
         data = techData,
-        media = media.map { it.toDoc() }.sortedBy { it.priority },
+        media = media.map { it.toExternalDoc() }.sortedBy { it.priority },
         created = created,
         updated = updated,
         expired = expired,
         // FILTERED: createdBy = createdBy,
         // FILTERED: updatedBy = updatedBy,
-        agreements = onlyActiveAgreements.map { it.toDoc() },
+        agreements = onlyActiveAgreements.map { it.toExternalDoc() },
         hasAgreement = onlyActiveAgreements.isNotEmpty(),
         // FILTERED: filters = mapExternalTechDataFilters(techData))
     )
@@ -124,7 +124,7 @@ fun ProductRapidDTO.toDoc(isoCategoryService: IsoCategoryService): ExternalProdu
     throw e
 }
 
-private fun AgreementInfo.toDoc(): ExternalAgreementInfoDoc = ExternalAgreementInfoDoc(
+private fun AgreementInfo.toExternalDoc(): ExternalAgreementInfoDoc = ExternalAgreementInfoDoc(
     id = id,
     identifier = identifier,
     title = title,
@@ -139,7 +139,7 @@ private fun AgreementInfo.toDoc(): ExternalAgreementInfoDoc = ExternalAgreementI
     expired = expired
 )
 
-private fun Attributes.toDoc(): ExternalAttributesDoc {
+private fun Attributes.toExternalDoc(): ExternalAttributesDoc {
     return ExternalAttributesDoc(
         // FILTERED: manufacturer = manufacturer,
         // FILTERED: keywords = keywords,
@@ -158,7 +158,7 @@ private fun Attributes.toDoc(): ExternalAttributesDoc {
     )
 }
 
-fun MediaInfo.toDoc(): ExternalMediaDoc = ExternalMediaDoc(
+fun MediaInfo.toExternalDoc(): ExternalMediaDoc = ExternalMediaDoc(
     uri = uri, priority = priority, type = type, text = text, source = source
 )
 

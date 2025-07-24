@@ -3,24 +3,25 @@ package no.nav.hm.grunndata.db.product
 import io.micronaut.data.model.Page
 import io.micronaut.data.model.Pageable
 import io.micronaut.data.repository.jpa.criteria.PredicateSpecification
-import io.micronaut.data.runtime.criteria.get
-import io.micronaut.data.runtime.criteria.where
 import jakarta.inject.Singleton
 import jakarta.transaction.Transactional
 import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.db.GdbRapidPushService
-import no.nav.hm.grunndata.db.REGISTER
 import no.nav.hm.grunndata.db.agreement.AgreementService
+import no.nav.hm.grunndata.db.index.external_product.toExternalDoc
+import no.nav.hm.grunndata.db.index.item.IndexItemService
+import no.nav.hm.grunndata.db.index.item.IndexType
+import no.nav.hm.grunndata.db.index.product.toDoc
+import no.nav.hm.grunndata.db.iso.IsoCategoryService
 import no.nav.hm.grunndata.db.supplier.SupplierService
 import no.nav.hm.grunndata.db.supplier.toDTO
 import no.nav.hm.grunndata.rapid.dto.AgreementInfo
+import no.nav.hm.grunndata.rapid.dto.ProductAgreementStatus
 import no.nav.hm.grunndata.rapid.dto.ProductRapidDTO
 import no.nav.hm.grunndata.rapid.dto.ProductStatus
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.util.*
-import kotlinx.coroutines.coroutineScope
-import no.nav.hm.grunndata.rapid.dto.ProductAgreementStatus
 
 
 @Singleton
@@ -29,7 +30,9 @@ open class ProductService(
     private val attributeTagService: AttributeTagService,
     private val supplierService: SupplierService,
     private val gdbRapidPushService: GdbRapidPushService,
-    private val agreementService: AgreementService
+    private val agreementService: AgreementService,
+    private val indexItemService: IndexItemService,
+    private val isoCategoryService: IsoCategoryService
 ) {
 
     companion object {
@@ -70,7 +73,12 @@ open class ProductService(
         LOG.info("saved: ${productDTO.id} ${productDTO.supplierRef} ${productDTO.hmsArtNr} ${productDTO.identifier}")
         if (productDTO.title == "Use series title" || productDTO.title.isBlank()) {
             LOG.warn("Product ${productDTO.id} has no title, it means series is not synced yet")
-        } else gdbRapidPushService.pushDTOToKafka(productDTO, eventName)
+        } else {
+            gdbRapidPushService.pushDTOToKafka(productDTO, eventName)
+            indexItemService.saveIndexItem(productDTO.toDoc(isoCategoryService), IndexType.PRODUCT)
+            // external product
+            indexItemService.saveIndexItem(productDTO.toExternalDoc(isoCategoryService), IndexType.EXTERNAL_PRODUCT)
+        }
         return productDTO
     }
 

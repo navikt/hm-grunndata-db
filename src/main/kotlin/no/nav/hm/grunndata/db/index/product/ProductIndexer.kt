@@ -5,6 +5,7 @@ import jakarta.inject.Singleton
 import no.nav.hm.grunndata.db.index.IndexName
 import no.nav.hm.grunndata.db.index.Indexer
 import no.nav.hm.grunndata.db.index.createIndexName
+import no.nav.hm.grunndata.db.iso.IsoCategoryService
 import no.nav.hm.grunndata.rapid.dto.ProductStatus
 
 import org.slf4j.LoggerFactory

@@ -1,8 +1,10 @@
 package no.nav.hm.grunndata.db.index.item
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import jakarta.inject.Singleton
 import no.nav.hm.grunndata.db.index.SearchDoc
 
+@Singleton
 class IndexItemService(private val indexItemRepository: IndexItemRepository, private val objectMapper: ObjectMapper) {
 
 
@@ -24,5 +26,5 @@ class IndexItemService(private val indexItemRepository: IndexItemRepository, pri
 }
 
 enum class IndexType {
-    NEWS, PRODUCT, AGREEMENT, SUPPLIER
+    NEWS, PRODUCT, AGREEMENT, SUPPLIER, EXTERNAL_PRODUCT
 }

@@ -2,6 +2,7 @@ package no.nav.hm.grunndata.db.index.product
 
 import no.nav.hm.grunndata.db.index.SearchDoc
 import no.nav.hm.grunndata.db.index.agreement.AgreementLabels
+import no.nav.hm.grunndata.db.iso.IsoCategoryService
 import no.nav.hm.grunndata.rapid.dto.AgreementInfo
 import no.nav.hm.grunndata.rapid.dto.AlternativeFor
 import no.nav.hm.grunndata.rapid.dto.Attributes

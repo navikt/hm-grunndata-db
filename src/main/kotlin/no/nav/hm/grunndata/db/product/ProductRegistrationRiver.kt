@@ -9,10 +9,9 @@ import no.nav.helse.rapids_rivers.KafkaRapid
 import no.nav.helse.rapids_rivers.MessageContext
 import no.nav.helse.rapids_rivers.River
 import no.nav.helse.rapids_rivers.asLocalDateTime
-import no.nav.hm.grunndata.db.index.product.IsoCategoryService
 import no.nav.hm.grunndata.db.index.product.ProductIndexer
-import no.nav.hm.grunndata.db.index.product.ProductIndexerRiver
 import no.nav.hm.grunndata.db.index.product.toDoc
+import no.nav.hm.grunndata.db.iso.IsoCategoryService
 import no.nav.hm.grunndata.db.series.Series
 import no.nav.hm.grunndata.db.series.SeriesService
 import no.nav.hm.grunndata.db.series.mergeCompatibleWith

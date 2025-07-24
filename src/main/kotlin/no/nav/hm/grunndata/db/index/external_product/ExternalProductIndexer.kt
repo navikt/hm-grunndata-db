@@ -6,7 +6,7 @@ import no.nav.hm.grunndata.db.index.IndexName
 import no.nav.hm.grunndata.db.index.Indexer
 import no.nav.hm.grunndata.db.index.createIndexName
 import no.nav.hm.grunndata.db.index.product.GdbApiClient
-import no.nav.hm.grunndata.db.index.product.IsoCategoryService
+import no.nav.hm.grunndata.db.iso.IsoCategoryService
 import no.nav.hm.grunndata.rapid.dto.ProductStatus
 
 import org.slf4j.LoggerFactory
@@ -41,7 +41,7 @@ class ExternalProductIndexer(
         var lastId: UUID? = null
         while(page.numberOfElements>0) {
             val products = page.content
-                .map { it.toDoc(isoCategoryService) }.filter {
+                .map { it.toExternalDoc(isoCategoryService) }.filter {
                     it.status != ProductStatus.DELETED
                 }
             LOG.info("indexing ${products.size} products to $indexName")
