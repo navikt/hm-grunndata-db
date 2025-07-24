@@ -12,29 +12,28 @@ import org.slf4j.LoggerFactory
 import java.util.UUID
 
 @Controller("/internal/index/products")
-@ExecuteOn(TaskExecutors.BLOCKING)
 class ProductIndexerController(private val productIndexer: ProductIndexer) {
     companion object {
         private val LOG = LoggerFactory.getLogger(ProductIndexerController::class.java)
     }
 
     @Post("/")
-    fun indexProducts(@QueryValue(value = "alias", defaultValue = "false") alias: Boolean) {
+    suspend fun indexProducts(@QueryValue(value = "alias", defaultValue = "false") alias: Boolean) {
         productIndexer.reIndex(alias)
     }
 
     @Post("/supplier/{supplierId}")
-    fun indexProductsBySupplierId(supplierId: UUID) {
+    suspend fun indexProductsBySupplierId(supplierId: UUID) {
         productIndexer.reIndexBySupplierId(supplierId)
     }
 
     @Post("/series/{seriesId}")
-    fun indexProductsBySeriesId(seriesId: UUID) {
+    suspend fun indexProductsBySeriesId(seriesId: UUID) {
         productIndexer.reIndexBySeriesId(seriesId)
     }
 
     @Post("/isoCategory/{isoCategory}")
-    fun indexProductsByCategory(isoCategory: String) {
+    suspend fun indexProductsByCategory(isoCategory: String) {
         productIndexer.reIndexByIsoCategory(isoCategory)
     }
 

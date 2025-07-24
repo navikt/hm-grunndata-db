@@ -3,6 +3,8 @@ package no.nav.hm.grunndata.db.product
 import io.micronaut.data.model.Page
 import io.micronaut.data.model.Pageable
 import io.micronaut.data.repository.jpa.criteria.PredicateSpecification
+import io.micronaut.data.runtime.criteria.get
+import io.micronaut.data.runtime.criteria.where
 import jakarta.inject.Singleton
 import jakarta.transaction.Transactional
 import kotlinx.coroutines.runBlocking
@@ -170,6 +172,24 @@ open class ProductService(
         return if (expired.isAfter(LocalDateTime.now())) ProductAgreementStatus.ACTIVE
         else ProductAgreementStatus.INACTIVE
     }
+
+    open suspend fun findProducts(criteria: ProductCriteria, pageable: Pageable) :  Page<ProductRapidDTO> = findProducts(
+        spec = buildCriteriaSpec(criteria), pageable)
+
+    private fun buildCriteriaSpec(criteria: ProductCriteria): PredicateSpecification<Product>? =
+        if (criteria.isNotEmpty()) {
+            where {
+                criteria.supplierRef?.let { root[Product::supplierRef] eq it }
+                criteria.supplierId?.let { root[Product::supplierId] eq it }
+                criteria.updated?.let { root[Product::updated] greaterThanOrEqualTo it }
+                criteria.status?.let { root[Product::status] eq it }
+                criteria.seriesUUID?.let { root[Product::seriesUUID] eq it }
+                criteria.isoCategory?.let { root[Product::isoCategory] eq it }
+                criteria.accessory?.let { root[Product::accessory] eq it }
+                criteria.sparePart?.let { root[Product::sparePart] eq it }
+            }
+        } else null
+
 
     @Transactional
     open suspend fun findProducts(spec: PredicateSpecification<Product>?, pageable: Pageable): Page<ProductRapidDTO> =

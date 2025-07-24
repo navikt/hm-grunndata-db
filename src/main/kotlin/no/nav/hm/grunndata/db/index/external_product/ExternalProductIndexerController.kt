@@ -6,22 +6,21 @@ import io.micronaut.scheduling.annotation.ExecuteOn
 import org.slf4j.LoggerFactory
 
 @Controller("/internal/index/external-products")
-@ExecuteOn(TaskExecutors.BLOCKING)
 class ExternalProductIndexerController(private val externalProductIndexer: ExternalProductIndexer) {
     companion object {
         private val LOG = LoggerFactory.getLogger(ExternalProductIndexerController::class.java)
     }
 
     @Post("/")
-    fun indexProducts(@QueryValue(value = "alias", defaultValue = "false") alias: Boolean) {
+    suspend fun indexProducts(@QueryValue(value = "alias", defaultValue = "false") alias: Boolean) {
         externalProductIndexer.reIndex(alias)
     }
 
     @Put("/alias/{indexName}")
-    fun aliasProducts(indexName: String) {
+    suspend fun aliasProducts(indexName: String) {
         externalProductIndexer.updateAlias(indexName)
     }
 
     @Get("/alias")
-    fun getAlias() = externalProductIndexer.getAlias().toJsonString()
+    suspend fun getAlias() = externalProductIndexer.getAlias().toJsonString()
 }

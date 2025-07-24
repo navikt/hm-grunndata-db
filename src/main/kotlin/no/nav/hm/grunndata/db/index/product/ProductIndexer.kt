@@ -1,11 +1,16 @@
 package no.nav.hm.grunndata.db.index.product
 
 import io.micronaut.context.annotation.Value
+import io.micronaut.data.model.Pageable
+import io.micronaut.data.model.Sort
+import io.micronaut.data.model.Sort.Order
 import jakarta.inject.Singleton
 import no.nav.hm.grunndata.db.index.IndexName
 import no.nav.hm.grunndata.db.index.Indexer
 import no.nav.hm.grunndata.db.index.createIndexName
 import no.nav.hm.grunndata.db.iso.IsoCategoryService
+import no.nav.hm.grunndata.db.product.ProductCriteria
+import no.nav.hm.grunndata.db.product.ProductService
 import no.nav.hm.grunndata.rapid.dto.ProductStatus
 
 import org.slf4j.LoggerFactory
@@ -16,8 +21,8 @@ import org.opensearch.client.opensearch.OpenSearchClient
 @Singleton
 class ProductIndexer(
     @Value("\${products.aliasName}") private val aliasName: String,
-    private val gdbApiClient: GdbApiClient,
     private val isoCategoryService: IsoCategoryService,
+    private val productService: ProductService,
     private val client: OpenSearchClient
 ) : Indexer(client, settings, mapping, aliasName) {
 
@@ -33,16 +38,14 @@ class ProductIndexer(
 
     fun count() = docCount()
 
-    fun reIndex(alias: Boolean) {
+    suspend fun reIndex(alias: Boolean) {
         val indexName = createIndexName(IndexName.products)
         if (!indexExists(indexName)) {
             createIndex(indexName, settings, mapping)
         }
         var updated = LocalDateTime.now().minusYears(1000)
-        var page = gdbApiClient.findProducts(
-            updated = updated.toString(),
-            size = size, page = 0, sort = "updated,asc"
-        )
+        var page = productService.findProducts(criteria = ProductCriteria(updated = updated), pageable = Pageable.from(
+            0, size, Sort.of(Sort.Order.asc( "updated"))))
         var lastId: UUID? = null
         while (page.numberOfElements > 0) {
             val products = page.content
@@ -60,22 +63,18 @@ class ProductIndexer(
                 updated = last.updated
             }
             LOG.info("updated is now: $updated")
-            page = gdbApiClient.findProducts(
-                updated = updated.toString(),
-                size = size, page = 0, sort = "updated,asc"
-            )
+            page = productService.findProducts(criteria = ProductCriteria(updated = updated), pageable = Pageable.from(
+                0, size, Sort.of(Sort.Order.asc( "updated"))))
         }
         if (alias) {
             updateAlias(indexName = indexName)
         }
     }
 
-    fun reIndexBySupplierId(supplierId: UUID) {
+    suspend fun reIndexBySupplierId(supplierId: UUID) {
         var pageNumber = 0
-        var page = gdbApiClient.findProductsBySupplierId(
-            supplierId = supplierId,
-            size = size, page = pageNumber, sort = "updated,asc"
-        )
+        var page = productService.findProducts(criteria = ProductCriteria(supplierId= supplierId), Pageable.from(
+           pageNumber, size, Sort.of(Order.asc("updated"))))
         while (page.numberOfElements > 0) {
             val products = page.content.map { it.toDoc(isoCategoryService) }.filter {
                 it.status != ProductStatus.DELETED
@@ -84,18 +83,15 @@ class ProductIndexer(
                 LOG.info("indexing ${products.size} products to $aliasName")
                 index(products, aliasName)
             }
-            page = gdbApiClient.findProductsBySupplierId(
-                supplierId = supplierId,
-                size = size, page = ++pageNumber, sort = "updated,asc"
-            )
+            page = productService.findProducts(criteria = ProductCriteria(supplierId= supplierId), Pageable.from(
+                ++pageNumber, size, Sort.of(Order.asc("updated"))))
         }
         LOG.info("finished indexing products for supplier $supplierId")
     }
 
-    fun reIndexBySeriesId(seriesId: UUID) {
-        val page = gdbApiClient.findProductsBySeriesId(
-            seriesUUID = seriesId,
-            size = size, page = 0, sort = "updated,asc"
+    suspend fun reIndexBySeriesId(seriesId: UUID) {
+        val page = productService.findProducts(criteria = ProductCriteria(seriesUUID = seriesId),
+            pageable = Pageable.from(0, size, Sort.of(Order.asc("updated")))
         )
         if (page.numberOfElements > 0) {
             val products = page.content.map { it.toDoc(isoCategoryService) }.filter {
@@ -106,9 +102,9 @@ class ProductIndexer(
         }
     }
 
-    fun reIndexByIsoCategory(iso: String) {
+    suspend fun reIndexByIsoCategory(iso: String) {
         var pageNumber = 0
-        var page = gdbApiClient.findProductsByIsoCategory(iso, size, pageNumber, "updated,asc")
+        var page = productService.findProducts(criteria = ProductCriteria(isoCategory = iso), Pageable.from(pageNumber, size, Sort.of(Order.asc("updated"))))
         while (page.numberOfElements > 0) {
             val products = page.content.map { it.toDoc(isoCategoryService) }.filter {
                 it.status != ProductStatus.DELETED
@@ -117,7 +113,7 @@ class ProductIndexer(
                 LOG.info("indexing ${products.size} products to $aliasName")
                 index(products, aliasName)
             }
-            page = gdbApiClient.findProductsByIsoCategory(iso, size, ++pageNumber , "updated,asc")
+            page = productService.findProducts(criteria = ProductCriteria(isoCategory = iso), Pageable.from(++pageNumber, size, Sort.of(Order.asc("updated"))))
         }
     }
 

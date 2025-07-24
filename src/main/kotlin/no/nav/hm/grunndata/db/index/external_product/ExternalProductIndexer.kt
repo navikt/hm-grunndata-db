@@ -1,12 +1,15 @@
 package no.nav.hm.grunndata.db.index.external_product
 
 import io.micronaut.context.annotation.Value
+import io.micronaut.data.model.Pageable
+import io.micronaut.data.model.Sort
 import jakarta.inject.Singleton
 import no.nav.hm.grunndata.db.index.IndexName
 import no.nav.hm.grunndata.db.index.Indexer
 import no.nav.hm.grunndata.db.index.createIndexName
-import no.nav.hm.grunndata.db.index.product.GdbApiClient
 import no.nav.hm.grunndata.db.iso.IsoCategoryService
+import no.nav.hm.grunndata.db.product.ProductCriteria
+import no.nav.hm.grunndata.db.product.ProductService
 import no.nav.hm.grunndata.rapid.dto.ProductStatus
 
 import org.slf4j.LoggerFactory
@@ -17,8 +20,8 @@ import org.opensearch.client.opensearch.OpenSearchClient
 @Singleton
 class ExternalProductIndexer(
     @Value("\${external_products.aliasName}") private val aliasName: String,
-    private val gdbApiClient: GdbApiClient,
     private val isoCategoryService: IsoCategoryService,
+    private val productService: ProductService,
     private val client: OpenSearchClient
 ): Indexer(client, settings, mapping, aliasName) {
     companion object {
@@ -29,15 +32,15 @@ class ExternalProductIndexer(
             .getResource("/opensearch/external_products_mapping.json")!!.readText()
     }
 
-    fun reIndex(alias: Boolean) {
+    suspend fun reIndex(alias: Boolean) {
         val indexName = createIndexName(IndexName.external_products)
         if (!indexExists(indexName)) {
             LOG.info("creating index $indexName")
             createIndex(indexName, settings, mapping)
         }
         var updated =  LocalDateTime.now().minusYears(30)
-        var page = gdbApiClient.findProducts(updated = updated.toString(),
-            size=3000, page = 0, sort="updated,asc")
+        var page = productService.findProducts(criteria = ProductCriteria(updated = updated), pageable = Pageable.from(
+            0, 3000, Sort.of(Sort.Order.asc( "updated"))))
         var lastId: UUID? = null
         while(page.numberOfElements>0) {
             val products = page.content
@@ -56,8 +59,8 @@ class ExternalProductIndexer(
                 updated = last.updated
             }
             LOG.info("updated is now: $updated")
-            page = gdbApiClient.findProducts(updated=updated.toString(),
-                size=3000, page = 0, sort="updated,asc")
+            page = productService.findProducts(criteria = ProductCriteria(updated = updated), pageable = Pageable.from(
+                0, 3000, Sort.of(Sort.Order.asc( "updated"))))
         }
         if (alias) {
             updateAlias(indexName)
