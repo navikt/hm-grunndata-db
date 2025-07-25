@@ -21,3 +21,7 @@ data class IndexItem(
 enum class IndexItemStatus {
     PENDING, DONE, ERROR
 }
+
+enum class IndexType {
+    NEWS, PRODUCT, AGREEMENT, SUPPLIER, EXTERNAL_PRODUCT
+}

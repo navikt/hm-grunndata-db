@@ -5,7 +5,6 @@ import io.micronaut.data.model.Pageable
 import io.micronaut.data.model.Sort
 import io.micronaut.data.model.Sort.Order
 import jakarta.inject.Singleton
-import no.nav.hm.grunndata.db.index.IndexName
 import no.nav.hm.grunndata.db.index.Indexer
 import no.nav.hm.grunndata.db.index.createIndexName
 import no.nav.hm.grunndata.db.iso.IsoCategoryService
@@ -16,32 +15,27 @@ import no.nav.hm.grunndata.rapid.dto.ProductStatus
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.util.UUID
-import org.opensearch.client.opensearch.OpenSearchClient
 
 @Singleton
 class ProductIndexer(
     @Value("\${products.aliasName}") private val aliasName: String,
     private val isoCategoryService: IsoCategoryService,
     private val productService: ProductService,
-    private val client: OpenSearchClient
-) : Indexer(client, settings, mapping, aliasName) {
+    private val indexableItem: ProductIndexItem,
+    private val indexer: Indexer) {
 
     companion object {
         private val LOG = LoggerFactory.getLogger(ProductIndexer::class.java)
-        private val settings = ProductIndexer::class.java
-            .getResource("/opensearch/products_settings.json")!!.readText()
-        private val mapping = ProductIndexer::class.java
-            .getResource("/opensearch/products_mapping.json")!!.readText()
     }
 
     val size: Int = 5000
 
-    fun count() = docCount()
+    fun count() = indexer.docCount()
 
     suspend fun reIndex(alias: Boolean) {
-        val indexName = createIndexName(IndexName.products)
-        if (!indexExists(indexName)) {
-            createIndex(indexName, settings, mapping)
+        val indexName = createIndexName(indexableItem.getAliasIndexName())
+        if (!indexer.indexExists(indexName)) {
+            indexer.createIndex(indexName, indexableItem.getSettings(), indexableItem.getMappings())
         }
         var updated = LocalDateTime.now().minusYears(1000)
         var page = productService.findProducts(criteria = ProductCriteria(updated = updated), pageable = Pageable.from(
@@ -53,7 +47,7 @@ class ProductIndexer(
                     it.status != ProductStatus.DELETED
                 }
             LOG.info("indexing ${products.size} products to $indexName")
-            if (products.isNotEmpty()) index(products, indexName)
+            if (products.isNotEmpty()) indexer.index(products, indexName)
             val last = page.last()
             if (updated.equals(last.updated) && last.id == lastId) {
                 LOG.info("Last updated ${last.updated} ${last.id} is the same, increasing last updated")
@@ -67,7 +61,7 @@ class ProductIndexer(
                 0, size, Sort.of(Sort.Order.asc( "updated"))))
         }
         if (alias) {
-            updateAlias(indexName = indexName)
+            indexer.updateAlias(indexName = indexName)
         }
     }
 
@@ -81,7 +75,7 @@ class ProductIndexer(
             }
             if (products.isNotEmpty()) {
                 LOG.info("indexing ${products.size} products to $aliasName")
-                index(products, aliasName)
+                indexer.index(products, aliasName)
             }
             page = productService.findProducts(criteria = ProductCriteria(supplierId= supplierId), Pageable.from(
                 ++pageNumber, size, Sort.of(Order.asc("updated"))))
@@ -98,7 +92,7 @@ class ProductIndexer(
                 it.status != ProductStatus.DELETED
             }
             LOG.info("indexing ${products.size} products to $aliasName")
-            index(products, aliasName)
+            indexer.index(products, aliasName)
         }
     }
 
@@ -111,7 +105,7 @@ class ProductIndexer(
             }
             if (products.isNotEmpty()) {
                 LOG.info("indexing ${products.size} products to $aliasName")
-                index(products, aliasName)
+                indexer.index(products, aliasName)
             }
             page = productService.findProducts(criteria = ProductCriteria(isoCategory = iso), Pageable.from(++pageNumber, size, Sort.of(Order.asc("updated"))))
         }

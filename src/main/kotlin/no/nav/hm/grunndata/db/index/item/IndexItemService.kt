@@ -1,6 +1,9 @@
 package no.nav.hm.grunndata.db.index.item
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.micronaut.data.model.Pageable
+import io.micronaut.data.model.Sort.Order
+import io.micronaut.data.model.Sort.of
 import jakarta.inject.Singleton
 import no.nav.hm.grunndata.db.index.SearchDoc
 
@@ -23,8 +26,16 @@ class IndexItemService(private val indexItemRepository: IndexItemRepository, pri
         return indexItemRepository.findByOid(oid)
     }
 
+    suspend fun findIndexItemsByType(indexType: IndexType): List<IndexItem> {
+        return indexItemRepository.findByIndexType(indexType)
+    }
+
+    suspend fun retrievePendingIndexItems(size: Int): List<IndexItem> {
+        return indexItemRepository.findByStatusOrderByUpdatedAsc(IndexItemStatus.PENDING, Pageable.from(0, size, of(
+            Order.asc("updated"))
+        ))
+    }
+
 }
 
-enum class IndexType {
-    NEWS, PRODUCT, AGREEMENT, SUPPLIER, EXTERNAL_PRODUCT
-}
+

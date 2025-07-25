@@ -1,11 +1,10 @@
 package no.nav.hm.grunndata.db.index
 
 
+import jakarta.inject.Singleton
 import java.io.StringReader
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.UUID
 import org.opensearch.client.opensearch.OpenSearchClient
 import org.opensearch.client.opensearch._types.Refresh
 import org.opensearch.client.opensearch._types.mapping.TypeMapping
@@ -26,31 +25,19 @@ import org.opensearch.client.opensearch.indices.UpdateAliasesRequest
 import org.opensearch.client.opensearch.indices.update_aliases.ActionBuilders
 import org.slf4j.LoggerFactory
 
-abstract class Indexer(private val client: OpenSearchClient,
-                       private val settings: String,
-                       private val mapping: String,
-                       private val aliasName: String) {
+@Singleton
+class Indexer(private val client: OpenSearchClient) {
 
     companion object {
         private val LOG = LoggerFactory.getLogger(Indexer::class.java)
     }
 
 
-    init {
-        try {
-            initAlias()
-        } catch (e: Exception) {
-            LOG.error("Trying to init alias ${aliasName}, failed! OpenSearch might not be ready ${e.message}, will wait 10s and retry")
-            Thread.sleep(10000)
-            initAlias()
-        }
-    }
 
-
-    fun updateAlias(indexName: String): Boolean {
+    fun updateAlias(aliasName: String, indexName: String): Boolean {
         val updateAliasesRequestBuilder = UpdateAliasesRequest.Builder()
-        if (existsAlias()) {
-            val aliasResponse = getAlias()
+        if (existsAlias(aliasName)) {
+            val aliasResponse = getAlias(aliasName)
             val indices = aliasResponse.result().keys
             indices.forEach { index ->
                 val removeAction = ActionBuilders.remove().index(index).alias(aliasName).build()
@@ -66,10 +53,10 @@ abstract class Indexer(private val client: OpenSearchClient,
     }
 
 
-    fun existsAlias()
+    fun existsAlias(aliasName: String)
         = client.indices().existsAlias(ExistsAliasRequest.Builder().name(aliasName).build()).value()
 
-    fun getAlias()
+    fun getAlias(aliasName: String)
         = client.indices().getAlias(GetAliasRequest.Builder().name(aliasName).build())
 
     fun createIndex(indexName: String, settings: String, mapping: String): Boolean {
@@ -111,42 +98,29 @@ abstract class Indexer(private val client: OpenSearchClient,
         }
     }
 
-    fun index(doc: SearchDoc): BulkResponse {
-        return index(doc, aliasName)
-    }
-
-    fun index(docs: List<SearchDoc>): BulkResponse {
-        LOG.info("indexing ${docs.size} docs to $aliasName")
-        return index(docs, aliasName)
-    }
-
-    fun index(doc: SearchDoc, indexName: String): BulkResponse {
-        return index(listOf(doc), indexName)
-    }
-
-    fun index(docs: List<SearchDoc>, indexName: String): BulkResponse {
-        val operations = docs.map { document ->
-            BulkOperation.Builder().index(
-                IndexOperation.of { it.index(indexName).id(document.id).document(document) }
-            ).build()
-        }
-        val bulkRequest = BulkRequest.Builder()
-            .index(indexName)
-            .operations(operations)
-            .refresh(Refresh.WaitFor)
-            .build()
-        return try {
-            client.bulk(bulkRequest)
-        }
-        catch (e: Exception) {
-            LOG.error("Failed to index $docs to $indexName", e)
-            throw e
-        }
-    }
-
-    fun delete(id: UUID): DeleteResponse {
-        return delete(id.toString(), aliasName)
-    }
+//    fun index(doc: SearchDoc, indexName: String): BulkResponse {
+//        return index(listOf(doc), indexName)
+//    }
+//
+//    fun index(docs: List<SearchDoc>, indexName: String): BulkResponse {
+//        val operations = docs.map { document ->
+//            BulkOperation.Builder().index(
+//                IndexOperation.of { it.index(indexName).id(document.id).document(document) }
+//            ).build()
+//        }
+//        val bulkRequest = BulkRequest.Builder()
+//            .index(indexName)
+//            .operations(operations)
+//            .refresh(Refresh.WaitFor)
+//            .build()
+//        return try {
+//            client.bulk(bulkRequest)
+//        }
+//        catch (e: Exception) {
+//            LOG.error("Failed to index $docs to $indexName", e)
+//            throw e
+//        }
+//    }
 
     fun delete(id: String, indexName: String): DeleteResponse {
         val request = DeleteRequest.Builder().index(indexName).id(id)
@@ -156,24 +130,20 @@ abstract class Indexer(private val client: OpenSearchClient,
     fun indexExists(indexName: String):Boolean =
         client.indices().exists(ExistsRequest.Builder().index(indexName).build()).value()
 
-    fun docCount(): Long = client.count(CountRequest.Builder().index(aliasName).build()).count()
+    fun docCount(aliasName:String): Long = client.count(CountRequest.Builder().index(aliasName).build()).count()
 
-    private fun initAlias() {
-        if (!existsAlias()) {
+    fun initAlias(aliasName: String, settings: String, mapping: String) {
+        if (!existsAlias(aliasName)) {
             LOG.warn("alias $aliasName is not pointing any index")
-            val indexName = "${aliasName}_${LocalDate.now()}"
+            val indexName = createIndexName(aliasName)
             LOG.info("Creating index $indexName")
             createIndex(indexName,settings, mapping)
-            updateAlias(indexName)
+            updateAlias(aliasName, indexName)
         }
         else {
-            LOG.info("Aliases is pointing to ${getAlias().toJsonString()}")
+            LOG.info("Aliases is pointing to ${getAlias(aliasName).toJsonString()}")
         }
     }
 }
 
-fun createIndexName(type: IndexName): String = "${type.name}_${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))}"
-
-enum class IndexName {
-    products, alternative_products, external_products, suppliers, agreements, news
-}
+fun createIndexName(aliasIndexName: String): String = "${aliasIndexName}_${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))}"

@@ -9,7 +9,6 @@ import no.nav.helse.rapids_rivers.KafkaRapid
 import no.nav.helse.rapids_rivers.MessageContext
 import no.nav.helse.rapids_rivers.River
 import no.nav.helse.rapids_rivers.asLocalDateTime
-import no.nav.hm.grunndata.db.index.product.ProductIndexer
 import no.nav.hm.grunndata.db.index.product.toDoc
 import no.nav.hm.grunndata.db.iso.IsoCategoryService
 import no.nav.hm.grunndata.db.series.Series
@@ -33,7 +32,6 @@ class ProductRegistrationRiver(
     private val objectMapper: ObjectMapper,
     private val seriesService: SeriesService,
     private val productService: ProductService,
-    private val productIndexer: ProductIndexer,
     private val isoCategoryService: IsoCategoryService
 ) : River.PacketListener {
 
@@ -102,14 +100,6 @@ class ProductRegistrationRiver(
                         ), eventName = EventName.syncedRegisterSeriesV1
                     )
                     productService.saveAndPushTokafka(riverProduct, EventName.syncedRegisterProductV1)
-                }
-                if (saved.status == ProductStatus.DELETED) {
-                    LOG.info("deleting product id: ${saved.id} hmsnr: ${saved.hmsArtNr} for series ${saved.seriesUUID}")
-                    productIndexer.delete(saved.id)
-                }
-                else {
-                    LOG.info("indexing product id: ${saved.id} hmsnr: ${saved.hmsArtNr} for series ${saved.seriesUUID}")
-                    productIndexer.index(saved.toDoc(isoCategoryService))
                 }
             }
 

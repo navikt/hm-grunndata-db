@@ -1,6 +1,7 @@
 package no.nav.hm.grunndata.db.index
 
 import com.fasterxml.jackson.databind.JsonNode
+import no.nav.hm.grunndata.db.index.item.IndexType
 import java.util.UUID
 
 
@@ -11,7 +12,8 @@ interface SearchDoc {
 
 data class IndexDoc(
     val id: UUID,
+    val indexType: IndexType,
     val delete: Boolean = false,
-    val doc: JsonNode,
+    val doc: SearchDoc,
     val indexName: String
 )
