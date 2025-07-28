@@ -5,13 +5,6 @@ import io.micronaut.context.annotation.Context
 import io.micronaut.context.annotation.Requires
 import kotlinx.coroutines.runBlocking
 import no.nav.helse.rapids_rivers.*
-import no.nav.hm.grunndata.db.agreement.AgreementRegistrationRiver
-import no.nav.hm.grunndata.db.agreement.AgreementService
-import no.nav.hm.grunndata.db.agreement.toEntity
-import no.nav.hm.grunndata.db.index.supplier.SupplierIndexer
-import no.nav.hm.grunndata.db.index.supplier.toDoc
-import no.nav.hm.grunndata.rapid.dto.AgreementRegistrationRapidDTO
-import no.nav.hm.grunndata.rapid.dto.DraftStatus
 import no.nav.hm.grunndata.rapid.dto.SupplierDTO
 import no.nav.hm.grunndata.rapid.dto.rapidDTOVersion
 import no.nav.hm.grunndata.rapid.event.EventName
@@ -22,7 +15,7 @@ import org.slf4j.LoggerFactory
 @Requires(bean = KafkaRapid::class)
 class SupplierRegistrationRiver(river: RiverHead,
                                 private val objectMapper: ObjectMapper,
-                                private val supplierService: SupplierService, private val supplierIndexer: SupplierIndexer
+                                private val supplierService: SupplierService
 ): River.PacketListener  {
 
     companion object {

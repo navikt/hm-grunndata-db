@@ -12,7 +12,6 @@ import no.nav.hm.grunndata.db.index.SearchDoc
 import no.nav.hm.grunndata.db.index.createIndexName
 import no.nav.hm.grunndata.db.index.item.IndexType
 import no.nav.hm.grunndata.db.index.item.IndexItemSupport
-import org.opensearch.client.opensearch.OpenSearchClient
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 

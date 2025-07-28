@@ -10,7 +10,6 @@ import no.nav.hm.grunndata.db.index.IndexDoc
 import no.nav.hm.grunndata.db.index.OpensearchIndexer
 import no.nav.hm.grunndata.db.index.SearchDoc
 import no.nav.hm.grunndata.db.index.createIndexName
-import no.nav.hm.grunndata.db.index.item.IndexItem
 import no.nav.hm.grunndata.db.index.item.IndexType
 import no.nav.hm.grunndata.db.index.item.IndexItemSupport
 import no.nav.hm.grunndata.db.iso.IsoCategoryService
@@ -22,7 +21,6 @@ import java.util.*
 
 @Singleton
 class ProductIndexer(
-    @Value("\${products.aliasName}") private val aliasName: String,
     private val isoCategoryService: IsoCategoryService,
     private val productService: ProductService,
     private val indexer: OpensearchIndexer): IndexItemSupport {
@@ -40,12 +38,12 @@ class ProductIndexer(
 
     fun count() = indexer.docCount(getAliasIndexName())
 
-    suspend fun reIndex(alias: Boolean) {
+    suspend fun reIndex(alias: Boolean, from : LocalDateTime?=null) {
         val indexName = createIndexName(getAliasIndexName())
         if (!indexer.indexExists(indexName)) {
             indexer.createIndex(indexName, getSettings(), getMappings())
         }
-        var updated = LocalDateTime.now().minusYears(1000)
+        var updated = from ?: LocalDateTime.now().minusYears(1000)
         var page = productService.findProducts(criteria = ProductCriteria(updated = updated), pageable = Pageable.from(
             0, size, Sort.of(Order.asc( "updated"))))
         var lastId: UUID? = null
@@ -88,7 +86,7 @@ class ProductIndexer(
                 indexName = getAliasIndexName(),
             )}
             if (products.isNotEmpty()) {
-                LOG.info("indexing ${products.size} products to $aliasName")
+                LOG.info("indexing ${products.size} products to ${getAliasIndexName()}")
                 indexer.indexDoc(products)
             }
             page = productService.findProducts(criteria = ProductCriteria(supplierId= supplierId), Pageable.from(
@@ -108,7 +106,7 @@ class ProductIndexer(
                 indexType = getIndexType(),
                 indexName = getAliasIndexName()
             )}
-            LOG.info("indexing ${products.size} products to $aliasName")
+            LOG.info("indexing ${products.size} products to ${getAliasIndexName()}")
             indexer.indexDoc(products)
         }
     }
@@ -124,7 +122,7 @@ class ProductIndexer(
                 indexName = getAliasIndexName()
             )}
             if (products.isNotEmpty()) {
-                LOG.info("indexing ${products.size} products to $aliasName")
+                LOG.info("indexing ${products.size} products to ${getAliasIndexName()}")
                 indexer.indexDoc(products)
             }
             page = productService.findProducts(criteria = ProductCriteria(isoCategory = iso), Pageable.from(++pageNumber, size, Sort.of(Order.asc("updated"))))

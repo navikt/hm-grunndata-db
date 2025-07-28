@@ -1,0 +1,148 @@
+{
+  "date_detection": false,
+  "properties": {
+    "id": {
+      "type": "keyword"
+    },
+    "agreements": {
+      "properties": {
+        "expired": {
+          "type": "date",
+          "format": "strict_date_optional_time"
+        },
+        "id": {
+          "type": "keyword"
+        },
+        "label": {
+          "type": "keyword"
+        },
+        "identifier": {
+          "type": "keyword"
+        },
+        "postIdentifier": {
+          "type": "keyword"
+        },
+        "postNr": {
+          "type": "long"
+        },
+        "postTitle": {
+          "type": "keyword"
+        },
+        "postId": {
+          "type": "keyword"
+        },
+        "refNr": {
+          "type": "keyword"
+        },
+        "rank": {
+          "type": "long"
+        },
+        "reference": {
+          "type": "keyword"
+        }
+      }
+    },
+    "attributes": {
+      "properties": {
+        "shortdescription": {
+          "type": "text",
+          "analyzer": "norwegian_html"
+        },
+        "text": {
+          "type": "text",
+          "analyzer": "norwegian_html"
+        },
+        "series": {
+          "type": "keyword"
+        }
+      }
+    },
+    "created": {
+      "type": "date",
+      "format": "strict_date_optional_time"
+    },
+    "data": {
+      "properties": {
+        "key": {
+          "type": "keyword"
+        },
+        "unit": {
+          "type": "keyword"
+        },
+        "value": {
+          "type": "keyword"
+        }
+      }
+    },
+    "expired": {
+      "type": "date",
+      "format": "strict_date_optional_time"
+    },
+    "hasAgreement": {
+      "type": "boolean"
+    },
+    "hmsArtNr": {
+      "type": "keyword"
+    },
+    "identifier": {
+      "type": "keyword"
+    },
+    "isoCategory": {
+      "type": "keyword"
+    },
+    "isoCategoryTitle": {
+      "type": "text",
+      "analyzer": "norwegian"
+    },
+    "isoCategoryTitleShort": {
+      "type": "text",
+      "analyzer": "norwegian"
+    },
+    "isoCategoryText": {
+      "type": "text",
+      "analyzer": "norwegian"
+    },
+    "isoCategoryTextShort": {
+      "type": "text",
+      "analyzer": "norwegian"
+    },
+    "media": {
+      "enabled": false
+    },
+    "seriesId": {
+      "type": "keyword"
+    },
+    "status": {
+      "type": "keyword"
+    },
+    "supplier": {
+      "properties": {
+        "id": {
+          "type": "keyword"
+        },
+        "identifier": {
+          "type": "keyword"
+        },
+        "name": {
+          "type": "keyword"
+        }
+      }
+    },
+    "supplierRef": {
+      "type": "keyword"
+    },
+    "title": {
+      "type": "text",
+      "analyzer": "norwegian"
+    },
+    "articleName": {
+      "type": "text",
+      "analyzer": "norwegian"
+    },
+    "updated": {
+      "type": "date",
+      "format": "strict_date_optional_time"
+    }
+  }
+}
+

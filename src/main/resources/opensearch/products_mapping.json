@@ -1,0 +1,378 @@
+{
+  "date_detection": false,
+  "properties": {
+    "id": {
+      "type": "keyword",
+      "copy_to": "keywords"
+    },
+    "accessory": {
+      "type": "boolean"
+    },
+    "agreements": {
+      "properties": {
+        "expired": {
+          "type": "date",
+          "format": "strict_date_optional_time"
+        },
+        "published": {
+          "type": "date",
+          "format": "strict_date_optional_time"
+        },
+        "id": {
+          "type": "keyword"
+        },
+        "label": {
+          "type": "keyword",
+          "copy_to": [
+            "keywords_suggest",
+            "keywords_bag"
+          ]
+        },
+        "identifier": {
+          "type": "keyword"
+        },
+        "postIdentifier": {
+          "type": "keyword"
+        },
+        "postNr": {
+          "type": "long"
+        },
+        "postTitle": {
+          "type": "keyword"
+        },
+        "postId": {
+          "type": "keyword"
+        },
+        "refNr": {
+          "type": "keyword"
+        },
+        "rank": {
+          "type": "long"
+        },
+        "reference": {
+          "type": "keyword",
+          "copy_to": [
+            "keywords_bag"
+          ]
+        }
+      }
+    },
+    "previousAgreements": {
+      "properties": {
+        "expired": {
+          "type": "date",
+          "format": "strict_date_optional_time"
+        },
+        "published": {
+          "type": "date",
+          "format": "strict_date_optional_time"
+        },
+        "id": {
+          "type": "keyword"
+        },
+        "label": {
+          "type": "keyword",
+          "copy_to": [
+            "keywords_suggest",
+            "keywords_bag"
+          ]
+        },
+        "identifier": {
+          "type": "keyword"
+        },
+        "postIdentifier": {
+          "type": "keyword"
+        },
+        "postNr": {
+          "type": "long"
+        },
+        "postTitle": {
+          "type": "keyword"
+        },
+        "postId": {
+          "type": "keyword"
+        },
+        "refNr": {
+          "type": "keyword"
+        },
+        "rank": {
+          "type": "long"
+        },
+        "reference": {
+          "type": "keyword",
+          "copy_to": [
+            "keywords_bag"
+          ]
+        }
+      }
+    },
+    "attributes": {
+      "properties": {
+        "shortdescription": {
+          "type": "text",
+          "analyzer": "norwegian_html"
+        },
+        "text": {
+          "type": "text",
+          "analyzer": "norwegian_html"
+        },
+        "keywords": {
+          "type": "keyword",
+          "copy_to": [
+            "keywords_suggest",
+            "keywords_bag"
+          ]
+        },
+        "compatibleWith": {
+          "properties": {
+            "seriesIds": {
+              "type": "keyword"
+            },
+            "productIds": {
+              "type": "keyword"
+            }
+          }
+        },
+        "bestillingsordning": {
+          "type": "boolean"
+        },
+        "digitalSoknad": {
+          "type": "boolean"
+        },
+        "sortimentKategori": {
+          "type": "text",
+          "analyzer": "norwegian"
+        },
+        "pakrevdGodkjenningskurs": {
+          "properties": {
+            "tittel": {
+              "enabled": false
+            },
+            "isokode": {
+              "type": "keyword"
+            },
+            "kursId": {
+              "type": "long"
+            }
+          }
+        },
+        "produkttype": {
+          "type": "keyword"
+        },
+        "series": {
+          "type": "keyword",
+          "copy_to": [
+            "keywords_bag"
+          ]
+        }
+      }
+    },
+    "created": {
+      "type": "date",
+      "format": "strict_date_optional_time"
+    },
+    "createdBy": {
+      "type": "keyword"
+    },
+    "data": {
+      "properties": {
+        "key": {
+          "type": "keyword"
+        },
+        "unit": {
+          "type": "keyword"
+        },
+        "value": {
+          "type": "keyword"
+        }
+      }
+    },
+    "expired": {
+      "type": "date",
+      "format": "strict_date_optional_time"
+    },
+    "filters": {
+      "properties": {
+        "beregnetBarn": {
+          "type": "keyword"
+        },
+        "breddeCM": {
+          "type": "long"
+        },
+        "brukervektMaksKG": {
+          "type": "long"
+        },
+        "brukervektMinKG": {
+          "type": "long"
+        },
+        "fyllmateriale": {
+          "type": "keyword"
+        },
+        "lengdeCM": {
+          "type": "long"
+        },
+        "materialeTrekk": {
+          "type": "keyword"
+        },
+        "setebreddeMaksCM": {
+          "type": "long"
+        },
+        "setebreddeMinCM": {
+          "type": "long"
+        },
+        "setedybdeMaksCM": {
+          "type": "long"
+        },
+        "setedybdeMinCM": {
+          "type": "long"
+        },
+        "setehoydeMaksCM": {
+          "type": "long"
+        },
+        "setehoydeMinCM": {
+          "type": "long"
+        },
+        "totalVektKG": {
+          "type": "float"
+        },
+        "iso": {
+          "type": "keyword"
+        }
+      }
+    },
+    "hasAgreement": {
+      "type": "boolean"
+    },
+    "hasPreviousAgreement": {
+      "type": "boolean"
+    },
+    "hmsArtNr": {
+      "type": "keyword",
+      "copy_to": [
+        "keywords_bag"
+      ]
+    },
+    "identifier": {
+      "type": "keyword"
+    },
+    "isoCategory": {
+      "type": "keyword",
+      "copy_to": "keywords_suggest"
+    },
+    "isoCategoryTitle": {
+      "type": "text",
+      "analyzer": "norwegian",
+      "copy_to": [
+        "keywords_suggest",
+        "isoCategoryName"
+      ]
+    },
+    "isoCategoryTitleShort": {
+      "type": "text",
+      "analyzer": "norwegian",
+      "copy_to": [
+        "keywords_suggest"
+      ]
+    },
+    "isoCategoryText": {
+      "type": "text",
+      "analyzer": "norwegian"
+    },
+    "isoCategoryTextShort": {
+      "type": "text",
+      "analyzer": "norwegian"
+    },
+    "isoCategoryName": {
+      "type": "keyword"
+    },
+    "isoSearchTag": {
+      "type": "keyword",
+      "copy_to": [
+        "keywords_suggest",
+        "keywords_bag"
+      ]
+    },
+    "media": {
+      "enabled": false
+    },
+    "seriesId": {
+      "type": "keyword"
+    },
+    "sparePart": {
+      "type": "boolean"
+    },
+    "main": {
+      "type": "boolean"
+    },
+    "status": {
+      "type": "keyword"
+    },
+    "supplier": {
+      "properties": {
+        "id": {
+          "type": "keyword"
+        },
+        "identifier": {
+          "type": "keyword"
+        },
+        "name": {
+          "type": "keyword",
+          "copy_to": [
+            "keywords_suggest",
+            "keywords_bag"
+          ]
+        }
+      }
+    },
+    "supplierRef": {
+      "type": "keyword",
+      "copy_to": [
+        "keywords_bag"
+      ]
+    },
+    "title": {
+      "type": "text",
+      "analyzer": "norwegian",
+      "copy_to": [
+        "keywords_suggest"
+      ]
+    },
+    "articleName": {
+      "type": "text",
+      "analyzer": "norwegian",
+      "copy_to": [
+        "articleName_keyword"
+      ]
+    },
+    "articleName_keyword": {
+      "type": "keyword"
+    },
+    "updated": {
+      "type": "date",
+      "format": "strict_date_optional_time"
+    },
+    "updatedBy": {
+      "type": "keyword"
+    },
+    "keywords_bag": {
+      "type": "text",
+      "analyzer": "norwegian"
+    },
+    "keywords_suggest": {
+      "type": "completion",
+      "contexts": [
+        {
+          "name": "status",
+          "type": "category",
+          "path": "status"
+        },
+        {
+          "name": "agreements.id",
+          "type": "category",
+          "path": "agreements.id"
+        }
+      ]
+    }
+  }
+}
+

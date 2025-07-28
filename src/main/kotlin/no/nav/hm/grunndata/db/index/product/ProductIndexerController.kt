@@ -1,5 +1,6 @@
 package no.nav.hm.grunndata.db.index.product
 
+import io.micronaut.data.annotation.Query
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Delete
 import io.micronaut.http.annotation.Get
@@ -9,6 +10,7 @@ import io.micronaut.http.annotation.QueryValue
 import io.micronaut.scheduling.TaskExecutors
 import io.micronaut.scheduling.annotation.ExecuteOn
 import org.slf4j.LoggerFactory
+import java.time.LocalDateTime
 import java.util.UUID
 
 @Controller("/internal/index/products")
@@ -18,8 +20,8 @@ class ProductIndexerController(private val productIndexer: ProductIndexer) {
     }
 
     @Post("/")
-    suspend fun indexProducts(@QueryValue(value = "alias", defaultValue = "false") alias: Boolean) {
-        productIndexer.reIndex(alias)
+    suspend fun indexProducts(@QueryValue(value = "alias", defaultValue = "false") alias: Boolean, @QueryValue(value ="from") from: LocalDateTime? = null) {
+        productIndexer.reIndex(alias, from = from)
     }
 
     @Post("/supplier/{supplierId}")
