@@ -11,7 +11,7 @@ interface SearchDoc {
 }
 
 data class IndexDoc(
-    val id: UUID,
+    val id: String,
     val indexType: IndexType,
     val doc: SearchDoc,
     val delete: Boolean = doc.isDelete(),

@@ -18,7 +18,7 @@ import java.time.LocalDateTime
 
 @Singleton
 class AgreementIndexer(private val agreementService: AgreementService,
-                       private val client: OpenSearchClient) : OpensearchIndexer(client), IndexItemSupport {
+                       private val indexer: OpensearchIndexer) : IndexItemSupport {
 
     companion object {
         private val LOG = LoggerFactory.getLogger(AgreementIndexer::class.java)
@@ -30,26 +30,26 @@ class AgreementIndexer(private val agreementService: AgreementService,
 
     suspend fun reIndex(alias: Boolean) {
         val indexName = createIndexName(getAliasIndexName())
-        if (!indexExists(indexName)) {
+        if (!indexer.indexExists(indexName)) {
             LOG.info("creating index $indexName")
-            createIndex(indexName, getSettings(), getMappings())
+            indexer.createIndex(indexName, getSettings(), getMappings())
         }
         val updated =  LocalDateTime.now().minusYears(30)
         val criteria = AgreementCriteria(updatedAfter = updated)
         val page = agreementService.findAll(criteria, Pageable.from(0, 5000, Sort.of(Sort.Order.asc("updated"))))
-        val agreements = page.content.map { IndexDoc(id = it.id, indexType = IndexType.AGREEMENT, doc = it.toDTO().toDoc(), indexName = indexName)}
+        val agreements = page.content.map { IndexDoc(id = it.id.toString(), indexType = IndexType.AGREEMENT, doc = it.toDTO().toDoc(), indexName = indexName)}
         LOG.info("indexing ${agreements.size} agreements to $indexName")
-        if (agreements.isNotEmpty()) indexDoc(agreements)
+        if (agreements.isNotEmpty()) indexer.indexDoc(agreements)
         if (alias) {
-           updateAlias(getAliasIndexName(), indexName)
+           indexer.updateAlias(getAliasIndexName(), indexName)
         }
     }
 
     suspend fun updateAlias(indexName: String) {
-        updateAlias(getAliasIndexName(), indexName)
+        indexer.updateAlias(getAliasIndexName(), indexName)
     }
 
-    fun getAlias() = getAlias(getAliasIndexName())
+    fun getAlias() = indexer.getAlias(getAliasIndexName())
 
     override fun getAliasIndexName(): String = "agreements"
 

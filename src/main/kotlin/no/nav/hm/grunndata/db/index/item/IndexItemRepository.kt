@@ -1,5 +1,6 @@
 package no.nav.hm.grunndata.db.index.item
 
+import io.micronaut.data.annotation.Query
 import io.micronaut.data.jdbc.annotation.JdbcRepository
 import io.micronaut.data.model.Pageable
 import io.micronaut.data.model.query.builder.sql.Dialect
@@ -12,6 +13,9 @@ interface IndexItemRepository: CoroutineCrudRepository<IndexItem, UUID>, Corouti
 
     suspend fun findByOid(oid: String): IndexItem?
     suspend fun findByIndexType(indexType: IndexType): List<IndexItem>
-    suspend fun findByStatusOrderByUpdatedAsc(status: IndexItemStatus, pageable: Pageable): List<IndexItem>
-
+    @Query(
+        value = "SELECT * FROM index_item WHERE status = :status ORDER BY updated ASC LIMIT :limit FOR UPDATE SKIP LOCKED",
+        nativeQuery = true
+    )
+    suspend fun findAndLockForProcessing(status: IndexItemStatus, limit: Int): List<IndexItem>
 }

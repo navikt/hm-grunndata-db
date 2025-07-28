@@ -10,12 +10,11 @@ import no.nav.hm.grunndata.db.index.createIndexName
 import no.nav.hm.grunndata.db.index.item.IndexType
 import no.nav.hm.grunndata.db.index.item.IndexItemSupport
 import no.nav.hm.grunndata.db.news.NewsService
-import org.opensearch.client.opensearch.OpenSearchClient
 import org.slf4j.LoggerFactory
 
 @Singleton
 class NewsIndexer(private val newsService: NewsService,
-                  private val client: OpenSearchClient) : OpensearchIndexer(client), IndexItemSupport {
+                  private val indexer: OpensearchIndexer) :  IndexItemSupport {
 
     companion object {
         private val LOG = LoggerFactory.getLogger(NewsIndexer::class.java)
@@ -27,22 +26,22 @@ class NewsIndexer(private val newsService: NewsService,
 
     suspend fun reIndex(alias: Boolean) {
         val indexName = createIndexName(getAliasIndexName())
-        if (!indexExists(indexName)) {
+        if (!indexer.indexExists(indexName)) {
             LOG.info("creating index $indexName")
-            createIndex(indexName, getSettings(), getMappings())
+            indexer.createIndex(indexName, getSettings(), getMappings())
         }
         val page = newsService.findNews(buildCriteriaSpec = null, Pageable.from(0, 5000, Sort.of(Sort.Order.asc("updated"))))
-        val news = page.content.map { IndexDoc(id = it.id, indexType = IndexType.NEWS, doc = it.toDoc(), indexName = indexName) }
+        val news = page.content.map { IndexDoc(id = it.id.toString(), indexType = IndexType.NEWS, doc = it.toDoc(), indexName = indexName) }
         LOG.info("indexing ${news.size} news to $indexName")
-        indexDoc(news)
+        indexer.indexDoc(news)
         if (alias) {
-            updateAlias(getAliasIndexName(), indexName)
+            indexer.updateAlias(getAliasIndexName(), indexName)
         }
     }
 
-    fun updateAlias(indexName: String) = updateAlias(indexName, indexName)
-    fun getAlias() = getAlias(getAliasIndexName())
-    fun docCount() = docCount(getAliasIndexName())
+    fun updateAlias(indexName: String) = indexer.updateAlias(indexName, indexName)
+    fun getAlias() = indexer.getAlias(getAliasIndexName())
+    fun docCount() = indexer.docCount(getAliasIndexName())
 
     override fun getAliasIndexName(): String = "news"
 

@@ -12,7 +12,6 @@ import no.nav.hm.grunndata.db.index.item.IndexItemSupport
 import no.nav.hm.grunndata.db.iso.IsoCategoryService
 import no.nav.hm.grunndata.db.product.ProductCriteria
 import no.nav.hm.grunndata.db.product.ProductService
-import org.opensearch.client.opensearch.OpenSearchClient
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.util.*
@@ -21,8 +20,8 @@ import java.util.*
 class ExternalProductIndexer(
     private val isoCategoryService: IsoCategoryService,
     private val productService: ProductService,
-    private val client: OpenSearchClient
-): OpensearchIndexer(client), IndexItemSupport {
+    private val indexer: OpensearchIndexer
+): IndexItemSupport {
     companion object {
         private val LOG = LoggerFactory.getLogger(ExternalProductIndexer::class.java)
         private val settings = ExternalProductIndexer::class.java
@@ -34,9 +33,9 @@ class ExternalProductIndexer(
 
     suspend fun reIndex(alias: Boolean) {
         val indexName = createIndexName(getAliasIndexName())
-        if (!indexExists(indexName)) {
+        if (!indexer.indexExists(indexName)) {
             LOG.info("creating index $indexName")
-            createIndex(indexName, getSettings(), getMappings())
+            indexer.createIndex(indexName, getSettings(), getMappings())
         }
         var updated =  LocalDateTime.now().minusYears(30)
         var page = productService.findProducts(criteria = ProductCriteria(updated = updated), pageable = Pageable.from(
@@ -44,10 +43,10 @@ class ExternalProductIndexer(
         var lastId: UUID? = null
         while(page.numberOfElements>0) {
             val products = page.content
-                .map { IndexDoc(id = it.id, indexType = IndexType.EXTERNAL_PRODUCT, doc = it.toExternalDoc(isoCategoryService), indexName = indexName)}
+                .map { IndexDoc(id = it.id.toString(), indexType = IndexType.EXTERNAL_PRODUCT, doc = it.toExternalDoc(isoCategoryService), indexName = indexName)}
 
             LOG.info("indexing ${products.size} products to $indexName")
-            if (products.isNotEmpty()) indexDoc(products)
+            if (products.isNotEmpty()) indexer.indexDoc(products)
             val last = page.last()
             if (updated.equals(last.updated) && last.id == lastId) {
                 LOG.info("Last updated ${last.updated} ${last.id} is the same, increasing last updated")
@@ -62,15 +61,15 @@ class ExternalProductIndexer(
                 0, 3000, Sort.of(Sort.Order.asc( "updated"))))
         }
         if (alias) {
-            updateAlias(getAliasIndexName(), indexName)
+            indexer.updateAlias(getAliasIndexName(), indexName)
         }
     }
 
     fun updateAlias(indexName: String) {
-        updateAlias(getAliasIndexName(),indexName)
+        indexer.updateAlias(getAliasIndexName(),indexName)
     }
 
-    fun getAlias() = getAlias(getAliasIndexName())
+    fun getAlias() = indexer.getAlias(getAliasIndexName())
 
     override fun getAliasIndexName(): String = "external_products"
 
