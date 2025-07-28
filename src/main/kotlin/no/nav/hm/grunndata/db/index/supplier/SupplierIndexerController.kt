@@ -6,7 +6,6 @@ import io.micronaut.scheduling.annotation.ExecuteOn
 import org.slf4j.LoggerFactory
 
 @Controller("/internal/index/suppliers")
-@ExecuteOn(TaskExecutors.BLOCKING)
 class SupplierIndexerController(private val supplierIndexer: SupplierIndexer) {
     companion object {
         private val LOG = LoggerFactory.getLogger(SupplierIndexerController::class.java)

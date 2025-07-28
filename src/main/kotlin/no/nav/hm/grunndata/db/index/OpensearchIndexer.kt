@@ -25,11 +25,11 @@ import org.opensearch.client.opensearch.indices.UpdateAliasesRequest
 import org.opensearch.client.opensearch.indices.update_aliases.ActionBuilders
 import org.slf4j.LoggerFactory
 
-@Singleton
-class Indexer(private val client: OpenSearchClient) {
+
+abstract class OpensearchIndexer(private val client: OpenSearchClient) {
 
     companion object {
-        private val LOG = LoggerFactory.getLogger(Indexer::class.java)
+        private val LOG = LoggerFactory.getLogger(OpensearchIndexer::class.java)
     }
 
 

@@ -4,14 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import io.micronaut.context.annotation.Context
 import io.micronaut.context.annotation.Requires
 import kotlinx.coroutines.runBlocking
-import no.nav.helse.rapids_rivers.*
-import no.nav.hm.grunndata.db.GdbRapidPushService
-import no.nav.hm.grunndata.db.index.news.NewsIndexer
-import no.nav.hm.grunndata.db.index.news.toDoc
-
+import no.nav.helse.rapids_rivers.JsonMessage
+import no.nav.helse.rapids_rivers.KafkaRapid
+import no.nav.helse.rapids_rivers.MessageContext
+import no.nav.helse.rapids_rivers.River
 import no.nav.hm.grunndata.rapid.dto.NewsDTO
 import no.nav.hm.grunndata.rapid.dto.NewsRegistrationRapidDTO
-import no.nav.hm.grunndata.rapid.dto.NewsStatus
 import no.nav.hm.grunndata.rapid.dto.rapidDTOVersion
 import no.nav.hm.grunndata.rapid.event.EventName
 import no.nav.hm.grunndata.rapid.event.RapidApp
@@ -21,9 +19,7 @@ import org.slf4j.LoggerFactory
 @Context
 @Requires(bean = KafkaRapid::class)
 class NewsRegistrationRiver(river: RiverHead, private val objectMapper: ObjectMapper,
-                            private val rapidPushService: GdbRapidPushService,
-                            private val newsService: NewsService,
-                            private val newsIndexer: NewsIndexer): River.PacketListener {
+                            private val newsService: NewsService): River.PacketListener {
 
     companion object {
         private val LOG = LoggerFactory.getLogger(NewsRegistrationRiver::class.java)

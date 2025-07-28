@@ -2,7 +2,7 @@ package no.nav.hm.grunndata.db.index.item
 
 import no.nav.hm.grunndata.db.index.SearchDoc
 
-interface IndexableItem {
+interface IndexItemSupport {
 
     fun getAliasIndexName(): String
 

@@ -13,7 +13,7 @@ interface SearchDoc {
 data class IndexDoc(
     val id: UUID,
     val indexType: IndexType,
-    val delete: Boolean = false,
     val doc: SearchDoc,
+    val delete: Boolean = doc.isDelete(),
     val indexName: String
 )

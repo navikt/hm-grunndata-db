@@ -3,13 +3,13 @@ package no.nav.hm.grunndata.db.index
 import jakarta.inject.Singleton
 import no.nav.hm.grunndata.db.index.item.IndexItemService
 import no.nav.hm.grunndata.db.index.item.IndexType
-import no.nav.hm.grunndata.db.index.item.IndexableItem
-import no.nav.hm.grunndata.db.index.product.ProductIndexer
+import no.nav.hm.grunndata.db.index.item.IndexItemSupport
 
 @Singleton
-class IndexerService(private val indexer: Indexer, private val indexItemService: IndexItemService) {
+class IndexerService(private val opensearchIndexer: OpensearchIndexer,
+                     private val indexItemService: IndexItemService) {
 
-    var indexAbleItems : Map<IndexType,IndexableItem> = emptyMap()
+    var indexAbleItems : Map<IndexType,IndexItemSupport> = emptyMap()
 
     suspend fun processIndexItems(limit: Int = 1000) {
         val items = indexItemService.retrievePendingIndexItems(limit)
