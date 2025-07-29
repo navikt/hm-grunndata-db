@@ -76,7 +76,6 @@ class OpensearchIndexer(private val client: OpenSearchClient, private val object
     fun indexItems(items: List<IndexItem>): BulkResponse {
         val operations = items.map { item ->
             if (item.delete) {
-                LOG.info("deleting document ${item.id} from index ${item.indexName}")
                 BulkOperation.Builder().delete(
                     DeleteOperation.of { it.index(item.indexName).id(item.oid) }
                 ).build()

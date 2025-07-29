@@ -137,13 +137,7 @@ opensearch:
   user: ${OPEN_SEARCH_USERNAME:admin}
   url: ${OPEN_SEARCH_URI:`https://localhost:9200`}
 
-agreements:
-  aliasName: ${AGREEMENTS_ALIASNAME:agreements}
-external_products:
-  aliasName: ${EXTERNAL_PRODUCTS_ALIASNAME:external_products}
-suppliers:
-  aliasName: ${SUPPLIERS_ALIASNAME:suppliers}
-products:
-  aliasName: ${PRODUCTS_ALIASNAME:products}
-news:
-  aliasName: ${NEWS_ALIASNAME:news}
+index:
+  item:
+    enabled: ${INDEX_ITEM_ENABLED:false}
+    size: ${INDEX_ITEM_SIZE:2000}

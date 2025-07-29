@@ -14,6 +14,9 @@ open class IndexItemService(
     private val objectMapper: ObjectMapper
 ) {
 
+    companion object {
+        private val LOG = org.slf4j.LoggerFactory.getLogger(IndexItemService::class.java)
+    }
 
     suspend fun saveIndexItem(doc: SearchDoc, indexType: IndexType, indexName: String): IndexItem {
         val indexItem = IndexItem(
@@ -34,6 +37,7 @@ open class IndexItemService(
             return
         }
         val uniqueItems = items.groupBy { it.oid to it.indexType }.map { it.value.last() }
+        LOG.info("Indexing ${items.size} with ${uniqueItems.size} unique items")
         indexer.indexItems(uniqueItems)
         items.forEach {
             indexItemRepository.update(it.copy(status = IndexItemStatus.DONE, updated = LocalDateTime.now()))
