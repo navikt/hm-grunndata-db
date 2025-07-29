@@ -1,5 +1,6 @@
 package no.nav.hm.grunndata.db.agreement
 
+import io.micronaut.cache.annotation.Cacheable
 import io.micronaut.data.model.Pageable
 import io.micronaut.data.repository.jpa.criteria.PredicateSpecification
 import io.micronaut.data.runtime.criteria.get
@@ -16,6 +17,7 @@ import no.nav.hm.grunndata.rapid.dto.AgreementDTO
 import org.slf4j.LoggerFactory
 
 @Singleton
+@Cacheable(cacheNames = ["agreements"])
 open class AgreementService(private val agreementRepository: AgreementRepository,
                             private val gdbRapidPushService: GdbRapidPushService,
                             private val indexItemService: IndexItemService,
@@ -37,18 +39,15 @@ open class AgreementService(private val agreementRepository: AgreementRepository
         agreementRepository.update(agreement)
     }
 
-
-    /**
-     * This function is not cached.
-     */
-    suspend fun findById(id: UUID) = agreementRepository.findById(id)
+    @Cacheable
+    fun findByIdCached(id: UUID) = runBlocking {  agreementRepository.findById(id) }
 
     suspend fun findAll(criteria: AgreementCriteria, pageable: Pageable) = agreementRepository.findAll(buildCriteriaSpec(criteria), pageable)
 
     @Transactional
     open suspend fun saveAndPushTokafka(agreementDTO: AgreementDTO, eventName: String): AgreementDTO {
         val agreement = agreementDTO.toEntity()
-        val saved = findById(agreement.id)?.let { inDb ->
+        val saved = agreementRepository.findById(agreement.id)?.let { inDb ->
             update(agreement.copy(id = inDb.id, created = inDb.created,
                 createdBy = inDb.createdBy))
         } ?: save(agreement)

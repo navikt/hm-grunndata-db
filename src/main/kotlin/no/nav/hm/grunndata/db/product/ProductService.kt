@@ -39,9 +39,6 @@ open class ProductService(
 
     companion object {
         private val LOG = LoggerFactory.getLogger(ProductService::class.java)
-
-        // HMDB-5205 = "Cognita", HMDB-5001= "Invacare"
-        private val suppliersInRegister: Set<String> = setOf("HMDB-5205", "HMDB-5001")
     }
 
     @Transactional
@@ -113,7 +110,7 @@ open class ProductService(
         ProductRapidDTO(
             id = id,
             partitionKey = seriesUUID.toString(),
-            supplier = runBlocking { supplierService.findById(supplierId)!!.toDTO() },
+            supplier = supplierService.findByIdCached(supplierId)!!.toDTO(),
             title = title,
             articleName = articleName,
             attributes = attributes,
@@ -138,7 +135,7 @@ open class ProductService(
             createdBy = createdBy,
             updatedBy = updatedBy,
             agreements = agreements?.mapNotNull { agree ->
-                val agreement = agreementService.findById(agree.id)
+                val agreement = agreementService.findByIdCached(agree.id)
                 if (agreement != null) {
                     LOG.info("Found agreement with ${agreement.id}, looking up for post: ${agree.postId}")
                     val post = if (agree.postId != null) { agreement.posts.find { it.id == agree.postId } } else null

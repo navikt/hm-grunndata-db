@@ -4,6 +4,7 @@ import io.micronaut.http.annotation.*
 import io.micronaut.scheduling.TaskExecutors
 import io.micronaut.scheduling.annotation.ExecuteOn
 import org.slf4j.LoggerFactory
+import java.time.LocalDateTime
 
 @Controller("/internal/index/external-products")
 class ExternalProductIndexerController(private val externalProductIndexer: ExternalProductIndexer) {
@@ -12,8 +13,9 @@ class ExternalProductIndexerController(private val externalProductIndexer: Exter
     }
 
     @Post("/")
-    suspend fun indexProducts(@QueryValue(value = "alias", defaultValue = "false") alias: Boolean) {
-        externalProductIndexer.reIndex(alias)
+    suspend fun indexProducts(@QueryValue(value = "alias", defaultValue = "false") alias: Boolean,
+                              @QueryValue(value = "from") from: LocalDateTime? = null, @QueryValue(value = "size") size: Int? = null) {
+        externalProductIndexer.reIndex(alias, from, size ?: 3000)
     }
 
     @Put("/alias/{indexName}")

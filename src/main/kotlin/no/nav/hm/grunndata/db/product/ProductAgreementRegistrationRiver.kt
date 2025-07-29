@@ -7,7 +7,6 @@ import jakarta.inject.Singleton
 import kotlinx.coroutines.runBlocking
 import no.nav.helse.rapids_rivers.*
 import no.nav.hm.grunndata.db.agreement.AgreementService
-import no.nav.hm.grunndata.db.product.ProductAgreementRegistrationRiver.Companion.LOG
 import no.nav.hm.grunndata.rapid.dto.*
 import no.nav.hm.grunndata.rapid.event.EventName
 import no.nav.hm.rapids_rivers.micronaut.RiverHead
@@ -80,7 +79,7 @@ class ProductAgreementRegistrationRiverSupport(private val agreementService: Agr
             agreement.hmsArtNr
         } else product.hmsArtNr
 
-        val updated = agreementService.findById(agreement.agreementId)?.let { agreementInDb ->
+        val updated = agreementService.findByIdCached(agreement.agreementId)?.let { agreementInDb ->
             val foundPost = agreementInDb.posts.find { post -> post.id == agreement.postId }
                     ?: throw IllegalStateException("Post ${agreement.postId} not found in agreement ${agreement.agreementId}, check if agreements are in sync")
             AgreementInfo(

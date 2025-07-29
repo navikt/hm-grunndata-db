@@ -1,5 +1,6 @@
 package no.nav.hm.grunndata.db.index.external_product
 
+import ch.qos.logback.core.util.FileSize
 import io.micronaut.data.model.Pageable
 import io.micronaut.data.model.Sort
 import jakarta.inject.Singleton
@@ -31,15 +32,16 @@ class ExternalProductIndexer(
 
     }
 
-    suspend fun reIndex(alias: Boolean) {
+    suspend fun reIndex(alias: Boolean, from: LocalDateTime? = null, size: Int = 3000) {
         val indexName = createIndexName(getAliasIndexName())
         if (!indexer.indexExists(indexName)) {
             LOG.info("creating index $indexName")
             indexer.createIndex(indexName, getSettings(), getMappings())
         }
-        var updated =  LocalDateTime.now().minusYears(30)
+        var updated = from ?: LocalDateTime.now().minusYears(30)
+        LOG.info("reindexing $indexName from $updated")
         var page = productService.findProducts(criteria = ProductCriteria(updated = updated), pageable = Pageable.from(
-            0, 3000, Sort.of(Sort.Order.asc( "updated"))))
+            0, size, Sort.of(Sort.Order.asc( "updated"))))
         var lastId: UUID? = null
         while(page.numberOfElements>0) {
             val products = page.content
@@ -58,7 +60,7 @@ class ExternalProductIndexer(
             }
             LOG.info("updated is now: $updated")
             page = productService.findProducts(criteria = ProductCriteria(updated = updated), pageable = Pageable.from(
-                0, 3000, Sort.of(Sort.Order.asc( "updated"))))
+                0, size, Sort.of(Sort.Order.asc( "updated"))))
         }
         if (alias) {
             indexer.updateAlias(getAliasIndexName(), indexName)
