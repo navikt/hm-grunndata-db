@@ -4,15 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import io.kotest.common.runBlocking
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
-import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
-import io.mockk.mockk
 import no.nav.hm.grunndata.db.agreement.Agreement
 import no.nav.hm.grunndata.db.agreement.AgreementService
 import no.nav.hm.grunndata.db.supplier.Supplier
 import no.nav.hm.grunndata.db.supplier.SupplierService
 import no.nav.hm.grunndata.rapid.dto.*
-import no.nav.hm.rapids_rivers.micronaut.RapidPushService
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 import java.util.*
@@ -22,9 +19,6 @@ class ProductServiceTest(private val productService: ProductService,
                          private val supplierService: SupplierService,
                          private val agreementService: AgreementService,
                          private val objectMapper: ObjectMapper) {
-
-    @MockBean(RapidPushService::class)
-    fun mockRapidService(): RapidPushService = mockk(relaxed = true)
 
     @Test
     fun productServiceTest() {

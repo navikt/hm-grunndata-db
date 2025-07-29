@@ -9,6 +9,7 @@ import jakarta.inject.Singleton
 import no.nav.hm.grunndata.db.GdbRapidPushService
 import no.nav.hm.grunndata.db.index.item.IndexItemService
 import no.nav.hm.grunndata.db.index.item.IndexType
+import no.nav.hm.grunndata.db.index.item.indexSettingsMap
 import no.nav.hm.grunndata.db.index.news.toDoc
 import no.nav.hm.grunndata.rapid.dto.NewsDTO
 import no.nav.hm.grunndata.rapid.dto.NewsRegistrationRapidDTO
@@ -35,7 +36,7 @@ class NewsService(private val newsRepository: NewsRepository, private val indexI
             newsRepository.update(news.copy(id = inDb.id, created = inDb.created, createdBy = inDb.createdBy))
         } ?: newsRepository.save(news)
         gdbRapidPushService.pushDTOToKafka(newsDTO, eventName)
-        indexItemService.saveIndexItem(newsDTO.toDoc(), IndexType.NEWS)
+        indexItemService.saveIndexItem(newsDTO.toDoc(), IndexType.NEWS, indexSettingsMap[IndexType.NEWS]!!.aliasIndexName)
         return newsDTO
     }
 

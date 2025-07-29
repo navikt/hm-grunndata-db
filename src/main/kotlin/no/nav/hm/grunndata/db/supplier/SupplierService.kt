@@ -10,6 +10,7 @@ import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.db.GdbRapidPushService
 import no.nav.hm.grunndata.db.index.item.IndexItemService
 import no.nav.hm.grunndata.db.index.item.IndexType
+import no.nav.hm.grunndata.db.index.item.indexSettingsMap
 import no.nav.hm.grunndata.db.index.supplier.toDoc
 import no.nav.hm.grunndata.rapid.dto.SupplierDTO
 import org.slf4j.LoggerFactory
@@ -61,7 +62,7 @@ open class SupplierService(private val supplierRepository: SupplierRepository,
             } ?: save(supplier)
         LOG.info("saved: ${saved.id} ")
         gdbRapidPushService.pushDTOToKafka(supplierDTO, eventName)
-        indexItemService.saveIndexItem(supplierDTO.toDoc(), IndexType.SUPPLIER)
+        indexItemService.saveIndexItem(supplierDTO.toDoc(), IndexType.SUPPLIER, indexSettingsMap[IndexType.SUPPLIER]!!.aliasIndexName)
         return supplierDTO
     }
 }

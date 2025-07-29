@@ -13,6 +13,7 @@ import no.nav.hm.grunndata.db.agreement.AgreementService
 import no.nav.hm.grunndata.db.index.external_product.toExternalDoc
 import no.nav.hm.grunndata.db.index.item.IndexItemService
 import no.nav.hm.grunndata.db.index.item.IndexType
+import no.nav.hm.grunndata.db.index.item.indexSettingsMap
 import no.nav.hm.grunndata.db.index.product.toDoc
 import no.nav.hm.grunndata.db.iso.IsoCategoryService
 import no.nav.hm.grunndata.db.supplier.SupplierService
@@ -74,9 +75,9 @@ open class ProductService(
             LOG.warn("Product ${productDTO.id} has no title, it means series is not synced yet")
         } else {
             gdbRapidPushService.pushDTOToKafka(productDTO, eventName)
-            indexItemService.saveIndexItem(productDTO.toDoc(isoCategoryService), IndexType.PRODUCT)
+            indexItemService.saveIndexItem(productDTO.toDoc(isoCategoryService), IndexType.PRODUCT, indexSettingsMap[IndexType.PRODUCT]!!.aliasIndexName)
             // external product
-            indexItemService.saveIndexItem(productDTO.toExternalDoc(isoCategoryService), IndexType.EXTERNAL_PRODUCT)
+            indexItemService.saveIndexItem(productDTO.toExternalDoc(isoCategoryService), IndexType.EXTERNAL_PRODUCT, indexSettingsMap[IndexType.EXTERNAL_PRODUCT]!!.aliasIndexName)
         }
         return productDTO
     }

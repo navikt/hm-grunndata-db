@@ -1,17 +1,14 @@
 package no.nav.hm.grunndata.db.index.product
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import io.micronaut.context.annotation.Value
 import io.micronaut.data.model.Pageable
 import io.micronaut.data.model.Sort
 import io.micronaut.data.model.Sort.Order
 import jakarta.inject.Singleton
 import no.nav.hm.grunndata.db.index.IndexDoc
 import no.nav.hm.grunndata.db.index.OpensearchIndexer
-import no.nav.hm.grunndata.db.index.SearchDoc
 import no.nav.hm.grunndata.db.index.createIndexName
 import no.nav.hm.grunndata.db.index.item.IndexType
-import no.nav.hm.grunndata.db.index.item.IndexItemSupport
+import no.nav.hm.grunndata.db.index.item.indexSettingsMap
 import no.nav.hm.grunndata.db.iso.IsoCategoryService
 import no.nav.hm.grunndata.db.product.ProductCriteria
 import no.nav.hm.grunndata.db.product.ProductService
@@ -23,25 +20,26 @@ import java.util.*
 class ProductIndexer(
     private val isoCategoryService: IsoCategoryService,
     private val productService: ProductService,
-    private val indexer: OpensearchIndexer): IndexItemSupport {
+    private val indexer: OpensearchIndexer) {
 
     companion object {
         private val LOG = LoggerFactory.getLogger(ProductIndexer::class.java)
-        private val settings = ProductIndexer::class.java
+        val settings = ProductIndexer::class.java
             .getResource("/opensearch/products_settings.json")!!.readText()
-        private val mapping = ProductIndexer::class.java
+        val mapping = ProductIndexer::class.java
             .getResource("/opensearch/products_mapping.json")!!.readText()
-
     }
+
+    val aliasIndexName = indexSettingsMap[IndexType.PRODUCT]!!.aliasIndexName
 
     val size: Int = 5000
 
-    fun count() = indexer.docCount(getAliasIndexName())
+    fun count() = indexer.docCount(aliasIndexName)
 
     suspend fun reIndex(alias: Boolean, from : LocalDateTime?=null) {
-        val indexName = createIndexName(getAliasIndexName())
+        val indexName = createIndexName(aliasIndexName)
         if (!indexer.indexExists(indexName)) {
-            indexer.createIndex(indexName, getSettings(), getMappings())
+            indexer.createIndex(indexName, settings, mapping)
         }
         var updated = from ?: LocalDateTime.now().minusYears(1000)
         var page = productService.findProducts(criteria = ProductCriteria(updated = updated), pageable = Pageable.from(
@@ -52,7 +50,7 @@ class ProductIndexer(
                 .map { IndexDoc(
                     id = it.id.toString(),
                     doc = it.toDoc(isoCategoryService),
-                    indexType = getIndexType(),
+                    indexType = IndexType.PRODUCT,
                     indexName = indexName
                 )}
             LOG.info("indexing ${products.size} products to $indexName")
@@ -70,7 +68,7 @@ class ProductIndexer(
                 0, size, Sort.of(Order.asc( "updated"))))
         }
         if (alias) {
-            indexer.updateAlias(aliasName = getAliasIndexName(), indexName = indexName)
+            indexer.updateAlias(aliasName = aliasIndexName, indexName = indexName)
         }
     }
 
@@ -82,11 +80,11 @@ class ProductIndexer(
             val products = page.content.map { IndexDoc(
                 id = it.id.toString(),
                 doc = it.toDoc(isoCategoryService),
-                indexType = getIndexType(),
-                indexName = getAliasIndexName(),
+                indexType = IndexType.PRODUCT,
+                indexName = aliasIndexName,
             )}
             if (products.isNotEmpty()) {
-                LOG.info("indexing ${products.size} products to ${getAliasIndexName()}")
+                LOG.info("indexing ${products.size} products to ${aliasIndexName}")
                 indexer.indexDoc(products)
             }
             page = productService.findProducts(criteria = ProductCriteria(supplierId= supplierId), Pageable.from(
@@ -103,10 +101,10 @@ class ProductIndexer(
             val products = page.content.map { IndexDoc(
                 id = it.id.toString(),
                 doc = it.toDoc(isoCategoryService),
-                indexType = getIndexType(),
-                indexName = getAliasIndexName()
+                indexType = IndexType.PRODUCT,
+                indexName = aliasIndexName
             )}
-            LOG.info("indexing ${products.size} products to ${getAliasIndexName()}")
+            LOG.info("indexing ${products.size} products to ${aliasIndexName}")
             indexer.indexDoc(products)
         }
     }
@@ -118,28 +116,18 @@ class ProductIndexer(
             val products = page.content.map { IndexDoc(
                 id = it.id.toString(),
                 doc = it.toDoc(isoCategoryService),
-                indexType = getIndexType(),
-                indexName = getAliasIndexName()
+                indexType = IndexType.PRODUCT,
+                indexName = aliasIndexName
             )}
             if (products.isNotEmpty()) {
-                LOG.info("indexing ${products.size} products to ${getAliasIndexName()}")
+                LOG.info("indexing ${products.size} products to ${aliasIndexName}")
                 indexer.indexDoc(products)
             }
             page = productService.findProducts(criteria = ProductCriteria(isoCategory = iso), Pageable.from(++pageNumber, size, Sort.of(Order.asc("updated"))))
         }
     }
 
-    override fun getAliasIndexName(): String = "products"
-
-    override fun getMappings(): String = mapping
-
-    override fun getSettings(): String = settings
-
-    override fun getIndexType(): IndexType = IndexType.PRODUCT
-
-    override fun getSearchDocClassType(): Class<out SearchDoc> = ProductDoc::class.java
-
-    fun updateAlias(indexName: String) = indexer.updateAlias(aliasName = getAliasIndexName(), indexName = indexName)
-    fun getAlias() = indexer.getAlias(getAliasIndexName())
-    fun delete(id: UUID) = indexer.delete(id.toString(), getAliasIndexName())
+    fun updateAlias(indexName: String) = indexer.updateAlias(aliasName = aliasIndexName, indexName = indexName)
+    fun getAlias() = indexer.getAlias(aliasIndexName)
+    fun delete(id: UUID) = indexer.delete(id.toString(), aliasIndexName)
 }

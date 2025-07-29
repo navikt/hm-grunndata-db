@@ -13,6 +13,7 @@ import no.nav.hm.grunndata.db.GdbRapidPushService
 import no.nav.hm.grunndata.db.index.agreement.toDoc
 import no.nav.hm.grunndata.db.index.item.IndexItemService
 import no.nav.hm.grunndata.db.index.item.IndexType
+import no.nav.hm.grunndata.db.index.item.indexSettingsMap
 import no.nav.hm.grunndata.rapid.dto.AgreementDTO
 import org.slf4j.LoggerFactory
 
@@ -52,7 +53,7 @@ open class AgreementService(private val agreementRepository: AgreementRepository
                 createdBy = inDb.createdBy))
         } ?: save(agreement)
         LOG.info("saved: ${agreementDTO.id} ${agreementDTO.reference}")
-        indexItemService.saveIndexItem(agreementDTO.toDoc(), IndexType.AGREEMENT)
+        indexItemService.saveIndexItem(agreementDTO.toDoc(), IndexType.AGREEMENT, indexSettingsMap[IndexType.AGREEMENT]!!.aliasIndexName)
         gdbRapidPushService.pushDTOToKafka(agreementDTO, eventName)
         LOG.info("indexing agreement id: ${agreementDTO.id} reference: ${agreementDTO.reference}")
         return agreementDTO

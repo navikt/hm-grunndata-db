@@ -5,10 +5,9 @@ import io.micronaut.data.model.Sort
 import jakarta.inject.Singleton
 import no.nav.hm.grunndata.db.index.IndexDoc
 import no.nav.hm.grunndata.db.index.OpensearchIndexer
-import no.nav.hm.grunndata.db.index.SearchDoc
 import no.nav.hm.grunndata.db.index.createIndexName
-import no.nav.hm.grunndata.db.index.item.IndexItemSupport
 import no.nav.hm.grunndata.db.index.item.IndexType
+import no.nav.hm.grunndata.db.index.item.indexSettingsMap
 import no.nav.hm.grunndata.db.supplier.SupplierService
 import org.slf4j.LoggerFactory
 
@@ -16,7 +15,7 @@ import org.slf4j.LoggerFactory
 class SupplierIndexer(
     private val supplierService: SupplierService,
     private val indexer: OpensearchIndexer
-): IndexItemSupport {
+) {
 
     companion object {
         private val LOG = LoggerFactory.getLogger(SupplierIndexer::class.java)
@@ -25,13 +24,14 @@ class SupplierIndexer(
         private val mapping = SupplierIndexer::class.java
             .getResource("/opensearch/suppliers_mapping.json")!!.readText()
     }
-
+    
+    val aliasIndexName = indexSettingsMap[IndexType.SUPPLIER]!!.aliasIndexName
 
     suspend fun reIndex(alias: Boolean) {
-        val indexName = createIndexName(getAliasIndexName())
+        val indexName = createIndexName(aliasIndexName)
         if (!indexer.indexExists(indexName)) {
             LOG.info("creating index $indexName")
-            indexer.createIndex(indexName, getSettings(), getMappings())
+            indexer.createIndex(indexName, settings, mapping)
         }
         val page = supplierService.findSuppliers(
             null,
@@ -52,23 +52,14 @@ class SupplierIndexer(
         LOG.info("indexing ${suppliers.size} suppliers to $indexName")
         indexer.indexDoc(suppliers)
         if (alias) {
-            indexer.updateAlias(aliasName = getAliasIndexName(), indexName = indexName)
+            indexer.updateAlias(aliasName = aliasIndexName, indexName = indexName)
         }
     }
 
-    override fun getAliasIndexName(): String = "suppliers"
 
-    override fun getMappings(): String = mapping
-
-    override fun getSettings(): String = settings
-
-    override fun getIndexType(): IndexType = IndexType.SUPPLIER
-
-    override fun getSearchDocClassType(): Class<out SearchDoc> = SupplierDoc::class.java
-
-    fun updateAlias(indexName: String) = indexer.updateAlias(aliasName = getAliasIndexName(), indexName = indexName)
-    fun getAlias() = indexer.getAlias(getAliasIndexName())
-    fun docCount() = indexer.docCount(getAliasIndexName())
+    fun updateAlias(indexName: String) = indexer.updateAlias(aliasName = aliasIndexName, indexName = indexName)
+    fun getAlias() = indexer.getAlias(aliasIndexName)
+    fun docCount() = indexer.docCount(aliasIndexName)
 
 
 }

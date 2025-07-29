@@ -1,7 +1,9 @@
 package no.nav.hm.grunndata.db.index
 
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.inject.Singleton
+import no.nav.hm.grunndata.db.index.item.IndexItem
 import java.io.StringReader
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -26,7 +28,7 @@ import org.opensearch.client.opensearch.indices.update_aliases.ActionBuilders
 import org.slf4j.LoggerFactory
 
 @Singleton
-class OpensearchIndexer(private val client: OpenSearchClient) {
+class OpensearchIndexer(private val client: OpenSearchClient, private val objectMapper: ObjectMapper) {
 
     companion object {
         private val LOG = LoggerFactory.getLogger(OpensearchIndexer::class.java)
@@ -71,6 +73,32 @@ class OpensearchIndexer(private val client: OpenSearchClient) {
         return ack
     }
 
+    fun indexItems(items: List<IndexItem>): BulkResponse {
+        val operations = items.map { item ->
+            if (item.delete) {
+                LOG.info("deleting document ${item.id} from index ${item.indexName}")
+                BulkOperation.Builder().delete(
+                    DeleteOperation.of { it.index(item.indexName).id(item.oid) }
+                ).build()
+            } else {
+                val docMap: Map<String, Any> = objectMapper.readValue(item.payload, Map::class.java) as Map<String, Any>
+                BulkOperation.Builder().index(
+                    IndexOperation.of { it.index(item.indexName).id(item.oid).document(docMap) }
+                ).build()
+            }
+        }
+        val bulkRequest = BulkRequest.Builder()
+            .operations(operations)
+            .refresh(Refresh.WaitFor)
+            .build()
+        return try {
+            client.bulk(bulkRequest)
+        } catch (e: Exception) {
+            LOG.error("Failed to bulk index ${items.size}", e)
+            throw e
+        }
+    }
+
     fun indexDoc(docs: List<IndexDoc>): BulkResponse {
         val operations = docs.map { document ->
             if (document.delete) {
@@ -79,9 +107,11 @@ class OpensearchIndexer(private val client: OpenSearchClient) {
                     DeleteOperation.of { it.index(document.indexName).id(document.id.toString()) }
                 ).build()
             }
-            else BulkOperation.Builder().index(
+            else {
+
+                BulkOperation.Builder().index(
                 IndexOperation.of { it.index(document.indexName).id(document.id.toString()).document(document.doc) }
-            ).build()
+            ).build() }
         }
         val bulkRequest = BulkRequest.Builder()
             .operations(operations)

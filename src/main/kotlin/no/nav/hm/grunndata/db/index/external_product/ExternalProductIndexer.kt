@@ -1,15 +1,13 @@
 package no.nav.hm.grunndata.db.index.external_product
 
-import ch.qos.logback.core.util.FileSize
 import io.micronaut.data.model.Pageable
 import io.micronaut.data.model.Sort
 import jakarta.inject.Singleton
 import no.nav.hm.grunndata.db.index.IndexDoc
 import no.nav.hm.grunndata.db.index.OpensearchIndexer
-import no.nav.hm.grunndata.db.index.SearchDoc
 import no.nav.hm.grunndata.db.index.createIndexName
 import no.nav.hm.grunndata.db.index.item.IndexType
-import no.nav.hm.grunndata.db.index.item.IndexItemSupport
+import no.nav.hm.grunndata.db.index.item.indexSettingsMap
 import no.nav.hm.grunndata.db.iso.IsoCategoryService
 import no.nav.hm.grunndata.db.product.ProductCriteria
 import no.nav.hm.grunndata.db.product.ProductService
@@ -22,21 +20,22 @@ class ExternalProductIndexer(
     private val isoCategoryService: IsoCategoryService,
     private val productService: ProductService,
     private val indexer: OpensearchIndexer
-): IndexItemSupport {
+) {
     companion object {
         private val LOG = LoggerFactory.getLogger(ExternalProductIndexer::class.java)
-        private val settings = ExternalProductIndexer::class.java
+        val settings = ExternalProductIndexer::class.java
             .getResource("/opensearch/external_products_settings.json")!!.readText()
-        private val mapping = ExternalProductIndexer::class.java
+        val mapping = ExternalProductIndexer::class.java
             .getResource("/opensearch/external_products_mapping.json")!!.readText()
-
     }
 
+    val aliasIndexName = indexSettingsMap[IndexType.EXTERNAL_PRODUCT]!!.aliasIndexName
+
     suspend fun reIndex(alias: Boolean, from: LocalDateTime? = null, size: Int = 3000) {
-        val indexName = createIndexName(getAliasIndexName())
+        val indexName = createIndexName(aliasIndexName)
         if (!indexer.indexExists(indexName)) {
             LOG.info("creating index $indexName")
-            indexer.createIndex(indexName, getSettings(), getMappings())
+            indexer.createIndex(indexName, settings, mapping)
         }
         var updated = from ?: LocalDateTime.now().minusYears(30)
         LOG.info("reindexing $indexName from $updated")
@@ -63,23 +62,14 @@ class ExternalProductIndexer(
                 0, size, Sort.of(Sort.Order.asc( "updated"))))
         }
         if (alias) {
-            indexer.updateAlias(getAliasIndexName(), indexName)
+            indexer.updateAlias(aliasIndexName, indexName)
         }
     }
 
     fun updateAlias(indexName: String) {
-        indexer.updateAlias(getAliasIndexName(),indexName)
+        indexer.updateAlias(aliasIndexName,indexName)
     }
 
-    fun getAlias() = indexer.getAlias(getAliasIndexName())
+    fun getAlias() = indexer.getAlias(aliasIndexName)
 
-    override fun getAliasIndexName(): String = "external_products"
-
-    override fun getMappings(): String = mapping
-
-    override fun getSettings(): String = settings
-
-    override fun getIndexType(): IndexType = IndexType.EXTERNAL_PRODUCT
-
-    override fun getSearchDocClassType(): Class<out SearchDoc>  = ExternalProductDoc::class.java
 }

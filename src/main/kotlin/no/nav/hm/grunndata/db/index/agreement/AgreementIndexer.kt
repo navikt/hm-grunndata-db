@@ -8,16 +8,15 @@ import no.nav.hm.grunndata.db.agreement.AgreementService
 import no.nav.hm.grunndata.db.agreement.toDTO
 import no.nav.hm.grunndata.db.index.IndexDoc
 import no.nav.hm.grunndata.db.index.OpensearchIndexer
-import no.nav.hm.grunndata.db.index.SearchDoc
 import no.nav.hm.grunndata.db.index.createIndexName
 import no.nav.hm.grunndata.db.index.item.IndexType
-import no.nav.hm.grunndata.db.index.item.IndexItemSupport
+import no.nav.hm.grunndata.db.index.item.indexSettingsMap
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 
 @Singleton
 class AgreementIndexer(private val agreementService: AgreementService,
-                       private val indexer: OpensearchIndexer) : IndexItemSupport {
+                       private val indexer: OpensearchIndexer) {
 
     companion object {
         private val LOG = LoggerFactory.getLogger(AgreementIndexer::class.java)
@@ -27,11 +26,13 @@ class AgreementIndexer(private val agreementService: AgreementService,
             .getResource("/opensearch/agreements_mapping.json")!!.readText()
     }
 
+    val aliasIndexName: String = indexSettingsMap[IndexType.AGREEMENT]!!.aliasIndexName
+
     suspend fun reIndex(alias: Boolean) {
-        val indexName = createIndexName(getAliasIndexName())
+        val indexName = createIndexName(aliasIndexName)
         if (!indexer.indexExists(indexName)) {
             LOG.info("creating index $indexName")
-            indexer.createIndex(indexName, getSettings(), getMappings())
+            indexer.createIndex(indexName, settings, mapping)
         }
         val updated =  LocalDateTime.now().minusYears(30)
         val criteria = AgreementCriteria(updatedAfter = updated)
@@ -40,24 +41,14 @@ class AgreementIndexer(private val agreementService: AgreementService,
         LOG.info("indexing ${agreements.size} agreements to $indexName")
         if (agreements.isNotEmpty()) indexer.indexDoc(agreements)
         if (alias) {
-           indexer.updateAlias(getAliasIndexName(), indexName)
+           indexer.updateAlias(aliasIndexName, indexName)
         }
     }
 
-    suspend fun updateAlias(indexName: String) {
-        indexer.updateAlias(getAliasIndexName(), indexName)
+    fun updateAlias(indexName: String) {
+        indexer.updateAlias(aliasIndexName, indexName)
     }
 
-    fun getAlias() = indexer.getAlias(getAliasIndexName())
-
-    override fun getAliasIndexName(): String = "agreements"
-
-    override fun getMappings(): String = mapping
-
-    override fun getSettings(): String  = settings
-
-    override fun getIndexType(): IndexType = IndexType.AGREEMENT
-
-    override fun getSearchDocClassType(): Class<out SearchDoc> = AgreementDoc::class.java
+    fun getAlias() = indexer.getAlias(aliasIndexName)
 
 }

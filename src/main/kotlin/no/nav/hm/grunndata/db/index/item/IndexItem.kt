@@ -13,6 +13,7 @@ data class IndexItem(
     val delete: Boolean = false,
     val payload: String,
     val indexType: IndexType,
+    val indexName: String,
     val status: IndexItemStatus = IndexItemStatus.PENDING,
     val created: LocalDateTime = LocalDateTime.now(),
     val updated: LocalDateTime = LocalDateTime.now(),

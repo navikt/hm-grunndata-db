@@ -11,8 +11,10 @@ import java.time.LocalDateTime
 import java.util.UUID
 
 @MicronautTest
-class IndexItemRepositoryTest(private val objectMapper: ObjectMapper,
-                              private val indexItemRepository: IndexItemRepository) {
+class IndexItemRepositoryTest(
+    private val objectMapper: ObjectMapper,
+    private val indexItemRepository: IndexItemRepository
+) {
 
     @Test
     fun crudTest() {
@@ -32,12 +34,13 @@ class IndexItemRepositoryTest(private val objectMapper: ObjectMapper,
             author = "author"
         )
 
-            val indexItem = IndexItem(
+        val indexItem = IndexItem(
             id = UUID.randomUUID(),
             oid = news.id,
             payload = objectMapper.writer().writeValueAsString(news),
             indexType = IndexType.NEWS,
             created = LocalDateTime.now(),
+            indexName = "news",
             updated = LocalDateTime.now()
         )
 
