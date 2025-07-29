@@ -7,6 +7,7 @@ import no.nav.hm.grunndata.db.index.external_product.ExternalProductIndexer
 import no.nav.hm.grunndata.db.index.news.NewsDoc
 import no.nav.hm.grunndata.db.index.news.NewsIndexer
 import no.nav.hm.grunndata.db.index.product.ProductIndexer
+import no.nav.hm.grunndata.db.index.supplier.SupplierIndexer
 
 data class IndexSettings(
     val aliasIndexName: String,
@@ -55,6 +56,16 @@ val indexSettingsMap = mutableMapOf<IndexType, IndexSettings>().apply {
             settings = ExternalProductIndexer.settings,
             indexType = IndexType.EXTERNAL_PRODUCT,
             searchDocClassType = SearchDoc::class.java
+        )
+    )
+    put(
+        IndexType.SUPPLIER,
+        IndexSettings(
+            aliasIndexName = "suppliers",
+            mappings = SupplierIndexer.mapping,
+            settings = SupplierIndexer.settings,
+            indexType = IndexType.SUPPLIER,
+            searchDocClassType = SearchDoc::class.java // Placeholder, should be replaced with actual SupplierDoc class
         )
     )
 }
