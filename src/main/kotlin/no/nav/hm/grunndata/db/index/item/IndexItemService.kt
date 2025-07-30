@@ -31,10 +31,10 @@ open class IndexItemService(
     }
 
     @Transactional
-    open suspend fun processPendingIndexItems(size: Int) {
+    open suspend fun processPendingIndexItems(size: Int): Int {
         val items = indexItemRepository.findAndLockForProcessing(status = IndexItemStatus.PENDING, limit = size)
         if (items.isEmpty()) {
-            return
+            return 0
         }
         val uniqueItems = items.groupBy { it.oid to it.indexType }.map { it.value.last() }
         LOG.info("Indexing ${items.size} with ${uniqueItems.size} unique items")
@@ -42,6 +42,14 @@ open class IndexItemService(
         items.forEach {
             indexItemRepository.update(it.copy(status = IndexItemStatus.DONE, updated = LocalDateTime.now()))
         }
+        return items.size
+    }
+
+    @Transactional
+    open suspend fun deleteOldIndexItems(): Long {
+        val deleted = indexItemRepository.deleteByStatusAndUpdatedBefore(IndexItemStatus.DONE, LocalDateTime.now().minusDays(15))
+        LOG.info("Deleted ${deleted} old index items")
+        return deleted
     }
 
 

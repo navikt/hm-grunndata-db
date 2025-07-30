@@ -1,5 +1,6 @@
 package no.nav.hm.grunndata.db.index.item
 
+import io.kotest.matchers.shouldBe
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.db.index.supplier.SupplierDoc
@@ -32,7 +33,8 @@ class IndexItemServiceTest(private val indexItemService: IndexItemService) {
         )
         runBlocking {
             indexItemService.saveIndexItem(supplierDoc, IndexType.SUPPLIER, indexSettingsMap[IndexType.SUPPLIER]!!.aliasIndexName)
-            indexItemService.processPendingIndexItems(size=1000)
+            indexItemService.processPendingIndexItems(size=1000) shouldBe 1
+            indexItemService.deleteOldIndexItems() shouldBe 0
         }
     }
 }

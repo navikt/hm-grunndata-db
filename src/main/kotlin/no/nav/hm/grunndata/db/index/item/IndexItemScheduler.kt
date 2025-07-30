@@ -5,11 +5,12 @@ import io.micronaut.context.annotation.Value
 import io.micronaut.scheduling.annotation.Scheduled
 import jakarta.inject.Singleton
 import kotlinx.coroutines.runBlocking
+import no.nav.hm.grunndata.register.leaderelection.LeaderOnly
 
 @Singleton
 @Requires(property = "schedulers.enabled", value = "true")
 @Requires(property = "index.item.enabled", value = "true")
-class IndexItemScheduler(private val indexItemService: IndexItemService,
+open class IndexItemScheduler(private val indexItemService: IndexItemService,
                          @Value("\${index.item.size}") private val size: Int ) {
 
     companion object {
@@ -17,9 +18,17 @@ class IndexItemScheduler(private val indexItemService: IndexItemService,
     }
 
     @Scheduled(fixedDelay = "10s")
-    fun indexItems() = runBlocking {
+    open fun indexItems() = runBlocking {
         LOG.info("Indexing items with size: $size")
         indexItemService.processPendingIndexItems(size)
 
     }
+
+    @LeaderOnly
+    @Scheduled(cron = "0 0 * * * *")
+    open fun deleteOldIndexItems() = runBlocking {
+        LOG.info("Deleting old index items")
+        indexItemService.deleteOldIndexItems()
+    }
+
 }
