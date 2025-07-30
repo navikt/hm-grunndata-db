@@ -17,7 +17,7 @@ open class IndexItemScheduler(private val indexItemService: IndexItemService,
         private val LOG = org.slf4j.LoggerFactory.getLogger(IndexItemScheduler::class.java)
     }
 
-    @Scheduled(fixedDelay = "10s")
+    @Scheduled(fixedDelay = "60s")
     open fun indexItems() = runBlocking {
         LOG.info("Indexing items with size: $size")
         indexItemService.processPendingIndexItems(size)
