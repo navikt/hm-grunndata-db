@@ -2,10 +2,6 @@ package no.nav.hm.grunndata.db.index.item
 
 import jakarta.inject.Singleton
 import no.nav.hm.grunndata.db.index.OpensearchIndexer
-import no.nav.hm.grunndata.db.index.SearchDoc
-import no.nav.hm.grunndata.db.index.agreement.AgreementDoc
-
-import no.nav.hm.grunndata.db.index.news.NewsDoc
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
