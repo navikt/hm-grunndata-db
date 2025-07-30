@@ -11,6 +11,7 @@ import java.time.LocalDateTime
 open class IndexItemService(
     private val indexItemRepository: IndexItemRepository,
     private val indexer: OpensearchIndexer,
+    private val indexSettings: IndexSettings,
     private val objectMapper: ObjectMapper
 ) {
 
@@ -19,6 +20,10 @@ open class IndexItemService(
     }
 
     suspend fun saveIndexItem(doc: SearchDoc, indexType: IndexType, indexName: String): IndexItem {
+        val config = indexSettings.indexConfigMap[indexType]
+        if (config == null) {
+            throw IllegalArgumentException("No index configuration found for index type: $indexType")
+        }
         val indexItem = IndexItem(
             oid = doc.id,
             delete = doc.isDelete(),
@@ -27,7 +32,13 @@ open class IndexItemService(
             indexName = indexName,
             status = IndexItemStatus.PENDING
         )
-        return indexItemRepository.save(indexItem)
+        return if (config.enabled) { indexItemRepository.save(indexItem) } else indexItem
+    }
+
+    suspend fun saveIndexItem(doc: SearchDoc, indexType: IndexType): IndexItem {
+        val indexName = indexSettings.indexConfigMap[indexType]?.aliasIndexName
+            ?: throw IllegalArgumentException("No index name found for index type: $indexType")
+        return saveIndexItem(doc, indexType, indexName)
     }
 
     @Transactional

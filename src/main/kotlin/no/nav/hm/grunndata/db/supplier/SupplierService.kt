@@ -9,7 +9,6 @@ import jakarta.transaction.Transactional
 import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.db.GdbRapidPushService
 import no.nav.hm.grunndata.db.index.item.IndexItemService
-import no.nav.hm.grunndata.db.index.item.IndexSettings
 import no.nav.hm.grunndata.db.index.item.IndexType
 import no.nav.hm.grunndata.db.index.supplier.toDoc
 import no.nav.hm.grunndata.rapid.dto.SupplierDTO
@@ -20,7 +19,6 @@ import java.util.*
 @Cacheable(cacheNames = ["suppliers"])
 open class SupplierService(private val supplierRepository: SupplierRepository,
                            private val indexItemService: IndexItemService,
-                           private val indexSettings: IndexSettings,
                            private val gdbRapidPushService: GdbRapidPushService) {
 
     companion object {
@@ -63,7 +61,7 @@ open class SupplierService(private val supplierRepository: SupplierRepository,
             } ?: save(supplier)
         LOG.info("saved: ${saved.id} ")
         gdbRapidPushService.pushDTOToKafka(supplierDTO, eventName)
-        indexItemService.saveIndexItem(supplierDTO.toDoc(), IndexType.SUPPLIER, indexSettings.indexConfigMap[IndexType.SUPPLIER]!!.aliasIndexName)
+        indexItemService.saveIndexItem(supplierDTO.toDoc(), IndexType.SUPPLIER)
         return supplierDTO
     }
 }

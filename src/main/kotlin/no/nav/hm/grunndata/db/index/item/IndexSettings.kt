@@ -24,7 +24,7 @@ class IndexSettings(private val indexer: OpensearchIndexer) {
                 settings = IndexSettings::class.java.getResource("/opensearch/agreements_settings.json")!!.readText(),
                 mappings = IndexSettings::class.java.getResource("/opensearch/agreements_mapping.json")!!.readText(),
                 indexType = IndexType.AGREEMENT,
-                searchDocClassType = AgreementDoc::class.java
+                enabled = false
             )
         )
         put(
@@ -34,7 +34,7 @@ class IndexSettings(private val indexer: OpensearchIndexer) {
                 settings = IndexSettings::class.java.getResource("/opensearch/news_settings.json")!!.readText(),
                 mappings = IndexSettings::class.java.getResource("/opensearch/news_mapping.json")!!.readText(),
                 indexType = IndexType.NEWS,
-                searchDocClassType = NewsDoc::class.java
+                enabled = true
             )
         )
         put(
@@ -44,7 +44,7 @@ class IndexSettings(private val indexer: OpensearchIndexer) {
                 settings = IndexSettings::class.java.getResource("/opensearch/products_settings.json")!!.readText(),
                 mappings = IndexSettings::class.java.getResource("/opensearch/products_mapping.json")!!.readText(),
                 indexType = IndexType.PRODUCT,
-                searchDocClassType = SearchDoc::class.java // Placeholder, should be replaced with actual ProductDoc class
+                enabled = false
             )
         )
         put(
@@ -54,7 +54,7 @@ class IndexSettings(private val indexer: OpensearchIndexer) {
                 settings = IndexSettings::class.java.getResource("/opensearch/external_products_settings.json")!!.readText(),
                 mappings = IndexSettings::class.java.getResource("/opensearch/external_products_mapping.json")!!.readText(),
                 indexType = IndexType.EXTERNAL_PRODUCT,
-                searchDocClassType = SearchDoc::class.java
+                enabled = false
             )
         )
         put(
@@ -64,13 +64,17 @@ class IndexSettings(private val indexer: OpensearchIndexer) {
                 settings = IndexSettings::class.java.getResource("/opensearch/suppliers_settings.json")!!.readText(),
                 mappings = IndexSettings::class.java.getResource("/opensearch/suppliers_mapping.json")!!.readText(),
                 indexType = IndexType.SUPPLIER,
-                searchDocClassType = SearchDoc::class.java // Placeholder, should be replaced with actual SupplierDoc class
+                enabled = true
             )
         )
     }
 
     init {
         indexConfigMap.forEach { (type, config) ->
+            if (!config.enabled) {
+                LOG.info("Indexing for type: ${type.name} is disabled, skipping initialization.")
+                return@forEach
+            }
             LOG.info("Initializing index for type: ${type.name}, alias: ${config.aliasIndexName}")
             indexer.initAlias(config.aliasIndexName, config.settings, config.mappings)
         }

@@ -12,7 +12,6 @@ import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.db.GdbRapidPushService
 import no.nav.hm.grunndata.db.index.agreement.toDoc
 import no.nav.hm.grunndata.db.index.item.IndexItemService
-import no.nav.hm.grunndata.db.index.item.IndexSettings
 import no.nav.hm.grunndata.db.index.item.IndexType
 import no.nav.hm.grunndata.rapid.dto.AgreementDTO
 import org.slf4j.LoggerFactory
@@ -21,7 +20,6 @@ import org.slf4j.LoggerFactory
 @Cacheable(cacheNames = ["agreements"])
 open class AgreementService(private val agreementRepository: AgreementRepository,
                             private val gdbRapidPushService: GdbRapidPushService,
-                            private val indexSettings: IndexSettings,
                             private val indexItemService: IndexItemService,
 ) {
 
@@ -54,7 +52,7 @@ open class AgreementService(private val agreementRepository: AgreementRepository
                 createdBy = inDb.createdBy))
         } ?: save(agreement)
         LOG.info("saved: ${agreementDTO.id} ${agreementDTO.reference}")
-        indexItemService.saveIndexItem(agreementDTO.toDoc(), IndexType.AGREEMENT, indexSettings.indexConfigMap[IndexType.AGREEMENT]!!.aliasIndexName)
+        indexItemService.saveIndexItem(agreementDTO.toDoc(), IndexType.AGREEMENT)
         gdbRapidPushService.pushDTOToKafka(agreementDTO, eventName)
         LOG.info("indexing agreement id: ${agreementDTO.id} reference: ${agreementDTO.reference}")
         return agreementDTO

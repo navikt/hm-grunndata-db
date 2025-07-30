@@ -10,7 +10,7 @@ import java.time.LocalDateTime
 import java.util.*
 
 @MicronautTest
-class IndexItemServiceTest(private val indexItemService: IndexItemService, private val indexSettings: IndexSettings) {
+class IndexItemServiceTest(private val indexItemService: IndexItemService) {
 
     @Test
     fun  testIndexItemService() {
@@ -32,7 +32,7 @@ class IndexItemServiceTest(private val indexItemService: IndexItemService, priva
             updated = LocalDateTime.now(),
         )
         runBlocking {
-            indexItemService.saveIndexItem(supplierDoc, IndexType.SUPPLIER, indexSettings.indexConfigMap[IndexType.SUPPLIER]!!.aliasIndexName)
+            indexItemService.saveIndexItem(supplierDoc, IndexType.SUPPLIER)
             indexItemService.processPendingIndexItems(size=1000) shouldBe 1
             indexItemService.deleteOldIndexItems() shouldBe 0
         }

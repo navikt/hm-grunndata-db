@@ -13,7 +13,6 @@ import java.util.UUID
 
 @Singleton
 class NewsService(private val newsRepository: NewsRepository,
-                  private val indexSettings: IndexSettings,
                   private val indexItemService: IndexItemService,
                   private val gdbRapidPushService: GdbRapidPushService) {
 
@@ -33,7 +32,7 @@ class NewsService(private val newsRepository: NewsRepository,
             newsRepository.update(news.copy(id = inDb.id, created = inDb.created, createdBy = inDb.createdBy))
         } ?: newsRepository.save(news)
         gdbRapidPushService.pushDTOToKafka(newsDTO, eventName)
-        indexItemService.saveIndexItem(newsDTO.toDoc(), IndexType.NEWS, indexSettings.indexConfigMap[IndexType.NEWS]!!.aliasIndexName)
+        indexItemService.saveIndexItem(newsDTO.toDoc(), IndexType.NEWS)
         return newsDTO
     }
 
