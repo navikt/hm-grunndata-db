@@ -15,6 +15,7 @@ import no.nav.hm.grunndata.rapid.dto.SupplierDTO
 import no.nav.hm.grunndata.rapid.dto.SupplierInfo
 
 import no.nav.hm.rapids_rivers.micronaut.RapidPushService
+import org.opensearch.client.opensearch.OpenSearchClient
 import java.time.LocalDateTime
 import java.util.UUID
 import kotlin.apply
@@ -43,5 +44,9 @@ class MockFactory {
                     isoLevel = 4
                 )
     }
+
+    @Singleton
+    @Replaces
+    fun mockOpenSearchClient(): OpenSearchClient = mockk<OpenSearchClient>(relaxed = true)
 
 }
