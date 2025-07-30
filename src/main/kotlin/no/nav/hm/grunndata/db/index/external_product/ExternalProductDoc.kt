@@ -162,4 +162,7 @@ fun MediaInfo.toExternalDoc(): ExternalMediaDoc = ExternalMediaDoc(
     uri = uri, priority = priority, type = type, text = text, source = source
 )
 
-private fun String.decimalToInt(): Int? = substringBeforeLast(".").toInt()
+private fun String.decimalToInt(): Int? {
+    val decimalPart = substringBeforeLast(".")
+    return decimalPart.toIntOrNull()
+}
