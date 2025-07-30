@@ -6,9 +6,8 @@ import io.micronaut.data.model.Sort.Order
 import jakarta.inject.Singleton
 import no.nav.hm.grunndata.db.index.IndexDoc
 import no.nav.hm.grunndata.db.index.OpensearchIndexer
-import no.nav.hm.grunndata.db.index.createIndexName
+import no.nav.hm.grunndata.db.index.item.IndexSettings
 import no.nav.hm.grunndata.db.index.item.IndexType
-import no.nav.hm.grunndata.db.index.item.indexSettingsMap
 import no.nav.hm.grunndata.db.iso.IsoCategoryService
 import no.nav.hm.grunndata.db.product.ProductCriteria
 import no.nav.hm.grunndata.db.product.ProductService
@@ -20,27 +19,21 @@ import java.util.*
 class ProductIndexer(
     private val isoCategoryService: IsoCategoryService,
     private val productService: ProductService,
+    private val indexSettings: IndexSettings,
     private val indexer: OpensearchIndexer) {
 
     companion object {
         private val LOG = LoggerFactory.getLogger(ProductIndexer::class.java)
-        val settings = ProductIndexer::class.java
-            .getResource("/opensearch/products_settings.json")!!.readText()
-        val mapping = ProductIndexer::class.java
-            .getResource("/opensearch/products_mapping.json")!!.readText()
     }
 
-    val aliasIndexName = indexSettingsMap[IndexType.PRODUCT]!!.aliasIndexName
+    val aliasIndexName = indexSettings.indexConfigMap[IndexType.PRODUCT]!!.aliasIndexName
 
     val size: Int = 5000
 
     fun count() = indexer.docCount(aliasIndexName)
 
     suspend fun reIndex(alias: Boolean, from : LocalDateTime?=null) {
-        val indexName = createIndexName(aliasIndexName)
-        if (!indexer.indexExists(indexName)) {
-            indexer.createIndex(indexName, settings, mapping)
-        }
+        val indexName = indexSettings.createIndexForReindex(IndexType.PRODUCT)
         var updated = from ?: LocalDateTime.now().minusYears(1000)
         var page = productService.findProducts(criteria = ProductCriteria(updated = updated), pageable = Pageable.from(
             0, size, Sort.of(Order.asc( "updated"))))

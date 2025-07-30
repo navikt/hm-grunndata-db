@@ -5,34 +5,26 @@ import io.micronaut.data.model.Sort
 import jakarta.inject.Singleton
 import no.nav.hm.grunndata.db.index.IndexDoc
 import no.nav.hm.grunndata.db.index.OpensearchIndexer
-import no.nav.hm.grunndata.db.index.createIndexName
+import no.nav.hm.grunndata.db.index.item.IndexSettings
 import no.nav.hm.grunndata.db.index.item.IndexType
-import no.nav.hm.grunndata.db.index.item.indexSettingsMap
 import no.nav.hm.grunndata.db.supplier.SupplierService
 import org.slf4j.LoggerFactory
 
 @Singleton
 class SupplierIndexer(
     private val supplierService: SupplierService,
+    private val indexSettings: IndexSettings,
     private val indexer: OpensearchIndexer
 ) {
 
     companion object {
         private val LOG = LoggerFactory.getLogger(SupplierIndexer::class.java)
-        val settings = SupplierIndexer::class.java
-            .getResource("/opensearch/suppliers_settings.json")!!.readText()
-        val mapping = SupplierIndexer::class.java
-            .getResource("/opensearch/suppliers_mapping.json")!!.readText()
     }
     
-    val aliasIndexName = indexSettingsMap[IndexType.SUPPLIER]!!.aliasIndexName
+    val aliasIndexName = indexSettings.indexConfigMap[IndexType.SUPPLIER]!!.aliasIndexName
 
     suspend fun reIndex(alias: Boolean) {
-        val indexName = createIndexName(aliasIndexName)
-        if (!indexer.indexExists(indexName)) {
-            LOG.info("creating index $indexName")
-            indexer.createIndex(indexName, settings, mapping)
-        }
+        val indexName = indexSettings.createIndexForReindex(IndexType.SUPPLIER)
         val page = supplierService.findSuppliers(
             null,
             Pageable.from(

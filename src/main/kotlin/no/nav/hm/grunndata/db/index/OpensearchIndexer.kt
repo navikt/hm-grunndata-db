@@ -4,9 +4,8 @@ package no.nav.hm.grunndata.db.index
 import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.inject.Singleton
 import no.nav.hm.grunndata.db.index.item.IndexItem
+import no.nav.hm.grunndata.db.index.item.createIndexName
 import java.io.StringReader
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import org.opensearch.client.opensearch.OpenSearchClient
 import org.opensearch.client.opensearch._types.Refresh
 import org.opensearch.client.opensearch._types.mapping.TypeMapping
@@ -173,4 +172,4 @@ class OpensearchIndexer(private val client: OpenSearchClient, private val object
     }
 }
 
-fun createIndexName(aliasIndexName: String): String = "${aliasIndexName}_${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))}"
+

@@ -5,6 +5,7 @@ import io.micronaut.context.annotation.Replaces
 import io.mockk.coEvery
 import io.mockk.mockk
 import jakarta.inject.Singleton
+import no.nav.hm.grunndata.db.index.OpensearchIndexer
 import no.nav.hm.grunndata.db.iso.IsoCategoryService
 import no.nav.hm.grunndata.rapid.dto.Attributes
 import no.nav.hm.grunndata.rapid.dto.IsoCategoryDTO
@@ -48,5 +49,9 @@ class MockFactory {
     @Singleton
     @Replaces
     fun mockOpenSearchClient(): OpenSearchClient = mockk<OpenSearchClient>(relaxed = true)
+
+    @Singleton
+    @Replaces
+    fun mockOpensearchIndexer(): OpensearchIndexer = mockk<OpensearchIndexer>(relaxed = true)
 
 }

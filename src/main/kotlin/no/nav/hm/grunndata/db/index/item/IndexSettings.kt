@@ -1,71 +1,91 @@
 package no.nav.hm.grunndata.db.index.item
 
+import jakarta.inject.Singleton
+import no.nav.hm.grunndata.db.index.OpensearchIndexer
 import no.nav.hm.grunndata.db.index.SearchDoc
 import no.nav.hm.grunndata.db.index.agreement.AgreementDoc
-import no.nav.hm.grunndata.db.index.agreement.AgreementIndexer
-import no.nav.hm.grunndata.db.index.external_product.ExternalProductIndexer
+
 import no.nav.hm.grunndata.db.index.news.NewsDoc
-import no.nav.hm.grunndata.db.index.news.NewsIndexer
-import no.nav.hm.grunndata.db.index.product.ProductIndexer
-import no.nav.hm.grunndata.db.index.supplier.SupplierIndexer
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
-data class IndexSettings(
-    val aliasIndexName: String,
-    val mappings: String,
-    val settings: String,
-    val indexType: IndexType,
-    val searchDocClassType: Class<out SearchDoc>,
-)
+@Singleton
+class IndexSettings(private val indexer: OpensearchIndexer) {
 
-val indexSettingsMap = mutableMapOf<IndexType, IndexSettings>().apply {
-    put(
-        IndexType.AGREEMENT,
-        IndexSettings(
-            aliasIndexName = "agreements",
-            mappings = AgreementIndexer.mapping,
-            settings = AgreementIndexer.settings,
-            indexType = IndexType.AGREEMENT,
-            searchDocClassType = AgreementDoc::class.java
+    companion object {
+        private val LOG = org.slf4j.LoggerFactory.getLogger(IndexSettings::class.java)
+    }
+
+    val indexConfigMap = mutableMapOf<IndexType, IndexConfig>().apply {
+        put(
+            IndexType.AGREEMENT,
+            IndexConfig(
+                aliasIndexName = "agreements",
+                settings = IndexSettings::class.java.getResource("/opensearch/agreements_settings.json")!!.readText(),
+                mappings = IndexSettings::class.java.getResource("/opensearch/agreements_mapping.json")!!.readText(),
+                indexType = IndexType.AGREEMENT,
+                searchDocClassType = AgreementDoc::class.java
+            )
         )
-    )
-    put(
-        IndexType.NEWS,
-        IndexSettings(
-            aliasIndexName = "news",
-            mappings = NewsIndexer.mapping,
-            settings = NewsIndexer.settings,
-            indexType = IndexType.NEWS,
-            searchDocClassType = NewsDoc::class.java
+        put(
+            IndexType.NEWS,
+            IndexConfig(
+                aliasIndexName = "news",
+                settings = IndexSettings::class.java.getResource("/opensearch/news_settings.json")!!.readText(),
+                mappings = IndexSettings::class.java.getResource("/opensearch/news_mapping.json")!!.readText(),
+                indexType = IndexType.NEWS,
+                searchDocClassType = NewsDoc::class.java
+            )
         )
-    )
-    put(
-        IndexType.PRODUCT,
-        IndexSettings(
-            aliasIndexName = "products",
-            mappings = ProductIndexer.mapping,
-            settings = ProductIndexer.settings,
-            indexType = IndexType.PRODUCT,
-            searchDocClassType = SearchDoc::class.java // Placeholder, should be replaced with actual ProductDoc class
+        put(
+            IndexType.PRODUCT,
+            IndexConfig(
+                aliasIndexName = "products",
+                settings = IndexSettings::class.java.getResource("/opensearch/products_settings.json")!!.readText(),
+                mappings = IndexSettings::class.java.getResource("/opensearch/products_mapping.json")!!.readText(),
+                indexType = IndexType.PRODUCT,
+                searchDocClassType = SearchDoc::class.java // Placeholder, should be replaced with actual ProductDoc class
+            )
         )
-    )
-    put(
-        IndexType.EXTERNAL_PRODUCT,
-        IndexSettings(
-            aliasIndexName = "external_products",
-            mappings = ExternalProductIndexer.mapping,
-            settings = ExternalProductIndexer.settings,
-            indexType = IndexType.EXTERNAL_PRODUCT,
-            searchDocClassType = SearchDoc::class.java
+        put(
+            IndexType.EXTERNAL_PRODUCT,
+            IndexConfig(
+                aliasIndexName = "external_products",
+                settings = IndexSettings::class.java.getResource("/opensearch/external_products_settings.json")!!.readText(),
+                mappings = IndexSettings::class.java.getResource("/opensearch/external_products_mapping.json")!!.readText(),
+                indexType = IndexType.EXTERNAL_PRODUCT,
+                searchDocClassType = SearchDoc::class.java
+            )
         )
-    )
-    put(
-        IndexType.SUPPLIER,
-        IndexSettings(
-            aliasIndexName = "suppliers",
-            mappings = SupplierIndexer.mapping,
-            settings = SupplierIndexer.settings,
-            indexType = IndexType.SUPPLIER,
-            searchDocClassType = SearchDoc::class.java // Placeholder, should be replaced with actual SupplierDoc class
+        put(
+            IndexType.SUPPLIER,
+            IndexConfig(
+                aliasIndexName = "suppliers",
+                settings = IndexSettings::class.java.getResource("/opensearch/suppliers_settings.json")!!.readText(),
+                mappings = IndexSettings::class.java.getResource("/opensearch/suppliers_mapping.json")!!.readText(),
+                indexType = IndexType.SUPPLIER,
+                searchDocClassType = SearchDoc::class.java // Placeholder, should be replaced with actual SupplierDoc class
+            )
         )
-    )
+    }
+
+    init {
+        indexConfigMap.forEach { (type, config) ->
+            LOG.info("Initializing index for type: ${type.name}, alias: ${config.aliasIndexName}")
+            indexer.initAlias(config.aliasIndexName, config.settings, config.mappings)
+        }
+    }
+
+    fun createIndexForReindex(indexType: IndexType): String {
+        val settings = indexConfigMap[indexType]
+            ?: throw IllegalArgumentException("No index configuration found for type: $indexType")
+        val indexName = createIndexName(settings.aliasIndexName)
+        if (!indexer.indexExists(indexName)) {
+            LOG.info("creating index $indexName")
+            indexer.createIndex(indexName, settings.settings, settings.mappings)
+        }
+        return indexName
+    }
 }
+
+fun createIndexName(aliasIndexName: String): String = "${aliasIndexName}_${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))}"

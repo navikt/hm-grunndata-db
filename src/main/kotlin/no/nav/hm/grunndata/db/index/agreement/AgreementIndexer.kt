@@ -8,32 +8,24 @@ import no.nav.hm.grunndata.db.agreement.AgreementService
 import no.nav.hm.grunndata.db.agreement.toDTO
 import no.nav.hm.grunndata.db.index.IndexDoc
 import no.nav.hm.grunndata.db.index.OpensearchIndexer
-import no.nav.hm.grunndata.db.index.createIndexName
+import no.nav.hm.grunndata.db.index.item.IndexSettings
 import no.nav.hm.grunndata.db.index.item.IndexType
-import no.nav.hm.grunndata.db.index.item.indexSettingsMap
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 
 @Singleton
 class AgreementIndexer(private val agreementService: AgreementService,
+                       private val indexSettings: IndexSettings,
                        private val indexer: OpensearchIndexer) {
 
     companion object {
         private val LOG = LoggerFactory.getLogger(AgreementIndexer::class.java)
-        val settings = AgreementIndexer::class.java
-            .getResource("/opensearch/agreements_settings.json")!!.readText()
-        val mapping = AgreementIndexer::class.java
-            .getResource("/opensearch/agreements_mapping.json")!!.readText()
     }
 
-    val aliasIndexName: String = indexSettingsMap[IndexType.AGREEMENT]!!.aliasIndexName
+    val aliasIndexName: String = indexSettings.indexConfigMap[IndexType.AGREEMENT]!!.aliasIndexName
 
     suspend fun reIndex(alias: Boolean) {
-        val indexName = createIndexName(aliasIndexName)
-        if (!indexer.indexExists(indexName)) {
-            LOG.info("creating index $indexName")
-            indexer.createIndex(indexName, settings, mapping)
-        }
+        val indexName = indexSettings.createIndexForReindex(IndexType.AGREEMENT)
         val updated =  LocalDateTime.now().minusYears(30)
         val criteria = AgreementCriteria(updatedAfter = updated)
         val page = agreementService.findAll(criteria, Pageable.from(0, 5000, Sort.of(Sort.Order.asc("updated"))))

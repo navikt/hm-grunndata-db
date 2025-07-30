@@ -1,24 +1,21 @@
 package no.nav.hm.grunndata.db.news
 
-import io.micronaut.data.model.Page
 import io.micronaut.data.model.Pageable
 import io.micronaut.data.repository.jpa.criteria.PredicateSpecification
-import io.micronaut.data.runtime.criteria.get
-import io.micronaut.data.runtime.criteria.where
 import jakarta.inject.Singleton
 import no.nav.hm.grunndata.db.GdbRapidPushService
 import no.nav.hm.grunndata.db.index.item.IndexItemService
+import no.nav.hm.grunndata.db.index.item.IndexSettings
 import no.nav.hm.grunndata.db.index.item.IndexType
-import no.nav.hm.grunndata.db.index.item.indexSettingsMap
 import no.nav.hm.grunndata.db.index.news.toDoc
 import no.nav.hm.grunndata.rapid.dto.NewsDTO
-import no.nav.hm.grunndata.rapid.dto.NewsRegistrationRapidDTO
-import no.nav.hm.grunndata.rapid.dto.NewsStatus
-import java.time.LocalDateTime
 import java.util.UUID
 
 @Singleton
-class NewsService(private val newsRepository: NewsRepository, private val indexItemService: IndexItemService, private val gdbRapidPushService: GdbRapidPushService) {
+class NewsService(private val newsRepository: NewsRepository,
+                  private val indexSettings: IndexSettings,
+                  private val indexItemService: IndexItemService,
+                  private val gdbRapidPushService: GdbRapidPushService) {
 
     suspend fun findByIdentifier(identifier: String): NewsDTO? = newsRepository.findByIdentifier(identifier)?.toDTO()
 
@@ -36,7 +33,7 @@ class NewsService(private val newsRepository: NewsRepository, private val indexI
             newsRepository.update(news.copy(id = inDb.id, created = inDb.created, createdBy = inDb.createdBy))
         } ?: newsRepository.save(news)
         gdbRapidPushService.pushDTOToKafka(newsDTO, eventName)
-        indexItemService.saveIndexItem(newsDTO.toDoc(), IndexType.NEWS, indexSettingsMap[IndexType.NEWS]!!.aliasIndexName)
+        indexItemService.saveIndexItem(newsDTO.toDoc(), IndexType.NEWS, indexSettings.indexConfigMap[IndexType.NEWS]!!.aliasIndexName)
         return newsDTO
     }
 
