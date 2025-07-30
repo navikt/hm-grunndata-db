@@ -44,7 +44,7 @@ services:
     networks:
       - grunndata-net
   opensearchdb:
-    image: opensearchproject/opensearch:2.11.1
+    image: opensearchproject/opensearch:2.17.1
     hostname: opensearch
     ports:
       - 9200:9200
@@ -53,13 +53,15 @@ services:
       - node.name=opensearch
       - discovery.type=single-node
       - bootstrap.memory_lock=true
+      - "_JAVA_OPTIONS=-XX:UseSVE=0"
       - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "OPENSEARCH_INITIAL_ADMIN_PASSWORD=T3@mM1m3!"
     networks:
       - grunndata-net
   dashboardsdb:
     depends_on:
       - opensearchdb
-    image: opensearchproject/opensearch-dashboards:2.11.1
+    image: opensearchproject/opensearch-dashboards:2.17.1
     ports:
       - 5601:5601
     environment:
