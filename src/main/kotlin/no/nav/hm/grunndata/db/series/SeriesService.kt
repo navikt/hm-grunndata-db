@@ -46,7 +46,7 @@ open class SeriesService(private val seriesRepository: SeriesRepository,
 
     @Transactional
     open suspend fun saveAndPushTokafka(series: Series, eventName: String): SeriesRapidDTO {
-        val saved = findById(series.id)?.let { inDb ->
+        val saved = seriesRepository.findById(series.id)?.let { inDb ->
                 update(series.copy(id = inDb.id, created = inDb.created, identifier = inDb.identifier,
                     createdBy = inDb.createdBy))
             } ?: save(series)

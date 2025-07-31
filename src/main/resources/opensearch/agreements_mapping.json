@@ -1,0 +1,86 @@
+{
+  "date_detection": false,
+  "properties": {
+    "attachments": {
+      "enabled": false
+    },
+    "created": {
+      "type": "date",
+      "format": "strict_date_optional_time"
+    },
+    "createdBy": {
+      "enabled": false
+    },
+    "expired": {
+      "type": "date",
+      "format": "strict_date_optional_time"
+    },
+    "id": {
+      "type": "keyword"
+    },
+    "identifier": {
+      "type": "keyword"
+    },
+    "posts": {
+      "properties": {
+        "created": {
+          "type": "date",
+          "format": "strict_date_optional_time"
+        },
+        "id": {
+          "type": "keyword"
+        },
+        "refNr": {
+          "type": "keyword"
+        },
+        "description": {
+          "type": "text"
+        },
+        "identifier": {
+          "type": "keyword"
+        },
+        "nr": {
+          "type": "long"
+        },
+        "title": {
+          "type": "text"
+        }
+      }
+    },
+    "isoCategory": {
+      "type": "keyword"
+    },
+    "published": {
+      "type": "date",
+      "format": "strict_date_optional_time"
+    },
+    "reference": {
+      "type": "text"
+    },
+    "resume": {
+      "type": "text"
+    },
+    "text": {
+      "type": "text"
+    },
+    "title": {
+      "type": "text"
+    },
+    "label": {
+      "type": "keyword"
+    },
+    "status": {
+      "type": "keyword"
+    },
+    "updated": {
+      "type": "date",
+      "format": "strict_date_optional_time"
+    },
+    "updatedBy": {
+      "enabled": false
+    },
+    "previousAgreement" : {
+      "type": "keyword"
+    }
+  }
+}

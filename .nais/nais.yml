@@ -68,6 +68,9 @@ spec:
   kafka:
     pool: {{ kafka_cluster }}
   leaderElection: true
+  openSearch:
+    access: admin
+    instance: grunndata
   accessPolicy:
     outbound:
       rules:

@@ -1,23 +1,24 @@
 package no.nav.hm.grunndata.db.supplier
 
+import io.micronaut.cache.annotation.Cacheable
 import io.micronaut.data.model.Page
 import io.micronaut.data.model.Pageable
 import io.micronaut.data.repository.jpa.criteria.PredicateSpecification
-import io.micronaut.data.runtime.criteria.get
-import io.micronaut.data.runtime.criteria.where
-import io.micronaut.http.annotation.QueryValue
 import jakarta.inject.Singleton
 import jakarta.transaction.Transactional
 import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.db.GdbRapidPushService
+import no.nav.hm.grunndata.db.index.item.IndexItemService
+import no.nav.hm.grunndata.db.index.item.IndexType
+import no.nav.hm.grunndata.db.index.supplier.toDoc
 import no.nav.hm.grunndata.rapid.dto.SupplierDTO
-import no.nav.hm.grunndata.rapid.dto.SupplierStatus
 import org.slf4j.LoggerFactory
-import java.time.LocalDateTime
 import java.util.*
 
 @Singleton
+@Cacheable(cacheNames = ["suppliers"])
 open class SupplierService(private val supplierRepository: SupplierRepository,
+                           private val indexItemService: IndexItemService,
                            private val gdbRapidPushService: GdbRapidPushService) {
 
     companion object {
@@ -29,8 +30,8 @@ open class SupplierService(private val supplierRepository: SupplierRepository,
         supplierRepository.findByIdentifier(identifier)
     }
 
-
-    open fun findById(id: UUID) = runBlocking {
+    @Cacheable
+    fun findByIdCached(id: UUID) = runBlocking {
         supplierRepository.findById(id)
     }
 
@@ -52,14 +53,15 @@ open class SupplierService(private val supplierRepository: SupplierRepository,
 
 
     @Transactional
-    open suspend fun saveAndPushTokafka(supplier: Supplier, eventName: String): SupplierDTO {
-        val saved = findById(supplier.id)?.let { inDb ->
+    open suspend fun saveAndPushTokafka(supplierDTO: SupplierDTO, eventName: String): SupplierDTO {
+        val supplier = supplierDTO.toEntity()
+        val saved = supplierRepository.findById(supplier.id)?.let { inDb ->
                 update(supplier.copy(id = inDb.id, created = inDb.created,
                     createdBy = inDb.createdBy))
             } ?: save(supplier)
-        val supplierDTO = saved.toDTO()
-        LOG.info("saved: ${supplierDTO.id} ")
+        LOG.info("saved: ${saved.id} ")
         gdbRapidPushService.pushDTOToKafka(supplierDTO, eventName)
+        indexItemService.saveIndexItem(supplierDTO.toDoc(), IndexType.SUPPLIER)
         return supplierDTO
     }
 }

@@ -5,11 +5,6 @@ import io.micronaut.context.annotation.Context
 import io.micronaut.context.annotation.Requires
 import kotlinx.coroutines.runBlocking
 import no.nav.helse.rapids_rivers.*
-import no.nav.hm.grunndata.db.agreement.AgreementRegistrationRiver
-import no.nav.hm.grunndata.db.agreement.AgreementService
-import no.nav.hm.grunndata.db.agreement.toEntity
-import no.nav.hm.grunndata.rapid.dto.AgreementRegistrationRapidDTO
-import no.nav.hm.grunndata.rapid.dto.DraftStatus
 import no.nav.hm.grunndata.rapid.dto.SupplierDTO
 import no.nav.hm.grunndata.rapid.dto.rapidDTOVersion
 import no.nav.hm.grunndata.rapid.event.EventName
@@ -46,7 +41,8 @@ class SupplierRegistrationRiver(river: RiverHead,
         val dto = objectMapper.treeToValue(packet["payload"], SupplierDTO::class.java)
         LOG.info("got supplier registration id: ${dto.id} eventId $eventId eventTime: $createdTime supplierStatus: ${dto.status}")
         runBlocking {
-                supplierService.saveAndPushTokafka(dto.toEntity(), EventName.syncedRegisterSupplierV1)
+            LOG.info("indexing supplier id: ${dto.id} name: ${dto.name} with status ${dto.status}")
+            supplierService.saveAndPushTokafka(dto, EventName.syncedRegisterSupplierV1)
         }
     }
 

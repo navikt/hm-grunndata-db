@@ -1,0 +1,45 @@
+{
+  "date_detection": false,
+  "properties": {
+    "id": {
+      "type": "keyword"
+    },
+    "identifier": {
+      "type": "keyword"
+    },
+    "title": {
+      "type": "text"
+    },
+    "text": {
+      "type": "text"
+    },
+    "status": {
+      "type": "keyword"
+    },
+    "published": {
+      "type": "date",
+      "format": "strict_date_optional_time"
+    },
+    "expired": {
+      "type": "date",
+      "format": "strict_date_optional_time"
+    },
+    "created": {
+      "type": "date",
+      "format": "strict_date_optional_time"
+    },
+    "updated": {
+      "type": "date",
+      "format": "strict_date_optional_time"
+    },
+    "createdBy": {
+      "enabled": false
+    },
+    "updatedBy": {
+      "enabled": false
+    },
+    "author": {
+      "type": "text"
+    }
+  }
+}

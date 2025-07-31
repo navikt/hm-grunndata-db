@@ -18,21 +18,7 @@ class ProductAPIController(private val productService: ProductService) {
 
     @Get("/")
     suspend fun findProducts(@RequestBean productCriteria: ProductCriteria, pageable: Pageable): Page<ProductRapidDTO> =
-        productService.findProducts(buildCriteriaSpec(productCriteria), pageable)
-
-    private fun buildCriteriaSpec(criteria: ProductCriteria): PredicateSpecification<Product>? =
-        if (criteria.isNotEmpty()) {
-            where {
-                criteria.supplierRef?.let { root[Product::supplierRef] eq it }
-                criteria.supplierId?.let { root[Product::supplierId] eq it }
-                criteria.updated?.let { root[Product::updated] greaterThanOrEqualTo it }
-                criteria.status?.let { root[Product::status] eq it }
-                criteria.seriesUUID?.let { root[Product::seriesUUID] eq it }
-                criteria.isoCategory?.let { root[Product::isoCategory] eq it }
-                criteria.accessory?.let { root[Product::accessory] eq it }
-                criteria.sparePart?.let { root[Product::sparePart] eq it }
-            }
-        } else null
+        productService.findProducts(productCriteria, pageable)
 
 
     @Get("/{id}")
@@ -52,14 +38,14 @@ class ProductAPIController(private val productService: ProductService) {
 
 @Introspected
 data class ProductCriteria(
-    val supplierRef: String?,
-    val supplierId: UUID?,
-    val updated: LocalDateTime?,
-    val status: String?,
-    val seriesUUID: UUID?,
-    val isoCategory: String?,
-    val accessory: Boolean?,
-    val sparePart: Boolean?,
+    val supplierRef: String? = null,
+    val supplierId: UUID? = null,
+    val updated: LocalDateTime? = null,
+    val status: String? = null,
+    val seriesUUID: UUID? = null,
+    val isoCategory: String? = null,
+    val accessory: Boolean? = null,
+    val sparePart: Boolean? ? = null,
 ) {
     fun isNotEmpty(): Boolean =
         supplierRef != null || supplierId != null || updated != null || status != null || seriesUUID != null

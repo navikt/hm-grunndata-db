@@ -1,0 +1,64 @@
+{
+  "date_detection": false,
+  "properties": {
+    "address": {
+      "type": "text"
+    },
+    "postNr": {
+      "type": "keyword"
+    },
+    "postLocation": {
+      "type": "keyword"
+    },
+    "countryCode": {
+      "type": "keyword"
+    },
+    "created": {
+      "type": "date",
+      "format": "strict_date_optional_time"
+    },
+    "createdBy": {
+      "enabled": false
+    },
+    "email": {
+      "type": "keyword"
+    },
+    "homepage": {
+      "type": "text"
+    },
+    "id": {
+      "type": "keyword"
+    },
+    "status": {
+      "type": "keyword"
+    },
+    "identifier": {
+      "type": "keyword"
+    },
+    "name": {
+      "type": "text",
+      "copy_to": [
+        "name_startswith",
+        "name_keyword"
+      ]
+    },
+    "name_startswith": {
+      "type": "text",
+      "analyzer": "analyzer_startswith"
+    },
+    "phone": {
+      "enabled": false
+    },
+    "updated": {
+      "type": "date",
+      "format": "strict_date_optional_time"
+    },
+    "updatedBy": {
+      "enabled": false
+    },
+    "name_keyword": {
+      "type": "keyword",
+      "normalizer": "lowercase_normalizer"
+    }
+  }
+}

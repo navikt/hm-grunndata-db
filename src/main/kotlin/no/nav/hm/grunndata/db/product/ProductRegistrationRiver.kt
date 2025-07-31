@@ -9,12 +9,15 @@ import no.nav.helse.rapids_rivers.KafkaRapid
 import no.nav.helse.rapids_rivers.MessageContext
 import no.nav.helse.rapids_rivers.River
 import no.nav.helse.rapids_rivers.asLocalDateTime
+import no.nav.hm.grunndata.db.index.product.toDoc
+import no.nav.hm.grunndata.db.iso.IsoCategoryService
 import no.nav.hm.grunndata.db.series.Series
 import no.nav.hm.grunndata.db.series.SeriesService
 import no.nav.hm.grunndata.db.series.mergeCompatibleWith
 import no.nav.hm.grunndata.rapid.dto.AdminStatus
 import no.nav.hm.grunndata.rapid.dto.DraftStatus
 import no.nav.hm.grunndata.rapid.dto.ProductRegistrationRapidDTO
+import no.nav.hm.grunndata.rapid.dto.ProductStatus
 import no.nav.hm.grunndata.rapid.dto.RegistrationStatus
 import no.nav.hm.grunndata.rapid.dto.SeriesData
 import no.nav.hm.grunndata.rapid.dto.rapidDTOVersion
@@ -28,7 +31,8 @@ class ProductRegistrationRiver(
     river: RiverHead,
     private val objectMapper: ObjectMapper,
     private val seriesService: SeriesService,
-    private val productService: ProductService
+    private val productService: ProductService,
+    private val isoCategoryService: IsoCategoryService
 ) : River.PacketListener {
 
     companion object {
@@ -62,7 +66,7 @@ class ProductRegistrationRiver(
             if (dto.draftStatus == DraftStatus.DONE && (dto.adminStatus == AdminStatus.APPROVED || dto.registrationStatus == RegistrationStatus.DELETED)) {
                 // series and products need to be merged before sending down the river
                 val riverProduct = dto.productDTO.toEntity()
-                seriesService.findById(riverProduct.seriesUUID!!)?.let { series ->
+                val saved = seriesService.findById(riverProduct.seriesUUID!!)?.let { series ->
                     val mergedProduct = riverProduct.copy(
                         title = series.title,
                         attributes = riverProduct.attributes.copy(

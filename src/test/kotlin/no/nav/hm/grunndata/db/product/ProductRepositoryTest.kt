@@ -24,9 +24,6 @@ class ProductRepositoryTest(
     private val objectMapper: ObjectMapper
 ) {
 
-    @MockBean(RapidPushService::class)
-    fun mockRapidService(): RapidPushService = mockk(relaxed = true)
-
     @Test
     fun readSavedDb() {
         val seriesId = UUID.randomUUID().toString()

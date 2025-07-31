@@ -38,4 +38,13 @@ open class IsoCategoryService(private val registerClient: RegisterClient) {
 
     fun retrieveAllCategories(): List<IsoCategoryDTO> = isoCategories.values.toList()
 
+    fun getClosestLevelInBranch(isoCode: String): IsoCategoryDTO? {
+        isoCategories.values.sortedByDescending { it.isoLevel }.forEach {
+            if (isoCode.startsWith(it.isoCode)) {
+                LOG.info("matched $isoCode with: ${it.isoCode} ${it.isoTitle} ${it.isoLevel}")
+                return it
+            }
+        }
+        return null
+    }
 }
