@@ -1,0 +1,1 @@
+CREATE INDEX idx_index_item_status ON index_item(status);
