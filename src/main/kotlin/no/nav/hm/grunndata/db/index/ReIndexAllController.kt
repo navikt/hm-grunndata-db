@@ -8,6 +8,7 @@ import io.micronaut.scheduling.TaskExecutors
 import io.micronaut.scheduling.annotation.ExecuteOn
 import no.nav.hm.grunndata.db.index.agreement.AgreementIndexer
 import no.nav.hm.grunndata.db.index.external_product.ExternalProductIndexer
+import no.nav.hm.grunndata.db.index.news.NewsIndexer
 import no.nav.hm.grunndata.db.index.product.ProductIndexer
 import no.nav.hm.grunndata.db.index.supplier.SupplierIndexer
 
@@ -15,6 +16,7 @@ import no.nav.hm.grunndata.db.index.supplier.SupplierIndexer
 class ReIndexAllController(private val productIndexer: ProductIndexer,
                            private val supplierIndexer: SupplierIndexer,
                            private val agreementIndexer: AgreementIndexer,
+                           private val newsIndexer: NewsIndexer,
                            private val externalProductIndexer: ExternalProductIndexer) {
 
     @Post("/")
@@ -23,6 +25,7 @@ class ReIndexAllController(private val productIndexer: ProductIndexer,
         agreementIndexer.reIndex(alias)
         productIndexer.reIndex(alias)
         externalProductIndexer.reIndex(alias)
+        newsIndexer.reIndex(alias)
     }
 
 }
