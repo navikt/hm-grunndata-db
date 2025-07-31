@@ -5,6 +5,7 @@ import jakarta.inject.Singleton
 import jakarta.transaction.Transactional
 import no.nav.hm.grunndata.db.index.OpensearchIndexer
 import no.nav.hm.grunndata.db.index.SearchDoc
+import java.time.Duration
 import java.time.LocalDateTime
 
 @Singleton
@@ -57,8 +58,9 @@ open class IndexItemService(
     }
 
     @Transactional
-    open suspend fun deleteOldIndexItems(): Long {
-        val deleted = indexItemRepository.deleteByStatusAndUpdatedBefore(IndexItemStatus.DONE, LocalDateTime.now().minusDays(15))
+    open suspend fun deleteOldIndexItems(duration: Duration): Long {
+        LOG.info("Deleting old index items $duration")
+        val deleted = indexItemRepository.deleteByStatusAndUpdatedBefore(IndexItemStatus.DONE, LocalDateTime.now().minusDays(duration.toDays()))
         LOG.info("Deleted ${deleted} old index items")
         return deleted
     }

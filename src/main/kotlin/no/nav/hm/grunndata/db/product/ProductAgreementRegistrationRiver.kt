@@ -69,45 +69,45 @@ class ProductAgreementRegistrationRiverSupport(private val agreementService: Agr
 
     suspend fun mergeAgreementInProduct(
         product: ProductRapidDTO,
-        agreement: ProductAgreementRegistrationRapidDTO
+        pag: ProductAgreementRegistrationRapidDTO
     ): ProductRapidDTO {
-        val filteredAgreements = product.agreements.filter { it.postId != agreement.postId }
-        if (agreement.status == ProductAgreementStatus.DELETED) return product.copy(agreements = filteredAgreements)
+        val filteredAgreements = product.agreements.filter { it.postId != pag.postId }
+        if (pag.status == ProductAgreementStatus.DELETED) return product.copy(agreements = filteredAgreements)
 
-        val hmsNr = if (product.hmsArtNr != agreement.hmsArtNr) {
-            LOG.info("This product ${product.id} has a different hmsArtNr than the agreement ${agreement.hmsArtNr}")
-            agreement.hmsArtNr
+        val hmsNr = if (product.hmsArtNr != pag.hmsArtNr) {
+            LOG.info("This product ${product.id} has a different hmsArtNr than the agreement ${pag.hmsArtNr}")
+            pag.hmsArtNr
         } else product.hmsArtNr
 
-        val updated = agreementService.findByIdCached(agreement.agreementId)?.let { agreementInDb ->
-            val foundPost = agreementInDb.posts.find { post -> post.id == agreement.postId }
-                    ?: throw IllegalStateException("Post ${agreement.postId} not found in agreement ${agreement.agreementId}, check if agreements are in sync")
+        val updated = agreementService.findByIdCached(pag.agreementId)?.let { agreementInDb ->
+            val foundPost = agreementInDb.posts.find { post -> post.id == pag.postId }
+                    ?: throw IllegalStateException("Post ${pag.postId} not found in agreement ${pag.agreementId}, check if agreements are in sync")
             AgreementInfo(
                 id = agreementInDb.id,
                 identifier = agreementInDb.identifier,
                 title = agreementInDb.title,
-                rank = agreement.rank,
-                postNr = agreement.post,
+                rank = pag.rank,
+                postNr = pag.post,
                 postIdentifier = foundPost.identifier,
                 postTitle = foundPost.title,
-                postId = agreement.postId,
+                postId = pag.postId,
                 refNr = foundPost.refNr,
-                reference = agreement.reference,
-                expired = agreement.expired,
-                status = agreement.status,
-                published = agreement.published,
-                mainProduct = agreement.mainProduct,
-                accessory = agreement.accessory,
-                sparePart = agreement.sparePart,
-                articleName = agreement.articleName
+                reference = pag.reference,
+                expired = pag.expired,
+                status = pag.status,
+                published = pag.published,
+                mainProduct = pag.mainProduct,
+                accessory = pag.accessory,
+                sparePart = pag.sparePart,
+                articleName = pag.articleName
             )
-        } ?: throw IllegalStateException("Agreement ${agreement.agreementId} not found, that can not be possible check if agreements are in sync")
+        } ?: throw IllegalStateException("Agreement ${pag.agreementId} not found, that can not be possible check if agreements are in sync")
         LOG.info("agreements for product ${product.id} updated with agreement ${updated.id} and post ${updated.postId}")
         return product.copy(
             hmsArtNr = hmsNr,
             agreements = filteredAgreements + updated,
-            updated = agreement.updated,
-            updatedBy = agreement.updatedBy
+            updated = pag.updated,
+            updatedBy = pag.updatedBy
         )
     }
 }

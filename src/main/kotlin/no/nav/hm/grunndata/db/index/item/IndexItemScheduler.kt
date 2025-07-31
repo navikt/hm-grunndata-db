@@ -6,12 +6,14 @@ import io.micronaut.scheduling.annotation.Scheduled
 import jakarta.inject.Singleton
 import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.register.leaderelection.LeaderOnly
+import java.time.Duration
 
 @Singleton
 @Requires(property = "schedulers.enabled", value = "true")
 @Requires(property = "index.item.enabled", value = "true")
 open class IndexItemScheduler(private val indexItemService: IndexItemService,
-                         @Value("\${index.item.size}") private val size: Int ) {
+                         @Value("\${index.item.size}") private val size: Int,
+                              @Value("\${index.item.retention}") private val retention: Duration) {
 
     companion object {
         private val LOG = org.slf4j.LoggerFactory.getLogger(IndexItemScheduler::class.java)
@@ -28,7 +30,7 @@ open class IndexItemScheduler(private val indexItemService: IndexItemService,
     @Scheduled(cron = "0 0 * * * *")
     open fun deleteOldIndexItems() = runBlocking {
         LOG.info("Deleting old index items")
-        indexItemService.deleteOldIndexItems()
+        indexItemService.deleteOldIndexItems(retention)
     }
 
 }

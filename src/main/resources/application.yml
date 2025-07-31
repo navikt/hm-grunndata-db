@@ -140,4 +140,5 @@ opensearch:
 index:
   item:
     enabled: ${INDEX_ITEM_ENABLED:false}
-    size: ${INDEX_ITEM_SIZE:2000}
+    size: ${INDEX_ITEM_SIZE:5000}
+    retention: ${INDEX_ITEM_RETENTION:5d}

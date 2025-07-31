@@ -6,7 +6,10 @@ import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.db.index.supplier.SupplierDoc
 import no.nav.hm.grunndata.rapid.dto.SupplierStatus
 import org.junit.jupiter.api.Test
+import java.time.Duration
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
+import java.time.temporal.TemporalUnit
 import java.util.*
 
 @MicronautTest
@@ -34,7 +37,7 @@ class IndexItemServiceTest(private val indexItemService: IndexItemService) {
         runBlocking {
             indexItemService.saveIndexItem(supplierDoc, IndexType.SUPPLIER)
             indexItemService.processPendingIndexItems(size=1000) shouldBe 1
-            indexItemService.deleteOldIndexItems() shouldBe 0
+            indexItemService.deleteOldIndexItems(Duration.of(5, ChronoUnit.DAYS)) shouldBe 0
         }
     }
 }
