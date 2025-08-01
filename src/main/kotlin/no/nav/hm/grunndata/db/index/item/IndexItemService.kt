@@ -58,7 +58,7 @@ open class IndexItemService(
     }
 
     @Transactional
-    open suspend fun deleteOldIndexItems(duration: Duration): Long {
+    open suspend fun deleteOldIndexItems(duration: Duration): Long? {
         LOG.info("Deleting old index items $duration")
         val deleted = indexItemRepository.deleteByStatusAndUpdatedBefore(IndexItemStatus.DONE, LocalDateTime.now().minusDays(duration.toDays()))
         LOG.info("Deleted ${deleted} old index items")

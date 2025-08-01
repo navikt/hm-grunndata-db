@@ -30,5 +30,5 @@ interface IndexItemRepository: CoroutineCrudRepository<IndexItem, UUID>, Corouti
     suspend fun deleteByStatusAndUpdatedBefore(
         status: IndexItemStatus,
         updated: LocalDateTime
-    ): Long
+    ): Long?
 }

@@ -21,15 +21,15 @@ open class IndexItemScheduler(private val indexItemService: IndexItemService,
 
     @Scheduled(fixedDelay = "60s")
     open fun indexItems() = runBlocking {
-        LOG.info("Indexing items with size: $size")
+        LOG.debug("Indexing items with size: $size")
         indexItemService.processPendingIndexItems(size)
 
     }
 
     @LeaderOnly
-    @Scheduled(cron = "0 0 * * * *")
+    @Scheduled(cron = "0 * * * * *")
     open fun deleteOldIndexItems() = runBlocking {
-        LOG.info("Deleting old index items")
+        LOG.debug("Deleting old index items")
         indexItemService.deleteOldIndexItems(retention)
     }
 
