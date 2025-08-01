@@ -6,9 +6,9 @@
   "min_replicas": 1,
   "max_replicas": 1,
   "java_opts": "-Xms128m -Xmx1024m -XX:+UseG1GC",
-  "schedulers_enabled": true,
   "media_storage_cdnurl": "https://finnhjelpemiddel.intern.dev.nav.no/imageproxy/file",
   "env": {
+    "SCHEDULERS_ENABLED": true,
     "INDEX_ITEM_ENABLED": true,
     "DIGITAL_SOKNAD_URL": "https://navikt.github.io/digihot-sortiment/sortiment_av_apostid_per_kategori_dev2.json"
   }
