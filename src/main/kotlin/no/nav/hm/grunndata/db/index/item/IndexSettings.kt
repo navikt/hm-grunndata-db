@@ -30,7 +30,7 @@ class IndexSettings(private val indexer: OpensearchIndexer) {
                 settings = IndexSettings::class.java.getResource("/opensearch/news_settings.json")!!.readText(),
                 mappings = IndexSettings::class.java.getResource("/opensearch/news_mapping.json")!!.readText(),
                 indexType = IndexType.NEWS,
-                enabled = true
+                enabled = false
             )
         )
         put(
@@ -60,7 +60,7 @@ class IndexSettings(private val indexer: OpensearchIndexer) {
                 settings = IndexSettings::class.java.getResource("/opensearch/suppliers_settings.json")!!.readText(),
                 mappings = IndexSettings::class.java.getResource("/opensearch/suppliers_mapping.json")!!.readText(),
                 indexType = IndexType.SUPPLIER,
-                enabled = false
+                enabled = true
             )
         )
     }
