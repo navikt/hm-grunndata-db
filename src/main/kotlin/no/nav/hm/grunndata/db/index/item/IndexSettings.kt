@@ -20,7 +20,7 @@ class IndexSettings(private val indexer: OpensearchIndexer) {
                 settings = IndexSettings::class.java.getResource("/opensearch/agreements_settings.json")!!.readText(),
                 mappings = IndexSettings::class.java.getResource("/opensearch/agreements_mapping.json")!!.readText(),
                 indexType = IndexType.AGREEMENT,
-                enabled = false
+                enabled = true
             )
         )
         put(
@@ -30,7 +30,7 @@ class IndexSettings(private val indexer: OpensearchIndexer) {
                 settings = IndexSettings::class.java.getResource("/opensearch/news_settings.json")!!.readText(),
                 mappings = IndexSettings::class.java.getResource("/opensearch/news_mapping.json")!!.readText(),
                 indexType = IndexType.NEWS,
-                enabled = false
+                enabled = true
             )
         )
         put(
@@ -40,7 +40,7 @@ class IndexSettings(private val indexer: OpensearchIndexer) {
                 settings = IndexSettings::class.java.getResource("/opensearch/products_settings.json")!!.readText(),
                 mappings = IndexSettings::class.java.getResource("/opensearch/products_mapping.json")!!.readText(),
                 indexType = IndexType.PRODUCT,
-                enabled = false
+                enabled = true
             )
         )
         put(
@@ -50,7 +50,7 @@ class IndexSettings(private val indexer: OpensearchIndexer) {
                 settings = IndexSettings::class.java.getResource("/opensearch/external_products_settings.json")!!.readText(),
                 mappings = IndexSettings::class.java.getResource("/opensearch/external_products_mapping.json")!!.readText(),
                 indexType = IndexType.EXTERNAL_PRODUCT,
-                enabled = false
+                enabled = true
             )
         )
         put(
