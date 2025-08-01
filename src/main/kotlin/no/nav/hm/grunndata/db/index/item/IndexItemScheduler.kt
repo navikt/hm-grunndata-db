@@ -27,7 +27,7 @@ open class IndexItemScheduler(private val indexItemService: IndexItemService,
     }
 
     @LeaderOnly
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 0 * * * *")
     open fun deleteOldIndexItems() = runBlocking {
         LOG.debug("Deleting old index items")
         indexItemService.deleteOldIndexItems(retention)
