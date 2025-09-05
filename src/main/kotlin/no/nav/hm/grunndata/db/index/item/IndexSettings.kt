@@ -72,7 +72,7 @@ class IndexSettings(private val indexer: OpensearchIndexer) {
                 return@forEach
             }
             LOG.info("Initializing index for type: ${type.name}, alias: ${config.aliasIndexName}")
-            indexer.initAlias(config.aliasIndexName, config.settings, config.mappings)
+            indexer.checkAliasIsPointingToIndex(config.aliasIndexName)
         }
     }
 

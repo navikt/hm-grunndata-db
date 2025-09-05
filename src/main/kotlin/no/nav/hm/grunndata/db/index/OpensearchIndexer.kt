@@ -158,13 +158,10 @@ class OpensearchIndexer(private val client: OpenSearchClient, private val object
 
     fun docCount(aliasName:String): Long = client.count(CountRequest.Builder().index(aliasName).build()).count()
 
-    fun initAlias(aliasName: String, settings: String, mapping: String) {
+    fun checkAliasIsPointingToIndex(aliasName: String) {
         if (!existsAlias(aliasName)) {
-            LOG.warn("alias $aliasName is not pointing any index")
-            val indexName = createIndexName(aliasName)
-            LOG.info("Creating index $indexName")
-            createIndex(indexName,settings, mapping)
-            updateAlias(aliasName, indexName)
+            LOG.error("alias $aliasName is not pointing to any index")
+            LOG.error("Remember to create index with correct settings and mappings and point alias to it")
         }
         else {
             LOG.info("Aliases is pointing to ${getAlias(aliasName).toJsonString()}")
