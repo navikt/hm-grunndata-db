@@ -71,7 +71,6 @@ class IndexSettings(private val indexer: OpensearchIndexer) {
                 LOG.info("Indexing for type: ${type.name} is disabled, skipping initialization.")
                 return@forEach
             }
-            LOG.info("Initializing index for type: ${type.name}, alias: ${config.aliasIndexName}")
             indexer.checkAliasIsPointingToIndex(config.aliasIndexName)
         }
     }
