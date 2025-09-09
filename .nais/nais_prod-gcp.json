@@ -4,7 +4,7 @@
   "kafka_cluster": "nav-prod",
   "rapidsandrivers_enabled": true,
   "min_replicas": 2,
-  "max_replicas": 2,
+  "max_replicas": 3,
   "java_opts": "-Xms256m -Xmx1024m -XX:+UseG1GC",
   "media_storage_cdnurl": "https://finnhjelpemiddel.nav.no/imageproxy/file",
   "env": {
