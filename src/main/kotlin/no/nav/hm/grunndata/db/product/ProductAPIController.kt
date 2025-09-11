@@ -34,6 +34,9 @@ class ProductAPIController(private val productService: ProductService) {
     @Get("/hmsArtNr/{hmsArtNr}")
     suspend fun findByHmsArtNr(hmsArtNr: String): ProductRapidDTO? = productService.findByHmsArtNr(hmsArtNr)
 
+    @Get("/agreement/{agreementId}")
+    suspend fun findByAgreementId(agreementId: UUID): List<ProductRapidDTO> = productService.findByAgreementId(agreementId)
+
 }
 
 @Introspected

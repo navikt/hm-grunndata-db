@@ -103,8 +103,8 @@ open class ProductService(
 
 
     @Transactional
-    open suspend fun findByAgreementId(agreementId: UUID): List<Product> =
-        productRepository.findByAgreementsJson("""[{"id": "$agreementId"}]""")
+    open suspend fun findByAgreementId(agreementId: UUID): List<ProductRapidDTO> =
+        productRepository.findByAgreementsJson("""[{"id": "$agreementId"}]""").map { it.toDTO() }
 
     suspend fun Product.toDTO(): ProductRapidDTO =
         ProductRapidDTO(

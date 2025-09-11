@@ -24,11 +24,13 @@ class ProductServiceTest(private val productService: ProductService,
     fun productServiceTest() {
         val agreementId = UUID.randomUUID()
         val agreementId2 = UUID.randomUUID()
+        val postId1 = UUID.randomUUID()
+        val postId2 = UUID.randomUUID()
         val agreement = Agreement(id = agreementId, identifier = "HMDB-123", title = "Rammeavtale Rullestoler", resume = "En kort beskrivelse", reference="23-10234",
             text = "En lang beskrivelse 1", published = LocalDateTime.now(), expired = LocalDateTime.now().plusYears(3),
             posts = listOf(
-                AgreementPost(title = "Post 1", identifier = "HMDB-321", nr = 1, description = "En beskrive av posten"),
-                AgreementPost(title = "Post 2", identifier = "HMDB-322", nr = 2, description = "En beskrive av posten")
+                AgreementPost(id = postId1, title = "Post 1", identifier = "HMDB-321", nr = 1, description = "En beskrive av posten"),
+                AgreementPost(id = postId2, title = "Post 2", identifier = "HMDB-322", nr = 2, description = "En beskrive av posten")
             ))
 
         val pastAgreement = Agreement(id = agreementId2, identifier = "HMDB-124", title = "Rammeavtale Rullestoler",
@@ -42,13 +44,13 @@ class ProductServiceTest(private val productService: ProductService,
 
         val productAgreement = ProductAgreement(
             id = agreement.id, identifier = agreement.identifier, reference = agreement.reference,
-            rank = 1, postNr = 1, postIdentifier = agreement.posts[0].identifier, status = ProductAgreementStatus.ACTIVE,
+            rank = 1, postNr = 1, postId = postId1, postIdentifier = agreement.posts[0].identifier, status = ProductAgreementStatus.ACTIVE,
             expired = agreement.expired, published = agreement.published
         )
 
         val productAgreement2 = ProductAgreement(
             id = agreement.id, identifier = agreement.identifier, reference = agreement.reference,
-            rank = 2, postNr = 2, postIdentifier = agreement.posts[1].identifier, status = ProductAgreementStatus.ACTIVE,
+            rank = 2, postNr = 2, postId = postId2, postIdentifier = agreement.posts[1].identifier, status = ProductAgreementStatus.ACTIVE,
             expired = agreement.expired, published = agreement.published
         )
 
@@ -86,8 +88,8 @@ class ProductServiceTest(private val productService: ProductService,
             product.shouldNotBeNull()
             val products = productService.findByAgreementId(agreementId)
             products.size shouldBe 1
-            products[0].agreements?.size shouldBe 2
-            products[0].pastAgreements.size shouldBe 1
+            products[0].agreements.size shouldBe 2
+
         }
     }
 }
