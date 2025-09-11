@@ -69,6 +69,9 @@ micronaut:
 endpoints:
   metrics:
     enabled: true
+  routes:
+    enabled: true
+    sensitive: false
   prometheus:
     sensitive: false
     enabled: true
