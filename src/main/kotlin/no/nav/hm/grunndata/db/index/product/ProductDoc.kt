@@ -235,7 +235,7 @@ fun mapTechDataFilters(data: List<TechData>): TechDataFilters {
         var brukervektMaksKG: Int? = null
         data.forEach {
             when (it.key) {
-                "Fyllmateriale" -> fyllmateriale = it.value
+                "Fyllmateriale" -> fyllmateriale = it.value.ifEmpty { null }
                 "Setebredde maks" -> setebreddeMaksCM = it.value.decimalToInt()
                 "Setebredde min" -> setebreddeMinCM = it.value.decimalToInt()
                 "Brukervekt min" -> brukervektMinKG = it.value.decimalToInt()
@@ -247,7 +247,7 @@ fun mapTechDataFilters(data: List<TechData>): TechDataFilters {
                 "Totalvekt" -> totalVektKG = it.value.decimalToFloat()
                 "Lengde" -> lengdeCM = it.value.decimalToInt()
                 "Bredde" -> breddeCM = it.value.decimalToInt()
-                "Beregnet på barn" -> beregnetBarn = it.value
+                "Beregnet på barn" -> beregnetBarn = it.value.ifEmpty { null }
                 "Brukervekt maks" -> brukervektMaksKG = it.value.decimalToInt()
             }
         }
