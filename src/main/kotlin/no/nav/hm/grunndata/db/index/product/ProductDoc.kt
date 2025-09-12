@@ -239,7 +239,7 @@ fun mapTechDataFilters(data: List<TechData>): TechDataFilters {
                 "Setebredde maks" -> setebreddeMaksCM = it.value.decimalToInt()
                 "Setebredde min" -> setebreddeMinCM = it.value.decimalToInt()
                 "Brukervekt min" -> brukervektMinKG = it.value.decimalToInt()
-                "Materiale i trekk" -> materialeTrekk = it.value
+                "Materiale i trekk" -> materialeTrekk = it.value.ifEmpty { null }
                 "Setedybde min" -> setedybdeMinCM = it.value.decimalToInt()
                 "Setedybde maks" -> setedybdeMaksCM = it.value.decimalToInt()
                 "Setehøyde maks" -> setehoydeMaksCM = it.value.decimalToInt()
