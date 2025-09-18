@@ -16,6 +16,7 @@ import no.nav.hm.grunndata.rapid.dto.ProductRapidDTO
 import no.nav.hm.grunndata.rapid.dto.ProductStatus
 import no.nav.hm.grunndata.rapid.dto.Produkttype
 import no.nav.hm.grunndata.rapid.dto.TechData
+import no.nav.hm.grunndata.rapid.dto.WorksWith
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -89,6 +90,7 @@ data class AttributesDoc(
     val tenderId: String? = null,
     val hasTender: Boolean? = null,
     val alternativeFor: AlternativeFor? = null,
+    val worksWith: WorksWith? = null,
     val egnetForKommunalTekniker: Boolean? = null,
     val egnetForBrukerpass: Boolean? = null,
 )
@@ -206,6 +208,7 @@ fun Attributes.toDoc(): AttributesDoc {
         hasTender = hasTender,
         compatibleWith = compatibleWith,
         alternativeFor = alternativeFor,
+        worksWith = worksWith,
         egnetForKommunalTekniker = egnetForKommunalTekniker,
         egnetForBrukerpass = egnetForBrukerpass
     )

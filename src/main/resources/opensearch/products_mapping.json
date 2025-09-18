@@ -133,6 +133,16 @@
             }
           }
         },
+        "worksWith": {
+          "properties": {
+            "seriesIds": {
+              "type": "keyword"
+            },
+            "productIds": {
+              "type": "keyword"
+            }
+          }
+        },
         "bestillingsordning": {
           "type": "boolean"
         },
