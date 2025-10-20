@@ -48,10 +48,11 @@ data class ProductCriteria(
     val seriesUUID: UUID? = null,
     val isoCategory: String? = null,
     val accessory: Boolean? = null,
-    val sparePart: Boolean? ? = null,
+    val sparePart: Boolean? = null,
+    val excludeIsoCategories: List<String>? = null,
 ) {
     fun isNotEmpty(): Boolean =
         supplierRef != null || supplierId != null || updated != null || status != null || seriesUUID != null
-                || isoCategory != null || accessory != null || sparePart != null
+                || isoCategory != null || accessory != null || sparePart != null || (excludeIsoCategories != null && excludeIsoCategories.isNotEmpty())
 
 }

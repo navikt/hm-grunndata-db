@@ -31,7 +31,8 @@ class ExternalProductIndexer(
         val indexName = indexSettings.createIndexForReindex(IndexType.EXTERNAL_PRODUCT)
         var updated = from ?: LocalDateTime.now().minusYears(30)
         LOG.info("reindexing $indexName from $updated")
-        var page = productService.findProducts(criteria = ProductCriteria(updated = updated), pageable = Pageable.from(
+        val excludedIsoCategories = listOf("09540601", "09540901", "09540301")
+        var page = productService.findProducts(criteria = ProductCriteria(updated = updated, excludeIsoCategories = excludedIsoCategories), pageable = Pageable.from(
             0, size, Sort.of(Sort.Order.asc( "updated"))))
         var lastId: UUID? = null
         while(page.numberOfElements>0) {
@@ -50,7 +51,7 @@ class ExternalProductIndexer(
                 updated = last.updated
             }
             LOG.info("updated is now: $updated")
-            page = productService.findProducts(criteria = ProductCriteria(updated = updated), pageable = Pageable.from(
+            page = productService.findProducts(criteria = ProductCriteria(updated = updated, excludeIsoCategories = excludedIsoCategories), pageable = Pageable.from(
                 0, size, Sort.of(Sort.Order.asc( "updated"))))
         }
         if (alias) {

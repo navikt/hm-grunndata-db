@@ -6,6 +6,7 @@ import io.micronaut.data.repository.jpa.criteria.PredicateSpecification
 import io.micronaut.data.runtime.criteria.get
 import io.micronaut.data.runtime.criteria.where
 import jakarta.inject.Singleton
+import jakarta.persistence.criteria.Predicate
 import jakarta.transaction.Transactional
 import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.db.GdbRapidPushService
@@ -173,19 +174,24 @@ open class ProductService(
     open suspend fun findProducts(criteria: ProductCriteria, pageable: Pageable) :  Page<ProductRapidDTO> = findProducts(
         spec = buildCriteriaSpec(criteria), pageable)
 
-    private fun buildCriteriaSpec(criteria: ProductCriteria): PredicateSpecification<Product>? =
-        if (criteria.isNotEmpty()) {
-            where {
-                criteria.supplierRef?.let { root[Product::supplierRef] eq it }
-                criteria.supplierId?.let { root[Product::supplierId] eq it }
-                criteria.updated?.let { root[Product::updated] greaterThanOrEqualTo it }
-                criteria.status?.let { root[Product::status] eq it }
-                criteria.seriesUUID?.let { root[Product::seriesUUID] eq it }
-                criteria.isoCategory?.let { root[Product::isoCategory] eq it }
-                criteria.accessory?.let { root[Product::accessory] eq it }
-                criteria.sparePart?.let { root[Product::sparePart] eq it }
+    private fun buildCriteriaSpec(criteria: ProductCriteria): PredicateSpecification<Product>? {
+        if (!criteria.isNotEmpty()) return null
+        return PredicateSpecification { root, cb ->
+            val predicates = mutableListOf<Predicate>()
+            criteria.supplierRef?.let { predicates += cb.equal(root.get<String>("supplierRef"), it) }
+            criteria.supplierId?.let { predicates += cb.equal(root.get<UUID>("supplierId"), it) }
+            criteria.updated?.let { predicates += cb.greaterThanOrEqualTo(root.get("updated"), it) }
+            criteria.status?.let { predicates += cb.equal(root.get<String>("status"), it) }
+            criteria.seriesUUID?.let { predicates += cb.equal(root.get<UUID>("seriesUUID"), it) }
+            criteria.isoCategory?.let { predicates += cb.equal(root.get<String>("isoCategory"), it) }
+            criteria.accessory?.let { predicates += cb.equal(root.get<Boolean>("accessory"), it) }
+            criteria.sparePart?.let { predicates += cb.equal(root.get<Boolean>("sparePart"), it) }
+            criteria.excludeIsoCategories?.takeIf { it.isNotEmpty() }?.let { exclude ->
+                predicates += cb.not(root.get<String>("isoCategory").`in`(exclude))
             }
-        } else null
+            if (predicates.isEmpty()) cb.conjunction() else cb.and(*predicates.toTypedArray())
+        }
+    }
 
 
     @Transactional
@@ -209,4 +215,3 @@ open class ProductService(
 
     suspend fun findBySeriesUUID(seriesUUID: UUID): List<Product> = productRepository.findBySeriesUUID(seriesUUID)
 }
-
