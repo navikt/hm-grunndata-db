@@ -181,7 +181,7 @@ open class ProductService(
             criteria.supplierRef?.let { predicates += cb.equal(root.get<String>("supplierRef"), it) }
             criteria.supplierId?.let { predicates += cb.equal(root.get<UUID>("supplierId"), it) }
             criteria.updated?.let { predicates += cb.greaterThanOrEqualTo(root.get("updated"), it) }
-            criteria.status?.let { predicates += cb.equal(root.get<String>("status"), it) }
+            criteria.status?.let { predicates += cb.equal(root.get<ProductStatus>("status"), it) }
             criteria.seriesUUID?.let { predicates += cb.equal(root.get<UUID>("seriesUUID"), it) }
             criteria.isoCategory?.let { predicates += cb.equal(root.get<String>("isoCategory"), it) }
             criteria.accessory?.let { predicates += cb.equal(root.get<Boolean>("accessory"), it) }
