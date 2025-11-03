@@ -49,8 +49,8 @@ data class ProductDoc(
     val createdBy: String,
     val updatedBy: String,
     val filters: TechDataFilters,
+    val mainAgreements: List<AgreementInfoDoc> = emptyList(),
     val agreements: List<AgreementInfoDoc> = emptyList(),
-    val previousAgreements: List<AgreementInfoDoc> = emptyList(),
     val hasAgreement: Boolean = false,
     val hasPreviousAgreement: Boolean = false
 ) : SearchDoc {
@@ -60,11 +60,13 @@ data class ProductDoc(
 
 data class AgreementInfoDoc(
     val id: UUID,
+    @Deprecated("Use id instead")
     val identifier: String? = null,
     val title: String? = null,
     val label: String,
     val rank: Int,
     val postNr: Int,
+    @Deprecated("Use postId instead")
     val postIdentifier: String? = null,
     val postTitle: String? = null,
     val postId: UUID? = null,
@@ -72,6 +74,9 @@ data class AgreementInfoDoc(
     val reference: String,
     val published: LocalDateTime,
     val expired: LocalDateTime,
+    val mainProduct: Boolean,
+    val accessory: Boolean,
+    val sparePart: Boolean,
 )
 
 data class AttributesDoc(
@@ -129,7 +134,7 @@ fun ProductRapidDTO.toDoc(isoCategoryService: IsoCategoryService): ProductDoc = 
                     && it.expired.isAfter(LocalDateTime.now()) && it.status == ProductAgreementStatus.ACTIVE
                     && this.status == ProductStatus.ACTIVE
         }
-
+    val mainAgreements = onlyActiveAgreements.filter { it.mainProduct }
     val iso = isoCategoryService.lookUpCode(isoCategory) ?: isoCategoryService.getClosestLevelInBranch(isoCategory)
     val internationalIso = isoCategoryService.lookUpCode(isoCategory.take(6))
     ProductDoc(
@@ -164,7 +169,7 @@ fun ProductRapidDTO.toDoc(isoCategoryService: IsoCategoryService): ProductDoc = 
         updatedBy = updatedBy,
         agreements = onlyActiveAgreements.map { it.toDoc() },
         hasAgreement = onlyActiveAgreements.isNotEmpty(),
-        previousAgreements = previousAgreements.map { it.toDoc() },
+        mainAgreements = mainAgreements.map { it.toDoc() },
         hasPreviousAgreement = previousAgreements.isNotEmpty(),
         filters = mapTechDataFilters(techData)
     )
@@ -188,7 +193,10 @@ fun AgreementInfo.toDoc(): AgreementInfoDoc = AgreementInfoDoc(
     refNr = refNr,
     reference = reference,
     expired = expired,
-    published = published ?: LocalDateTime.now()
+    published = published ?: LocalDateTime.now(),
+    mainProduct = mainProduct,
+    accessory = accessory,
+    sparePart = sparePart
 )
 
 fun Attributes.toDoc(): AttributesDoc {

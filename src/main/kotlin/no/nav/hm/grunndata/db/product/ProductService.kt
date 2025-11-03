@@ -157,6 +157,9 @@ open class ProductService(
                         reference = agreement.reference,
                         postTitle = post.title,
                         refNr = post.refNr,
+                        mainProduct = agree.mainProduct,
+                        sparePart = agree.sparePart,
+                        accessory = agree.accessory,
                         status = agree.status ?: mapProductAgreemenStatusFromExpired(agree.expired ?: agreement.expired)
                     )
                 } else {
