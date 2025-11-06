@@ -26,6 +26,8 @@ interface ProductRepository: CoroutinePageableCrudRepository<Product, UUID>, Cor
 
     suspend fun findByStatusAndExpiredBefore(status: ProductStatus, expired: LocalDateTime?): List<Product>
 
+    suspend fun findByStatusAndUpdatedBefore(status: ProductStatus, updated: LocalDateTime?): List<Product>
+
     suspend fun findByHmsArtNr(hmsArtNr: String): Product?
     suspend fun findBySeriesUUID(seriesUUID: UUID): List<Product>
     suspend fun findByIsoCategoryStartsWith(isoCategory: String): List<Product>

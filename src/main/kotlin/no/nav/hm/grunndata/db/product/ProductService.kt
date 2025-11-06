@@ -203,16 +203,18 @@ open class ProductService(
 
 
 
-    suspend fun findIdsByStatusAndCreatedBy(status: ProductStatus, createdBy: String): List<ProductIdDTO> =
-        productRepository.findIdsByStatusAndCreatedBy(status = status, createdBy = createdBy)
+    suspend fun findDeletedStatusUpdatedBefore(dateTime: LocalDateTime): List<Product> =
+        productRepository.findByStatusAndUpdatedBefore(ProductStatus.DELETED, dateTime)
 
-    suspend fun findIdsByCreatedBy(createdBy: String): List<ProductIdDTO> =
-        productRepository.findIdsByCreatedByAndNotDeleted(createdBy = createdBy)
+    suspend fun deleteProducts(products: List<Product>) {
+        products.forEach { product ->
+            indexItemService.saveIndexItem(product.toDTO().toDoc(isoCategoryService), IndexType.PRODUCT)
+            indexItemService.saveIndexItem(product.toDTO().toExternalDoc(isoCategoryService), IndexType.EXTERNAL_PRODUCT)
+            productRepository.delete(product)
+            LOG.info("Product: ${product.id} hmsnr: ${product.hmsArtNr} supplierRef: ${product.supplierRef} was marked for deletion")
+        }
+    }
 
-    suspend fun findByStatusAndExpiredBefore(
-        status: ProductStatus,
-        expired: LocalDateTime? = LocalDateTime.now()
-    ): List<Product> = productRepository.findByStatusAndExpiredBefore(status, expired)
 
     suspend fun findByHmsArtNr(hmsArtNr: String): ProductRapidDTO? = productRepository.findByHmsArtNr(hmsArtNr)?.toDTO()
 
