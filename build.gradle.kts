@@ -26,7 +26,7 @@ plugins {
     kotlin("kapt") version "1.9.25"
     kotlin("plugin.allopen") version "1.9.25"
     id("java")
-    id("com.github.johnrengelman.shadow") version "7.1.0"
+    id("com.gradleup.shadow") version "9.2.2"
     id("io.micronaut.application") version "4.6.1"
 }
 
@@ -134,7 +134,7 @@ tasks.withType<Test> {
 }
 
 tasks.withType<Wrapper> {
-    gradleVersion = "8.5"
+    gradleVersion = "8.11"
 }
 
 repositories {
