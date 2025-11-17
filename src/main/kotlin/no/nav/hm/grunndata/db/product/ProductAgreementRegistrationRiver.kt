@@ -67,17 +67,12 @@ class ProductAgreementRegistrationRiverSupport(private val agreementService: Agr
         private val LOG = LoggerFactory.getLogger(ProductAgreementRegistrationRiverSupport::class.java)
     }
 
-    suspend fun mergeAgreementInProduct(
+    fun mergeAgreementInProduct(
         product: ProductRapidDTO,
         pag: ProductAgreementRegistrationRapidDTO
     ): ProductRapidDTO {
         val filteredAgreements = product.agreements.filter { it.postId != pag.postId }
         if (pag.status == ProductAgreementStatus.DELETED) return product.copy(agreements = filteredAgreements)
-
-        val hmsNr = if (product.hmsArtNr != pag.hmsArtNr) {
-            LOG.info("This product ${product.id} has a different hmsArtNr than the agreement ${pag.hmsArtNr}")
-            pag.hmsArtNr
-        } else product.hmsArtNr
 
         val updated = agreementService.findByIdCached(pag.agreementId)?.let { agreementInDb ->
             val foundPost = agreementInDb.posts.find { post -> post.id == pag.postId }
@@ -104,7 +99,6 @@ class ProductAgreementRegistrationRiverSupport(private val agreementService: Agr
         } ?: throw IllegalStateException("Agreement ${pag.agreementId} not found, that can not be possible check if agreements are in sync")
         LOG.info("agreements for product ${product.id} updated with agreement ${updated.id} and post ${updated.postId}")
         return product.copy(
-            hmsArtNr = hmsNr,
             agreements = filteredAgreements + updated,
             updated = pag.updated,
             updatedBy = pag.updatedBy
