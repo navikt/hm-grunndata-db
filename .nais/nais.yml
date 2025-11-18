@@ -83,3 +83,4 @@ spec:
         - application: hm-grunndata-import
         - application: hm-grunndata-register
         - application: hm-grunndata-alternativprodukter
+        - application: hm-oversikt-frontend
