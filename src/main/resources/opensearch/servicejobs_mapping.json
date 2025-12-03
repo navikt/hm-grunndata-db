@@ -1,0 +1,68 @@
+{
+  "date_detection": false,
+  "properties": {
+    "id": {
+      "type": "keyword"
+    },
+    "title": {
+      "type": "text",
+      "analyzer": "norwegian_html"
+    },
+    "supplierId": {
+      "type": "keyword"
+    },
+    "supplierRef": {
+      "type": "keyword"
+    },
+    "hmsArtNr": {
+      "type": "keyword"
+    },
+    "isoCategory": {
+      "type": "keyword"
+    },
+    "published": {
+      "type": "date",
+      "format": "strict_date_optional_time"
+    },
+    "expired": {
+      "type": "date",
+      "format": "strict_date_optional_time"
+    },
+    "updated": {
+      "type": "date",
+      "format": "strict_date_optional_time"
+    },
+    "status": {
+      "type": "keyword"
+    },
+    "created": {
+      "type": "date",
+      "format": "strict_date_optional_time"
+    },
+    "updatedBy": {
+      "enabled": false
+    },
+    "createdBy": {
+      "enabled": false
+    },
+    "attributes": {
+      "type": "object",
+      "enabled": true
+    },
+    "agreements": {
+      "properties": {
+        "expired": {
+          "type": "date",
+          "format": "strict_date_optional_time"
+        },
+        "published": {
+          "type": "date",
+          "format": "strict_date_optional_time"
+        },
+        "agreementId": {
+          "type": "keyword"
+        }
+      }
+    }
+  }
+}

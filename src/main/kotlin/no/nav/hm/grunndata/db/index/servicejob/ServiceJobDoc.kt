@@ -2,6 +2,8 @@ package no.nav.hm.grunndata.db.index.servicejob
 
 import no.nav.hm.grunndata.db.index.SearchDoc
 import no.nav.hm.grunndata.db.servicejob.ServiceJob
+import no.nav.hm.grunndata.rapid.dto.ServiceAgreementInfo
+import no.nav.hm.grunndata.rapid.dto.ServiceAttributes
 import no.nav.hm.grunndata.rapid.dto.ServiceStatus
 import java.time.LocalDateTime
 
@@ -19,8 +21,8 @@ data class ServiceJobDoc(
     val created: LocalDateTime,
     val updatedBy: String,
     val createdBy: String,
-    val attributes: Any,
-    val agreements: Any
+    val attributes: ServiceAttributes,
+    val agreements: List<ServiceAgreementInfo>
 ) : SearchDoc {
     override fun isDelete(): Boolean = status == ServiceStatus.DELETED
 }
