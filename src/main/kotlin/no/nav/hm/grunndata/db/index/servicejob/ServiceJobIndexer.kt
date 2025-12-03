@@ -43,7 +43,7 @@ class ServiceJobIndexer(
         }
     }
 
-    fun updateAlias(indexName: String) = indexer.updateAlias(indexName, indexName)
+    fun updateAlias(indexName: String) = indexer.updateAlias(aliasIndexName, indexName)
     fun getAlias() = indexer.getAlias(aliasIndexName)
     fun docCount() = indexer.docCount(aliasIndexName)
 }
