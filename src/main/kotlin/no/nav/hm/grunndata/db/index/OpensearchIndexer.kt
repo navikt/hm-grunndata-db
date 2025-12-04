@@ -124,30 +124,6 @@ class OpensearchIndexer(private val client: OpenSearchClient, private val object
         }
     }
 
-//    fun index(doc: SearchDoc, indexName: String): BulkResponse {
-//        return index(listOf(doc), indexName)
-//    }
-//
-//    fun index(docs: List<SearchDoc>, indexName: String): BulkResponse {
-//        val operations = docs.map { document ->
-//            BulkOperation.Builder().index(
-//                IndexOperation.of { it.index(indexName).id(document.id).document(document) }
-//            ).build()
-//        }
-//        val bulkRequest = BulkRequest.Builder()
-//            .index(indexName)
-//            .operations(operations)
-//            .refresh(Refresh.WaitFor)
-//            .build()
-//        return try {
-//            client.bulk(bulkRequest)
-//        }
-//        catch (e: Exception) {
-//            LOG.error("Failed to index $docs to $indexName", e)
-//            throw e
-//        }
-//    }
-
     fun delete(id: String, indexName: String): DeleteResponse {
         val request = DeleteRequest.Builder().index(indexName).id(id)
         return client.delete(request.build())

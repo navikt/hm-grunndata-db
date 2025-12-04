@@ -10,7 +10,7 @@ import java.time.LocalDateTime
 data class ServiceJobDoc(
     override val id: String,
     val title: String,
-    val supplierId: String,
+    val supplier: Supplier,
     val supplierRef: String?,
     val hmsArtNr: String,
     val isoCategory: String,
@@ -27,10 +27,12 @@ data class ServiceJobDoc(
     override fun isDelete(): Boolean = status == ServiceStatus.DELETED
 }
 
-fun ServiceJob.toDoc(): ServiceJobDoc = ServiceJobDoc(
+data class Supplier(val id: String, val name: String)
+
+fun ServiceJob.toDoc(supplier: Supplier): ServiceJobDoc = ServiceJobDoc(
     id = id.toString(),
     title = title,
-    supplierId = supplierId.toString(),
+    supplier = supplier,
     supplierRef = supplierRef,
     hmsArtNr = hmsArtNr,
     isoCategory = isoCategory,

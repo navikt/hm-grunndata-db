@@ -7,7 +7,7 @@ import io.micronaut.http.annotation.Put
 import io.micronaut.http.annotation.QueryValue
 import org.slf4j.LoggerFactory
 
-@Controller("/internal/index/servicejob")
+@Controller("/internal/index/servicejobs")
 class ServiceJobIndexerController(private val serviceJobIndexer: ServiceJobIndexer) {
     companion object {
         private val LOG = LoggerFactory.getLogger(ServiceJobIndexerController::class.java)

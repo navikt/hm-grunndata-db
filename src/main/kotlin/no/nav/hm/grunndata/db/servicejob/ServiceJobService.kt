@@ -6,11 +6,15 @@ import io.micronaut.data.repository.jpa.criteria.PredicateSpecification
 import jakarta.inject.Singleton
 import no.nav.hm.grunndata.db.index.item.IndexItemService
 import no.nav.hm.grunndata.db.index.item.IndexType
+import no.nav.hm.grunndata.db.index.servicejob.Supplier
 import no.nav.hm.grunndata.db.index.servicejob.toDoc
+import no.nav.hm.grunndata.db.supplier.SupplierService
 import java.util.UUID
 
 @Singleton
-class ServiceJobService(private val repository: ServiceJobRepository, private val indexItemService: IndexItemService) {
+class ServiceJobService(private val repository: ServiceJobRepository,
+                        private val supplierService: SupplierService,
+                        private val indexItemService: IndexItemService) {
 
     suspend fun findServiceJobs(
         buildCriteriaSpec: PredicateSpecification<ServiceJob>? = null,
@@ -38,8 +42,23 @@ class ServiceJobService(private val repository: ServiceJobRepository, private va
                 updatedBy = serviceJob.updatedBy
             ))
         } ?: repository.save(serviceJob)
-        indexItemService.saveIndexItem(saved.toDoc(), IndexType.SERVICEJOB)
+        val supplier = supplierService.findByIdCached(serviceJob.supplierId)?.let { supplier ->
+            Supplier(
+                supplier.id.toString(),
+                supplier.name
+            )
+        }
+        if (supplier != null) {
+            indexItemService.saveIndexItem(saved.toDoc(supplier), IndexType.SERVICEJOB)
+        }
+        else {
+            LOG.error("Could not index ServiceJob ${serviceJob.id} as supplier ${serviceJob.supplierId} was not found")
+        }
         return saved
+    }
+
+    companion object {
+        private val LOG = org.slf4j.LoggerFactory.getLogger(ServiceJobService::class.java)
     }
 
 }

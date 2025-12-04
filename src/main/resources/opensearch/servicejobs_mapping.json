@@ -8,8 +8,15 @@
       "type": "text",
       "analyzer": "norwegian_html"
     },
-    "supplierId": {
-      "type": "keyword"
+    "supplier": {
+      "properties": {
+        "id": {
+          "type": "keyword"
+        },
+        "name": {
+          "type": "keyword"
+        }
+      }
     },
     "supplierRef": {
       "type": "keyword"
@@ -46,8 +53,25 @@
       "enabled": false
     },
     "attributes": {
-      "type": "object",
-      "enabled": true
+      "properties": {
+        "text": {
+          "type": "text",
+          "analyzer": "norwegian_html"
+        },
+        "keywords": {
+          "type": "keyword"
+        },
+        "serviceFor": {
+          "properties": {
+            "seriesIds": {
+              "type": "keyword"
+            },
+            "productIds": {
+              "type": "keyword"
+            }
+          }
+        }
+      }
     },
     "agreements": {
       "properties": {
