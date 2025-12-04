@@ -79,7 +79,6 @@ spec:
         - host: navikt.github.io
     inbound:
       rules:
-        - application: hm-grunndata-index
         - application: hm-grunndata-import
         - application: hm-grunndata-register
         - application: hm-grunndata-alternativprodukter

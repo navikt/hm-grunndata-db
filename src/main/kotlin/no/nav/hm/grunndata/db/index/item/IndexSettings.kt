@@ -63,6 +63,16 @@ class IndexSettings(private val indexer: OpensearchIndexer) {
                 enabled = true
             )
         )
+        put(
+            IndexType.SERVICEJOB,
+            IndexConfig(
+                aliasIndexName = "servicejobs",
+                settings = IndexSettings::class.java.getResource("/opensearch/servicejobs_settings.json")!!.readText(),
+                mappings = IndexSettings::class.java.getResource("/opensearch/servicejobs_mapping.json")!!.readText(),
+                indexType = IndexType.SERVICEJOB,
+                enabled = true
+            )
+        )
     }
 
     init {
