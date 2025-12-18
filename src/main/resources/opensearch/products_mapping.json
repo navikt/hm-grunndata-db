@@ -233,6 +233,9 @@
         "brukervektMinKG": {
           "type": "long"
         },
+        "dybdeCM": {
+          "type": "long"
+        },
         "fyllmateriale": {
           "type": "keyword"
         },

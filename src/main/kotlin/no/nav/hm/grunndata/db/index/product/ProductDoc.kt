@@ -121,6 +121,7 @@ data class TechDataFilters(
     val totalVektKG: Float? = null,
     val lengdeCM: Int? = null,
     val breddeCM: Int? = null,
+    val dybdeCM: Int? = null,
     val beregnetBarn: String? = null,
     val brukervektMaksKG: Int? = null
 )
@@ -242,6 +243,7 @@ fun mapTechDataFilters(data: List<TechData>): TechDataFilters {
         var totalVektKG: Float? = null
         var lengdeCM: Int? = null
         var breddeCM: Int? = null
+        var dybdeCM: Int? = null
         var beregnetBarn: String? = null
         var brukervektMaksKG: Int? = null
         data.forEach {
@@ -258,6 +260,7 @@ fun mapTechDataFilters(data: List<TechData>): TechDataFilters {
                 "Totalvekt" -> totalVektKG = it.value.decimalToFloat()
                 "Lengde" -> lengdeCM = it.value.decimalToInt()
                 "Bredde" -> breddeCM = it.value.decimalToInt()
+                "Dybde" -> dybdeCM = it.value.decimalToInt()
                 "Beregnet på barn" -> beregnetBarn = it.value.ifEmpty { null }
                 "Brukervekt maks" -> brukervektMaksKG = it.value.decimalToInt()
             }
@@ -275,6 +278,7 @@ fun mapTechDataFilters(data: List<TechData>): TechDataFilters {
             totalVektKG = totalVektKG,
             lengdeCM = lengdeCM,
             breddeCM = breddeCM,
+            dybdeCM = dybdeCM,
             beregnetBarn = beregnetBarn,
             brukervektMaksKG = brukervektMaksKG
         )
