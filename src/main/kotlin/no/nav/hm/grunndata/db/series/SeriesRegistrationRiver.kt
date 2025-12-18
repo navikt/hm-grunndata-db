@@ -71,6 +71,7 @@ class SeriesRegistrationRiver(
                             ),
                             isoCategory = dto.isoCategory,
                             media = dto.seriesData.media,
+                            mainProduct = dto.mainProduct ?: product.mainProduct,
                             updated = LocalDateTime.now()
                         ), EventName.syncedRegisterProductV1
                     )

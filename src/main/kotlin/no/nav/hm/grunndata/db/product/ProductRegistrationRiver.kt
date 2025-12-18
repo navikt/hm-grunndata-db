@@ -75,11 +75,14 @@ class ProductRegistrationRiver(
                             keywords = series.seriesData?.attributes?.keywords?.toList(),
                             compatibleWith = mergeCompatibleWith(
                                 riverProduct.attributes.compatibleWith,
-                                series.seriesData?.attributes?.compatibleWith)
+                                series.seriesData?.attributes?.compatibleWith
+                            )
                         ),
                         isoCategory = series.isoCategory,
                         seriesIdentifier = series.identifier,
                         media = series.seriesData?.media ?: riverProduct.media,
+                        accessory = riverProduct.accessory,
+                        sparePart = riverProduct.sparePart,
                     )
                     productService.saveAndPushTokafka(mergedProduct, EventName.syncedRegisterProductV1)
                 } ?: run {
