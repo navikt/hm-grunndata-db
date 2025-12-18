@@ -59,7 +59,8 @@ class ProductRegistrationRiver(
         LOG.info(
             "got product registration id: ${dto.id} supplierId: ${dto.productDTO.supplier.id} supplierRef: ${dto.productDTO.supplierRef} " +
                     "eventId $eventId eventTime: $createdTime adminStatus: ${dto.adminStatus} status: ${dto.productDTO.status} " +
-                    "createdBy: ${dto.createdBy} identifier: ${dto.productDTO.identifier}"
+                    "createdBy: ${dto.createdBy} identifier: ${dto.productDTO.identifier}, mainProduct: ${dto.productDTO.mainProduct}" +
+                    ", accessory: ${dto.productDTO.accessory}, sparePart: ${dto.productDTO.sparePart}"
         )
         runBlocking {
 
@@ -83,6 +84,7 @@ class ProductRegistrationRiver(
                         media = series.seriesData?.media ?: riverProduct.media,
                         accessory = riverProduct.accessory,
                         sparePart = riverProduct.sparePart,
+                        mainProduct = riverProduct.mainProduct,
                     )
                     productService.saveAndPushTokafka(mergedProduct, EventName.syncedRegisterProductV1)
                 } ?: run {
