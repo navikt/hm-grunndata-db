@@ -7,6 +7,7 @@ import no.nav.hm.grunndata.rapid.dto.AgreementInfo
 import no.nav.hm.grunndata.rapid.dto.AlternativeFor
 import no.nav.hm.grunndata.rapid.dto.Attributes
 import no.nav.hm.grunndata.rapid.dto.CompatibleWith
+import no.nav.hm.grunndata.rapid.dto.DocumentUrl
 import no.nav.hm.grunndata.rapid.dto.MediaInfo
 import no.nav.hm.grunndata.rapid.dto.MediaSourceType
 import no.nav.hm.grunndata.rapid.dto.MediaType
@@ -87,6 +88,7 @@ data class AttributesDoc(
     val shortdescription: String? = null,
     val text: String? = null,
     val url: String? = null,
+    val documentUrls: List<DocumentUrl>? = null,
     val bestillingsordning: Boolean? = null,
     val digitalSoknad: Boolean? = null,
     val sortimentKategori: String? = null,
@@ -208,6 +210,7 @@ fun Attributes.toDoc(): AttributesDoc {
         shortdescription = shortdescription,
         text = text,
         url = url,
+        documentUrls = documentUrls,
         bestillingsordning = bestillingsordning,
         digitalSoknad = digitalSoknad,
         sortimentKategori = sortimentKategori,

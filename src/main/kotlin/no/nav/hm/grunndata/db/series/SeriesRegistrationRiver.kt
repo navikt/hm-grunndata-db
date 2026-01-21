@@ -67,7 +67,8 @@ class SeriesRegistrationRiver(
                                 compatibleWith = mergeCompatibleWith(product.attributes.compatibleWith, dto.seriesData.attributes.compatibleWith),
                                 text = dto.text,
                                 keywords = dto.seriesData.attributes.keywords?.toList(),
-                                url = dto.seriesData.attributes.url
+                                url = dto.seriesData.attributes.url,
+                                documentUrls = dto.seriesData.attributes.documentUrls,
                             ),
                             isoCategory = dto.isoCategory,
                             media = dto.seriesData.media,
