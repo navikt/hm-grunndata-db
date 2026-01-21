@@ -73,6 +73,7 @@ class ProductRegistrationRiver(
                         attributes = riverProduct.attributes.copy(
                             text = series.text,
                             url = series.seriesData?.attributes?.url,
+                            documentUrls = series.seriesData?.attributes?.documentUrls,
                             keywords = series.seriesData?.attributes?.keywords?.toList(),
                             compatibleWith = mergeCompatibleWith(
                                 riverProduct.attributes.compatibleWith,
