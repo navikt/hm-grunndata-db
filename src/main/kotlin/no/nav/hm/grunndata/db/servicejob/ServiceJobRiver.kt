@@ -3,6 +3,7 @@ package no.nav.hm.grunndata.db.servicejob
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.micronaut.context.annotation.Context
 import io.micronaut.context.annotation.Requires
+import java.util.UUID
 import kotlinx.coroutines.runBlocking
 import no.nav.helse.rapids_rivers.JsonMessage
 import no.nav.helse.rapids_rivers.KafkaRapid
@@ -43,6 +44,9 @@ class ServiceJobRiver(
         val serviceJobRapidDTO = objectMapper.treeToValue(packet["payload"], ServiceJobRapidDTO::class.java)
         LOG.info("Got service job registration id: ${serviceJobRapidDTO.id} title: ${serviceJobRapidDTO.title}")
         runBlocking {
+            if (serviceJobRapidDTO.id == UUID.fromString("5197bfb3-74b8-4f5b-8d62-1d7735aa8ece")) {
+                return@runBlocking
+            }
             serviceJobService.saveAndIndex(serviceJobRapidDTO.toEntity())
         }
     }

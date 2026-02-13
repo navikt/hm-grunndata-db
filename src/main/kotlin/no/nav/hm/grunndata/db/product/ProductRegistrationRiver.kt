@@ -3,6 +3,7 @@ package no.nav.hm.grunndata.db.product
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.micronaut.context.annotation.Context
 import io.micronaut.context.annotation.Requires
+import java.util.UUID
 import kotlinx.coroutines.runBlocking
 import no.nav.helse.rapids_rivers.JsonMessage
 import no.nav.helse.rapids_rivers.KafkaRapid
@@ -63,6 +64,7 @@ class ProductRegistrationRiver(
                     ", accessory: ${dto.productDTO.accessory}, sparePart: ${dto.productDTO.sparePart}"
         )
         runBlocking {
+            if (dto.id == UUID.fromString("5197bfb3-74b8-4f5b-8d62-1d7735aa8ece"))
 
             if (dto.draftStatus == DraftStatus.DONE && (dto.adminStatus == AdminStatus.APPROVED || dto.registrationStatus == RegistrationStatus.DELETED)) {
                 // series and products need to be merged before sending down the river
