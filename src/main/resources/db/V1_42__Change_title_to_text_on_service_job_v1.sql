@@ -1,0 +1,1 @@
+ALTER TABLE service_job_v1 ALTER COLUMN title TYPE TEXT;
