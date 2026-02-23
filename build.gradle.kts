@@ -3,13 +3,13 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 
 val jvmTarget = "17"
-val micronautVersion = "4.10.2"
+val micronautVersion = "4.10.8"
 val logbackEncoderVersion = "7.3"
 val postgresqlVersion = "42.7.2"
 val tcVersion = " 1.21.4"
 val mockkVersion = "1.13.4"
 val kotestVersion = "5.5.5"
-val rapidsRiversVersion = "202410290928"
+val rapidsRiversVersion = "202602191359"
 val grunndataDtoVersion = "202601201544"
 val jupiterVersion ="5.9.2"
 val flywayVersion="10.6.0"
@@ -26,7 +26,7 @@ plugins {
     kotlin("kapt") version "1.9.25"
     kotlin("plugin.allopen") version "1.9.25"
     id("java")
-    id("com.gradleup.shadow") version "9.2.2"
+    id("com.gradleup.shadow") version "9.3.1"
     id("io.micronaut.application") version "4.6.1"
 }
 
