@@ -9,6 +9,8 @@ import no.nav.hm.grunndata.rapid.dto.SeriesData
 import org.junit.jupiter.api.Test
 import java.util.*
 import no.nav.hm.grunndata.db.REGISTER
+import no.nav.hm.grunndata.rapid.dto.DocumentUrl
+import no.nav.hm.grunndata.rapid.dto.SeriesAttributes
 
 @MicronautTest
 class SeriesRepositoryTest(private val seriesRepository: SeriesRepository) {
@@ -16,15 +18,26 @@ class SeriesRepositoryTest(private val seriesRepository: SeriesRepository) {
     @Test
     fun crudSeries() {
         val supplierId = UUID.randomUUID()
-        val series = Series (
+        val series = Series(
             identifier = "HMDB-12345",
             title = "en test series 1",
             text = "en test series 1 beskrivelse",
             isoCategory = "12001314",
-            seriesData = SeriesData(media = setOf(MediaInfo(sourceUri = "http://example.com", uri = "http://example.com"))),
+            seriesData = SeriesData(
+                media = setOf(MediaInfo(sourceUri = "http://example.com", uri = "http://example.com")),
+                attributes = SeriesAttributes(
+                    documentUrls = listOf(
+                        DocumentUrl(
+                            url = "http://example.com",
+                            title = "en document"
+                        )
+                    )
+                )
+            ),
             supplierId = supplierId,
             createdBy = REGISTER,
-            updatedBy = REGISTER )
+            updatedBy = REGISTER
+        )
         runBlocking {
             val saved = seriesRepository.save(series)
             val found = seriesRepository.findById(series.id)
@@ -36,6 +49,7 @@ class SeriesRepositoryTest(private val seriesRepository: SeriesRepository) {
             updated.isoCategory shouldBe "12001314"
             updated.seriesData.shouldNotBeNull()
             updated.seriesData!!.media.size shouldBe 1
+            updated.seriesData!!.attributes.documentUrls?.size shouldBe 1
         }
     }
 }

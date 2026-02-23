@@ -6,30 +6,21 @@ on:
       - ".gitignore"
       - "LICENCE"
       - "CODEOWNERS"
-      - "docker-compose.yml"
-      - ".github/workflows/deploy-rollback.yml"
-      - ".github/workflows/deploy-prod.yml"
-      - ".github/workflows/deploy-dev.yml"
+      - "docker-compose**"
+      - "dev**"
+      - ".nais/azure-emailer.yml"
     branches:
       - main
-      - fiks-cache
+
 jobs:
-  call-workflow:
-    concurrency: deploy-dev
+  build:
+    name: Bygg, deploy til dev-gcp og lag release
     permissions:
+      packages: write
       contents: write
       id-token: write
-      security-events: write
-      actions: read
-    uses: navikt/pam-deploy/.github/workflows/deploy-dev.yml@v7
+    uses: navikt/hm-workflows/.github/workflows/deploy-dev.yaml@main
     with:
-      NAIS_RESOURCE: ".nais/nais.yml"
-      NAIS_VARS: ".nais/nais_dev-gcp.json"
-      JAVA_VERSION: 17
-      TEAM: "teamdigihot"
-      CODEQL_ENABLED: true
-      SKIP_DRAFT_RELEASE: ${{ github.ref_name != 'main' }}
-      DRAFTS_MAX: 50
-    secrets:
-      NAIS_WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
-
+      manifest: .nais/nais.yaml
+      vars: .nais/nais-dev.json
+    secrets: inherit
