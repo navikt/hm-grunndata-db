@@ -4,27 +4,18 @@ package no.nav.hm.grunndata.db.index
 import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.inject.Singleton
 import no.nav.hm.grunndata.db.index.item.IndexItem
-import no.nav.hm.grunndata.db.index.item.createIndexName
-import java.io.StringReader
 import org.opensearch.client.opensearch.OpenSearchClient
 import org.opensearch.client.opensearch._types.Refresh
 import org.opensearch.client.opensearch._types.mapping.TypeMapping
-import org.opensearch.client.opensearch.core.BulkRequest
-import org.opensearch.client.opensearch.core.BulkResponse
-import org.opensearch.client.opensearch.core.CountRequest
-import org.opensearch.client.opensearch.core.DeleteRequest
-import org.opensearch.client.opensearch.core.DeleteResponse
+import org.opensearch.client.opensearch.core.*
 import org.opensearch.client.opensearch.core.bulk.BulkOperation
 import org.opensearch.client.opensearch.core.bulk.DeleteOperation
 import org.opensearch.client.opensearch.core.bulk.IndexOperation
-import org.opensearch.client.opensearch.indices.CreateIndexRequest
-import org.opensearch.client.opensearch.indices.ExistsAliasRequest
+import org.opensearch.client.opensearch.indices.*
 import org.opensearch.client.opensearch.indices.ExistsRequest
-import org.opensearch.client.opensearch.indices.GetAliasRequest
-import org.opensearch.client.opensearch.indices.IndexSettings
-import org.opensearch.client.opensearch.indices.UpdateAliasesRequest
 import org.opensearch.client.opensearch.indices.update_aliases.ActionBuilders
 import org.slf4j.LoggerFactory
+import java.io.StringReader
 
 @Singleton
 class OpensearchIndexer(private val client: OpenSearchClient, private val objectMapper: ObjectMapper) {
@@ -102,13 +93,13 @@ class OpensearchIndexer(private val client: OpenSearchClient, private val object
             if (document.delete) {
                 LOG.info("deleting document ${document.id} from index ${document.indexName}")
                 BulkOperation.Builder().delete(
-                    DeleteOperation.of { it.index(document.indexName).id(document.id.toString()) }
+                    DeleteOperation.of { it.index(document.indexName).id(document.id) }
                 ).build()
             }
             else {
 
                 BulkOperation.Builder().index(
-                IndexOperation.of { it.index(document.indexName).id(document.id.toString()).document(document.doc) }
+                IndexOperation.of { it.index(document.indexName).id(document.id).document(document.doc) }
             ).build() }
         }
         val bulkRequest = BulkRequest.Builder()

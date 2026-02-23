@@ -44,16 +44,16 @@ class OpenSearchConfig(private val openSearchEnv: OpenSearchEnv, private val obj
                     null
                 ) { chains: Array<X509Certificate?>?, authType: String? -> true }
                 .build()
-             } else {
-                SSLContext.getDefault()
-             }
+        } else {
+            SSLContext.getDefault()
+        }
 
         val builder = ApacheHttpClient5TransportBuilder.builder(host)
             .setMapper(JacksonJsonpMapper(objectMapper))
             .setHttpClientConfigCallback { httpClientBuilder: HttpAsyncClientBuilder ->
                 val tlsStrategy = ClientTlsStrategyBuilder.create()
                     .setSslContext(sslcontext)
-                    .build()
+                    .buildAsync()
                 val connectionManager = PoolingAsyncClientConnectionManagerBuilder
                     .create()
                     .setTlsStrategy(tlsStrategy)

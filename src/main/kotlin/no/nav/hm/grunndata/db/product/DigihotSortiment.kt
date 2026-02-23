@@ -57,7 +57,7 @@ open class DigihotSortiment(
         objectMapper.readTree(URI(digitalSoknadUrl).toURL()).let { node ->
             require(node.isObject) { "unexpected non-object reply from digihot-sortiment" }
             val res = mutableListOf<SortimentDTO>()
-            node.fields().forEachRemaining { (key, value) ->
+            node.properties().forEach { (key, value) ->
                 require(value.isArray) { "unexpected non-array reply from digihot-sortiment" }
                 res.add(
                     SortimentDTO(
