@@ -28,7 +28,7 @@ class NewsService(private val newsRepository: NewsRepository,
 
     suspend fun saveAndPushToKafka(newsDTO: NewsDTO, eventName: String): NewsDTO {
         val news = newsDTO.toEntity()
-        val saved = newsRepository.findById(news.id)?.let { inDb ->
+        newsRepository.findById(news.id)?.let { inDb ->
             newsRepository.update(news.copy(id = inDb.id, created = inDb.created, createdBy = inDb.createdBy))
         } ?: newsRepository.save(news)
         gdbRapidPushService.pushDTOToKafka(newsDTO, eventName)

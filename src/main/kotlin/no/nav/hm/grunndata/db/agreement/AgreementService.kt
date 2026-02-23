@@ -47,7 +47,7 @@ open class AgreementService(private val agreementRepository: AgreementRepository
     @Transactional
     open suspend fun saveAndPushTokafka(agreementDTO: AgreementDTO, eventName: String): AgreementDTO {
         val agreement = agreementDTO.toEntity()
-        val saved = agreementRepository.findById(agreement.id)?.let { inDb ->
+        agreementRepository.findById(agreement.id)?.let { inDb ->
             update(agreement.copy(id = inDb.id, created = inDb.created,
                 createdBy = inDb.createdBy))
         } ?: save(agreement)
