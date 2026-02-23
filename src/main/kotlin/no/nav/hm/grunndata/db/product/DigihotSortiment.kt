@@ -75,7 +75,7 @@ open class DigihotSortiment(
 
     @Cacheable("digihot-sortiment-produkttype")
     open fun cachedProdukttype(): Map<String, ProdukttypeDTO> =
-        objectMapper.readValue(URI(produkttypeUrl).toURL(), object : TypeReference<List<ProdukttypeDTO>>(){}).associateBy { it.isokode }
+        objectMapper.readValue(URI(produkttypeUrl).toURL().openStream(), object : TypeReference<List<ProdukttypeDTO>>(){}).associateBy { it.isokode }
 }
 
 data class BestillingsordningDTO(
