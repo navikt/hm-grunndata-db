@@ -35,5 +35,5 @@ jobs:
         name: deploy to ${{ inputs.cluster }}
         env:
           CLUSTER: ${{ inputs.cluster }}
-          RESOURCE: .nais/nais.yml
+          RESOURCE: .nais/nais.yaml
           VARS: .nais/nais_${{ inputs.cluster }}.json

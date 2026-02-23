@@ -13,25 +13,36 @@ class AttributeTagServiceTest(private val attributeTagService: AttributeTagServi
 
     @Test
     fun attributeTagTest() {
-        val supplier = SupplierDTO(id = UUID.randomUUID(), identifier = "341", name = "leverandør 1", info = SupplierInfo(),
-            createdBy = GDB, updatedBy = GDB, updated = LocalDateTime.now(), created = LocalDateTime.now())
-        val product = Product (id = UUID.randomUUID(),
-            supplierId = supplier.id , hmsArtNr = "267914", identifier = "123", title = "Dette er et produkt",
+        val supplier = SupplierDTO(
+            id = UUID.randomUUID(), identifier = "341", name = "leverandør 1", info = SupplierInfo(),
+            createdBy = GDB, updatedBy = GDB, updated = LocalDateTime.now(), created = LocalDateTime.now()
+        )
+        val product = Product(
+            id = UUID.randomUUID(),
+            supplierId = supplier.id, hmsArtNr = "267914", identifier = "123", title = "Dette er et produkt",
             articleName = "Product 1", supplierRef = "123", isoCategory = "123456", seriesUUID = UUID.randomUUID(),
-            attributes = Attributes (
-                manufacturer =  "Samsung",
-                compatibleWith = CompatibleWith(seriesIds = setOf(UUID.randomUUID()))
+            attributes = Attributes(
+                manufacturer = "Samsung",
+                compatibleWith = CompatibleWith(seriesIds = setOf(UUID.randomUUID())),
+                documentUrls = listOf(
+                    DocumentUrl(
+                        url = "https://example.com/doc.pdf",
+                        title = "Produktdokumentasjon",
+                    )
+                )
+
             ),
             createdBy = GDB,
             updatedBy = GDB
         )
-        val product2 = Product (id = UUID.randomUUID(),
+        val product2 = Product(
+            id = UUID.randomUUID(),
             supplierId = supplier.id, hmsArtNr = "12345A", identifier = "123", title = "Dette er et produkt",
             articleName = "Produkt1", supplierRef = "1234", isoCategory = "123456",
-            attributes = Attributes (
+            attributes = Attributes(
                 manufacturer = "Samsung",
                 compatibleWith = CompatibleWith(seriesIds = setOf(UUID.randomUUID())),
-                bestillingsordning= true
+                bestillingsordning = true
             ),
             createdBy = GDB,
             updatedBy = GDB,
@@ -41,5 +52,6 @@ class AttributeTagServiceTest(private val attributeTagService: AttributeTagServi
         val withNoBestillingsordning = attributeTagService.addBestillingsordningAttribute(product2)
         withBestillingsordning.attributes.bestillingsordning shouldBe true
         withNoBestillingsordning.attributes.bestillingsordning shouldBe false
+        withBestillingsordning.attributes.documentUrls?.isNotEmpty() shouldBe true
     }
 }
