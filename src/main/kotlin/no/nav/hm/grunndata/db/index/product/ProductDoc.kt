@@ -111,21 +111,31 @@ data class MediaDoc(
 )
 
 data class TechDataFilters(
+    val beregnetBarn: String? = null,
+    val breddeCM: Int? = null,
+    val brukervektMaksKG: Int? = null,
+    val brukervektMinKG: Int? = null,
+    val dybdeCM: Int? = null,
     val fyllmateriale: String? = null,
+    val innendorsBruk: String? = null,
+    val lengdeCM: Int? = null,
+    val materialeTrekk: String? = null,
+    val rammetype: String? = null,
+    val setebreddeCM: Int? = null,
     val setebreddeMaksCM: Int? = null,
     val setebreddeMinCM: Int? = null,
-    val brukervektMinKG: Int? = null,
-    val materialeTrekk: String? = null,
-    val setedybdeMinCM: Int? = null,
+    val setedybdeCM: Int? = null,
     val setedybdeMaksCM: Int? = null,
+    val setedybdeMinCM: Int? = null,
+    val setehoydeCM: Int? = null,
     val setehoydeMaksCM: Int? = null,
     val setehoydeMinCM: Int? = null,
+    val terskelhoydeMaksCM: Int? = null,
+    val terskelhoydeMinCM: Int? = null,
     val totalVektKG: Float? = null,
-    val lengdeCM: Int? = null,
-    val breddeCM: Int? = null,
-    val dybdeCM: Int? = null,
-    val beregnetBarn: String? = null,
-    val brukervektMaksKG: Int? = null
+    val totalbreddeCM: Int? = null,
+    val totallengdeCM: Int? = null,
+    val utendorsBruk: String? = null,
 )
 
 data class ProductSupplier(val id: String, val identifier: String, val name: String)
@@ -233,10 +243,10 @@ fun MediaInfo.toDoc(): MediaDoc = MediaDoc(
 
 fun mapTechDataFilters(data: List<TechData>): TechDataFilters {
     try {
-
         var fyllmateriale: String? = null
         var setebreddeMaksCM: Int? = null
         var setebreddeMinCM: Int? = null
+        var brukervektMaksKG: Int? = null
         var brukervektMinKG: Int? = null
         var materialeTrekk: String? = null
         var setedybdeMinCM: Int? = null
@@ -248,16 +258,26 @@ fun mapTechDataFilters(data: List<TechData>): TechDataFilters {
         var breddeCM: Int? = null
         var dybdeCM: Int? = null
         var beregnetBarn: String? = null
-        var brukervektMaksKG: Int? = null
+        var setebreddeCM: Int? = null
+        var setedybdeCM: Int? = null
+        var setehoydeCM: Int? = null
+        var innendorsBruk: String? = null
+        var utendorsBruk: String? = null
+        var rammetype: String? = null
+        var totalbreddeCM: Int? = null
+        var totallengdeCM: Int? = null
+        var terskelhoydeMaksCM: Int? = null
+        var terskelhoydeMinCM: Int? = null
         data.forEach {
             when (it.key) {
                 "Fyllmateriale" -> fyllmateriale = it.value.ifEmpty { null }
                 "Setebredde maks" -> setebreddeMaksCM = it.value.decimalToInt()
                 "Setebredde min" -> setebreddeMinCM = it.value.decimalToInt()
+                "Brukervekt maks" -> brukervektMaksKG = it.value.decimalToInt()
                 "Brukervekt min" -> brukervektMinKG = it.value.decimalToInt()
                 "Materiale i trekk" -> materialeTrekk = it.value.ifEmpty { null }
-                "Setedybde min" -> setedybdeMinCM = it.value.decimalToInt()
                 "Setedybde maks" -> setedybdeMaksCM = it.value.decimalToInt()
+                "Setedybde min" -> setedybdeMinCM = it.value.decimalToInt()
                 "Setehøyde maks" -> setehoydeMaksCM = it.value.decimalToInt()
                 "Setehøyde min" -> setehoydeMinCM = it.value.decimalToInt()
                 "Totalvekt" -> totalVektKG = it.value.decimalToFloat()
@@ -265,7 +285,16 @@ fun mapTechDataFilters(data: List<TechData>): TechDataFilters {
                 "Bredde" -> breddeCM = it.value.decimalToInt()
                 "Dybde" -> dybdeCM = it.value.decimalToInt()
                 "Beregnet på barn" -> beregnetBarn = it.value.ifEmpty { null }
-                "Brukervekt maks" -> brukervektMaksKG = it.value.decimalToInt()
+                "Setebredde" -> setebreddeCM = it.value.decimalToInt()
+                "Setedybde" -> setedybdeCM = it.value.decimalToInt()
+                "Setehøyde" -> setehoydeCM = it.value.decimalToInt()
+                "Innendørs bruk" -> innendorsBruk = it.value.ifEmpty { null }
+                "Utendørs bruk" -> utendorsBruk = it.value.ifEmpty { null }
+                "Rammetype" -> rammetype = it.value.ifEmpty { null }
+                "Totalbredde" -> totalbreddeCM = it.value.decimalToInt()
+                "Totallengde" -> totallengdeCM = it.value.decimalToInt()
+                "Terkselhøyde maks" -> terskelhoydeMaksCM = it.value.decimalToInt()
+                "Terkselhøyde min" -> terskelhoydeMinCM = it.value.decimalToInt()
             }
         }
         return TechDataFilters(
@@ -283,7 +312,17 @@ fun mapTechDataFilters(data: List<TechData>): TechDataFilters {
             breddeCM = breddeCM,
             dybdeCM = dybdeCM,
             beregnetBarn = beregnetBarn,
-            brukervektMaksKG = brukervektMaksKG
+            brukervektMaksKG = brukervektMaksKG,
+            setebreddeCM = setebreddeCM,
+            setedybdeCM = setedybdeCM,
+            setehoydeCM = setehoydeCM,
+            innendorsBruk = innendorsBruk,
+            utendorsBruk = utendorsBruk,
+            rammetype = rammetype,
+            totalbreddeCM = totalbreddeCM,
+            totallengdeCM = totallengdeCM,
+            terskelhoydeMaksCM = terskelhoydeMaksCM,
+            terskelhoydeMinCM = terskelhoydeMinCM,
         )
     } catch (e: Exception) {
         println("Error mapping techdatafilters ${e.message}")

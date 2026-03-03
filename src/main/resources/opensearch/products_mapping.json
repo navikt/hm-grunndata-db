@@ -239,16 +239,31 @@
         "fyllmateriale": {
           "type": "keyword"
         },
+        "innendorsBruk": {
+          "type": "keyword"
+        },
+        "iso": {
+          "type": "keyword"
+        },
         "lengdeCM": {
           "type": "long"
         },
         "materialeTrekk": {
           "type": "keyword"
         },
+        "rammetype": {
+          "type": "keyword"
+        },
+        "setebreddeCM": {
+          "type": "long"
+        },
         "setebreddeMaksCM": {
           "type": "long"
         },
         "setebreddeMinCM": {
+          "type": "long"
+        },
+        "setedybdeCM": {
           "type": "long"
         },
         "setedybdeMaksCM": {
@@ -257,16 +272,31 @@
         "setedybdeMinCM": {
           "type": "long"
         },
+        "setehoydeCM": {
+          "type": "long"
+        },
         "setehoydeMaksCM": {
           "type": "long"
         },
         "setehoydeMinCM": {
           "type": "long"
         },
+        "terskelhoydeMaksCM": {
+          "type": "long"
+        },
+        "terskelhoydeMinCM": {
+          "type": "long"
+        },
+        "totalbreddeCM": {
+          "type": "float"
+        },
+        "totallengdeCM": {
+          "type": "float"
+        },
         "totalVektKG": {
           "type": "float"
         },
-        "iso": {
+        "utendorsBruk": {
           "type": "keyword"
         }
       }
