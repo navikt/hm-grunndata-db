@@ -19,6 +19,7 @@ import no.nav.hm.rapids_rivers.micronaut.RiverHead
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import no.nav.hm.grunndata.rapid.dto.CompatibleWith
+import no.nav.hm.grunndata.rapid.dto.SeriesStatus
 
 @Context
 @Requires(bean = KafkaRapid::class)
@@ -52,7 +53,7 @@ class SeriesRegistrationRiver(
         val dto = objectMapper.treeToValue(packet["payload"], SeriesRegistrationRapidDTO::class.java)
         LOG.info("got series registration id: ${dto.id} eventId $eventId eventTime: $createdTime")
         runBlocking {
-            if (dto.draftStatus == DraftStatus.DONE && dto.adminStatus == AdminStatus.APPROVED) {
+            if (dto.canCreateEvent()) {
                 val saved = seriesService.saveAndPushTokafka(dto.toEntity(), EventName.syncedRegisterSeriesV1)
                 val productsInSeries = productService.findBySeriesUUID(dto.id)
                 productsInSeries.forEach { product ->
@@ -80,6 +81,9 @@ class SeriesRegistrationRiver(
             }
         }
     }
+
+    fun SeriesRegistrationRapidDTO.canCreateEvent(): Boolean =
+        (draftStatus == DraftStatus.DONE && adminStatus == AdminStatus.APPROVED) || status == SeriesStatus.DELETED
 
 }
 

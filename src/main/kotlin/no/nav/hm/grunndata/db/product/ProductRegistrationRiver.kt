@@ -52,7 +52,7 @@ class ProductRegistrationRiver(
                     ", accessory: ${dto.productDTO.accessory}, sparePart: ${dto.productDTO.sparePart}"
         )
         runBlocking {
-            if (dto.draftStatus == DraftStatus.DONE && (dto.adminStatus == AdminStatus.APPROVED || dto.registrationStatus == RegistrationStatus.DELETED)) {
+            if (dto.canCreateEvent()) {
                 // series and products need to be merged before sending down the river
                 val riverProduct = dto.productDTO.toEntity()
                 seriesService.findById(riverProduct.seriesUUID!!)?.let { series ->
@@ -99,5 +99,8 @@ class ProductRegistrationRiver(
 
         }
     }
+
+    fun ProductRegistrationRapidDTO.canCreateEvent(): Boolean =
+        (draftStatus == DraftStatus.DONE && adminStatus == AdminStatus.APPROVED) || registrationStatus == RegistrationStatus.DELETED
 }
 
