@@ -248,11 +248,26 @@
         "lengdeCM": {
           "type": "long"
         },
+        "madrasslengdeMaksCM": {
+          "type": "long"
+        },
+        "madrasslengdeMinCM": {
+          "type": "long"
+        },
+        "madrassbreddeMaksCM": {
+          "type": "long"
+        },
+        "madrassbreddeMinCM": {
+          "type": "long"
+        },
         "materialeTrekk": {
           "type": "keyword"
         },
         "rammetype": {
           "type": "keyword"
+        },
+        "ryggstottebreddeCM": {
+          "type": "long"
         },
         "setebreddeCM": {
           "type": "long"
@@ -281,6 +296,12 @@
         "setehoydeMinCM": {
           "type": "long"
         },
+        "skrittlengdeMaksCM": {
+          "type": "long"
+        },
+        "skrittlengdeMinCM": {
+          "type": "long"
+        },
         "terskelhoydeMaksCM": {
           "type": "long"
         },
@@ -288,10 +309,10 @@
           "type": "long"
         },
         "totalbreddeCM": {
-          "type": "float"
+          "type": "long"
         },
         "totallengdeCM": {
-          "type": "float"
+          "type": "long"
         },
         "totalVektKG": {
           "type": "float"

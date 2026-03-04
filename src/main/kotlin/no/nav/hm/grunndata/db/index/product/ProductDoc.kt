@@ -139,6 +139,13 @@ data class TechDataFilters(
     val totalbreddeCM: Int? = null,
     val totallengdeCM: Int? = null,
     val utendorsBruk: String? = null,
+    val skrittlengdeMaksCM: Int? = null,
+    val skrittlengdeMinCM: Int? = null,
+    val madrasslengdeMaksCM: Int? = null,
+    val madrasslengdeMinCM: Int? = null,
+    val madrassbreddeMaksCM: Int? = null,
+    val madrassbreddeMinCM: Int? = null,
+    val ryggstottebreddeCM: Int? = null,
 )
 
 data class ProductSupplier(val id: String, val identifier: String, val name: String)
@@ -246,86 +253,41 @@ fun MediaInfo.toDoc(): MediaDoc = MediaDoc(
 
 fun mapTechDataFilters(data: List<TechData>): TechDataFilters {
     try {
-        var fyllmateriale: String? = null
-        var setebreddeMaksCM: Int? = null
-        var setebreddeMinCM: Int? = null
-        var brukervektMaksKG: Int? = null
-        var brukervektMinKG: Int? = null
-        var materialeTrekk: String? = null
-        var setedybdeMinCM: Int? = null
-        var setedybdeMaksCM: Int? = null
-        var setehoydeMaksCM: Int? = null
-        var setehoydeMinCM: Int? = null
-        var totalVektKG: Float? = null
-        var lengdeCM: Int? = null
-        var breddeCM: Int? = null
-        var dybdeCM: Int? = null
-        var beregnetBarn: String? = null
-        var setebreddeCM: Int? = null
-        var setedybdeCM: Int? = null
-        var setehoydeCM: Int? = null
-        var innendorsBruk: String? = null
-        var utendorsBruk: String? = null
-        var rammetype: String? = null
-        var totalbreddeCM: Int? = null
-        var totallengdeCM: Int? = null
-        var terskelhoydeMaksCM: Int? = null
-        var terskelhoydeMinCM: Int? = null
-        data.forEach {
-            when (it.key) {
-                "Fyllmateriale" -> fyllmateriale = it.value.ifEmpty { null }
-                "Setebredde maks" -> setebreddeMaksCM = it.value.decimalToInt()
-                "Setebredde min" -> setebreddeMinCM = it.value.decimalToInt()
-                "Brukervekt maks" -> brukervektMaksKG = it.value.decimalToInt()
-                "Brukervekt min" -> brukervektMinKG = it.value.decimalToInt()
-                "Materiale i trekk" -> materialeTrekk = it.value.ifEmpty { null }
-                "Setedybde maks" -> setedybdeMaksCM = it.value.decimalToInt()
-                "Setedybde min" -> setedybdeMinCM = it.value.decimalToInt()
-                "Setehøyde maks" -> setehoydeMaksCM = it.value.decimalToInt()
-                "Setehøyde min" -> setehoydeMinCM = it.value.decimalToInt()
-                "Totalvekt" -> totalVektKG = it.value.decimalToFloat()
-                "Lengde" -> lengdeCM = it.value.decimalToInt()
-                "Bredde" -> breddeCM = it.value.decimalToInt()
-                "Dybde" -> dybdeCM = it.value.decimalToInt()
-                "Beregnet på barn" -> beregnetBarn = it.value.ifEmpty { null }
-                "Setebredde" -> setebreddeCM = it.value.decimalToInt()
-                "Setedybde" -> setedybdeCM = it.value.decimalToInt()
-                "Setehøyde" -> setehoydeCM = it.value.decimalToInt()
-                "Innendørs bruk" -> innendorsBruk = it.value.ifEmpty { null }
-                "Utendørs bruk" -> utendorsBruk = it.value.ifEmpty { null }
-                "Rammetype" -> rammetype = it.value.ifEmpty { null }
-                "Totalbredde" -> totalbreddeCM = it.value.decimalToInt()
-                "Totallengde" -> totallengdeCM = it.value.decimalToInt()
-                "Terkselhøyde maks" -> terskelhoydeMaksCM = it.value.decimalToInt()
-                "Terkselhøyde min" -> terskelhoydeMinCM = it.value.decimalToInt()
-            }
-        }
+        val techDataMap = data.associate { it.key to it.value }
+
         return TechDataFilters(
-            fyllmateriale = fyllmateriale,
-            setebreddeMaksCM = setebreddeMaksCM,
-            setebreddeMinCM = setebreddeMinCM,
-            brukervektMinKG = brukervektMinKG,
-            materialeTrekk = materialeTrekk,
-            setedybdeMinCM = setedybdeMinCM,
-            setedybdeMaksCM = setedybdeMaksCM,
-            setehoydeMaksCM = setehoydeMaksCM,
-            setehoydeMinCM = setehoydeMinCM,
-            totalVektKG = totalVektKG,
-            lengdeCM = lengdeCM,
-            breddeCM = breddeCM,
-            dybdeCM = dybdeCM,
-            beregnetBarn = beregnetBarn,
-            brukervektMaksKG = brukervektMaksKG,
-            setebreddeCM = setebreddeCM,
-            setedybdeCM = setedybdeCM,
-            setehoydeCM = setehoydeCM,
-            innendorsBruk = innendorsBruk,
-            utendorsBruk = utendorsBruk,
-            rammetype = rammetype,
-            totalbreddeCM = totalbreddeCM,
-            totallengdeCM = totallengdeCM,
-            terskelhoydeMaksCM = terskelhoydeMaksCM,
-            terskelhoydeMinCM = terskelhoydeMinCM,
+            fyllmateriale = techDataMap["Fyllmateriale"]?.ifEmpty { null },
+            setebreddeMaksCM = techDataMap["Setebredde maks"]?.decimalToInt(),
+            setebreddeMinCM = techDataMap["Setebredde min"]?.decimalToInt(),
+            brukervektMinKG = techDataMap["Brukervekt min"]?.decimalToInt(),
+            materialeTrekk = techDataMap["Materiale i trekk"]?.ifEmpty { null },
+            setedybdeMinCM = techDataMap["Setedybde min"]?.decimalToInt(),
+            setedybdeMaksCM = techDataMap["Setedybde maks"]?.decimalToInt(),
+            setehoydeMaksCM = techDataMap["Setehøyde maks"]?.decimalToInt(),
+            setehoydeMinCM = techDataMap["Setehøyde min"]?.decimalToInt(),
+            totalVektKG = techDataMap["Totalvekt"]?.decimalToFloat(),
+            lengdeCM = techDataMap["Lengde"]?.decimalToInt(),
+            breddeCM = techDataMap["Bredde"]?.decimalToInt(),
+            dybdeCM = techDataMap["Dybde"]?.decimalToInt(),
+            beregnetBarn = techDataMap["Beregnet på barn"]?.ifEmpty { null },
+            brukervektMaksKG = techDataMap["Brukervekt maks"]?.decimalToInt(),
+            setebreddeCM = techDataMap["Setebredde"]?.decimalToInt(),
+            setedybdeCM = techDataMap["Setedybde"]?.decimalToInt(),
+            setehoydeCM = techDataMap["Setehøyde"]?.decimalToInt(),
+            innendorsBruk = techDataMap["Innendørs bruk"]?.ifEmpty { null },
+            utendorsBruk = techDataMap["Utendørs bruk"]?.ifEmpty { null },
+            rammetype = techDataMap["Rammetype"]?.ifEmpty { null },
+            totalbreddeCM = techDataMap["Totalbredde"]?.decimalToInt(),
+            totallengdeCM = techDataMap["Totallengde"]?.decimalToInt(),
+            terskelhoydeMaksCM = techDataMap["Terkselhøyde maks"]?.decimalToInt(),
+            terskelhoydeMinCM = techDataMap["Terkselhøyde min"]?.decimalToInt(),
+            skrittlengdeMaksCM = techDataMap["Skrittlengde maks"]?.decimalToInt(),
+            skrittlengdeMinCM = techDataMap["Skrittlengde min"]?.decimalToInt(),
+            madrasslengdeMaksCM = techDataMap["Madrass lengde maks"]?.decimalToInt(),
+            madrasslengdeMinCM = techDataMap["Madrass lengde min"]?.decimalToInt(),
+            madrassbreddeMaksCM = techDataMap["Madrass bredde maks"]?.decimalToInt(),
+            madrassbreddeMinCM = techDataMap["Madrass bredde min"]?.decimalToInt(),
+            ryggstottebreddeCM = techDataMap["Ryggstøtte bredde"]?.decimalToInt(),
         )
     } catch (e: Exception) {
         LOG.error("Error mapping techdatafilters ${e.message}", e)
