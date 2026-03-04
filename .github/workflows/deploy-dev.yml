@@ -1,4 +1,4 @@
-name: build-deploy-dev v2
+name: build-deploy-dev
 on:
   push:
     paths-ignore:
