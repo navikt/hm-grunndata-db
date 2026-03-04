@@ -18,8 +18,11 @@ import no.nav.hm.grunndata.rapid.dto.ProductStatus
 import no.nav.hm.grunndata.rapid.dto.Produkttype
 import no.nav.hm.grunndata.rapid.dto.TechData
 import no.nav.hm.grunndata.rapid.dto.WorksWith
+import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.util.UUID
+
+private val LOG = LoggerFactory.getLogger(ProductDoc::class.java)
 
 data class ProductDoc(
     override val id: String,
@@ -325,10 +328,12 @@ fun mapTechDataFilters(data: List<TechData>): TechDataFilters {
             terskelhoydeMinCM = terskelhoydeMinCM,
         )
     } catch (e: Exception) {
-        println("Error mapping techdatafilters ${e.message}")
+        LOG.error("Error mapping techdatafilters ${e.message}", e)
         return TechDataFilters()
     }
 }
 
-private fun String.decimalToInt(): Int = if (this.isNotEmpty()) substringBeforeLast(".").toInt() else 0
-private fun String.decimalToFloat(): Float = if (this.isNotEmpty()) this.toFloat() else 0.0F
+private fun String.decimalToInt(): Int = if (this.isNotEmpty()) normalizeDecimalMark().substringBeforeLast(".").toInt() else 0
+private fun String.decimalToFloat(): Float = if (this.isNotEmpty()) normalizeDecimalMark().toFloat() else 0.0F
+
+private fun String.normalizeDecimalMark() = replace(",", ".")
