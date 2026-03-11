@@ -248,10 +248,16 @@
         "lengdeCM": {
           "type": "long"
         },
+        "madrasslengdeCM": {
+          "type": "long"
+        },
         "madrasslengdeMaksCM": {
           "type": "long"
         },
         "madrasslengdeMinCM": {
+          "type": "long"
+        },
+        "madrassbreddeCM": {
           "type": "long"
         },
         "madrassbreddeMaksCM": {
