@@ -239,6 +239,15 @@
         "fyllmateriale": {
           "type": "keyword"
         },
+        "gulvmontert": {
+          "type": "keyword"
+        },
+        "hoydereguleringElektrisk": {
+          "type": "keyword"
+        },
+        "hoydereguleringHydraulisk": {
+          "type": "keyword"
+        },
         "innendorsBruk": {
           "type": "keyword"
         },
@@ -246,6 +255,15 @@
           "type": "keyword"
         },
         "lengdeCM": {
+          "type": "long"
+        },
+        "loftehoydeCM": {
+          "type": "long"
+        },
+        "loftehoydeMaksCM": {
+          "type": "long"
+        },
+        "loftehoydeMinCM": {
           "type": "long"
         },
         "madrasslengdeCM": {
@@ -270,6 +288,9 @@
           "type": "keyword"
         },
         "rammetype": {
+          "type": "keyword"
+        },
+        "rettloft": {
           "type": "keyword"
         },
         "ryggstottebreddeCM": {
@@ -302,6 +323,9 @@
         "setehoydeMinCM": {
           "type": "long"
         },
+        "skraloft": {
+          "type": "keyword"
+        },
         "skrittlengdeMaksCM": {
           "type": "long"
         },
@@ -324,6 +348,9 @@
           "type": "float"
         },
         "utendorsBruk": {
+          "type": "keyword"
+        },
+        "veggmontert": {
           "type": "keyword"
         }
       }

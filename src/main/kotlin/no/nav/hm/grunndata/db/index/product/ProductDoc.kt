@@ -148,6 +148,16 @@ data class TechDataFilters(
     val madrassbreddeMaksCM: Int? = null,
     val madrassbreddeMinCM: Int? = null,
     val ryggstottebreddeCM: Int? = null,
+    val hoydereguleringElektrisk: String? = null,
+    val hoydereguleringHydraulisk: String? = null,
+    val loftehoydeCM: Int? = null,
+    val loftehoydeMaksCM: Int? = null,
+    val loftehoydeMinCM: Int? = null,
+    val veggmontert: String? = null,
+    val gulvmontert: String? = null,
+    val rettloft: String? = null,
+    val skraloft: String? = null,
+
 )
 
 data class ProductSupplier(val id: String, val identifier: String, val name: String)
@@ -292,6 +302,15 @@ fun mapTechDataFilters(data: List<TechData>): TechDataFilters {
             madrassbreddeMaksCM = techDataMap["Madrass bredde maks"]?.decimalToInt(),
             madrassbreddeMinCM = techDataMap["Madrass bredde min"]?.decimalToInt(),
             ryggstottebreddeCM = techDataMap["Ryggstøtte bredde"]?.decimalToInt(),
+            hoydereguleringElektrisk = techDataMap["Høyderegulering elektrisk"]?.ifEmpty { null },
+            hoydereguleringHydraulisk = techDataMap["Høyderegulering hydraulisk"]?.ifEmpty { null },
+            loftehoydeCM = techDataMap["Løftehøyde"]?.decimalToInt(),
+            loftehoydeMaksCM = techDataMap["Løftehøyde maks"]?.decimalToInt(),
+            loftehoydeMinCM = techDataMap["Løftehøyde min"]?.decimalToInt(),
+            veggmontert = techDataMap["Veggmontert"]?.ifEmpty { null },
+            gulvmontert = techDataMap["Gulvmontert"]?.ifEmpty { null },
+            rettloft = techDataMap["Rettløft"]?.ifEmpty { null },
+            skraloft = techDataMap["Skråløft"]?.ifEmpty { null }
         )
     } catch (e: Exception) {
         LOG.error("Error mapping techdatafilters ${e.message}", e)
