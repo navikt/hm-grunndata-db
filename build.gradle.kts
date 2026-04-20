@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 
 val jvmTarget = "17"
-val micronautVersion = "4.10.8"
+val micronautVersion = "4.10.10"
 val logbackEncoderVersion = "7.3"
 val postgresqlVersion = "42.7.2"
 val tcVersion = " 1.21.4"
@@ -27,7 +27,7 @@ plugins {
     kotlin("plugin.allopen") version "1.9.25"
     id("java")
     id("com.gradleup.shadow") version "9.3.1"
-    id("io.micronaut.application") version "4.6.1"
+    id("io.micronaut.application") version "4.6.2"
 }
 
 configurations.all {
@@ -77,7 +77,7 @@ dependencies {
 
     implementation("com.github.navikt:hm-micronaut-leaderelection:$leaderElectionVersion")
 
-    implementation("org.apache.httpcomponents.client5:httpclient5:5.4.1")
+    implementation("org.apache.httpcomponents.client5:httpclient5:5.4.3")
     implementation("org.opensearch.client:opensearch-java:${openSearchJavaClientVersion}")
 
     testImplementation("io.mockk:mockk:$mockkVersion")
