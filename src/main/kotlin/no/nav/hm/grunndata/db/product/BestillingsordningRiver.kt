@@ -10,7 +10,6 @@ import no.nav.hm.grunndata.rapid.dto.BestillingsordningStatus
 import no.nav.hm.grunndata.rapid.dto.rapidDTOVersion
 import no.nav.hm.grunndata.rapid.event.EventName
 import no.nav.hm.rapids_rivers.micronaut.RiverHead
-import no.nav.hm.rapids_rivers.micronaut.deadletter.DeadLetterSupport
 import org.slf4j.LoggerFactory
 
 @Context
@@ -35,7 +34,6 @@ class BestillingsordningRiver(
             .register(this)
     }
 
-    @DeadLetterSupport(packet = "packet", messageContext = "context", exceptionsToCatch = 3)
     override fun onPacket(packet: JsonMessage, context: MessageContext) {
         val eventId = packet["eventId"].asText()
         val createdTime = packet["createdTime"].asLocalDateTime()
