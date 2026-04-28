@@ -9,6 +9,7 @@ import no.nav.helse.rapids_rivers.*
 import no.nav.hm.grunndata.db.agreement.AgreementService
 import no.nav.hm.grunndata.rapid.dto.*
 import no.nav.hm.grunndata.rapid.event.EventName
+import no.nav.hm.grunndata.rapid.version.rapidDTOVersion
 import no.nav.hm.rapids_rivers.micronaut.RiverHead
 import org.slf4j.LoggerFactory
 

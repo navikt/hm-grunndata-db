@@ -8,7 +8,7 @@ import no.nav.helse.rapids_rivers.*
 import no.nav.hm.grunndata.rapid.dto.PaakrevdGodkjenningskursRegistrationRapidDTO
 import no.nav.hm.grunndata.rapid.dto.PaakrevdGodkjenningskursStatus
 import no.nav.hm.grunndata.rapid.dto.PakrevdGodkjenningskurs
-import no.nav.hm.grunndata.rapid.dto.rapidDTOVersion
+import no.nav.hm.grunndata.rapid.version.rapidDTOVersion
 import no.nav.hm.grunndata.rapid.event.EventName
 import no.nav.hm.rapids_rivers.micronaut.RiverHead
 import org.slf4j.LoggerFactory

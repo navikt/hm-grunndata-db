@@ -7,7 +7,7 @@ import kotlinx.coroutines.runBlocking
 import no.nav.helse.rapids_rivers.*
 import no.nav.hm.grunndata.rapid.dto.DigitalSoknadSortimentRegistrationRapidDTO
 import no.nav.hm.grunndata.rapid.dto.DigitalSoknadSortimentStatus
-import no.nav.hm.grunndata.rapid.dto.rapidDTOVersion
+import no.nav.hm.grunndata.rapid.version.rapidDTOVersion
 import no.nav.hm.grunndata.rapid.event.EventName
 import no.nav.hm.rapids_rivers.micronaut.RiverHead
 import org.slf4j.LoggerFactory

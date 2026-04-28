@@ -11,6 +11,7 @@ import no.nav.hm.grunndata.db.series.SeriesService
 import no.nav.hm.grunndata.db.series.mergeCompatibleWith
 import no.nav.hm.grunndata.rapid.dto.*
 import no.nav.hm.grunndata.rapid.event.EventName
+import no.nav.hm.grunndata.rapid.version.rapidDTOVersion
 import no.nav.hm.rapids_rivers.micronaut.RiverHead
 import org.slf4j.LoggerFactory
 

@@ -3,25 +3,15 @@ package no.nav.hm.grunndata.db.product
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.kotest.common.runBlocking
 import io.kotest.matchers.shouldBe
-import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
-import io.mockk.mockk
 import no.nav.hm.grunndata.db.agreement.Agreement
 import no.nav.hm.grunndata.db.agreement.AgreementService
 import no.nav.hm.grunndata.db.supplier.Supplier
 import no.nav.hm.grunndata.db.supplier.SupplierService
-import no.nav.hm.grunndata.rapid.dto.AgreementPost
-import no.nav.hm.grunndata.rapid.dto.AgreementStatus
-import no.nav.hm.grunndata.rapid.dto.Attributes
-import no.nav.hm.grunndata.rapid.dto.CompatibleWith
-import no.nav.hm.grunndata.rapid.dto.ProductAgreementRegistrationRapidDTO
-import no.nav.hm.grunndata.rapid.dto.SupplierInfo
-import no.nav.hm.grunndata.rapid.dto.SupplierStatus
-import no.nav.hm.rapids_rivers.micronaut.RapidPushService
+import no.nav.hm.grunndata.rapid.dto.*
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 import java.util.*
-import no.nav.hm.grunndata.rapid.dto.ProductAgreementStatus
 
 @MicronautTest
 class ProductAgreementRegistrationRiverSupportTest(
