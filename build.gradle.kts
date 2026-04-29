@@ -5,19 +5,20 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val jvmTarget = "17"
 val micronautVersion = "4.10.12"
-val logbackEncoderVersion = "7.3"
+val logbackEncoderVersion = "8.1"
 val postgresqlVersion = "42.7.2"
 val tcVersion = " 1.21.4"
 val mockkVersion = "1.13.4"
 val kotestVersion = "5.5.5"
-val rapidsRiversVersion = "202602191359"
+val rapidsRiversVersion = "202604231235"
 val grunndataDtoVersion = "202604280844"
 val jupiterVersion ="5.9.2"
 val flywayVersion="10.6.0"
 val leaderElectionVersion = "202405151234"
 val jakartaPersistenceVersion = "3.1.0"
-val openSearchJavaClientVersion = "2.18.0"
+val openSearchJavaClientVersion = "3.8.0"
 val opensearchTestContainerVersion = "2.1.1"
+val httpClientVersion = "5.6.1"
 
 group = "no.nav.hm"
 version = properties["version"] ?: "local-build"
@@ -88,7 +89,7 @@ dependencies {
 
     implementation("com.github.navikt:hm-micronaut-leaderelection:$leaderElectionVersion")
 
-    implementation("org.apache.httpcomponents.client5:httpclient5:5.4.3")
+    implementation("org.apache.httpcomponents.client5:httpclient5:$httpClientVersion")
     implementation("org.opensearch.client:opensearch-java:${openSearchJavaClientVersion}")
 
     testImplementation("io.mockk:mockk:$mockkVersion")
@@ -97,6 +98,7 @@ dependencies {
 
     testImplementation("org.junit.jupiter:junit-jupiter-params:$jupiterVersion")
     testImplementation("org.testcontainers:postgresql:${tcVersion}")
+    testImplementation("org.apache.commons:commons-lang3:3.18.0")
     testImplementation("org.opensearch:opensearch-testcontainers:${opensearchTestContainerVersion}")
 }
 
