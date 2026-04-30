@@ -44,7 +44,7 @@ services:
     networks:
       - grunndata-net
   opensearchdb:
-    image: opensearchproject/opensearch:2.17.1
+    image: opensearchproject/opensearch:3.3.0
     hostname: opensearch
     ports:
       - 9200:9200
@@ -61,7 +61,7 @@ services:
   dashboardsdb:
     depends_on:
       - opensearchdb
-    image: opensearchproject/opensearch-dashboards:2.17.1
+    image: opensearchproject/opensearch-dashboards:3.3.0
     ports:
       - 5601:5601
     environment:
