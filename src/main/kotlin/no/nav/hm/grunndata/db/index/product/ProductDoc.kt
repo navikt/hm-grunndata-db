@@ -218,7 +218,7 @@ fun ProductRapidDTO.toDoc(isoCategoryService: IsoCategoryService, labelService: 
         hasAgreement = onlyActiveAgreements.isNotEmpty(),
         mainAgreements = mainAgreements.map { it.toDoc() },
         hasPreviousAgreement = previousAgreements.isNotEmpty(),
-        filters = mapTechDataFilters(techData)
+        filters = mapTechDataFilters(dataDoc)
     )
 
 
@@ -285,7 +285,7 @@ fun MediaInfo.toDoc(): MediaDoc = MediaDoc(
     uri = uri, priority = priority, type = type, text = text, source = source
 )
 
-fun mapTechDataFilters(data: List<TechData>): TechDataFilters {
+fun mapTechDataFilters(data: List<TechDataDoc>): TechDataFilters {
     try {
         val techDataMap = data.associate { it.key to it.value }
 
