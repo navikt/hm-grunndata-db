@@ -3,6 +3,8 @@ package no.nav.hm.grunndata.db.index.product
 import no.nav.hm.grunndata.db.index.SearchDoc
 import no.nav.hm.grunndata.db.index.agreement.AgreementLabels
 import no.nav.hm.grunndata.db.iso.IsoCategoryService
+import no.nav.hm.grunndata.db.techlabel.TechLabelDTO
+import no.nav.hm.grunndata.db.techlabel.TechLabelService
 import no.nav.hm.grunndata.rapid.dto.AgreementInfo
 import no.nav.hm.grunndata.rapid.dto.AlternativeFor
 import no.nav.hm.grunndata.rapid.dto.Attributes
@@ -45,7 +47,7 @@ data class ProductDoc(
     val sparePart: Boolean = false,
     val main: Boolean = !(accessory || sparePart),
     val seriesId: String? = null,
-    val data: List<TechData> = emptyList(),
+    val data: List<TechDataDoc> = emptyList(),
     val media: List<MediaDoc> = emptyList(),
     val created: LocalDateTime,
     val updated: LocalDateTime,
@@ -61,6 +63,13 @@ data class ProductDoc(
     override fun isDelete(): Boolean = status == ProductStatus.DELETED
 }
 
+
+data class TechDataDoc (
+    val key:    String,
+    val value:  String,
+    val unit:   String,
+    val type:   String,
+)
 
 data class AgreementInfoDoc(
     val id: UUID,
@@ -162,7 +171,7 @@ data class TechDataFilters(
 
 data class ProductSupplier(val id: String, val identifier: String, val name: String)
 
-fun ProductRapidDTO.toDoc(isoCategoryService: IsoCategoryService): ProductDoc = try {
+fun ProductRapidDTO.toDoc(isoCategoryService: IsoCategoryService, labelService: TechLabelService): ProductDoc = try {
     val (onlyActiveAgreements, previousAgreements) =
         agreements.partition {
             it.published!!.isBefore(LocalDateTime.now())
@@ -172,6 +181,9 @@ fun ProductRapidDTO.toDoc(isoCategoryService: IsoCategoryService): ProductDoc = 
     val mainAgreements = onlyActiveAgreements.filter { it.mainProduct }
     val iso = isoCategoryService.lookUpCode(isoCategory) ?: isoCategoryService.getClosestLevelInBranch(isoCategory)
     val internationalIso = isoCategoryService.lookUpCode(isoCategory.take(6))
+    val labels = labelService.fetchLabelsByIsoCode(isoCategory)
+    val dataDoc = washDataLabels(labels)
+
     ProductDoc(
         id = id.toString(),
         supplier = ProductSupplier(
@@ -195,7 +207,7 @@ fun ProductRapidDTO.toDoc(isoCategoryService: IsoCategoryService): ProductDoc = 
         sparePart = sparePart,
         main = mainProduct,
         seriesId = seriesUUID?.toString(),
-        data = techData,
+        data = dataDoc,
         media = media.map { it.toDoc() }.sortedBy { it.priority },
         created = created,
         updated = updated,
@@ -214,6 +226,16 @@ fun ProductRapidDTO.toDoc(isoCategoryService: IsoCategoryService): ProductDoc = 
     println("Error while mapping id:$id  and iso: $isoCategory")
     throw e
 }
+
+private fun ProductRapidDTO.washDataLabels(labels: List<TechLabelDTO>): List<TechDataDoc> =
+    techData.filter { it.value.isNotEmpty() }.map { data ->
+        labels.find { it.label == data.key }?.let { l ->
+            val valueWash = if (l.type == "L") {
+                if (data.value.lowercase() == "ja") "Ja" else "Nei"
+            } else data.value
+            TechDataDoc(key = data.key, value = valueWash, unit = data.unit, type = l.type)
+        }
+    }.filterNotNull()
 
 fun AgreementInfo.toDoc(): AgreementInfoDoc = AgreementInfoDoc(
     id = id,
