@@ -7,6 +7,7 @@ import io.mockk.mockk
 import jakarta.inject.Singleton
 import no.nav.hm.grunndata.db.index.OpensearchIndexer
 import no.nav.hm.grunndata.db.iso.IsoCategoryService
+import no.nav.hm.grunndata.db.techlabel.TechLabelService
 import no.nav.hm.grunndata.rapid.dto.Attributes
 import no.nav.hm.grunndata.rapid.dto.IsoCategoryDTO
 import no.nav.hm.grunndata.rapid.dto.MediaInfo
@@ -53,5 +54,9 @@ class MockFactory {
     @Singleton
     @Replaces
     fun mockOpensearchIndexer(): OpensearchIndexer = mockk<OpensearchIndexer>(relaxed = true)
+
+    @Singleton
+    @Replaces
+    fun mockTechLabelService(): TechLabelService = mockk(relaxed = true)
 
 }
