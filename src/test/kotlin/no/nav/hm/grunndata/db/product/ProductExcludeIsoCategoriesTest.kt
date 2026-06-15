@@ -1,6 +1,5 @@
 package no.nav.hm.grunndata.db.product
-
-import io.kotest.common.runBlocking
+import kotlinx.coroutines.runBlocking
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldNotContain
 import io.kotest.matchers.shouldBe

@@ -5,12 +5,19 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import io.micronaut.context.annotation.Factory
 import io.micronaut.context.event.BeanCreatedEvent
 import io.micronaut.context.event.BeanCreatedEventListener
 import jakarta.inject.Singleton
 
-@Singleton
+@Factory
 class JacksonConfig : BeanCreatedEventListener<ObjectMapper> {
+
+    @Singleton
+    fun objectMapper(): ObjectMapper {
+        return ObjectMapper()
+    }
+
 
     override fun onCreated(event: BeanCreatedEvent<ObjectMapper>): ObjectMapper {
         val objectMapper = event.bean

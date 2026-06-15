@@ -3,11 +3,11 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 
-val jvmTarget = "17"
-val micronautVersion = "4.10.12"
+val jvmTarget = "25"
+val micronautVersion = "5.0.2"
 val logbackEncoderVersion = "8.1"
 val postgresqlVersion = "42.7.2"
-val tcVersion = " 1.21.4"
+val tcVersion = "2.0.1"
 val mockkVersion = "1.13.4"
 val kotestVersion = "5.5.5"
 val rapidsRiversVersion = "202604231235"
@@ -17,19 +17,19 @@ val flywayVersion="10.6.0"
 val leaderElectionVersion = "202405151234"
 val jakartaPersistenceVersion = "3.1.0"
 val openSearchJavaClientVersion = "3.8.0"
-val opensearchTestContainerVersion = "2.1.1"
+val opensearchTestContainerVersion = "2.2.0"
 val httpClientVersion = "5.6.1"
 
 group = "no.nav.hm"
 version = properties["version"] ?: "local-build"
 
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "2.1.21"
-    id("org.jetbrains.kotlin.plugin.allopen") version "2.1.21"
+    id("org.jetbrains.kotlin.jvm") version "2.3.0"
+    id("org.jetbrains.kotlin.plugin.allopen") version "2.3.0"
     id("java")
     id("com.gradleup.shadow") version "9.3.1"
-    id("io.micronaut.application") version "4.6.2"
-    id("com.google.devtools.ksp") version "2.1.21-2.0.1"
+    id("io.micronaut.application") version "5.0.0"
+    id("com.google.devtools.ksp") version "2.3.0"
 }
 
 configurations.all {
@@ -54,7 +54,9 @@ dependencies {
     api("net.logstash.logback:logstash-logback-encoder:$logbackEncoderVersion")
 
     runtimeOnly("org.yaml:snakeyaml")
-    implementation("io.micronaut:micronaut-jackson-databind")
+
+    implementation("com.fasterxml.jackson.core:jackson-databind")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     // coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
@@ -97,9 +99,10 @@ dependencies {
     testImplementation("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
 
     testImplementation("org.junit.jupiter:junit-jupiter-params:$jupiterVersion")
-    testImplementation("org.testcontainers:postgresql:${tcVersion}")
+    testImplementation("org.testcontainers:testcontainers-postgresql:${tcVersion}")
     testImplementation("org.apache.commons:commons-lang3:3.18.0")
     testImplementation("org.opensearch:opensearch-testcontainers:${opensearchTestContainerVersion}")
+    testImplementation("io.micronaut:micronaut-jackson-databind")
 }
 
 micronaut {
@@ -142,7 +145,7 @@ tasks.withType<Test> {
 }
 
 tasks.withType<Wrapper> {
-    gradleVersion = "8.11"
+    gradleVersion = "9.1.0"
 }
 
 repositories {

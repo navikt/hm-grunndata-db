@@ -1,9 +1,10 @@
 package no.nav.hm.grunndata.db.agreement
 
-import io.kotest.common.runBlocking
+
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
+import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.rapid.dto.AgreementPost
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime

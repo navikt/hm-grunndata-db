@@ -1,9 +1,9 @@
 package no.nav.hm.grunndata.db.product
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.kotest.common.runBlocking
 import io.kotest.matchers.shouldBe
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
+import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.db.agreement.Agreement
 import no.nav.hm.grunndata.db.agreement.AgreementService
 import no.nav.hm.grunndata.db.supplier.Supplier
