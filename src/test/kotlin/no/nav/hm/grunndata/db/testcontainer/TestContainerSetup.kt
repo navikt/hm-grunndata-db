@@ -8,6 +8,7 @@ object TestDbContainer {
         withDatabaseName("postgres")
         withUsername("postgres")
         withPassword("postgres")
+        withReuse(true)
         start()
     }
 
