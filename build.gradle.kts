@@ -57,6 +57,7 @@ dependencies {
 
     implementation("com.fasterxml.jackson.core:jackson-databind")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("io.micronaut:micronaut-jackson-databind")
 
     // coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
@@ -102,7 +103,7 @@ dependencies {
     testImplementation("org.testcontainers:testcontainers-postgresql:${tcVersion}")
     testImplementation("org.apache.commons:commons-lang3:3.18.0")
     testImplementation("org.opensearch:opensearch-testcontainers:${opensearchTestContainerVersion}")
-    testImplementation("io.micronaut:micronaut-jackson-databind")
+
 }
 
 micronaut {

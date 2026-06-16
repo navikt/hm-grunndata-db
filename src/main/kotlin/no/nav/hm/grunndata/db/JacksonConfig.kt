@@ -18,8 +18,8 @@ class JacksonConfig : BeanCreatedEventListener<ObjectMapper> {
         return ObjectMapper().findAndRegisterModules()
     }
 
-
     override fun onCreated(event: BeanCreatedEvent<ObjectMapper>): ObjectMapper {
+        LOG.debug("Initialized JacksonConfig")
         val objectMapper = event.bean
         objectMapper.registerModule(JavaTimeModule())
             .disable(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS)
@@ -28,5 +28,9 @@ class JacksonConfig : BeanCreatedEventListener<ObjectMapper> {
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
             .configure(SerializationFeature.INDENT_OUTPUT, false)
         return objectMapper
+    }
+
+    companion object {
+        private val LOG = org.slf4j.LoggerFactory.getLogger(JacksonConfig::class.java)
     }
 }
