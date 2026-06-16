@@ -85,7 +85,7 @@ jackson:
 
 datasources:
   default:
-    url: ${DB_JDBC_URL:`jdbc:tc:postgresql:14:///gdb?TC_TMPFS=/testtmpfs:rw&TC_REUSABLE=true`}
+    url: ${DB_JDBC_URL:`jdbc:tc:postgresql:15:///gdb?TC_TMPFS=/testtmpfs:rw&TC_REUSABLE=true`}
     driverClassName: ${DB_DRIVER:org.testcontainers.jdbc.ContainerDatabaseDriver}
     username: ${DB_USERNAME:gdb}
     password: ${DB_PASSWORD:gdb}

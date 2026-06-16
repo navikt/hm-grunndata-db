@@ -32,11 +32,11 @@ class MockFactory {
 
     }
     @Singleton
-    @Replaces
+    @Replaces(bean = RapidPushService::class)
     fun rapidPushService(): RapidPushService = mockk(relaxed = true)
 
     @Singleton
-    @Replaces
+    @Replaces(bean = IsoCategoryService::class)
     fun mockIsoCategoryService(): IsoCategoryService = mockk<IsoCategoryService>(relaxed = true).apply {
         coEvery { lookUpCode("123456") } returns
                 IsoCategoryDTO(
@@ -48,15 +48,15 @@ class MockFactory {
     }
 
     @Singleton
-    @Replaces
+    @Replaces(bean = OpenSearchClient::class)
     fun mockOpenSearchClient(): OpenSearchClient = mockk<OpenSearchClient>(relaxed = true)
 
     @Singleton
-    @Replaces
+    @Replaces(bean = OpensearchIndexer::class)
     fun mockOpensearchIndexer(): OpensearchIndexer = mockk<OpensearchIndexer>(relaxed = true)
 
     @Singleton
-    @Replaces
+    @Replaces(bean = TechLabelService::class)
     fun mockTechLabelService(): TechLabelService = mockk(relaxed = true)
 
 }

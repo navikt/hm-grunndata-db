@@ -15,7 +15,7 @@ class JacksonConfig : BeanCreatedEventListener<ObjectMapper> {
 
     @Singleton
     fun objectMapper(): ObjectMapper {
-        return ObjectMapper()
+        return ObjectMapper().findAndRegisterModules()
     }
 
 
