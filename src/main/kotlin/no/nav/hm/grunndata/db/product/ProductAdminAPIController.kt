@@ -1,6 +1,5 @@
 package no.nav.hm.grunndata.db.product
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.micronaut.data.model.Pageable
 import io.micronaut.data.model.Sort
 import io.micronaut.http.annotation.Body
@@ -9,6 +8,7 @@ import io.micronaut.http.annotation.Post
 import no.nav.hm.grunndata.rapid.dto.ProductRapidDTO
 import no.nav.hm.grunndata.rapid.event.EventName
 import org.slf4j.LoggerFactory
+import tools.jackson.databind.ObjectMapper
 import java.util.UUID
 
 @Controller("/internal/v1/products")

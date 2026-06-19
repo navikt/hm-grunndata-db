@@ -4,8 +4,6 @@ import io.micronaut.http.annotation.Controller
 
 import io.micronaut.http.annotation.Post
 import io.micronaut.http.annotation.QueryValue
-import io.micronaut.scheduling.TaskExecutors
-import io.micronaut.scheduling.annotation.ExecuteOn
 import no.nav.hm.grunndata.db.index.agreement.AgreementIndexer
 import no.nav.hm.grunndata.db.index.external_product.ExternalProductIndexer
 import no.nav.hm.grunndata.db.index.news.NewsIndexer

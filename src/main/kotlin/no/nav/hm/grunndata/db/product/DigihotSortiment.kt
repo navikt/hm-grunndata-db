@@ -1,13 +1,14 @@
 package no.nav.hm.grunndata.db.product
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectMapper
+
 import io.micronaut.cache.annotation.Cacheable
 import io.micronaut.context.annotation.Value
 import jakarta.inject.Singleton
 import no.nav.hm.grunndata.rapid.dto.PakrevdGodkjenningskurs
 import no.nav.hm.grunndata.rapid.dto.Produkttype
 import org.slf4j.LoggerFactory
+import tools.jackson.core.type.TypeReference
+import tools.jackson.databind.ObjectMapper
 import java.net.URI
 import java.util.UUID
 
@@ -49,12 +50,12 @@ open class DigihotSortiment(
 
     @Cacheable("digihot-sortiment-bestillingsordning")
     open fun cachedBestillingsordning(): Map<String, BestillingsordningDTO> = objectMapper
-        .readValue(URI(bestillingsordningUrl).toURL(), object : TypeReference<List<BestillingsordningDTO>>(){})
+        .readValue(URI(bestillingsordningUrl).toURL().openStream(), object : TypeReference<List<BestillingsordningDTO>>(){})
         .associateBy { it.hmsnr }
 
     @Cacheable("digihot-sortiment-digitalsoknad")
     open fun cachedDigitalSoknad(): List<SortimentDTO> =
-        objectMapper.readTree(URI(digitalSoknadUrl).toURL()).let { node ->
+        objectMapper.readTree(URI(digitalSoknadUrl).toURL().openStream()).let { node ->
             require(node.isObject) { "unexpected non-object reply from digihot-sortiment" }
             val res = mutableListOf<SortimentDTO>()
             node.properties().forEach { (key, value) ->
@@ -71,7 +72,7 @@ open class DigihotSortiment(
 
     @Cacheable("digihot-sortiment-paakrevdgodkjenningskurs")
     open fun cachedPakrevdGodkjenningskurs(): Map<String, PakrevdGodkjenningskurs> =
-        objectMapper.readValue(URI(pakrevdGodkjenningskursUrl).toURL(), object : TypeReference<List<PakrevdGodkjenningskurs>>(){}).associateBy { it.isokode }
+        objectMapper.readValue(URI(pakrevdGodkjenningskursUrl).toURL().openStream(), object : TypeReference<List<PakrevdGodkjenningskurs>>(){}).associateBy { it.isokode }
 
     @Cacheable("digihot-sortiment-produkttype")
     open fun cachedProdukttype(): Map<String, ProdukttypeDTO> =

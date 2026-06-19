@@ -5,18 +5,18 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val jvmTarget = "25"
 val micronautVersion = "5.0.2"
-val logbackEncoderVersion = "8.1"
+val logbackEncoderVersion = "9.0"
 val postgresqlVersion = "42.7.2"
 val tcVersion = "2.0.1"
 val mockkVersion = "1.13.4"
 val kotestVersion = "5.5.5"
-val rapidsRiversVersion = "202604231235"
-val grunndataDtoVersion = "202604280844"
+val rapidsRiversVersion = "202606190809"
+val grunndataDtoVersion = "202606180923"
 val jupiterVersion ="5.9.2"
 val flywayVersion="10.6.0"
 val leaderElectionVersion = "202405151234"
 val jakartaPersistenceVersion = "3.1.0"
-val openSearchJavaClientVersion = "3.8.0"
+val openSearchJavaClientVersion = "3.9.0"
 val opensearchTestContainerVersion = "2.2.0"
 val httpClientVersion = "5.6.1"
 
@@ -24,17 +24,23 @@ group = "no.nav.hm"
 version = properties["version"] ?: "local-build"
 
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "2.3.0"
-    id("org.jetbrains.kotlin.plugin.allopen") version "2.3.0"
+    id("org.jetbrains.kotlin.jvm") version "2.3.21"
+    id("org.jetbrains.kotlin.plugin.allopen") version "2.3.21"
     id("java")
     id("com.gradleup.shadow") version "9.3.1"
     id("io.micronaut.application") version "5.0.0"
-    id("com.google.devtools.ksp") version "2.3.0"
+    id("com.google.devtools.ksp") version "2.3.7"
 }
 
 configurations.all {
     resolutionStrategy {
        failOnChangingVersions()
+    }
+}
+
+kotlin {
+    sourceSets.main {
+        kotlin.srcDir("build/generated/ksp/main/classes")
     }
 }
 
@@ -48,15 +54,19 @@ allOpen {
     annotation("io.micronaut.scheduling.annotation.Scheduled")
 }
 
+configurations.all {
+    exclude(group="com.fasterxml.jackson.core", "jackson-core")
+    exclude(group="com.fasterxml.jackson.core", module= "jackson-databind")
+    exclude(group="com.fasterxml.jackson.datatype", module= "jackson-datatype-jsr310")
+    exclude(group="com.fasterxml.jackson.module", module= "jackson-module-kotlin")
+}
+
 dependencies {
 
     api("ch.qos.logback:logback-classic")
     api("net.logstash.logback:logstash-logback-encoder:$logbackEncoderVersion")
 
     runtimeOnly("org.yaml:snakeyaml")
-
-    implementation("com.fasterxml.jackson.core:jackson-databind")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("io.micronaut:micronaut-jackson-databind")
 
     // coroutines
@@ -93,7 +103,10 @@ dependencies {
     implementation("com.github.navikt:hm-micronaut-leaderelection:$leaderElectionVersion")
 
     implementation("org.apache.httpcomponents.client5:httpclient5:$httpClientVersion")
-    implementation("org.opensearch.client:opensearch-java:${openSearchJavaClientVersion}")
+    implementation("org.opensearch.client:opensearch-java:${openSearchJavaClientVersion}") {
+        exclude(group = "com.fasterxml.jackson.core", module = "jackson-core")
+        exclude(group = "com.fasterxml.jackson.core", module = "jackson-databind")
+    }
 
     testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("io.kotest:kotest-runner-junit5-jvm:$kotestVersion")

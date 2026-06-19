@@ -1,12 +1,12 @@
 package no.nav.hm.grunndata.db.index.item
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.db.index.news.NewsDoc
 import no.nav.hm.grunndata.rapid.dto.NewsStatus
 import org.junit.jupiter.api.Test
+import tools.jackson.databind.ObjectMapper
 import java.time.LocalDateTime
 import java.util.UUID
 
