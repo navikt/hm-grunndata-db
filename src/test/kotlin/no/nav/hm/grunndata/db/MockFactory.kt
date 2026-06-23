@@ -8,19 +8,9 @@ import jakarta.inject.Singleton
 import no.nav.hm.grunndata.db.index.OpensearchIndexer
 import no.nav.hm.grunndata.db.iso.IsoCategoryService
 import no.nav.hm.grunndata.db.techlabel.TechLabelService
-import no.nav.hm.grunndata.rapid.dto.Attributes
 import no.nav.hm.grunndata.rapid.dto.IsoCategoryDTO
-import no.nav.hm.grunndata.rapid.dto.MediaInfo
-import no.nav.hm.grunndata.rapid.dto.ProductRapidDTO
-import no.nav.hm.grunndata.rapid.dto.ProductStatus
-import no.nav.hm.grunndata.rapid.dto.SupplierDTO
-import no.nav.hm.grunndata.rapid.dto.SupplierInfo
-
 import no.nav.hm.rapids_rivers.micronaut.RapidPushService
 import org.opensearch.client.opensearch.OpenSearchClient
-import java.time.LocalDateTime
-import java.util.UUID
-import kotlin.apply
 
 
 @Factory
@@ -32,11 +22,11 @@ class MockFactory {
 
     }
     @Singleton
-    @Replaces
+    @Replaces(bean = RapidPushService::class)
     fun rapidPushService(): RapidPushService = mockk(relaxed = true)
 
     @Singleton
-    @Replaces
+    @Replaces(bean = IsoCategoryService::class)
     fun mockIsoCategoryService(): IsoCategoryService = mockk<IsoCategoryService>(relaxed = true).apply {
         coEvery { lookUpCode("123456") } returns
                 IsoCategoryDTO(
@@ -48,15 +38,15 @@ class MockFactory {
     }
 
     @Singleton
-    @Replaces
+    @Replaces(bean = OpenSearchClient::class)
     fun mockOpenSearchClient(): OpenSearchClient = mockk<OpenSearchClient>(relaxed = true)
 
     @Singleton
-    @Replaces
+    @Replaces(bean = OpensearchIndexer::class)
     fun mockOpensearchIndexer(): OpensearchIndexer = mockk<OpensearchIndexer>(relaxed = true)
 
     @Singleton
-    @Replaces
+    @Replaces(bean = TechLabelService::class)
     fun mockTechLabelService(): TechLabelService = mockk(relaxed = true)
 
 }

@@ -1,7 +1,6 @@
 package no.nav.hm.grunndata.db.product
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import io.kotest.common.runBlocking
+import kotlinx.coroutines.runBlocking
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
@@ -11,6 +10,7 @@ import no.nav.hm.grunndata.db.supplier.Supplier
 import no.nav.hm.grunndata.db.supplier.SupplierService
 import no.nav.hm.grunndata.rapid.dto.*
 import org.junit.jupiter.api.Test
+import tools.jackson.databind.ObjectMapper
 import java.time.LocalDateTime
 import java.util.*
 
@@ -18,7 +18,8 @@ import java.util.*
 class ProductServiceTest(private val productService: ProductService,
                          private val supplierService: SupplierService,
                          private val agreementService: AgreementService,
-                         private val objectMapper: ObjectMapper) {
+                         private val objectMapper: ObjectMapper
+) {
 
     @Test
     fun productServiceTest() {

@@ -1,10 +1,10 @@
 package no.nav.hm.grunndata.db.index.item
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.inject.Singleton
 import jakarta.transaction.Transactional
 import no.nav.hm.grunndata.db.index.OpensearchIndexer
 import no.nav.hm.grunndata.db.index.SearchDoc
+import tools.jackson.databind.ObjectMapper
 import java.time.Duration
 import java.time.LocalDateTime
 

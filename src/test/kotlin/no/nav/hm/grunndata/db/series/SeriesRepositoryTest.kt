@@ -1,6 +1,6 @@
 package no.nav.hm.grunndata.db.series
 
-import io.kotest.common.runBlocking
+import kotlinx.coroutines.runBlocking
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest

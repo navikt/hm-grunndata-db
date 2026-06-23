@@ -85,7 +85,7 @@ jackson:
 
 datasources:
   default:
-    url: ${DB_JDBC_URL:`jdbc:tc:postgresql:14:///gdb?TC_TMPFS=/testtmpfs:rw&TC_INITSCRIPT=file:src/test/resources/postgres/postgres-init.sql&TC_REUSABLE=true`}
+    url: ${DB_JDBC_URL:`jdbc:tc:postgresql:15:///gdb?TC_TMPFS=/testtmpfs:rw&TC_REUSABLE=true`}
     driverClassName: ${DB_DRIVER:org.testcontainers.jdbc.ContainerDatabaseDriver}
     username: ${DB_USERNAME:gdb}
     password: ${DB_PASSWORD:gdb}
@@ -136,7 +136,7 @@ grunndata:
     url: ${GRUNNDATA_REGISTER_URL:`http://localhost:8080/admreg`}
 
 opensearch:
-  password: ${OPEN_SEARCH_PASSWORD:T3@mM1m3!}
+  password: ${OPEN_SEARCH_PASSWORD:admin}
   user: ${OPEN_SEARCH_USERNAME:admin}
   url: ${OPEN_SEARCH_URI:`https://localhost:9200`}
 

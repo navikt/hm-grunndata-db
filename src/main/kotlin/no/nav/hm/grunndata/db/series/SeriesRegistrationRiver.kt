@@ -1,6 +1,5 @@
 package no.nav.hm.grunndata.db.series
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.micronaut.context.annotation.Context
 import io.micronaut.context.annotation.Requires
 import kotlinx.coroutines.runBlocking
@@ -20,6 +19,7 @@ import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import no.nav.hm.grunndata.rapid.dto.CompatibleWith
 import no.nav.hm.grunndata.rapid.dto.SeriesStatus
+import tools.jackson.databind.ObjectMapper
 
 @Context
 @Requires(bean = KafkaRapid::class)

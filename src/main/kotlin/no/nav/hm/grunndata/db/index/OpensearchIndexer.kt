@@ -1,7 +1,6 @@
 package no.nav.hm.grunndata.db.index
 
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.inject.Singleton
 import no.nav.hm.grunndata.db.index.item.IndexItem
 import org.opensearch.client.opensearch.OpenSearchClient
@@ -15,6 +14,7 @@ import org.opensearch.client.opensearch.indices.*
 import org.opensearch.client.opensearch.indices.ExistsRequest
 import org.opensearch.client.opensearch.indices.update_aliases.ActionBuilders
 import org.slf4j.LoggerFactory
+import tools.jackson.databind.ObjectMapper
 import java.io.StringReader
 
 @Singleton
