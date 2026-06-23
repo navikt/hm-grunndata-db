@@ -14,13 +14,13 @@ import java.util.UUID
 
 @Singleton
 open class DigihotSortiment(
-    @Value("\${digihotSortiment.bestillingsordning}")
+    @param:Value("\${digihotSortiment.bestillingsordning}")
     private val bestillingsordningUrl : String,
-    @Value("\${digihotSortiment.digitalSoknad}")
+    @param:Value("\${digihotSortiment.digitalSoknad}")
     private val digitalSoknadUrl : String,
-    @Value("\${digihotSortiment.pakrevdGodkjenningskurs}")
+    @param:Value("\${digihotSortiment.pakrevdGodkjenningskurs}")
     private val pakrevdGodkjenningskursUrl: String,
-    @Value("\${digihotSortiment.produkttype}")
+    @param:Value("\${digihotSortiment.produkttype}")
     private val produkttypeUrl: String,
     private val objectMapper: ObjectMapper,
 ) {
@@ -49,34 +49,51 @@ open class DigihotSortiment(
     }
 
     @Cacheable("digihot-sortiment-bestillingsordning")
-    open fun cachedBestillingsordning(): Map<String, BestillingsordningDTO> = objectMapper
-        .readValue(URI(bestillingsordningUrl).toURL().openStream(), object : TypeReference<List<BestillingsordningDTO>>(){})
-        .associateBy { it.hmsnr }
+    open fun cachedBestillingsordning(): Map<String, BestillingsordningDTO> {
+        URI(bestillingsordningUrl).toURL().openStream().use { stream ->
+            return objectMapper
+                .readValue(stream, object : TypeReference<List<BestillingsordningDTO>>() {})
+                .associateBy { it.hmsnr }
+        }
+    }
 
     @Cacheable("digihot-sortiment-digitalsoknad")
-    open fun cachedDigitalSoknad(): List<SortimentDTO> =
-        objectMapper.readTree(URI(digitalSoknadUrl).toURL().openStream()).let { node ->
-            require(node.isObject) { "unexpected non-object reply from digihot-sortiment" }
-            val res = mutableListOf<SortimentDTO>()
-            node.properties().forEach { (key, value) ->
-                require(value.isArray) { "unexpected non-array reply from digihot-sortiment" }
-                res.add(
-                    SortimentDTO(
-                        sortimentKategori = key!!,
-                        postIds = value!!.mapNotNull { it.at("/postId").textValue() }.map { UUID.fromString(it) },
+    open fun cachedDigitalSoknad(): List<SortimentDTO> {
+        URI(digitalSoknadUrl).toURL().openStream().use { stream ->
+            return objectMapper.readTree(stream).let { node ->
+                require(node.isObject) { "unexpected non-object reply from digihot-sortiment" }
+                val res = mutableListOf<SortimentDTO>()
+                node.properties().forEach { (key, value) ->
+                    require(value.isArray) { "unexpected non-array reply from digihot-sortiment" }
+                    res.add(
+                        SortimentDTO(
+                            sortimentKategori = key!!,
+                            postIds = value!!.mapNotNull { it.at("/postId").textValue() }.map { UUID.fromString(it) },
+                        )
                     )
-                )
+                }
+                res
             }
-            res
         }
+    }
 
     @Cacheable("digihot-sortiment-paakrevdgodkjenningskurs")
-    open fun cachedPakrevdGodkjenningskurs(): Map<String, PakrevdGodkjenningskurs> =
-        objectMapper.readValue(URI(pakrevdGodkjenningskursUrl).toURL().openStream(), object : TypeReference<List<PakrevdGodkjenningskurs>>(){}).associateBy { it.isokode }
+    open fun cachedPakrevdGodkjenningskurs(): Map<String, PakrevdGodkjenningskurs> {
+        URI(pakrevdGodkjenningskursUrl).toURL().openStream().use { stream ->
+            return objectMapper.readValue(
+                stream,
+                object : TypeReference<List<PakrevdGodkjenningskurs>>() {}).associateBy { it.isokode }
+        }
+    }
 
     @Cacheable("digihot-sortiment-produkttype")
-    open fun cachedProdukttype(): Map<String, ProdukttypeDTO> =
-        objectMapper.readValue(URI(produkttypeUrl).toURL().openStream(), object : TypeReference<List<ProdukttypeDTO>>(){}).associateBy { it.isokode }
+    open fun cachedProdukttype(): Map<String, ProdukttypeDTO> {
+        URI(produkttypeUrl).toURL().openStream().use { stream ->
+            return objectMapper.readValue(
+                stream,
+                object : TypeReference<List<ProdukttypeDTO>>() {}).associateBy { it.isokode }
+        }
+    }
 }
 
 data class BestillingsordningDTO(
