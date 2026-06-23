@@ -136,7 +136,7 @@ grunndata:
     url: ${GRUNNDATA_REGISTER_URL:`http://localhost:8080/admreg`}
 
 opensearch:
-  password: ${OPEN_SEARCH_PASSWORD:T3@mM1m3!}
+  password: ${OPEN_SEARCH_PASSWORD:git s}
   user: ${OPEN_SEARCH_USERNAME:admin}
   url: ${OPEN_SEARCH_URI:`https://localhost:9200`}
 

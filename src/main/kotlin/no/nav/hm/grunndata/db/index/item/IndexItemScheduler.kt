@@ -5,7 +5,7 @@ import io.micronaut.context.annotation.Value
 import io.micronaut.scheduling.annotation.Scheduled
 import jakarta.inject.Singleton
 import kotlinx.coroutines.runBlocking
-import no.nav.hm.grunndata.register.leaderelection.LeaderOnly
+import no.nav.hm.micronaut.leaderelection.LeaderOnly
 import java.time.Duration
 
 @Singleton

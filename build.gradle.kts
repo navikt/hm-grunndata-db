@@ -14,7 +14,7 @@ val rapidsRiversVersion = "202606190809"
 val grunndataDtoVersion = "202606180923"
 val jupiterVersion ="5.9.2"
 val flywayVersion="10.6.0"
-val leaderElectionVersion = "202405151234"
+val leaderElectionVersion = "202606231046"
 val jakartaPersistenceVersion = "3.1.0"
 val openSearchJavaClientVersion = "3.9.0"
 val opensearchTestContainerVersion = "2.2.0"
@@ -52,13 +52,6 @@ allOpen {
     annotation("io.micronaut.context.annotation.Factory")
     annotation("io.micronaut.context.annotation.Context")
     annotation("io.micronaut.scheduling.annotation.Scheduled")
-}
-
-configurations.all {
-    exclude(group="com.fasterxml.jackson.core", "jackson-core")
-    exclude(group="com.fasterxml.jackson.core", module= "jackson-databind")
-    exclude(group="com.fasterxml.jackson.datatype", module= "jackson-datatype-jsr310")
-    exclude(group="com.fasterxml.jackson.module", module= "jackson-module-kotlin")
 }
 
 dependencies {
@@ -159,7 +152,7 @@ tasks.withType<Test> {
 }
 
 tasks.withType<Wrapper> {
-    gradleVersion = "9.1.0"
+    gradleVersion = "9.3.1"
 }
 
 repositories {
