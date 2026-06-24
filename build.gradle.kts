@@ -61,7 +61,7 @@ dependencies {
 
     runtimeOnly("org.yaml:snakeyaml")
     implementation("io.micronaut:micronaut-jackson-databind")
-    implementation("tools.jackson.module:jackson-module-kotlin:3.0.0")
+    implementation("tools.jackson.module:jackson-module-kotlin")
 
     // coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
