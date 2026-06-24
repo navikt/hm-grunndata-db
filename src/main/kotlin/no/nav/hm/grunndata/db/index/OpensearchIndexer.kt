@@ -70,7 +70,7 @@ class OpensearchIndexer(private val client: OpenSearchClient, private val object
                     DeleteOperation.of { it.index(item.indexName).id(item.oid) }
                 ).build()
             } else {
-                val docMap: Map<String, Any> = objectMapper.readValue(item.payload, Map::class.java) as Map<String, Any>
+                val docMap = objectMapper.readTree(item.payload)
                 BulkOperation.Builder().index(
                     IndexOperation.of { it.index(item.indexName).id(item.oid).document(docMap) }
                 ).build()

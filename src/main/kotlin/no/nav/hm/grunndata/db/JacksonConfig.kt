@@ -22,7 +22,8 @@ class JacksonConfig() : BeanCreatedEventListener<JsonMapper.Builder> {
         LOG.info("Initialized JacksonConfig")
         event.bean
             .addModule(kotlinModule())
-            .changeDefaultPropertyInclusion{it.withValueInclusion(JsonInclude.Include.NON_NULL)}
+            .changeDefaultPropertyInclusion{incl -> incl.withValueInclusion(JsonInclude.Include.ALWAYS)}
+            .changeDefaultPropertyInclusion{incl -> incl.withContentInclusion(JsonInclude.Include.ALWAYS)}
             .disable(DateTimeFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS)
             .disable(DateTimeFeature.WRITE_DATES_AS_TIMESTAMPS)
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
