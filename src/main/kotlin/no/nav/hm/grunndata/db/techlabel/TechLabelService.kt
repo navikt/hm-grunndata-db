@@ -1,5 +1,6 @@
 package no.nav.hm.grunndata.db.techlabel
 
+import io.micronaut.cache.annotation.Cacheable
 import jakarta.inject.Singleton
 import java.time.LocalDateTime
 import java.util.UUID
@@ -7,21 +8,12 @@ import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 
 @Singleton
-class TechLabelService(
+open class TechLabelService(
     private val techLabelClient: TechLabelApiClient
 )  {
 
-    private var techLabelsByIso: Map<String, List<TechLabelDTO>>
-
     companion object {
         private val LOG = LoggerFactory.getLogger(TechLabelService::class.java)
-    }
-
-    init {
-        runBlocking {
-            techLabelsByIso = techLabelClient.fetchAllTechLabel()
-            LOG.info("Init techLabels: ${techLabelsByIso.values.size}")
-        }
     }
 
   fun fetchLabelsByIsoCode(isocode: String): List<TechLabelDTO> {
@@ -29,7 +21,7 @@ class TechLabelService(
         val techLabels: MutableList<TechLabelDTO> = mutableListOf()
         for (i in levels downTo 0) {
             val iso = isocode.substring(0, i * 2)
-            techLabels.addAll(techLabelsByIso[iso] ?: emptyList())
+            techLabels.addAll(fetchAllLabelsGroupByIso()[iso] ?: emptyList())
         }
         return techLabels.distinctBy { it.id }
     }
@@ -42,7 +34,11 @@ class TechLabelService(
         return null
     }
 
-    fun fetchAllLabels(): Map<String, List<TechLabelDTO>> = techLabelsByIso
+    @Cacheable("techlabels-all-labels")
+    open fun fetchAllLabelsGroupByIso(): Map<String, List<TechLabelDTO>> = runBlocking {
+        LOG.info("fetching all labels")
+        techLabelClient.fetchAllTechLabel()
+    }
 
 }
 

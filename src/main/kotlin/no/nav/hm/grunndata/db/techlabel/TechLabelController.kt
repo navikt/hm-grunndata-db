@@ -8,6 +8,6 @@ class TechLabelController(private val techLabelService: TechLabelService) {
 
     @Get("/")
     fun getAllTechLabels(): Map<String, List<TechLabelDTO>> =
-        techLabelService.fetchAllLabels()
+        techLabelService.fetchAllLabelsGroupByIso()
 
 }
