@@ -213,6 +213,9 @@
         "value": {
           "type": "keyword"
         },
+        "section": {
+          "type": "keyword"
+        },
         "type": {
           "type": "keyword"
         }

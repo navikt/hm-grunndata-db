@@ -18,7 +18,6 @@ import no.nav.hm.grunndata.rapid.dto.ProductAgreementStatus
 import no.nav.hm.grunndata.rapid.dto.ProductRapidDTO
 import no.nav.hm.grunndata.rapid.dto.ProductStatus
 import no.nav.hm.grunndata.rapid.dto.Produkttype
-import no.nav.hm.grunndata.rapid.dto.TechData
 import no.nav.hm.grunndata.rapid.dto.WorksWith
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
@@ -69,6 +68,7 @@ data class TechDataDoc (
     val value:  String,
     val unit:   String,
     val type:   String,
+    val section: String? = null,
 )
 
 data class AgreementInfoDoc(
@@ -182,7 +182,7 @@ fun ProductRapidDTO.toDoc(isoCategoryService: IsoCategoryService, labelService: 
     val iso = isoCategoryService.lookUpCode(isoCategory) ?: isoCategoryService.getClosestLevelInBranch(isoCategory)
     val internationalIso = isoCategoryService.lookUpCode(isoCategory.take(6))
     val labels = labelService.fetchLabelsByIsoCode(isoCategory)
-    val dataDoc = washDataLabels(labels)
+    val dataDoc = enrichTechData(labels)
 
     ProductDoc(
         id = id.toString(),
@@ -227,15 +227,18 @@ fun ProductRapidDTO.toDoc(isoCategoryService: IsoCategoryService, labelService: 
     throw e
 }
 
-private fun ProductRapidDTO.washDataLabels(labels: List<TechLabelDTO>): List<TechDataDoc> =
-    techData.filter { it.value.isNotEmpty() }.map { data ->
-        labels.find { it.label == data.key }?.let { l ->
-            val valueWash = if (l.type == "L") {
-                if (data.value.lowercase() == "ja") "Ja" else "Nei"
-            } else data.value
-            TechDataDoc(key = data.key, value = valueWash, unit = data.unit, type = l.type)
+private fun ProductRapidDTO.enrichTechData(labels: List<TechLabelDTO>): List<TechDataDoc> =
+    techData.filter { it.value.isNotEmpty() }.mapNotNull { data ->
+        labels.find { it.label == data.key }?.let { foundLabel ->
+            TechDataDoc(
+                key = data.key,
+                value = data.value,
+                unit = data.unit,
+                type = foundLabel.type,
+                section = foundLabel.section
+            )
         }
-    }.filterNotNull()
+    }
 
 fun AgreementInfo.toDoc(): AgreementInfoDoc = AgreementInfoDoc(
     id = id,
