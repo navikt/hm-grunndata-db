@@ -52,6 +52,7 @@ data class TechLabelDTO(
     val type: String,
     val unit: String?,
     val sort: Int,
+    val section: String?=null,
     val required: Boolean= false,
     @Deprecated("isKeyLabel is deprecated, use required instead")
     val isKeyLabel: Boolean = required,
