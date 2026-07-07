@@ -67,8 +67,7 @@ data class TechDataDoc (
     val key:    String,
     val value:  String,
     val unit:   String,
-    val type:   String,
-    val section: String? = null,
+    val type:   String
 )
 
 data class AgreementInfoDoc(
@@ -234,8 +233,7 @@ private fun ProductRapidDTO.enrichTechData(labels: List<TechLabelDTO>): List<Tec
                 key = data.key,
                 value = data.value,
                 unit = data.unit,
-                type = foundLabel.type,
-                section = foundLabel.section
+                type = foundLabel.type
             )
         }
     }
