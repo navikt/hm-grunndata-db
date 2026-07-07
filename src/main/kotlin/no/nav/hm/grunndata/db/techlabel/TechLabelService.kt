@@ -44,22 +44,11 @@ open class TechLabelService(
 
 data class TechLabelDTO(
     val id: UUID,
-    val identifier: String,
     val label: String,
-    val guide: String,
-    val definition: String?,
     val isocode: String,
     val type: String,
-    val unit: String?,
+    val unit: String?=null,
     val sort: Int,
     val section: String?=null,
-    val required: Boolean= false,
-    @Deprecated("isKeyLabel is deprecated, use required instead")
-    val isKeyLabel: Boolean = required,
-    val systemLabel: String,
-    val options: List<String> = emptyList(),
-    val createdBy: String,
-    val updatedBy: String,
-    val created: LocalDateTime,
     val updated: LocalDateTime
 )
