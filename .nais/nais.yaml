@@ -83,4 +83,5 @@ spec:
         - application: hm-grunndata-register
         - application: hm-grunndata-alternativprodukter
         - application: hm-oversikt-frontend
+        - application: hm-finnhjelpemiddel
         - application: hm-finnhjelpemiddel-bff
