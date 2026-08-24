@@ -10,4 +10,8 @@ class TechLabelController(private val techLabelService: TechLabelService) {
     fun getAllTechLabels(): Map<String, List<TechLabelDTO>> =
         techLabelService.fetchAllLabelsGroupByIso()
 
+    @Get("/{isocode}")
+    fun getTechLabelsByIsoCode(isocode: String): List<TechLabelDTO> =
+        techLabelService.fetchLabelsByIsoCode(isocode)
+
 }
