@@ -1,9 +1,6 @@
 package no.nav.hm.grunndata.db.iso
 
-import io.micronaut.data.annotation.Repository
 import jakarta.inject.Singleton
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.rapid.dto.IsoCategoryDTO
 import org.slf4j.LoggerFactory

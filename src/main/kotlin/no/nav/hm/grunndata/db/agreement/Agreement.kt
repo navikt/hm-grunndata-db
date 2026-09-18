@@ -30,6 +30,7 @@ data class Agreement (
     @field:TypeDef(type = DataType.JSON)
     val posts: List<AgreementPost> = emptyList(),
     @field: TypeDef(type = DataType.JSON)
+    @Deprecated("Not in use")
     val isoCategory: List<String> = emptyList(),
     val createdBy: String = REGISTER,
     val updatedBy: String = REGISTER,
