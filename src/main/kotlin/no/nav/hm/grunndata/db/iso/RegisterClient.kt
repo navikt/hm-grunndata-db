@@ -10,4 +10,7 @@ interface RegisterClient {
     @Get("/api/v1/isocategories")
     suspend fun getAllIsoCategories(): List<IsoCategoryDTO>
 
+    @Get("/api/v22/isocategories")
+    suspend fun getAllIsoCategoriesV22(): List<IsoCategory22DTO>
+
 }
