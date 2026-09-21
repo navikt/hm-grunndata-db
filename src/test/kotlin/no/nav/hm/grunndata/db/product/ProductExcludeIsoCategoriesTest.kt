@@ -42,15 +42,15 @@ class ProductExcludeIsoCategoriesTest {
                 Product(
                     supplierId = supplier.id,
                     identifier = "p1", title = "Product 1", articleName = "Prod 1", supplierRef = "p1",
-                    isoCategory = excludedCodes.first(), seriesUUID = UUID.randomUUID(), seriesId = null, seriesIdentifier = null,
-                    attributes = Attributes(manufacturer = "Manu", compatibleWith = CompatibleWith()), status = ProductStatus.ACTIVE
+                    isoCategory = excludedCodes.first(), isoCategory22 = "12345", seriesId = null, seriesIdentifier = null,
+                    attributes = Attributes(manufacturer = "Manu", compatibleWith = CompatibleWith()), seriesUUID=UUID.randomUUID(), status = ProductStatus.ACTIVE
                 )
             )
             val p2 = productRepository.save(
                 Product(
                     supplierId = supplier.id,
                     identifier = "p2", title = "Product 2", articleName = "Prod 2", supplierRef = "p2",
-                    isoCategory = "12345678", seriesUUID = UUID.randomUUID(), seriesId = null, seriesIdentifier = null,
+                    isoCategory = "12345678", isoCategory22 = "12345", seriesUUID = UUID.randomUUID(), seriesId = null, seriesIdentifier = null,
                     attributes = Attributes(manufacturer = "Manu", compatibleWith = CompatibleWith()), status = ProductStatus.ACTIVE
                 )
             )

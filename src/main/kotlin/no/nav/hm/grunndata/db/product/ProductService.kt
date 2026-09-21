@@ -15,6 +15,7 @@ import no.nav.hm.grunndata.db.index.external_product.toExternalDoc
 import no.nav.hm.grunndata.db.index.item.IndexItemService
 import no.nav.hm.grunndata.db.index.item.IndexType
 import no.nav.hm.grunndata.db.index.product.toDoc
+import no.nav.hm.grunndata.db.iso.IsoCategory22Service
 import no.nav.hm.grunndata.db.iso.IsoCategoryService
 import no.nav.hm.grunndata.db.supplier.SupplierService
 import no.nav.hm.grunndata.db.supplier.toDTO
@@ -37,7 +38,8 @@ open class ProductService(
     private val agreementService: AgreementService,
     private val indexItemService: IndexItemService,
     private val isoCategoryService: IsoCategoryService,
-    private val labelService: TechLabelService
+    private val labelService: TechLabelService,
+    private val isoCategory22Service: IsoCategory22Service
 ) {
 
     companion object {
@@ -77,7 +79,7 @@ open class ProductService(
             LOG.warn("Product ${productDTO.id} has no title, it means series is not synced yet")
         } else {
             gdbRapidPushService.pushDTOToKafka(productDTO, eventName)
-            indexItemService.saveIndexItem(productDTO.toDoc(isoCategoryService, labelService), IndexType.PRODUCT)
+            indexItemService.saveIndexItem(productDTO.toDoc(isoCategoryService, labelService, isoCategory22Service), IndexType.PRODUCT)
             // external product
             indexItemService.saveIndexItem(productDTO.toExternalDoc(isoCategoryService), IndexType.EXTERNAL_PRODUCT)
         }
@@ -122,6 +124,7 @@ open class ProductService(
             identifier = identifier,
             supplierRef = supplierRef,
             isoCategory = isoCategory,
+            isoCategory22 = isoCategory22,
             accessory = accessory,
             sparePart = sparePart,
             mainProduct = mainProduct,
@@ -210,7 +213,7 @@ open class ProductService(
 
     suspend fun deleteProducts(products: List<Product>) {
         products.forEach { product ->
-            indexItemService.saveIndexItem(product.toDTO().toDoc(isoCategoryService,labelService), IndexType.PRODUCT)
+            indexItemService.saveIndexItem(product.toDTO().toDoc(isoCategoryService,labelService, isoCategory22Service), IndexType.PRODUCT)
             indexItemService.saveIndexItem(product.toDTO().toExternalDoc(isoCategoryService), IndexType.EXTERNAL_PRODUCT)
             productRepository.delete(product)
             LOG.info("Product: ${product.id} hmsnr: ${product.hmsArtNr} supplierRef: ${product.supplierRef} was marked for deletion")

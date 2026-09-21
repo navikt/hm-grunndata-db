@@ -87,6 +87,7 @@ class ProductRegistrationRiver(
                             title = riverProduct.title,
                             text = riverProduct.attributes.text ?: "",
                             isoCategory = riverProduct.isoCategory,
+                            isoCategory22 = riverProduct.isoCategory22,
                             seriesData = SeriesData(media = riverProduct.media),
                             createdBy = riverProduct.createdBy,
                             updatedBy = riverProduct.updatedBy,

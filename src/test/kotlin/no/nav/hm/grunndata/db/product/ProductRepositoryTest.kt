@@ -67,6 +67,7 @@ class ProductRepositoryTest(
                     articleName = "Produkt 1",
                     supplierRef = "123",
                     isoCategory = "123456",
+                    isoCategory22 = "12345",
                     seriesId = seriesId,
                     seriesIdentifier = seriesId,
                     agreements = setOf(productAgreement, productAgreement2),
@@ -88,6 +89,7 @@ class ProductRepositoryTest(
                     sparePart = false,
                     supplierRef = "124",
                     isoCategory = "123456",
+                    isoCategory22 = "12345",
                     seriesUUID = UUID.randomUUID(),
                     agreements = setOf(productAgreement),
                     attributes = Attributes(

@@ -6,6 +6,8 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import jakarta.inject.Singleton
 import no.nav.hm.grunndata.db.index.OpensearchIndexer
+import no.nav.hm.grunndata.db.iso.IsoCategory22DTO
+import no.nav.hm.grunndata.db.iso.IsoCategory22Service
 import no.nav.hm.grunndata.db.iso.IsoCategoryService
 import no.nav.hm.grunndata.db.techlabel.TechLabelService
 import no.nav.hm.grunndata.rapid.dto.IsoCategoryDTO
@@ -30,6 +32,18 @@ class MockFactory {
     fun mockIsoCategoryService(): IsoCategoryService = mockk<IsoCategoryService>(relaxed = true).apply {
         coEvery { lookUpCode("123456") } returns
                 IsoCategoryDTO(
+                    isoCode = "123456",
+                    isoTitle = "mock-title",
+                    isoText = "mock-text",
+                    isoLevel = 4
+                )
+    }
+
+    @Singleton
+    @Replaces(bean = IsoCategory22Service::class)
+    fun mockIsoCategoryService22(): IsoCategory22Service = mockk<IsoCategory22Service>(relaxed = true).apply {
+        coEvery { lookUpCode("123456") } returns
+                IsoCategory22DTO(
                     isoCode = "123456",
                     isoTitle = "mock-title",
                     isoText = "mock-text",

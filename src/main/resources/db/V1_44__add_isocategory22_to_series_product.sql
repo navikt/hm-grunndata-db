@@ -1,0 +1,2 @@
+ALTER TABLE series_v1 ADD COLUMN iso_category22 VARCHAR(255);
+ALTER TABLE product_v1 ADD COLUMN iso_category22 VARCHAR(255);
