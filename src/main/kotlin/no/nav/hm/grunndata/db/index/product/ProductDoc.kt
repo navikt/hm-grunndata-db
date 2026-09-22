@@ -4,7 +4,6 @@ import no.nav.hm.grunndata.db.index.SearchDoc
 import no.nav.hm.grunndata.db.index.agreement.AgreementLabels
 import no.nav.hm.grunndata.db.iso.IsoCategory22Service
 import no.nav.hm.grunndata.db.iso.IsoCategoryService
-import no.nav.hm.grunndata.db.techlabel.TechLabelDTO
 import no.nav.hm.grunndata.db.techlabel.TechLabelService
 import no.nav.hm.grunndata.rapid.dto.AgreementInfo
 import no.nav.hm.grunndata.rapid.dto.AlternativeFor
@@ -19,6 +18,7 @@ import no.nav.hm.grunndata.rapid.dto.ProductAgreementStatus
 import no.nav.hm.grunndata.rapid.dto.ProductRapidDTO
 import no.nav.hm.grunndata.rapid.dto.ProductStatus
 import no.nav.hm.grunndata.rapid.dto.Produkttype
+import no.nav.hm.grunndata.rapid.dto.TechData
 import no.nav.hm.grunndata.rapid.dto.WorksWith
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
@@ -51,7 +51,7 @@ data class ProductDoc(
     val sparePart: Boolean = false,
     val main: Boolean = !(accessory || sparePart),
     val seriesId: String? = null,
-    val data: List<TechDataDoc> = emptyList(),
+    val data: List<TechData> = emptyList(),
     val media: List<MediaDoc> = emptyList(),
     val created: LocalDateTime,
     val updated: LocalDateTime,
@@ -67,13 +67,6 @@ data class ProductDoc(
     override fun isDelete(): Boolean = status == ProductStatus.DELETED
 }
 
-
-data class TechDataDoc(
-    val key: String,
-    val value: String,
-    val unit: String,
-    val type: String
-)
 
 data class AgreementInfoDoc(
     val id: UUID,
@@ -188,11 +181,10 @@ fun ProductRapidDTO.toDoc(
         }
     val mainAgreements = onlyActiveAgreements.filter { it.mainProduct }
     val iso = isoCategoryService.lookUpCode(isoCategory) ?: isoCategoryService.getClosestLevelInBranch(isoCategory)
-    val is22 = isoCategory22Service.lookUpCode(isoCategory) ?: isoCategory22Service.getClosestLevelInBranch(isoCategory)
+    val is22 = isoCategory22Service.lookUpCode(isoCategory22?: "") ?: isoCategory22Service.getClosestLevelInBranch(isoCategory22?: "")
     val internationalIso = isoCategoryService.lookUpCode(isoCategory.take(6))
-    val internationalIso22 = isoCategory22Service.lookUpCode(isoCategory.take(6))
-    val labels = labelService.fetchLabelsByIsoCode(isoCategory)
-    val dataDoc = enrichTechData(labels)
+    val internationalIso22 = isoCategory22?.take(6)?.let { isoCategory22Service.lookUpCode(it) }
+
 
     ProductDoc(
         id = id.toString(),
@@ -221,7 +213,7 @@ fun ProductRapidDTO.toDoc(
         sparePart = sparePart,
         main = mainProduct,
         seriesId = seriesUUID?.toString(),
-        data = dataDoc,
+        data = techData,
         media = media.map { it.toDoc() }.sortedBy { it.priority },
         created = created,
         updated = updated,
@@ -232,7 +224,7 @@ fun ProductRapidDTO.toDoc(
         hasAgreement = onlyActiveAgreements.isNotEmpty(),
         mainAgreements = mainAgreements.map { it.toDoc() },
         hasPreviousAgreement = previousAgreements.isNotEmpty(),
-        filters = mapTechDataFilters(dataDoc)
+        filters = mapTechDataFilters(techData)
     )
 
 
@@ -241,17 +233,6 @@ fun ProductRapidDTO.toDoc(
     throw e
 }
 
-private fun ProductRapidDTO.enrichTechData(labels: List<TechLabelDTO>): List<TechDataDoc> =
-    techData.filter { it.value.isNotEmpty() }.mapNotNull { data ->
-        labels.find { it.label == data.key }?.let { foundLabel ->
-            TechDataDoc(
-                key = data.key,
-                value = data.value,
-                unit = data.unit,
-                type = foundLabel.type
-            )
-        }
-    }
 
 fun AgreementInfo.toDoc(): AgreementInfoDoc = AgreementInfoDoc(
     id = id,
@@ -301,7 +282,7 @@ fun MediaInfo.toDoc(): MediaDoc = MediaDoc(
     uri = uri, priority = priority, type = type, text = text, source = source
 )
 
-fun mapTechDataFilters(data: List<TechDataDoc>): TechDataFilters {
+fun mapTechDataFilters(data: List<TechData>): TechDataFilters {
     try {
         val techDataMap = data.associate { it.key to it.value }
 

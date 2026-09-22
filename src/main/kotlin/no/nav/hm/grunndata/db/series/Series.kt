@@ -33,7 +33,7 @@ data class Series(
 
 
 fun Series.toRapidDTO() = SeriesRapidDTO (id = id, status = status, title = title,
-    text = text, isoCategory = isoCategory, seriesData = seriesData,
+    text = text, isoCategory = isoCategory, isoCategory22 = isoCategory22, seriesData = seriesData,
     supplierId = supplierId, expired = expired,
     identifier = identifier, createdBy = createdBy,
     updatedBy = updatedBy, created = created, updated = updated)

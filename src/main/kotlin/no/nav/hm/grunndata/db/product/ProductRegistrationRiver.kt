@@ -21,8 +21,7 @@ class ProductRegistrationRiver(
     river: RiverHead,
     private val objectMapper: ObjectMapper,
     private val seriesService: SeriesService,
-    private val productService: ProductService,
-    private val isoCategoryService: IsoCategoryService
+    private val productService: ProductService
 ) : River.PacketListener {
 
     companion object {
@@ -70,6 +69,7 @@ class ProductRegistrationRiver(
                             )
                         ),
                         isoCategory = series.isoCategory,
+                        isoCategory22 = series.isoCategory22,
                         seriesIdentifier = series.identifier,
                         media = series.seriesData?.media ?: riverProduct.media,
                         accessory = riverProduct.accessory,
