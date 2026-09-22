@@ -7,6 +7,7 @@ import no.nav.hm.grunndata.db.index.IndexDoc
 import no.nav.hm.grunndata.db.index.OpensearchIndexer
 import no.nav.hm.grunndata.db.index.item.IndexSettings
 import no.nav.hm.grunndata.db.index.item.IndexType
+import no.nav.hm.grunndata.db.iso.IsoCategory22Service
 import no.nav.hm.grunndata.db.iso.IsoCategoryService
 import no.nav.hm.grunndata.db.product.ProductCriteria
 import no.nav.hm.grunndata.db.product.ProductService
@@ -17,6 +18,7 @@ import java.util.*
 @Singleton
 class ExternalProductIndexer(
     private val isoCategoryService: IsoCategoryService,
+    private val isoCategory22Service: IsoCategory22Service,
     private val productService: ProductService,
     private val indexSettings: IndexSettings,
     private val indexer: OpensearchIndexer
@@ -37,7 +39,7 @@ class ExternalProductIndexer(
         var lastId: UUID? = null
         while(page.numberOfElements>0) {
             val products = page.content
-                .map { IndexDoc(id = it.id.toString(), indexType = IndexType.EXTERNAL_PRODUCT, doc = it.toExternalDoc(isoCategoryService), indexName = indexName)}
+                .map { IndexDoc(id = it.id.toString(), indexType = IndexType.EXTERNAL_PRODUCT, doc = it.toExternalDoc(isoCategoryService, isoCategory22Service), indexName = indexName)}
 
             LOG.info("indexing ${products.size} products to $indexName")
             if (products.isNotEmpty()) indexer.indexDoc(products)

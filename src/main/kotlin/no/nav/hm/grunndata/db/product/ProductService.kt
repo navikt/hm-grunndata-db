@@ -81,7 +81,7 @@ open class ProductService(
             gdbRapidPushService.pushDTOToKafka(productDTO, eventName)
             indexItemService.saveIndexItem(productDTO.toDoc(isoCategoryService, labelService, isoCategory22Service), IndexType.PRODUCT)
             // external product
-            indexItemService.saveIndexItem(productDTO.toExternalDoc(isoCategoryService), IndexType.EXTERNAL_PRODUCT)
+            indexItemService.saveIndexItem(productDTO.toExternalDoc(isoCategoryService, isoCategory22Service), IndexType.EXTERNAL_PRODUCT)
         }
         return productDTO
     }
@@ -214,7 +214,7 @@ open class ProductService(
     suspend fun deleteProducts(products: List<Product>) {
         products.forEach { product ->
             indexItemService.saveIndexItem(product.toDTO().toDoc(isoCategoryService,labelService, isoCategory22Service), IndexType.PRODUCT)
-            indexItemService.saveIndexItem(product.toDTO().toExternalDoc(isoCategoryService), IndexType.EXTERNAL_PRODUCT)
+            indexItemService.saveIndexItem(product.toDTO().toExternalDoc(isoCategoryService, isoCategory22Service), IndexType.EXTERNAL_PRODUCT)
             productRepository.delete(product)
             LOG.info("Product: ${product.id} hmsnr: ${product.hmsArtNr} supplierRef: ${product.supplierRef} was marked for deletion")
         }
