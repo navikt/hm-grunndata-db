@@ -181,7 +181,7 @@ fun ProductRapidDTO.toDoc(
         }
     val mainAgreements = onlyActiveAgreements.filter { it.mainProduct }
     val iso = isoCategoryService.lookUpCode(isoCategory) ?: isoCategoryService.getClosestLevelInBranch(isoCategory)
-    val is22 = isoCategory22Service.lookUpCode(isoCategory22?: "") ?: isoCategory22Service.getClosestLevelInBranch(isoCategory22?: "")
+    val iso22 = isoCategory22?.let { isoCategory22Service.lookUpCode(it) } ?: isoCategory22?.let { isoCategory22Service.getClosestLevelInBranch(it) }
     val internationalIso = isoCategoryService.lookUpCode(isoCategory.take(6))
     val internationalIso22 = isoCategory22?.take(6)?.let { isoCategory22Service.lookUpCode(it) }
 
@@ -201,14 +201,14 @@ fun ProductRapidDTO.toDoc(
         isoCategory = isoCategory,
         isoCategory22 = isoCategory22,
         isoCategoryTitle = iso?.isoTitle,
-        isoCategoryTitle22 = is22?.isoTitle,
+        isoCategoryTitle22 = iso22?.isoTitle,
         isoCategoryTitleShort = iso?.isoTitleShort,
         isoCategoryText = iso?.isoText,
-        isoCategoryText22 = is22?.isoText,
+        isoCategoryText22 = iso22?.isoText,
         isoCategoryTextShort = iso?.isoTextShort,
         isoSearchTag = isoCategoryService.getHigherLevelsInBranch(isoCategory).map { it.searchWords }.flatten(),
         isoCategoryTitleInternational = internationalIso?.isoTitle ?: iso?.isoTitle,
-        isoCategoryTitleInternational22 = internationalIso22?.isoTitle ?: is22?.isoTitle,
+        isoCategoryTitleInternational22 = internationalIso22?.isoTitle ?: iso22?.isoTitle,
         accessory = accessory,
         sparePart = sparePart,
         main = mainProduct,
