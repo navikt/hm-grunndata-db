@@ -19,4 +19,5 @@ open class IsoMapService(private val registerClient: RegisterClient) {
     companion object {
         private val LOG = org.slf4j.LoggerFactory.getLogger(IsoMapService::class.java)
     }
+
 }

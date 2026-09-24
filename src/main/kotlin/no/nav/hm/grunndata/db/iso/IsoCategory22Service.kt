@@ -16,7 +16,7 @@ class IsoCategory22Service(private val registerClient: RegisterClient) {
     init {
         runBlocking {
             isoCategories = registerClient.getAllIsoCategoriesV22().associateBy { it.isoCode }
-            LOG.info("Iso categories initialized with size: ${isoCategories.size}")
+            LOG.info("Iso categories v2022 initialized with size: ${isoCategories.size}")
         }
     }
 
