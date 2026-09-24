@@ -2,8 +2,8 @@ package no.nav.hm.grunndata.db.index.product
 
 import no.nav.hm.grunndata.db.index.SearchDoc
 import no.nav.hm.grunndata.db.index.agreement.AgreementLabels
+import no.nav.hm.grunndata.db.iso.IsoCategory22Service
 import no.nav.hm.grunndata.db.iso.IsoCategoryService
-import no.nav.hm.grunndata.db.techlabel.TechLabelDTO
 import no.nav.hm.grunndata.db.techlabel.TechLabelService
 import no.nav.hm.grunndata.rapid.dto.AgreementInfo
 import no.nav.hm.grunndata.rapid.dto.AlternativeFor
@@ -18,6 +18,7 @@ import no.nav.hm.grunndata.rapid.dto.ProductAgreementStatus
 import no.nav.hm.grunndata.rapid.dto.ProductRapidDTO
 import no.nav.hm.grunndata.rapid.dto.ProductStatus
 import no.nav.hm.grunndata.rapid.dto.Produkttype
+import no.nav.hm.grunndata.rapid.dto.TechData
 import no.nav.hm.grunndata.rapid.dto.WorksWith
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
@@ -36,17 +37,21 @@ data class ProductDoc(
     val identifier: String,
     val supplierRef: String,
     val isoCategory: String,
+    val isoCategory22: String?,
     val isoCategoryTitleInternational: String?,
+    val isoCategoryTitleInternational22: String?,
     val isoCategoryTitle: String?,
+    val isoCategoryTitle22: String?,
     val isoCategoryTitleShort: String?,
     val isoCategoryText: String?,
+    val isoCategoryText22: String?,
     val isoCategoryTextShort: String?,
     val isoSearchTag: List<String>?,
     val accessory: Boolean = false,
     val sparePart: Boolean = false,
     val main: Boolean = !(accessory || sparePart),
     val seriesId: String? = null,
-    val data: List<TechDataDoc> = emptyList(),
+    val data: List<TechData> = emptyList(),
     val media: List<MediaDoc> = emptyList(),
     val created: LocalDateTime,
     val updated: LocalDateTime,
@@ -62,13 +67,6 @@ data class ProductDoc(
     override fun isDelete(): Boolean = status == ProductStatus.DELETED
 }
 
-
-data class TechDataDoc (
-    val key:    String,
-    val value:  String,
-    val unit:   String,
-    val type:   String
-)
 
 data class AgreementInfoDoc(
     val id: UUID,
@@ -166,11 +164,15 @@ data class TechDataFilters(
     val rettloft: String? = null,
     val skraloft: String? = null,
 
-)
+    )
 
 data class ProductSupplier(val id: String, val identifier: String, val name: String)
 
-fun ProductRapidDTO.toDoc(isoCategoryService: IsoCategoryService, labelService: TechLabelService): ProductDoc = try {
+fun ProductRapidDTO.toDoc(
+    isoCategoryService: IsoCategoryService,
+    labelService: TechLabelService,
+    isoCategory22Service: IsoCategory22Service
+): ProductDoc = try {
     val (onlyActiveAgreements, previousAgreements) =
         agreements.partition {
             it.published!!.isBefore(LocalDateTime.now())
@@ -179,9 +181,10 @@ fun ProductRapidDTO.toDoc(isoCategoryService: IsoCategoryService, labelService: 
         }
     val mainAgreements = onlyActiveAgreements.filter { it.mainProduct }
     val iso = isoCategoryService.lookUpCode(isoCategory) ?: isoCategoryService.getClosestLevelInBranch(isoCategory)
+    val is22 = isoCategory22Service.lookUpCode(isoCategory22?: "") ?: isoCategory22Service.getClosestLevelInBranch(isoCategory22?: "")
     val internationalIso = isoCategoryService.lookUpCode(isoCategory.take(6))
-    val labels = labelService.fetchLabelsByIsoCode(isoCategory)
-    val dataDoc = enrichTechData(labels)
+    val internationalIso22 = isoCategory22?.take(6)?.let { isoCategory22Service.lookUpCode(it) }
+
 
     ProductDoc(
         id = id.toString(),
@@ -196,17 +199,21 @@ fun ProductRapidDTO.toDoc(isoCategoryService: IsoCategoryService, labelService: 
         identifier = identifier,
         supplierRef = supplierRef,
         isoCategory = isoCategory,
+        isoCategory22 = isoCategory22,
         isoCategoryTitle = iso?.isoTitle,
+        isoCategoryTitle22 = is22?.isoTitle,
         isoCategoryTitleShort = iso?.isoTitleShort,
         isoCategoryText = iso?.isoText,
+        isoCategoryText22 = is22?.isoText,
         isoCategoryTextShort = iso?.isoTextShort,
         isoSearchTag = isoCategoryService.getHigherLevelsInBranch(isoCategory).map { it.searchWords }.flatten(),
         isoCategoryTitleInternational = internationalIso?.isoTitle ?: iso?.isoTitle,
+        isoCategoryTitleInternational22 = internationalIso22?.isoTitle ?: is22?.isoTitle,
         accessory = accessory,
         sparePart = sparePart,
         main = mainProduct,
         seriesId = seriesUUID?.toString(),
-        data = dataDoc,
+        data = techData,
         media = media.map { it.toDoc() }.sortedBy { it.priority },
         created = created,
         updated = updated,
@@ -217,7 +224,7 @@ fun ProductRapidDTO.toDoc(isoCategoryService: IsoCategoryService, labelService: 
         hasAgreement = onlyActiveAgreements.isNotEmpty(),
         mainAgreements = mainAgreements.map { it.toDoc() },
         hasPreviousAgreement = previousAgreements.isNotEmpty(),
-        filters = mapTechDataFilters(dataDoc)
+        filters = mapTechDataFilters(techData)
     )
 
 
@@ -226,17 +233,6 @@ fun ProductRapidDTO.toDoc(isoCategoryService: IsoCategoryService, labelService: 
     throw e
 }
 
-private fun ProductRapidDTO.enrichTechData(labels: List<TechLabelDTO>): List<TechDataDoc> =
-    techData.filter { it.value.isNotEmpty() }.mapNotNull { data ->
-        labels.find { it.label == data.key }?.let { foundLabel ->
-            TechDataDoc(
-                key = data.key,
-                value = data.value,
-                unit = data.unit,
-                type = foundLabel.type
-            )
-        }
-    }
 
 fun AgreementInfo.toDoc(): AgreementInfoDoc = AgreementInfoDoc(
     id = id,
@@ -286,7 +282,7 @@ fun MediaInfo.toDoc(): MediaDoc = MediaDoc(
     uri = uri, priority = priority, type = type, text = text, source = source
 )
 
-fun mapTechDataFilters(data: List<TechDataDoc>): TechDataFilters {
+fun mapTechDataFilters(data: List<TechData>): TechDataFilters {
     try {
         val techDataMap = data.associate { it.key to it.value }
 
@@ -341,7 +337,9 @@ fun mapTechDataFilters(data: List<TechDataDoc>): TechDataFilters {
     }
 }
 
-private fun String.decimalToInt(): Int = if (this.isNotEmpty()) normalizeDecimalMark().substringBeforeLast(".").toInt() else 0
+private fun String.decimalToInt(): Int =
+    if (this.isNotEmpty()) normalizeDecimalMark().substringBeforeLast(".").toInt() else 0
+
 private fun String.decimalToFloat(): Float = if (this.isNotEmpty()) normalizeDecimalMark().toFloat() else 0.0F
 
 private fun String.normalizeDecimalMark() = replace(",", ".")

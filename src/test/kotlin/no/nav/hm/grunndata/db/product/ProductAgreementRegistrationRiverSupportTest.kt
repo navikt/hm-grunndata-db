@@ -76,6 +76,7 @@ class ProductAgreementRegistrationRiverSupportTest(
                     articleName = "Produkt 1",
                     supplierRef = "J71001-15",
                     isoCategory = "123456",
+                    isoCategory22 = "12345",
                     agreements = setOf(productAgreement2),
                     pastAgreements = setOf(pastProductAgreement),
                     seriesUUID = UUID.randomUUID(),

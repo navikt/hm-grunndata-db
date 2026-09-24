@@ -20,7 +20,7 @@ class AttributeTagServiceTest(private val attributeTagService: AttributeTagServi
         val product = Product(
             id = UUID.randomUUID(),
             supplierId = supplier.id, hmsArtNr = "267914", identifier = "123", title = "Dette er et produkt",
-            articleName = "Product 1", supplierRef = "123", isoCategory = "123456", seriesUUID = UUID.randomUUID(),
+            articleName = "Product 1", supplierRef = "123", isoCategory = "123456", isoCategory22="12345", seriesUUID = UUID.randomUUID(),
             attributes = Attributes(
                 manufacturer = "Samsung",
                 compatibleWith = CompatibleWith(seriesIds = setOf(UUID.randomUUID())),
@@ -38,7 +38,7 @@ class AttributeTagServiceTest(private val attributeTagService: AttributeTagServi
         val product2 = Product(
             id = UUID.randomUUID(),
             supplierId = supplier.id, hmsArtNr = "12345A", identifier = "123", title = "Dette er et produkt",
-            articleName = "Produkt1", supplierRef = "1234", isoCategory = "123456",
+            articleName = "Produkt1", supplierRef = "1234", isoCategory = "123456", isoCategory22="12345",
             attributes = Attributes(
                 manufacturer = "Samsung",
                 compatibleWith = CompatibleWith(seriesIds = setOf(UUID.randomUUID())),

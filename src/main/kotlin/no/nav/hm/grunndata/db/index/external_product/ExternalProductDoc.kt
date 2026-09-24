@@ -3,6 +3,7 @@ package no.nav.hm.grunndata.db.index.external_product
 import no.nav.hm.grunndata.rapid.dto.*
 import no.nav.hm.grunndata.db.index.SearchDoc
 import no.nav.hm.grunndata.db.index.agreement.AgreementLabels
+import no.nav.hm.grunndata.db.iso.IsoCategory22Service
 import no.nav.hm.grunndata.db.iso.IsoCategoryService
 import java.time.LocalDateTime
 import java.util.*
@@ -18,9 +19,12 @@ data class ExternalProductDoc(
     val identifier: String,
     val supplierRef: String,
     val isoCategory: String,
+    val isoCategory22: String?,
     val isoCategoryTitle: String?,
+    val isoCategoryTitle22: String?,
     val isoCategoryTitleShort: String?,
     val isoCategoryText: String?,
+    val isoCategoryText22: String?,
     val isoCategoryTextShort: String?,
     // FILTERED: val isoSearchTag: List<String>?,
     // FILTERED: val accessory: Boolean = false,
@@ -83,11 +87,12 @@ data class ExternalMediaDoc(
 
 data class ExternalProductSupplier(val id: String, val identifier: String, val name: String)
 
-fun ProductRapidDTO.toExternalDoc(isoCategoryService: IsoCategoryService): ExternalProductDoc = try {
+fun ProductRapidDTO.toExternalDoc(isoCategoryService: IsoCategoryService, isoCategory22Service: IsoCategory22Service): ExternalProductDoc = try {
     val onlyActiveAgreements =
         agreements.filter { it.published!!.isBefore(LocalDateTime.now())
                 && it.expired.isAfter(LocalDateTime.now()) && it.status == ProductAgreementStatus.ACTIVE}
     val iso = isoCategoryService.lookUpCode(isoCategory)
+    val iso22 = isoCategory22Service.lookUpCode(isoCategory22?:"")
     ExternalProductDoc(id = id.toString(),
         supplier = ExternalProductSupplier(
             id = supplier.id.toString(), identifier = supplier.identifier, name = supplier.name
@@ -100,10 +105,13 @@ fun ProductRapidDTO.toExternalDoc(isoCategoryService: IsoCategoryService): Exter
         identifier = identifier,
         supplierRef = supplierRef,
         isoCategory = isoCategory,
+        isoCategory22 = isoCategory22,
         isoCategoryTitle = iso?.isoTitle,
         isoCategoryTitleShort = iso?.isoTitleShort,
         isoCategoryText = iso?.isoText,
         isoCategoryTextShort = iso?.isoTextShort,
+        isoCategoryTitle22 = iso22?.isoTitle,
+        isoCategoryText22 = iso22?.isoText,
         // FILTERED: isoSearchTag = isoCategoryService.getHigherLevelsInBranch(isoCategory).map { it.searchWords }.flatten(),
         // FILTERED: accessory = accessory,
         // FILTERED: sparePart = sparePart,

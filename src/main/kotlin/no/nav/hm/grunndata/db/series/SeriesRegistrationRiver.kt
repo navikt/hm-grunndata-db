@@ -72,6 +72,7 @@ class SeriesRegistrationRiver(
                                 documentUrls = dto.seriesData.attributes.documentUrls,
                             ),
                             isoCategory = dto.isoCategory,
+                            isoCategory22 = dto.isoCategory22,
                             media = dto.seriesData.media,
                             mainProduct = dto.mainProduct ?: product.mainProduct,
                             updated = LocalDateTime.now()

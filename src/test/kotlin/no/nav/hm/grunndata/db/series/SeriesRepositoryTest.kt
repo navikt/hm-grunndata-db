@@ -23,6 +23,7 @@ class SeriesRepositoryTest(private val seriesRepository: SeriesRepository) {
             title = "en test series 1",
             text = "en test series 1 beskrivelse",
             isoCategory = "12001314",
+            isoCategory22 = "12345",
             seriesData = SeriesData(
                 media = setOf(MediaInfo(sourceUri = "http://example.com", uri = "http://example.com")),
                 attributes = SeriesAttributes(
@@ -47,6 +48,7 @@ class SeriesRepositoryTest(private val seriesRepository: SeriesRepository) {
             identifier.title shouldBe series.title
             val updated = seriesRepository.update(identifier.copy(title = "en test series 2"))
             updated.isoCategory shouldBe "12001314"
+            updated.isoCategory22 shouldBe "12345"
             updated.seriesData.shouldNotBeNull()
             updated.seriesData!!.media.size shouldBe 1
             updated.seriesData!!.attributes.documentUrls?.size shouldBe 1

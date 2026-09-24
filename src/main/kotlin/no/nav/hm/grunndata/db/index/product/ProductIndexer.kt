@@ -8,6 +8,7 @@ import no.nav.hm.grunndata.db.index.IndexDoc
 import no.nav.hm.grunndata.db.index.OpensearchIndexer
 import no.nav.hm.grunndata.db.index.item.IndexSettings
 import no.nav.hm.grunndata.db.index.item.IndexType
+import no.nav.hm.grunndata.db.iso.IsoCategory22Service
 import no.nav.hm.grunndata.db.iso.IsoCategoryService
 import no.nav.hm.grunndata.db.product.ProductCriteria
 import no.nav.hm.grunndata.db.product.ProductService
@@ -19,6 +20,7 @@ import java.util.*
 @Singleton
 class ProductIndexer(
     private val isoCategoryService: IsoCategoryService,
+    private val isoCategory22Service: IsoCategory22Service,
     private val labelService: TechLabelService,
     private val productService: ProductService,
     private val indexSettings: IndexSettings,
@@ -44,7 +46,7 @@ class ProductIndexer(
             val products = page.content
                 .map { IndexDoc(
                     id = it.id.toString(),
-                    doc = it.toDoc(isoCategoryService, labelService),
+                    doc = it.toDoc(isoCategoryService, labelService, isoCategory22Service),
                     indexType = IndexType.PRODUCT,
                     indexName = indexName
                 )}
@@ -74,7 +76,7 @@ class ProductIndexer(
         while (page.numberOfElements > 0) {
             val products = page.content.map { IndexDoc(
                 id = it.id.toString(),
-                doc = it.toDoc(isoCategoryService, labelService),
+                doc = it.toDoc(isoCategoryService, labelService, isoCategory22Service),
                 indexType = IndexType.PRODUCT,
                 indexName = aliasIndexName,
             )}
@@ -95,7 +97,7 @@ class ProductIndexer(
         if (page.numberOfElements > 0) {
             val products = page.content.map { IndexDoc(
                 id = it.id.toString(),
-                doc = it.toDoc(isoCategoryService, labelService),
+                doc = it.toDoc(isoCategoryService, labelService, isoCategory22Service),
                 indexType = IndexType.PRODUCT,
                 indexName = aliasIndexName
             )}
@@ -110,7 +112,7 @@ class ProductIndexer(
         while (page.numberOfElements > 0) {
             val products = page.content.map { IndexDoc(
                 id = it.id.toString(),
-                doc = it.toDoc(isoCategoryService, labelService),
+                doc = it.toDoc(isoCategoryService, labelService, isoCategory22Service),
                 indexType = IndexType.PRODUCT,
                 indexName = aliasIndexName
             )}

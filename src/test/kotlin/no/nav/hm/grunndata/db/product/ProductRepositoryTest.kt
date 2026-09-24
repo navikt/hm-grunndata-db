@@ -67,6 +67,7 @@ class ProductRepositoryTest(
                     articleName = "Produkt 1",
                     supplierRef = "123",
                     isoCategory = "123456",
+                    isoCategory22 = "12345",
                     seriesId = seriesId,
                     seriesIdentifier = seriesId,
                     agreements = setOf(productAgreement, productAgreement2),
@@ -88,6 +89,7 @@ class ProductRepositoryTest(
                     sparePart = false,
                     supplierRef = "124",
                     isoCategory = "123456",
+                    isoCategory22 = "12345",
                     seriesUUID = UUID.randomUUID(),
                     agreements = setOf(productAgreement),
                     attributes = Attributes(
@@ -110,6 +112,7 @@ class ProductRepositoryTest(
             updated.shouldNotBeNull()
             updated.title shouldBe "Dette er et nytt produkt"
             updated.media.size shouldBe 2
+            updated.isoCategory22 shouldBe "12345"
             println(objectMapper.writeValueAsString(updated))
             val ids = productRepository.findIdsByStatusAndCreatedBy(status = ProductStatus.ACTIVE, REGISTER)
             ids.size shouldBe 2
