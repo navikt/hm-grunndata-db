@@ -48,6 +48,7 @@ class SeriesRepositoryTest(private val seriesRepository: SeriesRepository) {
             identifier.title shouldBe series.title
             val updated = seriesRepository.update(identifier.copy(title = "en test series 2"))
             updated.isoCategory shouldBe "12001314"
+            updated.isoCategory22 shouldBe "12345"
             updated.seriesData.shouldNotBeNull()
             updated.seriesData!!.media.size shouldBe 1
             updated.seriesData!!.attributes.documentUrls?.size shouldBe 1

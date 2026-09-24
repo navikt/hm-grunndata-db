@@ -112,6 +112,7 @@ class ProductRepositoryTest(
             updated.shouldNotBeNull()
             updated.title shouldBe "Dette er et nytt produkt"
             updated.media.size shouldBe 2
+            updated.isoCategory22 shouldBe "12345"
             println(objectMapper.writeValueAsString(updated))
             val ids = productRepository.findIdsByStatusAndCreatedBy(status = ProductStatus.ACTIVE, REGISTER)
             ids.size shouldBe 2
