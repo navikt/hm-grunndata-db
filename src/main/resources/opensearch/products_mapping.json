@@ -377,7 +377,19 @@
       "type": "keyword",
       "copy_to": "keywords_suggest"
     },
+    "isoCategory22": {
+      "type": "keyword",
+      "copy_to": "keywords_suggest"
+    },
     "isoCategoryTitle": {
+      "type": "text",
+      "analyzer": "norwegian",
+      "copy_to": [
+        "keywords_suggest",
+        "isoCategoryName"
+      ]
+    },
+    "isoCategoryTitle22": {
       "type": "text",
       "analyzer": "norwegian",
       "copy_to": [
@@ -393,6 +405,10 @@
       ]
     },
     "isoCategoryText": {
+      "type": "text",
+      "analyzer": "norwegian"
+    },
+    "isoCategoryText22": {
       "type": "text",
       "analyzer": "norwegian"
     },

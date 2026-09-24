@@ -90,7 +90,14 @@
     "isoCategory": {
       "type": "keyword"
     },
+    "isoCategory22": {
+      "type": "keyword"
+    },
     "isoCategoryTitle": {
+      "type": "text",
+      "analyzer": "norwegian"
+    },
+    "isoCategoryTitle22": {
       "type": "text",
       "analyzer": "norwegian"
     },
@@ -99,6 +106,10 @@
       "analyzer": "norwegian"
     },
     "isoCategoryText": {
+      "type": "text",
+      "analyzer": "norwegian"
+    },
+    "isoCategoryText22": {
       "type": "text",
       "analyzer": "norwegian"
     },
