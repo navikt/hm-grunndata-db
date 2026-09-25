@@ -92,7 +92,7 @@ fun ProductRapidDTO.toExternalDoc(isoCategoryService: IsoCategoryService, isoCat
         agreements.filter { it.published!!.isBefore(LocalDateTime.now())
                 && it.expired.isAfter(LocalDateTime.now()) && it.status == ProductAgreementStatus.ACTIVE}
     val iso = isoCategoryService.lookUpCode(isoCategory)
-    val iso22 = isoCategory22Service.lookUpCode(isoCategory22?:"")
+    val iso22 = isoCategory22?.let { isoCategory22Service.lookUpCode(it) }
     ExternalProductDoc(id = id.toString(),
         supplier = ExternalProductSupplier(
             id = supplier.id.toString(), identifier = supplier.identifier, name = supplier.name
