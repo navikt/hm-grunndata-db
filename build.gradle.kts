@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 
 val jvmTarget = "25"
-val micronautVersion = "5.1.1"
+val micronautVersion = "5.2.2"
 val logbackEncoderVersion = "9.0"
 val postgresqlVersion = "42.7.2"
 val tcVersion = "2.0.1"
