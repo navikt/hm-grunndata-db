@@ -45,7 +45,7 @@ micronaut:
       expire-after-write: 5m
     isomap:
       charset: 'UTF-8'
-      expire-after-write: 30m
+      expire-after-write: 5m
   data:
     pageable:
       max-page-size: 10000
