@@ -4,4 +4,4 @@ ENV TZ="Europe/Oslo"
 EXPOSE 8080
 COPY build/libs/hm-grunndata-db-all.jar ./app.jar
 USER 1000
-CMD ["java", "-jar", "app.jar"]
+CMD ["-jar", "app.jar"]
